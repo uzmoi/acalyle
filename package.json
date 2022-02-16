@@ -7,11 +7,15 @@
   "license": "ISC",
   "main": "app/main.js",
   "scripts": {
+    "build": "esbuild scripts/build.ts --format=cjs | node",
+    "dev": "esbuild scripts/build.ts --format=cjs | node - --dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
+    "@vitejs/plugin-react": "^1.2.0",
     "electron": "^17.0.0",
-    "typescript": "^4.5.5"
+    "typescript": "^4.5.5",
+    "vite": "^2.8.1"
   },
   "workspaces": [
     "renderer",
