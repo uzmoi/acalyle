@@ -11,9 +11,15 @@
     "dev": "esbuild scripts/build.ts --format=cjs | node - --dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "dependencies": {
+    "polished": "^4.1.4"
+  },
   "devDependencies": {
     "@vitejs/plugin-react": "^1.2.0",
     "electron": "^17.0.0",
+    "stylelint": "^14.5.1",
+    "stylelint-config-recess-order": "^3.0.0",
+    "stylelint-config-standard": "^25.0.0",
     "typescript": "^4.5.5",
     "vite": "^2.8.1"
   },
