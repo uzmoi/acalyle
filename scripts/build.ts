@@ -1,21 +1,29 @@
+import { rm } from "fs/promises";
 import { spawn } from "child_process";
-import { build as esbuild } from "esbuild";
+import * as path from "path";
+import { build as esbuild, BuildOptions as ESBuildOptions } from "esbuild";
 import { build as viteBuild } from "vite";
 import { RollupWatcher } from "rollup";
 import electronPath = require("electron");
 
 const DEV = process.argv.includes("--dev");
+const ENV = DEV ? "development" : "production";
 
 (async () => {
-    const esbuildOptions = {
+    const assetsPath = path.join(__dirname, "app/assets");
+    await rm(assetsPath, { recursive: true, force: true });
+    const esbuildOptions: ESBuildOptions = {
         bundle: true,
         minify: !DEV,
         watch: DEV,
-    } as const;
+        define: {
+            "process.env.NODE_ENV": JSON.stringify(ENV),
+        },
+    };
     const mainPromise = esbuild({
         entryPoints: ["main/src/main.ts"],
         outfile: "app/main.js",
-        external: ["electron/main"],
+        external: ["electron"],
         platform: "node",
         ...esbuildOptions,
     });
@@ -26,7 +34,9 @@ const DEV = process.argv.includes("--dev");
         ...esbuildOptions,
     });
     const rendererPromise = viteBuild({
+        mode: ENV,
         build: {
+            minify: !DEV,
             watch: DEV ? {} : void 0,
             emptyOutDir: false,
         },
@@ -43,4 +53,7 @@ const DEV = process.argv.includes("--dev");
             renderer.close();
         });
     }
-})().catch(() => process.exit(1));
+})().catch(err => {
+    console.error(err);
+    process.exit(1);
+});
