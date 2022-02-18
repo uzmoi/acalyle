@@ -16,6 +16,15 @@ const createWindow = () => {
 };
 
 void app.whenReady().then(() => {
+    if(process.env.NODE_ENV === "development") {
+        void import("electron-devtools-installer")
+            .then(({ default: installExtension, REACT_DEVELOPER_TOOLS }) =>
+                installExtension(REACT_DEVELOPER_TOOLS, {
+                    loadExtensionOptions: { allowFileAccess: true },
+                })
+            )
+            .catch(console.error);
+    }
     createWindow();
     ipcMain.handle(cannels.CWD, () => process.cwd());
 });
