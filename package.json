@@ -12,12 +12,14 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "@prisma/client": "^3.9.2",
     "polished": "^4.1.4"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^1.2.0",
     "electron": "^17.0.0",
     "electron-devtools-installer": "^3.2.0",
+    "prisma": "^3.9.2",
     "stylelint": "^14.5.1",
     "stylelint-config-recess-order": "^3.0.0",
     "stylelint-config-standard": "^25.0.0",
