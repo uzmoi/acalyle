@@ -15,6 +15,7 @@ const ENV = DEV ? "development" : "production";
     const esbuildOptions: ESBuildOptions = {
         bundle: true,
         minify: !DEV,
+        sourcemap: DEV,
         watch: DEV,
         define: {
             "process.env.NODE_ENV": JSON.stringify(ENV),
@@ -37,6 +38,7 @@ const ENV = DEV ? "development" : "production";
         mode: ENV,
         build: {
             minify: !DEV,
+            sourcemap: DEV,
             watch: DEV ? {} : void 0,
             emptyOutDir: false,
         },
