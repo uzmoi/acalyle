@@ -16,6 +16,7 @@
     "polished": "^4.1.4"
   },
   "devDependencies": {
+    "@stylelint/postcss-css-in-js": "^0.37.2",
     "@vitejs/plugin-react": "^1.2.0",
     "electron": "^17.0.0",
     "electron-devtools-installer": "^3.2.0",
