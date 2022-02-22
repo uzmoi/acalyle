@@ -13,6 +13,7 @@ const ENV = DEV ? "development" : "production";
     const assetsPath = path.join(__dirname, "app/assets");
     await rm(assetsPath, { recursive: true, force: true });
     const esbuildOptions: ESBuildOptions = {
+        platform: "node",
         bundle: true,
         minify: !DEV,
         sourcemap: DEV,
@@ -25,7 +26,6 @@ const ENV = DEV ? "development" : "production";
         entryPoints: ["main/src/main.ts"],
         outfile: "app/main.js",
         external: ["electron"],
-        platform: "node",
         ...esbuildOptions,
     });
     const preloadPromise = esbuild({
