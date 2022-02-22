@@ -1,14 +1,11 @@
 import { contextBridge, ipcRenderer } from "electron/renderer";
-import * as cannels from "./cannels";
+import { Acalyle, channels } from "../../main/src/ipc";
 
-export interface Acalyle {
-    cwd(): Promise<string>;
+const acalyle: Partial<Acalyle> = {};
+
+for(const name of Object.keys(channels) as (keyof typeof channels)[]) {
+    acalyle[name] = (...args: unknown[]) =>
+        ipcRenderer.invoke(channels[name], ...args);
 }
-
-const acalyle: Acalyle = {
-    cwd() {
-        return ipcRenderer.invoke(cannels.CWD);
-    },
-};
 
 contextBridge.exposeInMainWorld("acalyle", acalyle);

@@ -1,6 +1,6 @@
 import path = require("path");
 import { app, BrowserWindow, ipcMain } from "electron/main";
-import * as cannels from "../../preload/src/cannels";
+import { acalyle, channels } from "./ipc";
 
 app.disableHardwareAcceleration();
 
@@ -26,7 +26,12 @@ void app.whenReady().then(() => {
             .catch(console.error);
     }
     createWindow();
-    ipcMain.handle(cannels.CWD, () => process.cwd());
+    for(const name of Object.keys(channels) as (keyof typeof channels)[]) {
+        ipcMain.handle(channels[name], (_, ...args) => {
+            const f: (...args: any) => unknown = acalyle[name];
+            return f(...args);
+        });
+    }
 });
 
 app.on("window-all-closed", () => {
