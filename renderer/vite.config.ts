@@ -8,10 +8,16 @@ export default defineConfig({
     base: "./",
     plugins: [
         react(),
-        linaria({ include: ["**/*.tsx"] }),
+        linaria({
+            include: ["**/*.(ts|tsx)"],
+            sourceMap: true,
+        }),
     ],
     build: {
-        outDir: "../app",
+        minify: "terser",
         polyfillModulePreload: false,
+        outDir: "../app",
+        assetsDir: "",
+        emptyOutDir: false,
     },
 });

@@ -1,3 +1,3 @@
 {
-    "stylelint.validate": ["css", "typescriptreact"],
+    "stylelint.validate": ["css", "typescript", "typescriptreact"],
 }

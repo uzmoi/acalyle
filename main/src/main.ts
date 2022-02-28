@@ -12,7 +12,11 @@ const createWindow = () => {
         width: 800,
         height: 600,
     });
-    win.loadFile(path.join(__dirname, "index.html"));
+    if(process.env.NODE_ENV === "development") {
+        win.loadURL(process.env.DEV_SERVER_URL!);
+    } else {
+        win.loadFile(path.join(__dirname, "index.html"));
+    }
 };
 
 void app.whenReady().then(() => {
