@@ -1,6 +1,6 @@
 import path = require("path");
 import { app, BrowserWindow, ipcMain } from "electron/main";
-import { acalyle, channels } from "./ipc";
+import { ipc, ipcChannels } from "./ipc";
 
 app.disableHardwareAcceleration();
 
@@ -30,9 +30,9 @@ void app.whenReady().then(() => {
             .catch(console.error);
     }
     createWindow();
-    for(const name of Object.keys(channels) as (keyof typeof channels)[]) {
-        ipcMain.handle(channels[name], (_, ...args) => {
-            const f: (...args: any) => unknown = acalyle[name];
+    for(const name of Object.keys(ipcChannels) as (keyof typeof ipcChannels)[]) {
+        ipcMain.handle(ipcChannels[name], (_, ...args) => {
+            const f: (...args: any) => unknown = ipc[name];
             return f(...args);
         });
     }
