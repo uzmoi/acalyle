@@ -3,5 +3,6 @@
         "prisma.prisma",
         "stylelint.vscode-stylelint",
         "styled-components.vscode-styled-components",
+        "GraphQL.vscode-graphql",
     ]
 }

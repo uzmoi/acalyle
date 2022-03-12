@@ -9,10 +9,13 @@
   "scripts": {
     "build": "esbuild scripts/build.ts --format=cjs | node",
     "dev": "esbuild scripts/build.ts --format=cjs | node - --dev",
+    "relay": "relay-compiler",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "@prisma/client": "^3.10.0",
+    "emnorst": "^0.5.0",
+    "graphql": "^16.3.0",
     "polished": "^4.1.4"
   },
   "devDependencies": {
@@ -21,6 +24,7 @@
     "electron": "^17.0.1",
     "electron-devtools-installer": "^3.2.0",
     "prisma": "^3.10.0",
+    "relay-compiler": "^13.1.1",
     "stylelint": "^14.5.2",
     "stylelint-config-recess-order": "^3.0.0",
     "stylelint-config-standard": "^25.0.0",

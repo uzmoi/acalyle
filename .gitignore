@@ -1,4 +1,5 @@
 app/
 node_modules/
+__generated__/
 prisma/*
 !schema.prisma

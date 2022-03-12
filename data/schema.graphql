@@ -1,0 +1,7 @@
+schema {
+    query: Root
+}
+
+type Root {
+    data: String
+}
