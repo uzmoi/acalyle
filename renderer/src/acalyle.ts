@@ -4,6 +4,18 @@ import type { IPC } from "main/src/ipc";
 
 declare const ipc: IPC;
 
+declare module globalThis {
+    let ipc: IPC;
+}
+
+if(import.meta.vitest) {
+    const { vi } = import.meta.vitest;
+    globalThis.ipc = {
+        cwd: vi.fn().mockResolvedValue("cwd"),
+        graphql: vi.fn(),
+    };
+}
+
 export const relayEnv = new Environment({
     network: Network.create(async (params, variables): Promise<GraphQLResponse> => {
         if(params.text) {

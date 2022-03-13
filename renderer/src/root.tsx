@@ -37,3 +37,20 @@ export const root = (
         </RelayEnvironmentProvider>
     </StrictMode>
 );
+
+if(import.meta.vitest) {
+    const { vi, it, expect } = import.meta.vitest;
+    vi.mock("./acalyle", () => {
+        return {
+            acalyle: {
+                cwd: vi.fn().mockResolvedValue("cwd"),
+            },
+            relayEnv: null,
+        };
+    });
+    const { render } = await import("@testing-library/react");
+    it("vitest test", async () => {
+        const { findByText } = render(<Cwd />);
+        expect(await findByText("cwd")).toBeInTheDocument();
+    });
+}
