@@ -1,3 +1,4 @@
+import { css } from "@linaria/core";
 import { StrictMode, Suspense, useEffect, useState, VFC } from "react";
 import { graphql, RelayEnvironmentProvider, useLazyLoadQuery } from "react-relay";
 import { acalyle, relayEnv } from "./acalyle";
@@ -12,6 +13,19 @@ const Cwd: VFC = () => {
 
     return <p>{cwd}</p>;
 };
+
+css`
+    ${":global()"} {
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+        }
+    }
+`;
 
 export const App: VFC = ({  }) => {
     const { data } = useLazyLoadQuery<rootQuery>(graphql`
