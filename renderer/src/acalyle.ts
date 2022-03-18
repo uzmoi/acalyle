@@ -1,10 +1,12 @@
-import { Environment, Network, Store, RecordSource, GraphQLResponse } from "relay-runtime";
-import {  } from "react-relay";
 import type { IPC } from "main/src/ipc";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { Environment, GraphQLResponse, Network, RecordSource, Store } from "relay-runtime";
+import {  } from "react-relay";
 
 declare const ipc: IPC;
 
-declare module globalThis {
+// eslint-disable-next-line @typescript-eslint/no-namespace
+declare namespace globalThis {
     let ipc: IPC;
 }
 
@@ -21,6 +23,7 @@ export const relayEnv = new Environment({
         if(params.text) {
             const result = await ipc.graphql(params.text, variables);
             return {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 data: result.data || undefined!,
                 errors: result.errors?.map(err => ({
                     message: err.message,

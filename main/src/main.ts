@@ -1,5 +1,5 @@
+import { BrowserWindow, app, ipcMain } from "electron/main";
 import path = require("path");
-import { app, BrowserWindow, ipcMain } from "electron/main";
 import { ipc, ipcChannels } from "./ipc";
 
 app.disableHardwareAcceleration();
@@ -13,14 +13,16 @@ const createWindow = () => {
         height: 600,
     });
     if(process.env.NODE_ENV === "development") {
-        win.loadURL(process.env.DEV_SERVER_URL!);
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        void win.loadURL(process.env.DEV_SERVER_URL!);
     } else {
-        win.loadFile(path.join(__dirname, "index.html"));
+        void win.loadFile(path.join(__dirname, "index.html"));
     }
 };
 
 void app.whenReady().then(() => {
     if(process.env.NODE_ENV === "development") {
+        // eslint-disable-next-line import/no-extraneous-dependencies
         void import("electron-devtools-installer")
             .then(({ default: installExtension, REACT_DEVELOPER_TOOLS }) =>
                 installExtension(REACT_DEVELOPER_TOOLS, {
@@ -32,7 +34,9 @@ void app.whenReady().then(() => {
     createWindow();
     for(const name of Object.keys(ipcChannels) as (keyof typeof ipcChannels)[]) {
         ipcMain.handle(ipcChannels[name], (_, ...args) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const f: (...args: any) => unknown = ipc[name];
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             return f(...args);
         });
     }

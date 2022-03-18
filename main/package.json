@@ -6,5 +6,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@prisma/client": "^3.11.0",
+    "emnorst": "^0.5.0",
+    "graphql": "^16.3.0"
   }
 }

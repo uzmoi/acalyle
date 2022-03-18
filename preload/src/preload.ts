@@ -1,4 +1,5 @@
 import { contextBridge, ipcRenderer } from "electron/renderer";
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { IPC, ipcChannels } from "main/src/ipc";
 
 const ipc: Partial<IPC> = {};

@@ -1,7 +1,8 @@
-import { defineConfig } from "vite";
 import type {} from "vitest";
-import react from "@vitejs/plugin-react";
 import linaria from "@linaria/rollup";
+import react from "@vitejs/plugin-react";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { defineConfig } from "vite";
 import relay from "vite-plugin-relay";
 
 // https://vitejs.dev/config/

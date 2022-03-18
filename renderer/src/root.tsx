@@ -1,14 +1,14 @@
 import { css } from "@linaria/core";
-import { StrictMode, Suspense, useEffect, useState, VFC } from "react";
-import { graphql, RelayEnvironmentProvider, useLazyLoadQuery } from "react-relay";
-import { acalyle, relayEnv } from "./acalyle";
+import { StrictMode, Suspense, VFC, useEffect, useState } from "react";
+import { RelayEnvironmentProvider, graphql, useLazyLoadQuery } from "react-relay";
 import { rootQuery } from "./__generated__/rootQuery.graphql";
+import { acalyle, relayEnv } from "./acalyle";
 
 const Cwd: VFC = () => {
     const [cwd, setCwd] = useState("");
 
     useEffect(() => {
-        acalyle.cwd().then(setCwd);
+        void acalyle.cwd().then(setCwd);
     }, []);
 
     return <p>{cwd}</p>;
@@ -27,7 +27,7 @@ css`
     }
 `;
 
-export const App: VFC = ({  }) => {
+export const App: VFC = () => {
     const { data } = useLazyLoadQuery<rootQuery>(graphql`
         query rootQuery {
             data
@@ -62,6 +62,7 @@ if(import.meta.vitest) {
             relayEnv: null,
         };
     });
+    // eslint-disable-next-line import/no-extraneous-dependencies
     const { render } = await import("@testing-library/react");
     it("vitest test", async () => {
         const { findByText } = render(<Cwd />);

@@ -1,10 +1,10 @@
-import { rm } from "fs/promises";
 import { spawn } from "child_process";
-import { EventEmitter } from "events";
-import * as path from "path";
-import { build as esbuild, BuildOptions as ESBuildOptions } from "esbuild";
-import { build as viteBuild, createServer as createViteServer } from "vite";
 import electronPath = require("electron");
+import { BuildOptions as ESBuildOptions, build as esbuild } from "esbuild";
+import { EventEmitter } from "events";
+import { rm } from "fs/promises";
+import * as path from "path";
+import { createServer as createViteServer, build as viteBuild } from "vite";
 
 const DEV = process.argv.includes("--dev");
 const ENV = DEV ? "development" : "production";
@@ -29,9 +29,10 @@ const ENV = DEV ? "development" : "production";
     if(DEV) {
         const viteDevServer = await createViteServer({ configFile: rendererConfigFile });
         await viteDevServer.listen();
-        emitter.once("close", () => viteDevServer.close());
+        emitter.once("close", () => void viteDevServer.close());
         const { base, server } = viteDevServer.config;
         Object.assign(esbuildOptions.define, {
+            // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
             "process.env.DEV_SERVER_URL": `"http://localhost:${server.port + base}"`,
         });
     } else {

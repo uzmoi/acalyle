@@ -1,4 +1,4 @@
-import "electron";
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 global {
     namespace NodeJS {
@@ -7,3 +7,5 @@ global {
         }
     }
 }
+
+export {};
