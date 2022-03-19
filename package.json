@@ -22,6 +22,8 @@
     "esbuild": "^0.14.27",
     "eslint": "^8.11.0",
     "eslint-plugin-oreore-config": "github:rizzzse/eslint-plugin-oreore-config#build",
+    "eslint-plugin-react": "^7.29.4",
+    "eslint-plugin-react-hooks": "^4.3.0",
     "happy-dom": "^2.49.0",
     "jest-extended": "^2.0.0",
     "prisma": "^3.11.0",

@@ -7,6 +7,7 @@ module.exports = {
     parserOptions: {
         project: "tsconfig.json",
     },
+    ignorePatterns: ["app", "**/__generated__/**", "setup-test.ts"],
     overrides: [
         {
             files: "*.config.*",
@@ -30,6 +31,21 @@ module.exports = {
             files: "renderer/**",
             parserOptions: {
                 project: "renderer/tsconfig.json",
+            },
+        },
+        {
+            files: "*.tsx",
+            extends: [
+                "plugin:react/recommended",
+                "plugin:react/jsx-runtime",
+                "plugin:react-hooks/recommended",
+                // "plugin:oreore-config/react",
+            ],
+            settings: {
+                react: { version: "detect" },
+            },
+            rules: {
+                "react/prop-types": "off",
             },
         },
     ],
