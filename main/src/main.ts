@@ -1,8 +1,11 @@
-import { BrowserWindow, app, ipcMain } from "electron/main";
+import { BrowserWindow, app, ipcMain, nativeTheme } from "electron/main";
 import path = require("path");
 import { ipc, ipcChannels } from "./ipc";
 
 app.disableHardwareAcceleration();
+if(process.env.NODE_ENV === "development") {
+    nativeTheme.themeSource = "dark";
+}
 
 const createWindow = () => {
     const win = new BrowserWindow({
