@@ -2,11 +2,34 @@ import type {} from "vitest";
 import linaria from "@linaria/rollup";
 import react from "@vitejs/plugin-react";
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { defineConfig } from "vite";
+import { Plugin, defineConfig } from "vite";
 import relay from "vite-plugin-relay";
 
+const html = (define: Record<string, string> = {}): Plugin => ({
+    name: "html-replace",
+    transformIndexHtml: html => html
+        .replace(/\$\w+/g, varName => String(define[varName.slice(1)]))
+        .replace(
+            /<!--\s*if(.+?)\s*-->[^]*?<!--\s*fi\s*-->/g,
+            (match, test: string) => {
+                const eq = /^\[(\w+)([!=^$*]=)(\w+)\]$/.exec(test.replace(/\s+/g, ""));
+                if(eq) {
+                    const [, lhs, op, rhs] = eq;
+                    return {
+                        "=": lhs === rhs,
+                        "!": lhs !== rhs,
+                        "^": lhs.startsWith(rhs),
+                        "$": lhs.endsWith(rhs),
+                        "*": lhs.includes(rhs),
+                    }[op[0]] ? match : "";
+                }
+                return match;
+            },
+        ),
+});
+
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(env => ({
     root: __dirname,
     base: "./",
     define: {
@@ -19,6 +42,9 @@ export default defineConfig({
             sourceMap: true,
         }),
         relay,
+        html({
+            mode: env.mode,
+        }),
     ],
     build: {
         minify: "terser",
@@ -33,4 +59,4 @@ export default defineConfig({
         includeSource: ["src/**/*.{ts,tsx}"],
         setupFiles: ["setup-test.ts"],
     },
-});
+}));
