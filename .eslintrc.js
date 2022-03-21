@@ -7,7 +7,7 @@ module.exports = {
     parserOptions: {
         project: "tsconfig.json",
     },
-    ignorePatterns: ["app", "**/__generated__/**", "setup-test.ts"],
+    ignorePatterns: ["app", "**/__generated__/**"],
     overrides: [
         {
             files: "*.config.*",

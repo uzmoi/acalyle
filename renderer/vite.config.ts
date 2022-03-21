@@ -57,6 +57,6 @@ export default defineConfig(env => ({
         globals: true,
         environment: "happy-dom",
         includeSource: ["src/**/*.{ts,tsx}"],
-        setupFiles: ["setup-test.ts"],
+        setupFiles: ["@testing-library/jest-dom"],
     },
 }));
