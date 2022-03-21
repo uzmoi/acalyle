@@ -9,7 +9,6 @@
   "scripts": {
     "build": "esbuild scripts/build.ts --format=cjs | node",
     "dev": "esbuild scripts/build.ts --format=cjs | node - --dev",
-    "relay": "relay-compiler",
     "test": "npm test -w renderer",
     "coverage": "npm run coverage -w renderer"
   },

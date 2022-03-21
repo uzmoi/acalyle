@@ -1,5 +1,6 @@
+/* eslint-disable import/unambiguous */
 module.exports = {
-    src: "./renderer/src",
+    src: "./renderer",
     schema: "./data/schema.graphql",
     exclude: [
         "**/node_modules/**",
