@@ -4,6 +4,7 @@
     "compilerOptions": {
         "lib": ["DOM", "DOM.Iterable", "ES2020"],
         "module": "ES2022",
+        "jsx": "react-jsx",
         "types": [],
     },
 }
