@@ -24,7 +24,6 @@
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.3.0",
     "happy-dom": "^2.49.0",
-    "jest-extended": "^2.0.0",
     "prisma": "^3.11.0",
     "relay-compiler": "^13.2.0",
     "stylelint": "^14.6.0",
