@@ -25,13 +25,16 @@ const createWindow = () => {
 
 void app.whenReady().then(() => {
     if(process.env.NODE_ENV === "development") {
+        const RELAY_DEVELOPER_TOOLS = "ncedobpgnmkhcmnnkcimnobpfepidadl";
         // eslint-disable-next-line import/no-extraneous-dependencies
         void import("electron-devtools-installer")
-            .then(({ default: installExtension, REACT_DEVELOPER_TOOLS }) =>
-                installExtension(REACT_DEVELOPER_TOOLS, {
-                    loadExtensionOptions: { allowFileAccess: true },
-                })
-            )
+            .then(({ default: installExtension, REACT_DEVELOPER_TOOLS }) => installExtension(
+                [
+                    REACT_DEVELOPER_TOOLS,
+                    RELAY_DEVELOPER_TOOLS,
+                ],
+                { loadExtensionOptions: { allowFileAccess: true } },
+            ))
             .catch(console.error);
     }
     createWindow();
