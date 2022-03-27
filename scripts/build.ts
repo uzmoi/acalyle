@@ -41,6 +41,7 @@ const spawnWithLogger = (name: string, path: string, args: readonly string[]) =>
         bundle: true,
         minify: !DEV,
         sourcemap: DEV,
+        watch: DEV,
         define: {
             "process.env.NODE_ENV": `"${ENV}"`,
         },
@@ -70,9 +71,9 @@ const spawnWithLogger = (name: string, path: string, args: readonly string[]) =>
 
     await esbuild({
         ...esbuildOptions,
-        entryPoints: ["main/src/main.ts"],
-        outfile: "app/main.js",
-        external: ["electron"],
+        entryPoints: ["main/src/main.ts", ...DEV ? ["main/src/ipc.ts"] : []],
+        ...DEV ? { outdir: "app" } : { outfile: "app/main.js" },
+        external: ["electron", ...DEV ? ["./ipc"] : []],
     });
     await esbuild({
         ...esbuildOptions,

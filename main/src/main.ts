@@ -23,6 +23,16 @@ const createWindow = () => {
     }
 };
 
+const handleIpc = <T extends string>(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ipc: Record<T, (...args: any) => unknown>,
+    ipcChannels: Record<T, string>,
+) => {
+    for(const name of Object.keys(ipcChannels) as (keyof typeof ipcChannels)[]) {
+        ipcMain.handle(ipcChannels[name], (_, ...args) => ipc[name].apply(null, args));
+    }
+};
+
 void app.whenReady().then(() => {
     if(process.env.NODE_ENV === "development") {
         const RELAY_DEVELOPER_TOOLS = "ncedobpgnmkhcmnnkcimnobpfepidadl";
@@ -38,13 +48,35 @@ void app.whenReady().then(() => {
             .catch(console.error);
     }
     createWindow();
-    for(const name of Object.keys(ipcChannels) as (keyof typeof ipcChannels)[]) {
-        ipcMain.handle(ipcChannels[name], (_, ...args) => {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const f: (...args: any) => unknown = ipc[name];
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-            return f(...args);
+    if(process.env.NODE_ENV === "development") {
+        type Dispose = () => void;
+        type HmrAction = (...x: never[]) => Dispose | void;
+        const hmr = async (paths: string[], hmrAction: HmrAction) => {
+            let dispose: Dispose | void;
+            const chokidar = await import("chokidar");
+            const watcher = chokidar.watch(paths.map(path => require.resolve(path)), {
+                cwd: __dirname,
+            });
+            watcher.on("all", (_, updatedFilePath) => {
+                const resolvedPath = require.resolve(path.join(__dirname, updatedFilePath));
+                console.log("hmr", path.relative(process.cwd(), resolvedPath));
+                delete require.cache[resolvedPath];
+                dispose?.();
+                // @ts-expect-error: never
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+                dispose = hmrAction(...paths.map(require));
+            });
+        };
+        void hmr(["./ipc"], ({ ipc, ipcChannels }: typeof import("./ipc")) => {
+            handleIpc(ipc, ipcChannels);
+            return () => {
+                for(const name of Object.keys(ipcChannels) as (keyof typeof ipcChannels)[]) {
+                    ipcMain.removeHandler(ipcChannels[name]);
+                }
+            };
         });
+    } else {
+        handleIpc(ipc, ipcChannels);
     }
 });
 
