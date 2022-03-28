@@ -70,8 +70,8 @@ void app.whenReady().then(() => {
         void hmr(["./ipc"], ({ ipc, ipcChannels }: typeof import("./ipc")) => {
             handleIpc(ipc, ipcChannels);
             return () => {
-                for(const name of Object.keys(ipcChannels) as (keyof typeof ipcChannels)[]) {
-                    ipcMain.removeHandler(ipcChannels[name]);
+                for(const channel of Object.values(ipcChannels)) {
+                    ipcMain.removeHandler(channel);
                 }
             };
         });
