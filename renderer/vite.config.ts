@@ -39,7 +39,7 @@ export default defineConfig(env => ({
         react(),
         linaria({
             include: ["**/*.(ts|tsx)"],
-            sourceMap: true,
+            sourceMap: env.mode === "develepment",
         }),
         relay,
         html({
@@ -52,6 +52,7 @@ export default defineConfig(env => ({
         outDir: "../app",
         assetsDir: "",
         emptyOutDir: false,
+        sourcemap: env.mode === "develepment",
     },
     test: {
         globals: true,
