@@ -15,13 +15,11 @@ import {
 const DEV = process.argv.includes("--dev");
 const ENV = DEV ? "development" : "production";
 
-const exitHandlers: (() => void)[] = [];
-
 const spawnWithLogger = (name: string, path: string, args: readonly string[]) => {
     const logger = createLogger(undefined, { prefix: `[${name}]` });
     const child = spawn(path, args);
-    exitHandlers.push(() => child.killed || child.kill());
-    child.on("exit", () => exitHandlers.forEach(f => f()));
+    process.once("exit", () => child.killed || child.kill());
+    child.once("exit", code => process.exit(code ?? void 0));
     child.stdout?.on("data", chuck => {
         logger.info(String(chuck).trim(), { timestamp: true });
     });
@@ -55,11 +53,6 @@ const spawnWithLogger = (name: string, path: string, args: readonly string[]) =>
     if(DEV) {
         const viteDevServer = await createViteServer(rendererViteConfig);
         await viteDevServer.listen();
-        exitHandlers.push(() => {
-            if(viteDevServer.httpServer?.listening) {
-                void viteDevServer.close();
-            }
-        });
         const { base, server } = viteDevServer.config;
         Object.assign(esbuildOptions.define, {
             // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
