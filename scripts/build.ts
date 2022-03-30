@@ -15,11 +15,20 @@ import {
 const DEV = process.argv.includes("--dev");
 const ENV = DEV ? "development" : "production";
 
-const spawnWithLogger = (name: string, path: string, args: readonly string[]) => {
+const spawnWithLogger = (
+    name: string,
+    path: string,
+    args: readonly string[],
+    shouldExitOnExit: boolean,
+) => {
     const logger = createLogger(undefined, { prefix: `[${name}]` });
     const child = spawn(path, args);
     process.once("exit", () => child.killed || child.kill());
-    child.once("exit", code => process.exit(code ?? void 0));
+    child.once("exit", code => {
+        if(shouldExitOnExit || code !== 0) {
+            process.exit(code ?? void 0);
+        }
+    });
     child.stdout?.on("data", chuck => {
         logger.info(String(chuck).trim(), { timestamp: true });
     });
@@ -45,7 +54,7 @@ const spawnWithLogger = (name: string, path: string, args: readonly string[]) =>
         },
     };
 
-    spawnWithLogger("relay-compiler", String(relayPath), DEV ? ["--watch"] : []);
+    spawnWithLogger("relay-compiler", String(relayPath), DEV ? ["--watch"] : [], false);
 
     const rendererViteConfig: ViteInlineConfig = {
         configFile: "renderer/vite.config.ts",
@@ -76,7 +85,7 @@ const spawnWithLogger = (name: string, path: string, args: readonly string[]) =>
     });
 
     if(DEV) {
-        spawnWithLogger("electron", String(electronPath), ["."]);
+        spawnWithLogger("electron", String(electronPath), ["."], true);
     }
 })().catch(err => {
     console.error(err);
