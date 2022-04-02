@@ -3,6 +3,7 @@ node_modules/
 __generated__/
 prisma/*
 !schema.prisma
+data/schema.graphql
 
 _*
 *.local
