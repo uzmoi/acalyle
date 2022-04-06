@@ -6,3 +6,9 @@ datasource db {
 generator client {
     provider = "prisma-client-js"
 }
+
+model Book {
+    id        String   @id
+    title     String
+    createdAt DateTime
+}

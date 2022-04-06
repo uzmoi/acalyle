@@ -1,5 +1,6 @@
 import { JsonValue } from "emnorst";
 import { ExecutionResult, graphql } from "graphql";
+import { context } from "./context";
 import { graphQLSchema } from "./schema";
 
 export const ipcChannels: Record<keyof typeof ipc, string> = {
@@ -13,6 +14,7 @@ export const ipc = {
     },
     graphql(query: string, variables: Record<string, JsonValue>): Promise<ExecutionResult> {
         return graphql({
+            contextValue: context,
             schema: graphQLSchema,
             source: query,
             variableValues: variables,
