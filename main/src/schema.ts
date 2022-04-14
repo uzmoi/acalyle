@@ -69,7 +69,10 @@ const Query = [
                     orderBy: { createdAt: "desc" },
                 });
                 return nodes.map(gqlBook);
-            }
+            },
+            totalCount(_, __, { prisma }) {
+                return prisma.book.count();
+            },
         });
     }),
 ];
@@ -123,7 +126,11 @@ const Mutation = [
 export const graphQLSchema = makeSchema({
     types: [...Query, ...Mutation],
     plugins: [
-        connectionPlugin(),
+        connectionPlugin({
+            extendConnection: {
+                totalCount: { type: nonNull("Int") },
+            },
+        }),
     ],
     nonNullDefaults: { output: true },
     outputs: {
