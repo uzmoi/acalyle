@@ -51,10 +51,21 @@ const Query = [
             type: Book,
             cursorFromNode: node => node.id,
             async nodes(_, args, { prisma }) {
+                let cursor: string | null | undefined;
+                let take: number | undefined;
+                if(args.first != null) {
+                    // forward pagination
+                    cursor = args.after;
+                    take = args.first + 1;
+                } else if(args.last != null) {
+                    // backward pagination
+                    cursor = args.before;
+                    take = -(args.last + 1);
+                }
                 const nodes = await prisma.book.findMany({
-                    cursor: args.before || args.after ? { id: args.before || args.after || undefined } : undefined,
-                    skip: args.before || args.after ? 1 : 0,
-                    take: (args.first ?? args.last ?? 0) + 1,
+                    cursor: cursor != null ? { id: cursor } : undefined,
+                    skip: cursor != null ? 1 : 0,
+                    take,
                     orderBy: { createdAt: "desc" },
                 });
                 return nodes.map(gqlBook);
