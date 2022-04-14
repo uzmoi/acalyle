@@ -10,6 +10,7 @@ import {
     queryField,
 } from "nexus";
 import path = require("path");
+import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 
 const Node = interfaceType({
@@ -74,7 +75,7 @@ const Mutation = [
             const book = await prisma.book.create({
                 data: {
                     title: validBookTitle,
-                    id: "uuid",
+                    id: uuidv4(),
                     createdAt: new Date(),
                 },
             });
