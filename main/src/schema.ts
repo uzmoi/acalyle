@@ -55,6 +55,7 @@ const Query = [
                     cursor: args.before || args.after ? { id: args.before || args.after || undefined } : undefined,
                     skip: args.before || args.after ? 1 : 0,
                     take: (args.first ?? args.last ?? 0) + 1,
+                    orderBy: { createdAt: "desc" },
                 });
                 return nodes.map(gqlBook);
             }
