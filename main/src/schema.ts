@@ -38,10 +38,10 @@ const Query = [
     queryField("data", { type: "String", resolve: () => "Hello nexus" }),
     queryField("book", {
         type: nullable(Book),
-        args: { id: "ID" },
+        args: { id: nonNull("ID") },
         async resolve(_, args, { prisma }) {
             const book = await prisma.book.findUnique({
-                where: { id: args.id ?? undefined },
+                where: { id: args.id },
             });
             return book && gqlBook(book);
         }
