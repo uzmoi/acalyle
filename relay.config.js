@@ -8,4 +8,5 @@ module.exports = {
         "**/__generated__/**",
     ],
     language: "typescript",
+    eagerEsModules: true,
 };
