@@ -1,9 +1,8 @@
-import { VFC } from "react";
 import { graphql, usePaginationFragment } from "react-relay";
 import { BookListFragment$key } from "./__generated__/BookListFragment.graphql";
 import { BookListPaginationQuery } from "./__generated__/BookListPaginationQuery.graphql";
 
-export const BookList: VFC<{
+export const BookList: React.FC<{
     queryRef: BookListFragment$key;
 }> = ({ queryRef }) => {
     const {

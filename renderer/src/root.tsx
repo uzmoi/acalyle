@@ -1,5 +1,5 @@
 import { css } from "@linaria/core";
-import { StrictMode, Suspense, VFC, useEffect, useState } from "react";
+import { StrictMode, Suspense, useEffect, useState } from "react";
 import { RelayEnvironmentProvider } from "react-relay";
 import { acalyle, relayEnv } from "./acalyle";
 import { BookListPage } from "./components/pages/books";
@@ -17,7 +17,7 @@ css`
     }
 `;
 
-export const App: VFC = () => {
+export const App: React.FC = () => {
     return (
         <div>
             <BookListPage />
@@ -35,7 +35,7 @@ export const root = (
     </StrictMode>
 );
 
-const Cwd: VFC = () => {
+const Cwd: React.FC = () => {
     const [cwd, setCwd] = useState("");
 
     useEffect(() => {
