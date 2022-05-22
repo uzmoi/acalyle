@@ -5,6 +5,7 @@ import { readdir, rm } from "fs/promises";
 import * as path from "path";
 // @ts-expect-error: Only used as a path.
 import relayPath = require("relay-compiler");
+// eslint-disable-next-line import/no-extraneous-dependencies
 import {
     InlineConfig as ViteInlineConfig,
     createLogger,
