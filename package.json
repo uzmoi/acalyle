@@ -14,8 +14,6 @@
   },
   "devDependencies": {
     "@stylelint/postcss-css-in-js": "^0.37.2",
-    "@testing-library/jest-dom": "^5.16.2",
-    "@testing-library/react": "^12.1.4",
     "electron": "^17.1.2",
     "electron-devtools-installer": "^3.2.0",
     "esbuild": "^0.14.27",
