@@ -1,7 +1,7 @@
 import { spawn } from "child_process";
 import electronPath = require("electron");
 import { BuildOptions as ESBuildOptions, build as esbuild } from "esbuild";
-import { readdir, rm } from "fs/promises";
+import { mkdir, open, readdir, rm } from "fs/promises";
 import * as path from "path";
 // @ts-expect-error: Only used as a path.
 import relayPath = require("relay-compiler");
@@ -39,10 +39,12 @@ const spawnWithLogger = (
 };
 
 (async () => {
-    const appPath = path.join(__dirname, "app");
-    await Promise.all((await readdir(appPath)).map(file =>
-        rm(path.join(appPath, file), { recursive: true, force: true })
+    await mkdir("app", { recursive: true });
+    await Promise.all((await readdir("app")).map(file =>
+        rm(path.join("app", file), { recursive: true, force: true })
     ));
+    await mkdir("data", { recursive: true });
+    await (await open("data/schema.graphql", "a")).close();
 
     const esbuildOptions: ESBuildOptions = {
         platform: "node",
