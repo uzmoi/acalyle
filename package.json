@@ -13,7 +13,7 @@
     "coverage": "npm run coverage -w renderer"
   },
   "devDependencies": {
-    "electron": "^17.4.5",
+    "electron": "^19.0.0",
     "electron-devtools-installer": "^3.2.0",
     "esbuild": "^0.14.39",
     "eslint": "^8.16.0",
