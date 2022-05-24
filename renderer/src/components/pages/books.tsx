@@ -1,9 +1,8 @@
-import { VFC } from "react";
 import { graphql, useLazyLoadQuery } from "react-relay";
 import { BookList } from "../data/BookList";
 import { booksQuery } from "./__generated__/booksQuery.graphql";
 
-export const BookListPage: VFC = () => {
+export const BookListPage: React.FC = () => {
     const queryRef = useLazyLoadQuery<booksQuery>(graphql`
         query booksQuery($count: Int!, $cursor: String) {
             ...BookListFragment

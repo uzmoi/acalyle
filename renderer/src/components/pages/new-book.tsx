@@ -2,7 +2,7 @@ import { useState } from "react";
 import { graphql, useMutation } from "react-relay";
 import { newBookCreateMutation } from "./__generated__/newBookCreateMutation.graphql";
 
-export const NewBookPage: React.VFC = () => {
+export const NewBookPage: React.FC = () => {
     const [title, setTitle] = useState("");
     const [commitNewBook, isInFlight] = useMutation<newBookCreateMutation>(graphql`
         mutation newBookCreateMutation($title: String!) {

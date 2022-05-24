@@ -3,7 +3,7 @@ import { Book } from "../data/Book";
 import { bookDeleteMutation } from "./__generated__/bookDeleteMutation.graphql";
 import { bookQuery } from "./__generated__/bookQuery.graphql";
 
-export const BookPage: React.VFC<{ id: string }> = ({ id }) => {
+export const BookPage: React.FC<{ id: string }> = ({ id }) => {
     const { book } = useLazyLoadQuery<bookQuery>(graphql`
         query bookQuery($id: ID!) {
             book(id: $id) {

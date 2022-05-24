@@ -1,4 +1,4 @@
-export const Book: React.VFC<{
+export const Book: React.FC<{
     book: { title: string, createdAt: string };
 }> = ({ book }) => {
     return (
