@@ -1,4 +1,4 @@
-import { BrowserWindow, app, ipcMain, nativeTheme } from "electron/main";
+import { BrowserWindow, LoadExtensionOptions, app, ipcMain, nativeTheme } from "electron/main";
 import path = require("path");
 import { ipc, ipcChannels } from "./ipc";
 
@@ -35,17 +35,19 @@ const handleIpc = <T extends string>(
 
 void app.whenReady().then(() => {
     if(process.env.NODE_ENV === "development") {
-        const RELAY_DEVELOPER_TOOLS = "ncedobpgnmkhcmnnkcimnobpfepidadl";
-        // eslint-disable-next-line import/no-extraneous-dependencies
-        void import("electron-devtools-installer")
-            .then(({ default: installExtension, REACT_DEVELOPER_TOOLS }) => installExtension(
-                [
-                    REACT_DEVELOPER_TOOLS,
-                    RELAY_DEVELOPER_TOOLS,
-                ],
-                { loadExtensionOptions: { allowFileAccess: true } },
-            ))
-            .catch(console.error);
+        void (async () => {
+            const RELAY_DEVELOPER_TOOLS = "ncedobpgnmkhcmnnkcimnobpfepidadl";
+            const {
+                default: installExtension,
+                REACT_DEVELOPER_TOOLS,
+                // eslint-disable-next-line import/no-extraneous-dependencies
+            } = await import("electron-devtools-installer");
+            const loadExtensionOptions: LoadExtensionOptions = { allowFileAccess: true };
+            await installExtension([
+                REACT_DEVELOPER_TOOLS,
+                RELAY_DEVELOPER_TOOLS,
+            ], { loadExtensionOptions });
+        })().catch(console.error);
     }
     createWindow();
     if(process.env.NODE_ENV === "development") {
