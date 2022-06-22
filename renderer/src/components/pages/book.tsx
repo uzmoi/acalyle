@@ -36,6 +36,7 @@ export const BookPage: React.FC<{ id: string }> = ({ id }) => {
 
     return (
         <div>
+            <a onClick={() => navigate("books")}>return to book list</a>
             <Book book={book} />
             <button onClick={deleteBook} disabled={isInFlight}>delete book</button>
         </div>
