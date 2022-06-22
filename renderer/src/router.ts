@@ -94,10 +94,10 @@ export class Route<Path extends string, ParamKeys extends string, R = unknown> {
         ...args: [ParamKeys] extends [never]
             ? [] : [matchParams: MatchParams<ParamKeys>]
     ): R | null;
-    match(link: Link<Path>, matchParams?: MatchParams<ParamKeys>): R | null {
-        const path = link.split("/");
+    match(link: Link<Path>, matchParams: MatchParams<ParamKeys> = {} as never): R | null {
+        const path = link.split("/").filter(Boolean);
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return this.get(path, matchParams!);
+        return this.get(path, matchParams);
     }
     static link<T extends Routing<string, string>>(): LinkCtor<PathNomalize<T["path"]>> {
         return <U extends string>(pattern: U, params?: MatchParams<ParseStringPath<U>>) =>
