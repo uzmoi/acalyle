@@ -170,3 +170,45 @@ export declare namespace Route {
     export type Routes<T extends Record<string, Routing<string, string>>> = NestRoutes<T, Extract<keyof T, string>>;
     export type Page<ParamKeys extends string = never> = Routing<"", ParamKeys>;
 }
+
+if(import.meta.vitest) {
+    const { it, expect } = import.meta.vitest;
+    const link = Route.link();
+    it("link", () => {
+        expect(link("")).toBe("");
+        expect(link("hoge")).toBe("hoge");
+        expect(link("/a///b")).toBe("a/b");
+        expect(link("normal/://:option?/:many*/", {
+            "": "any",
+            option: undefined,
+            many: ["a", "b"],
+        })).toBe("normal/any/a/b");
+    });
+    it("constructor", () => {
+        expect(Route.routes({})).toEqual({ routes: [] });
+        expect(Route.routes({
+            hoge: parsePattern as never,
+            ":fuga": parsePattern as never,
+            "piyo/piyoyo": parsePattern as never,
+        })).toEqual({
+            routes: [
+                { part: "hoge", route: parsePattern },
+                { part: parsePatternPart(":fuga"), route: parsePattern },
+                {
+                    part: "piyo",
+                    route: {
+                        routes: [{ part: "piyoyo", route: parsePattern }]
+                    },
+                },
+            ],
+        });
+    });
+    it("match path", () => {
+        type P = Routing<string, never>;
+        type R = MatchParams<never>;
+        const page = Route.page<never, R>(params => params);
+        expect(page.match(link(""))).toEqual({});
+        expect(Route.routes<P, R>({ "": page }).match(link(""))).toEqual({});
+        expect(Route.routes<P, R>({ hoge: page }).match(link("hoge"))).toEqual({});
+    });
+}
