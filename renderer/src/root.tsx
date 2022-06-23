@@ -2,8 +2,7 @@ import { css } from "@linaria/core";
 import { StrictMode, Suspense, useEffect, useState } from "react";
 import { RelayEnvironmentProvider } from "react-relay";
 import { acalyle, relayEnv } from "./acalyle";
-import { routes } from "./components/pages/routes";
-import { RootRoutes } from "./components/pages/routes-def";
+import { RootRoutes, routes } from "./components/pages/routes";
 import { Route } from "./router";
 import { RouteProvider } from "./router-react";
 
