@@ -2,7 +2,9 @@ import { css } from "@linaria/core";
 import { StrictMode, Suspense, useEffect, useState } from "react";
 import { RelayEnvironmentProvider } from "react-relay";
 import { acalyle, relayEnv } from "./acalyle";
-import { BookListPage } from "./components/pages/books";
+import { RootRoutes, routes } from "./components/pages/routes";
+import { Route } from "./router";
+import { RouteProvider } from "./router-react";
 
 css`
     ${":global()"} {
@@ -19,9 +21,10 @@ css`
 
 export const App: React.FC = () => {
     return (
-        <div>
-            <BookListPage />
-        </div>
+        <RouteProvider
+            routes={routes}
+            init={Route.link<RootRoutes>()("books")}
+        />
     );
 };
 

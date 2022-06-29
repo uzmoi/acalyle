@@ -1,4 +1,5 @@
 import { graphql, usePaginationFragment } from "react-relay";
+import { useLocation } from "../../router-react";
 import { BookListFragment$key } from "./__generated__/BookListFragment.graphql";
 import { BookListPaginationQuery } from "./__generated__/BookListPaginationQuery.graphql";
 
@@ -24,13 +25,16 @@ export const BookList: React.FC<{
             }
         }
     `, queryRef);
+    const [, navigate] = useLocation();
 
     return (
         <div>
             <ul>
                 {data.books.edges.map(({ node }) => (
                     <li key={node.id}>
-                        {node.title}
+                        <a onClick={() => navigate("books/:id", { id: node.id })}>
+                            {node.title}
+                        </a>
                     </li>
                 ))}
             </ul>
