@@ -1,9 +1,7 @@
-import { createContext, useContext, useRef, useState } from "react";
-import { Link, MatchParams, ParseStringPath, PathNomalize, Route, Routing } from "./router";
+import { useSyncExternalStore } from "react";
+import { MatchParams, ParseStringPath, Route } from "./router";
 
 type AcaRoutePath = AcaRoute["route"]["path"];
-
-const RouteContext = createContext<readonly [Link<AcaRoutePath>, Navigate<AcaRoutePath>]>(["" as Link<AcaRoutePath>, () => { /* - */ }]);
 
 interface Navigate<T extends string> {
     <U extends T>(pattern: U, params: MatchParams<ParseStringPath<U>>): void;
@@ -14,27 +12,37 @@ interface Navigate<T extends string> {
     ): void;
 }
 
-export const RouteProvider = <T extends AcaRoutePath>({ routes, init }: {
-    routes: Route<T, never, React.ReactNode>;
-    init: Link<PathNomalize<T>>;
-    children?: React.ReactNode;
-}) => {
-    const [location, setLocation] = useState<Link<PathNomalize<T>>>(init);
-    const value = useRef<[Link<PathNomalize<T>>, Navigate<T>]>([
-        location,
-        (pattern, params = {} as never) => {
-            const link = Route.link<Routing<T>>();
-            setLocation(link(pattern as never, params as never));
-        },
-    ]).current;
+export const useHashLocation = () => useSyncExternalStore(
+    onStoreChange => {
+        window.addEventListener("hashchange", onStoreChange);
+        return () => {
+            window.removeEventListener("hashchange", onStoreChange);
+        };
+    },
+    () => window.location.hash.slice(1),
+);
 
-    value[0] = location;
-
-    return (
-        <RouteContext.Provider value={value}>
-            {routes.match(location as never)}
-        </RouteContext.Provider>
-    );
+export const hashNavigate: Navigate<AcaRoutePath> = (pattern, params?) => {
+    window.location.hash = Route.link()(pattern, params as never);
 };
 
-export const useLocation = () => useContext(RouteContext);
+export const Link = <T extends AcaRoutePath>(props: (
+    { pattern: T }
+    & (T extends `${string}/:${string}` | `:${string}`
+        ? { params: MatchParams<ParseStringPath<T>> }
+        : { params?: undefined }
+    )
+    & Omit<React.ComponentPropsWithoutRef<"a">, "href">
+)): React.ReactElement => {
+    const { pattern, params, ...rest } = props;
+
+    return (
+        <a
+            {...rest}
+            href={Route.link()(pattern, params as never)}
+            onClick={() => {
+                hashNavigate(pattern, params as never);
+            }}
+        />
+    );
+};
