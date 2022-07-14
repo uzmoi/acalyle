@@ -32,7 +32,7 @@ const parsePattern = (pattern: string): Part[] =>
 
 export type Link<T extends string = string> = string & { "__?link": T };
 
-export interface LinkCtor<T extends string> {
+export interface LinkBuilder<T extends string> {
     <U extends T>(pattern: U, params: MatchParams<ParseStringPath<U>>): Link<U>;
     <U extends T>(
         pattern: U,
@@ -99,7 +99,7 @@ export class Route<Path extends string, ParamKeys extends string, R = unknown> {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         return this.get(path, matchParams);
     }
-    static link<T extends Routing<string, string>>(): LinkCtor<PathNomalize<T["path"]>> {
+    static link<T extends Routing<string, string>>(): LinkBuilder<NomalizePath<T["path"]>> {
         return <U extends string>(pattern: U, params?: MatchParams<ParseStringPath<U>>) =>
             parsePattern(pattern).flatMap(part => {
                 if(typeof part === "string") {
@@ -140,9 +140,9 @@ class Page<ParamKeys extends string, R> extends Route<"", ParamKeys, R> {
     }
 }
 
-export type PathNomalize<T extends string> =
-    T extends `${infer Pre}//${infer Post}` ? PathNomalize<`${Pre}/${Post}`>
-    : T extends `/${infer U}` | `${infer U}/` ? PathNomalize<U>
+export type NomalizePath<T extends string> =
+    T extends `${infer Pre}//${infer Post}` ? NomalizePath<`${Pre}/${Post}`>
+    : T extends `/${infer U}` | `${infer U}/` ? NomalizePath<U>
     : T;
 
 export interface Routing<Path extends string, ParamKeys extends string = never> {
@@ -156,7 +156,7 @@ export declare namespace Route {
         T extends Record<string, Routing<string, string>>,
         K extends keyof T,
     > = Routing<
-        PathNomalize<
+        NomalizePath<
             K extends "" ? T[K]["path"]
             : K extends string ? `${K}/${T[K]["path"]}`
             : never

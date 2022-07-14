@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { graphql, useMutation } from "react-relay";
-import { useLocation } from "../../router-react";
+import { hashNavigate } from "../../router-react";
 import { newBookCreateMutation } from "./__generated__/newBookCreateMutation.graphql";
 
 export const NewBookPage: React.FC = () => {
@@ -12,14 +12,13 @@ export const NewBookPage: React.FC = () => {
             }
         }
     `);
-    const [, navigate] = useLocation();
 
     const onSubmit: React.FormEventHandler<HTMLFormElement> = e => {
         e.preventDefault();
         commitNewBook({
             variables: { title },
             onCompleted({ createBook }) {
-                navigate("books/:id", { id: createBook.id });
+                hashNavigate("books/:id", { id: createBook.id });
             },
         });
     };

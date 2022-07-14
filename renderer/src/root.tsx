@@ -2,9 +2,8 @@ import { css } from "@linaria/core";
 import { StrictMode, Suspense, useEffect, useState } from "react";
 import { RelayEnvironmentProvider } from "react-relay";
 import { acalyle, relayEnv } from "./acalyle";
-import { RootRoutes, routes } from "./components/pages/routes";
-import { Route } from "./router";
-import { RouteProvider } from "./router-react";
+import { routes } from "./components/pages/routes";
+import { hashNavigate, useHashLocation } from "./router-react";
 
 css`
     ${":global()"} {
@@ -20,12 +19,15 @@ css`
 `;
 
 export const App: React.FC = () => {
-    return (
-        <RouteProvider
-            routes={routes}
-            init={Route.link<RootRoutes>()("books")}
-        />
-    );
+    const location = useHashLocation();
+
+    useEffect(() => {
+        if(window.location.hash === "") {
+            hashNavigate("books");
+        }
+    }, []);
+
+    return routes.match(location as never);
 };
 
 export const root = (
