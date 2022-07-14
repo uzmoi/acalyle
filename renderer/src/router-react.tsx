@@ -39,8 +39,10 @@ export const Link = <T extends AcaRoutePath>(props: (
     return (
         <a
             {...rest}
-            href={Route.link()(pattern, params as never)}
-            onClick={() => {
+            href={"#" + Route.link()(pattern, params as never)}
+            onClick={e => {
+                if(e.defaultPrevented) return;
+                e.preventDefault();
                 hashNavigate(pattern, params as never);
             }}
         />
