@@ -23,7 +23,7 @@ export const BookPage: React.FC<{ id: string }> = ({ id }) => {
     const [, navigate] = useLocation();
 
     if(book == null) {
-        return <div>book not found</div>;
+        return <div>book not found (id: {id})</div>;
     }
 
     const deleteBook = () => {
@@ -38,7 +38,7 @@ export const BookPage: React.FC<{ id: string }> = ({ id }) => {
     return (
         <div>
             <a onClick={() => navigate("books")}>return to book list</a>
-            <Book book={book} />
+            <Book id={id} book={book} />
             <button onClick={deleteBook} disabled={isInFlight}>delete book</button>
         </div>
     );

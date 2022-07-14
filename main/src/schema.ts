@@ -172,6 +172,28 @@ const Mutation = [
             return (await prisma.book.delete({ where: { id: args.id } })).id;
         }
     }),
+    mutationField("createMemo", {
+        type: objectType({
+            // for relay directive
+            name: "MemoWrapper",
+            definition(t) {
+                t.field("node", { type: Memo });
+            },
+        }),
+        args: { bookId: nonNull("ID") },
+        async resolve(_, args, { prisma }) {
+            const memo = await prisma.memo.create({
+                data: {
+                    id: uuidv4(),
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                    contents: "",
+                    bookId: args.bookId,
+                },
+            });
+            return { node: gqlMemo(memo) };
+        }
+    }),
 ];
 
 export const graphQLSchema = makeSchema({
