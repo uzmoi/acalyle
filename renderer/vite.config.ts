@@ -40,6 +40,9 @@ export default defineConfig(env => ({
         linaria({
             include: ["**/*.(ts|tsx)"],
             sourceMap: env.mode === "develepment",
+            babelOptions: {
+                presets: ["@babel/preset-typescript"],
+            },
         }),
         relay,
         html({

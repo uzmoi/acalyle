@@ -11,4 +11,14 @@ model Book {
     id        String   @id
     title     String
     createdAt DateTime
+    memos     Memo[]
+}
+
+model Memo {
+    id        String   @id
+    contents  String
+    createdAt DateTime
+    updatedAt DateTime
+    Book      Book     @relation(fields: [bookId], references: [id])
+    bookId    String
 }

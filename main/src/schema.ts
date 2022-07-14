@@ -1,4 +1,4 @@
-import { Book } from "@prisma/client";
+import { Book, Memo } from "@prisma/client";
 import {
     connectionPlugin,
     interfaceType,
@@ -25,8 +25,55 @@ const Book = objectType({
     definition(t) {
         t.implements(Node);
         t.string("title");
-        t.string("createdAt");
+        t.string("createdAt", { description: "ISO8601" });
+        t.connectionField("memos", {
+            type: Memo,
+            cursorFromNode: node => node.id,
+            async nodes(book, args, { prisma }) {
+                let cursor: string | null | undefined;
+                let take: number | undefined;
+                if(args.first != null) {
+                    // forward pagination
+                    cursor = args.after;
+                    take = args.first + 1;
+                } else if(args.last != null) {
+                    // backward pagination
+                    cursor = args.before;
+                    take = -(args.last + 1);
+                }
+                const nodes = await prisma.memo.findMany({
+                    cursor: cursor != null ? { id: cursor } : undefined,
+                    skip: cursor != null ? 1 : 0,
+                    take,
+                    orderBy: { createdAt: "desc" },
+                    where: { bookId: book.id },
+                });
+                return nodes.map(gqlMemo);
+            },
+            totalCount(book, __, { prisma }) {
+                return prisma.memo.count({
+                    where: { id: book.id },
+                });
+            },
+        });
     }
+});
+
+const Memo = objectType({
+    name: "Memo",
+    definition(t) {
+        t.implements(Node);
+        t.string("createdAt", { description: "ISO8601" });
+        t.string("updatedAt", { description: "ISO8601" });
+        t.list.string("contents");
+    }
+});
+
+const gqlMemo = (memo: Memo) => ({
+    ...memo,
+    createdAt: memo.createdAt.toISOString(),
+    updatedAt: memo.createdAt.toISOString(),
+    contents: memo.contents.split(","),
 });
 
 const gqlBook = (book: Book) => ({
@@ -36,6 +83,10 @@ const gqlBook = (book: Book) => ({
 
 const Query = [
     queryField("data", { type: "String", resolve: () => "Hello nexus" }),
+    queryField("node", {
+        type: nullable(Node),
+        args: { id: nonNull("ID") },
+    }),
     queryField("book", {
         type: nullable(Book),
         args: { id: nonNull("ID") },
@@ -119,6 +170,28 @@ const Mutation = [
         args: { id: nonNull("ID") },
         async resolve(_, args, { prisma }) {
             return (await prisma.book.delete({ where: { id: args.id } })).id;
+        }
+    }),
+    mutationField("createMemo", {
+        type: objectType({
+            // for relay directive
+            name: "MemoWrapper",
+            definition(t) {
+                t.field("node", { type: Memo });
+            },
+        }),
+        args: { bookId: nonNull("ID") },
+        async resolve(_, args, { prisma }) {
+            const memo = await prisma.memo.create({
+                data: {
+                    id: uuidv4(),
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                    contents: "",
+                    bookId: args.bookId,
+                },
+            });
+            return { node: gqlMemo(memo) };
         }
     }),
 ];

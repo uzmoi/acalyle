@@ -16,6 +16,7 @@
     "react-relay": "^13.2.0"
   },
   "devDependencies": {
+    "@babel/preset-typescript": "^7.18.6",
     "@linaria/rollup": "^3.0.0-beta.15",
     "@linaria/shaker": "^3.0.0-beta.15",
     "@stylelint/postcss-css-in-js": "^0.38.0",
