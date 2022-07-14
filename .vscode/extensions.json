@@ -3,7 +3,7 @@
         "prisma.prisma",
         "stylelint.vscode-stylelint",
         "styled-components.vscode-styled-components",
-        "graphql.vscode-graphql",
+        "meta.relay",
         "dbaeumer.vscode-eslint",
     ]
 }
