@@ -1,7 +1,7 @@
 import { css } from "@linaria/core";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { graphql, useMutation, usePaginationFragment } from "react-relay";
-import { columnSplit } from "../../column-split";
+import { columnSplit } from "~/column-split";
 import { Memo, MemoStyle, contentsHeight } from "./Memo";
 import { BookMemoCreateMutation } from "./__generated__/BookMemoCreateMutation.graphql";
 import { BookMemosFragment$key } from "./__generated__/BookMemosFragment.graphql";

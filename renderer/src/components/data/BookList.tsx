@@ -1,5 +1,5 @@
 import { graphql, usePaginationFragment } from "react-relay";
-import { Link } from "../../router-react";
+import { Link } from "~/router-react";
 import { BookListFragment$key } from "./__generated__/BookListFragment.graphql";
 import { BookListPaginationQuery } from "./__generated__/BookListPaginationQuery.graphql";
 

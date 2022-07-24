@@ -35,6 +35,9 @@ export default defineConfig(env => ({
     define: {
         "import.meta.vitest": false,
     },
+    resolve: {
+        alias: { "~/": `${__dirname}/src/` },
+    },
     plugins: [
         react(),
         linaria({

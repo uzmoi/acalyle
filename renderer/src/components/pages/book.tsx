@@ -1,5 +1,5 @@
 import { graphql, useLazyLoadQuery, useMutation } from "react-relay";
-import { Link, hashNavigate } from "../../router-react";
+import { Link, hashNavigate } from "~/router-react";
 import { Book } from "../data/Book";
 import { bookDeleteMutation } from "./__generated__/bookDeleteMutation.graphql";
 import { bookQuery } from "./__generated__/bookQuery.graphql";

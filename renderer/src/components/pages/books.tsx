@@ -1,5 +1,5 @@
 import { graphql, useLazyLoadQuery } from "react-relay";
-import { Link } from "../../router-react";
+import { Link } from "~/router-react";
 import { BookList } from "../data/BookList";
 import { booksQuery } from "./__generated__/booksQuery.graphql";
 

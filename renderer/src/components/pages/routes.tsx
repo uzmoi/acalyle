@@ -1,4 +1,4 @@
-import { Route } from "../../router";
+import { Route } from "~/router";
 import { BookPage } from "./book";
 import { BookListPage } from "./books";
 import { NewBookPage } from "./new-book";
