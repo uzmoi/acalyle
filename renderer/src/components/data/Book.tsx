@@ -1,6 +1,8 @@
 import { css } from "@linaria/core";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { graphql, useMutation, usePaginationFragment } from "react-relay";
-import { Memo, MemoStyle } from "./Memo";
+import { columnSplit } from "../../column-split";
+import { Memo, MemoStyle, contentsHeight } from "./Memo";
 import { BookMemoCreateMutation } from "./__generated__/BookMemoCreateMutation.graphql";
 import { BookMemosFragment$key } from "./__generated__/BookMemosFragment.graphql";
 
@@ -30,6 +32,7 @@ export const Book: React.FC<{
                 edges {
                     node {
                         id
+                        contents
                         ...MemoFragment
                     }
                 }
@@ -45,6 +48,29 @@ export const Book: React.FC<{
             }
         }
     `);
+
+    const columnsEl = useRef<HTMLDivElement>(null);
+    const [columnsCount, setColumnsCount] = useState(16);
+    useEffect(() => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const el = columnsEl.current!;
+        const observer = new ResizeObserver(es => {
+            console.log(es);
+            setColumnsCount(Math.floor(es[0].contentRect.width / 256));
+        });
+        observer.observe(el);
+        return () => {
+            observer.unobserve(el);
+        };
+    }, []);
+
+    const columns = useMemo(() => {
+        return columnSplit(
+            data.memos.edges.map(x => x.node),
+            columnsCount,
+            node => contentsHeight(node.contents),
+        );
+    }, [data.memos.edges, columnsCount]);
 
     return (
         <div>
@@ -62,9 +88,13 @@ export const Book: React.FC<{
             >
                 add memo
             </button>
-            <div className={memosStyle}>
-                {data.memos.edges.map(({ node }) => (
-                    <Memo key={node.id} fragmentRef={node} />
+            <div ref={columnsEl} className={memosStyle}>
+                {columns.map((column, i) => (
+                    <div key={i}>
+                        {column.map(node => (
+                            <Memo key={node.id} fragmentRef={node} />
+                        ))}
+                    </div>
                 ))}
             </div>
         </div>
