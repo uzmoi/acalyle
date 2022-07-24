@@ -27,27 +27,6 @@ module.exports = {
                 project: "preload/tsconfig.json",
             },
         },
-        {
-            files: "renderer/**",
-            parserOptions: {
-                project: "renderer/tsconfig.json",
-            },
-        },
-        {
-            files: "*.tsx",
-            extends: [
-                "plugin:react/recommended",
-                "plugin:react/jsx-runtime",
-                "plugin:react-hooks/recommended",
-                // "plugin:oreore-config/react",
-            ],
-            settings: {
-                react: { version: "detect" },
-            },
-            rules: {
-                "react/prop-types": "off",
-            },
-        },
     ],
     rules: {
         "import/extensions": ["warn", "ignorePackages", {
