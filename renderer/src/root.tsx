@@ -5,6 +5,7 @@ import { acalyle, relayEnv } from "./acalyle";
 import { Header } from "./components/page-parts/header";
 import { routes } from "./components/pages/routes";
 import { hashNavigate, useHashLocation } from "./router-react";
+import { fonts } from "./styles/theme";
 
 css`
     ${":global()"} {
@@ -20,7 +21,7 @@ css`
             width: 100vw;
             height: 100vh;
             overflow-y: auto;
-            font-family: sans-serif;
+            font-family: ${fonts.sans};
             color: #e0e0e0;
             background-color: #202028;
         }
