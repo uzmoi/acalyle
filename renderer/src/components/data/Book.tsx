@@ -50,7 +50,6 @@ export const Book: React.FC<{
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const el = columnsEl.current!;
         const observer = new ResizeObserver(es => {
-            console.log(es);
             setColumnsCount(clamp(Math.floor(es[0].contentRect.width / columnWidth), 1, 6));
         });
         observer.observe(el);
