@@ -1,4 +1,5 @@
 import { css } from "@linaria/core";
+import { clamp } from "emnorst";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { graphql, useMutation, usePaginationFragment } from "react-relay";
 import { columnSplit } from "~/column-split";
@@ -6,13 +7,7 @@ import { Memo, MemoStyle, contentsHeight } from "./Memo";
 import { BookMemoCreateMutation } from "./__generated__/BookMemoCreateMutation.graphql";
 import { BookMemosFragment$key } from "./__generated__/BookMemosFragment.graphql";
 
-const memosStyle = css`
-    display: flex;
-    flex-wrap: wrap;
-    ${MemoStyle} {
-        margin: 1em;
-    }
-`;
+const columnWidth = 256;
 
 export const Book: React.FC<{
     id: string;
@@ -56,7 +51,7 @@ export const Book: React.FC<{
         const el = columnsEl.current!;
         const observer = new ResizeObserver(es => {
             console.log(es);
-            setColumnsCount(Math.floor(es[0].contentRect.width / 256));
+            setColumnsCount(clamp(Math.floor(es[0].contentRect.width / columnWidth), 1, 6));
         });
         observer.observe(el);
         return () => {
@@ -88,9 +83,9 @@ export const Book: React.FC<{
             >
                 add memo
             </button>
-            <div ref={columnsEl} className={memosStyle}>
+            <div ref={columnsEl} className={ColumnListStyle}>
                 {columns.map((column, i) => (
-                    <div key={i}>
+                    <div key={i} className={ColumnStyle}>
                         {column.map(node => (
                             <Memo key={node.id} fragmentRef={node} />
                         ))}
@@ -100,3 +95,15 @@ export const Book: React.FC<{
         </div>
     );
 };
+
+const ColumnListStyle = css`
+    display: flex;
+`;
+
+const ColumnStyle = css`
+    flex-grow: 1;
+    flex-shrink: 0;
+    .${MemoStyle} {
+        margin: 1em;
+    }
+`;

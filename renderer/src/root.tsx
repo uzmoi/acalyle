@@ -15,6 +15,14 @@ css`
         body {
             margin: 0;
         }
+        #app {
+            width: 100vw;
+            height: 100vh;
+            overflow-y: auto;
+            font-family: sans-serif;
+            color: #e0e0e0;
+            background-color: #202028;
+        }
     }
 `;
 

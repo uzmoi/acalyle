@@ -11,12 +11,6 @@ export const contentsHeight = (contents: readonly string[]) => {
     return clamp(Math.floor(contentsLines / 8), 1, 4);
 };
 
-export const MemoStyle = css`
-    width: 16em;
-    height: calc(var(--height) * 8em);
-    padding: 0.4em;
-`;
-
 export const Memo: React.FC<{
     fragmentRef: MemoFragment$key;
 }> = ({ fragmentRef }) => {
@@ -41,3 +35,9 @@ export const Memo: React.FC<{
         </article>
     );
 };
+
+export const MemoStyle = css`
+    height: calc(var(--height) * 8em);
+    padding: 0.4em;
+    background-color: #101018;
+`;

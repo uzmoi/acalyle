@@ -24,7 +24,7 @@ module.exports = {
     },
     overrides: [
         {
-            files: "**/*.tsx",
+            files: "**/*.(ts|tsx)",
             rules: {
                 "no-empty-first-line": null,
                 "rule-empty-line-before": "never",
