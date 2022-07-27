@@ -1,5 +1,5 @@
 import { graphql, useLazyLoadQuery, useMutation } from "react-relay";
-import { Link, hashNavigate } from "~/router-react";
+import { hashNavigate } from "~/router-react";
 import { Book } from "../data/Book";
 import { bookDeleteMutation } from "./__generated__/bookDeleteMutation.graphql";
 import { bookQuery } from "./__generated__/bookQuery.graphql";
@@ -36,7 +36,6 @@ export const BookPage: React.FC<{ id: string }> = ({ id }) => {
 
     return (
         <div>
-            <Link pattern="books">return to book list</Link>
             <Book id={id} book={book} />
             <button onClick={deleteBook} disabled={isInFlight}>delete book</button>
         </div>

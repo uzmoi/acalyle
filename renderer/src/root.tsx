@@ -2,6 +2,7 @@ import { css } from "@linaria/core";
 import { StrictMode, Suspense, useEffect, useState } from "react";
 import { RelayEnvironmentProvider } from "react-relay";
 import { acalyle, relayEnv } from "./acalyle";
+import { Header } from "./components/page-parts/header";
 import { routes } from "./components/pages/routes";
 import { hashNavigate, useHashLocation } from "./router-react";
 
@@ -35,15 +36,20 @@ export const App: React.FC = () => {
         }
     }, []);
 
-    return routes.match(location as never);
+    return (
+        <>
+            <Header />
+            <Suspense fallback="loading">
+                {routes.match(location as never)}
+            </Suspense>
+        </>
+    );
 };
 
 export const root = (
     <StrictMode>
         <RelayEnvironmentProvider environment={relayEnv}>
-            <Suspense fallback="loading">
-                <App />
-            </Suspense>
+            <App />
         </RelayEnvironmentProvider>
     </StrictMode>
 );
