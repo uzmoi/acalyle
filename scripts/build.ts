@@ -66,7 +66,8 @@ const spawnWithLogger = (
         const viteDevServer = await createViteServer(rendererViteConfig);
         await viteDevServer.listen();
         const { base, server } = viteDevServer.config;
-        Object.assign(esbuildOptions.define, {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        Object.assign(esbuildOptions.define!, {
             // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
             "process.env.DEV_SERVER_URL": `"http://localhost:${server.port + base}"`,
         });
