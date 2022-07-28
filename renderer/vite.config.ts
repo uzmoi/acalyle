@@ -45,6 +45,7 @@ export default defineConfig(env => ({
             sourceMap: env.mode === "develepment",
             babelOptions: {
                 presets: ["@babel/preset-typescript"],
+                plugins: [["module-resolver", { alias: { "~": `${__dirname}/src` } }]],
             },
         }),
         relay,
