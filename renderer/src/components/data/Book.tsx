@@ -1,8 +1,9 @@
 import { css } from "@linaria/core";
 import { clamp } from "emnorst";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { graphql, useMutation, usePaginationFragment } from "react-relay";
 import { columnSplit } from "~/column-split";
+import { useResize } from "~/lib/use-resize";
 import { Memo, MemoStyle, contentsHeight } from "./Memo";
 import { BookMemoCreateMutation } from "./__generated__/BookMemoCreateMutation.graphql";
 import { BookMemosFragment$key } from "./__generated__/BookMemosFragment.graphql";
@@ -44,19 +45,10 @@ export const Book: React.FC<{
         }
     `);
 
-    const columnsEl = useRef<HTMLDivElement>(null);
     const [columnsCount, setColumnsCount] = useState(16);
-    useEffect(() => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const el = columnsEl.current!;
-        const observer = new ResizeObserver(es => {
-            setColumnsCount(clamp(Math.floor(es[0].contentRect.width / columnWidth), 1, 6));
-        });
-        observer.observe(el);
-        return () => {
-            observer.unobserve(el);
-        };
-    }, []);
+    const columnsEl = useResize<HTMLDivElement>(entry => {
+        setColumnsCount(clamp(Math.floor(entry.contentRect.width / columnWidth), 1, 6));
+    });
 
     const columns = useMemo(() => {
         return columnSplit(
