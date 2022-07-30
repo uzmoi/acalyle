@@ -46,9 +46,6 @@ export const BookList: React.FC<{
 };
 
 const BookListStyle = css`
-    padding: 0;
-    margin: 0;
-    list-style: none;
     > li {
         margin: 1em;
         a {
@@ -59,7 +56,6 @@ const BookListStyle = css`
             cursor: pointer;
             background-color: #101018;
             p {
-                margin: 0;
                 font-size: 2em;
             }
         }
