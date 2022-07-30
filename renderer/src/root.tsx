@@ -1,11 +1,11 @@
-import { css } from "@linaria/core";
+import { css, cx } from "@linaria/core";
 import { StrictMode, Suspense, useEffect, useState } from "react";
 import { RelayEnvironmentProvider } from "react-relay";
 import { acalyle, relayEnv } from "./acalyle";
 import { Header } from "./components/page-parts/header";
 import { routes } from "./components/pages/routes";
 import { hashNavigate, useHashLocation } from "./router-react";
-import { fonts } from "./styles/theme";
+import { colors, fonts, themeClassNames, useColorScheme } from "./styles/theme";
 
 css`
     ${":global()"} {
@@ -21,15 +21,20 @@ css`
             padding-left: 0;
             list-style: none;
         }
-        #app {
-            width: 100vw;
-            height: 100vh;
-            overflow-y: auto;
-            font-family: ${fonts.sans};
-            color: #e0e0e0;
-            background-color: #202028;
+        /* #app {} */
+        a {
+            color: inherit;
         }
     }
+`;
+
+const RootStyle = css`
+    width: 100vw;
+    height: 100vh;
+    overflow-y: auto;
+    font-family: ${fonts.sans};
+    color: ${colors.text};
+    background-color: ${colors.bg};
 `;
 
 export const App: React.FC = () => {
@@ -41,13 +46,15 @@ export const App: React.FC = () => {
         }
     }, []);
 
+    const theme = useColorScheme();
+
     return (
-        <>
+        <div className={cx(RootStyle, themeClassNames[theme])}>
             <Header />
             <Suspense fallback="loading">
                 {routes.match(location as never)}
             </Suspense>
-        </>
+        </div>
     );
 };
 

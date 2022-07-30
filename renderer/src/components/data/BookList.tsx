@@ -1,6 +1,7 @@
 import { css } from "@linaria/core";
 import { graphql, usePaginationFragment } from "react-relay";
 import { Link } from "~/router-react";
+import { colors } from "~/styles/theme";
 import { BookListFragment$key } from "./__generated__/BookListFragment.graphql";
 import { BookListPaginationQuery } from "./__generated__/BookListPaginationQuery.graphql";
 
@@ -54,7 +55,7 @@ const BookListStyle = css`
             height: 6em;
             padding: 1em;
             cursor: pointer;
-            background-color: #101018;
+            background-color: ${colors.bgSub};
             p {
                 font-size: 2em;
             }
