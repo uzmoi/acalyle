@@ -12,16 +12,14 @@ const columnWidth = 256;
 
 export const Book: React.FC<{
     id: string;
-    book: {
-        readonly title: string;
-        readonly createdAt: string;
-    } & BookMemosFragment$key;
+    book: BookMemosFragment$key;
 }> = ({ id, book }) => {
     const {
         data,
     } = usePaginationFragment(graphql`
         fragment BookMemosFragment on Book
         @refetchable(queryName: "MemosPaginationQuery") {
+            title
             memos(first: $count, after: $cursor)
             @connection(key: "BookMemosFragment_memos") {
                 __id
@@ -70,7 +68,7 @@ export const Book: React.FC<{
     return (
         <div>
             <div className={BookHeaderStyle}>
-                <h2 className={BookTitleStyle}>{book.title}</h2>
+                <h2 className={BookTitleStyle}>{data.title}</h2>
                 <ul className={ButtonListStyle}>
                     <li>
                         <button onClick={addMemo}>add memo</button>
