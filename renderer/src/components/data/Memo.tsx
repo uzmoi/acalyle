@@ -1,6 +1,7 @@
 import { css } from "@linaria/core";
 import { clamp } from "emnorst";
 import { graphql, useFragment } from "react-relay";
+import { colors } from "~/styles/theme";
 import { MemoFragment$key } from "./__generated__/MemoFragment.graphql";
 
 export const contentsHeight = (contents: readonly string[]) => {
@@ -39,5 +40,5 @@ export const Memo: React.FC<{
 export const MemoStyle = css`
     height: calc(var(--height) * 8em);
     padding: 0.4em;
-    background-color: #101018;
+    background-color: ${colors.bgSub};
 `;
