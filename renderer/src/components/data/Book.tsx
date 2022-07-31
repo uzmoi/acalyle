@@ -58,22 +58,25 @@ export const Book: React.FC<{
         );
     }, [data.memos.edges, columnsCount]);
 
+    const addMemo = () => {
+        commitAddMemo({
+            variables: {
+                bookId: id,
+                connections: [data.memos.__id],
+            },
+        });
+    };
+
     return (
         <div>
-            <h2>{book.title}</h2>
-            <p>{book.createdAt}</p>
-            <button
-                onClick={() => {
-                    commitAddMemo({
-                        variables: {
-                            bookId: id,
-                            connections: [data.memos.__id],
-                        },
-                    });
-                }}
-            >
-                add memo
-            </button>
+            <div className={BookHeaderStyle}>
+                <h2 className={BookTitleStyle}>{book.title}</h2>
+                <ul className={ButtonListStyle}>
+                    <li>
+                        <button onClick={addMemo}>add memo</button>
+                    </li>
+                </ul>
+            </div>
             <div ref={columnsEl} className={ColumnListStyle}>
                 {columns.map((column, i) => (
                     <div key={i} className={ColumnStyle}>
@@ -86,6 +89,25 @@ export const Book: React.FC<{
         </div>
     );
 };
+
+const BookHeaderStyle = css`
+    display: flex;
+    padding: 1em;
+    padding-right: 2em;
+    padding-left: 2em;
+`;
+
+const BookTitleStyle = css`
+    flex-grow: 1;
+`;
+
+const ButtonListStyle = css`
+    display: flex;
+    flex-shrink: 0;
+    > li ~ li {
+        margin-left: 0.8em;
+    }
+`;
 
 const ColumnListStyle = css`
     display: flex;
