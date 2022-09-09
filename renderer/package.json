@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@linaria/core": "^3.0.0-beta.19",
-    "emnorst": "^0.5.0",
+    "emnorst": "^0.6.0",
     "polished": "^4.2.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

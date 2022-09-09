@@ -1,4 +1,4 @@
-type TypeFlat<T> = T extends unknown ? { [P in keyof T]: T[P] } : never;
+import { Meta, Nomalize } from "emnorst";
 
 type RemoveHead<S extends string, Head extends string> = S extends `${Head}${infer P}` ? P : S;
 type RemoveTail<S extends string, Tail extends string> = S extends `${infer P}${Tail}` ? P : S;
@@ -30,7 +30,7 @@ const parsePatternPart = (part: string): Part => {
 const parsePattern = (pattern: string): Part[] =>
     pattern.split("/").filter(Boolean).map(parsePatternPart);
 
-export type Link<T extends string = string> = string & { "__?link": T };
+export type Link<T extends string = string> =  Meta<string, `link:${T}`>;
 
 export interface LinkBuilder<in T extends string> {
     <U extends T>(pattern: U, params: MatchParams<ParseStringPath<U>>): Link<U>;
@@ -111,13 +111,13 @@ export class Route<in Path extends string, out ParamKeys extends string, out R =
             }).join("/") as Link<never>;
     }
     static routes<T extends string, ParamKeys extends string, R>(
-        routes: TypeFlat<RouteEntries<T, ParamKeys, R>>,
+        routes: Nomalize<RouteEntries<T, ParamKeys, R>>,
     ): Route<T, ParamKeys, R>;
     static routes<T extends Routing<string, string>, R>(
-        routes: TypeFlat<RouteEntries<T["path"], T["paramKeys"], R>>,
+        routes: Nomalize<RouteEntries<T["path"], T["paramKeys"], R>>,
     ): Route<T["path"], T["paramKeys"], R>;
     static routes<T extends string, ParamKeys extends string, R>(
-        routes: TypeFlat<RouteEntries<T, ParamKeys, R>>,
+        routes: Nomalize<RouteEntries<T, ParamKeys, R>>,
     ): Route<T, ParamKeys, R> {
         return new Route(routes);
     }
