@@ -5,7 +5,7 @@ type RemoveTail<S extends string, Tail extends string> = S extends `${infer P}${
 
 type Mark = "+" | "*" | "?";
 
-export type MatchParams<T extends string> = {
+export type MatchParams<in T extends string> = {
     [P in T as RemoveTail<P, Mark>]:
         P extends `${string}+` ? [string, ...string[]]
         : P extends `${string}*` ? string[]
@@ -32,7 +32,7 @@ const parsePattern = (pattern: string): Part[] =>
 
 export type Link<T extends string = string> = string & { "__?link": T };
 
-export interface LinkBuilder<T extends string> {
+export interface LinkBuilder<in T extends string> {
     <U extends T>(pattern: U, params: MatchParams<ParseStringPath<U>>): Link<U>;
     <U extends T>(
         pattern: U,
@@ -41,7 +41,7 @@ export interface LinkBuilder<T extends string> {
     ): Link<U>;
 }
 
-type RouteEntries<T extends string, ParamKeys extends string, R> = {
+type RouteEntries<in T extends string, out ParamKeys extends string, R> = {
     [P in T as RemoveTail<P, `/${string}`>]: (
         Route<
             P extends `${string}/${infer P}` ? P : "",
@@ -51,14 +51,14 @@ type RouteEntries<T extends string, ParamKeys extends string, R> = {
     );
 };
 
-export class Route<Path extends string, ParamKeys extends string, R = unknown> {
-    private routes: { part: Part, route: Route<string, string, R> }[];
+export class Route<in Path extends string, out ParamKeys extends string, out R = unknown> {
+    private routes: { part: Part, route: Route<string, ParamKeys, R> }[];
     protected constructor(routes: object) {
         this.routes = Object.keys(routes).map(key => {
             const pattern = parsePattern(key);
             return {
                 part: pattern.shift() ?? "",
-                route: pattern.reduceRight<Route<string, string, R>>(
+                route: pattern.reduceRight<Route<string, ParamKeys, R>>(
                     (accum, part) => new Route({
                         [typeof part === "string" ? part : ":" + part.key + part.mark]: accum,
                     }),
@@ -128,7 +128,7 @@ export class Route<Path extends string, ParamKeys extends string, R = unknown> {
     }
 }
 
-class Page<ParamKeys extends string, R> extends Route<"", ParamKeys, R> {
+class Page<out ParamKeys extends string, out R> extends Route<"", ParamKeys, R> {
     constructor(private readonly route: (params: MatchParams<ParamKeys>) => R) {
         super({});
     }
@@ -145,7 +145,7 @@ export type NomalizePath<T extends string> =
     : T extends `/${infer U}` | `${infer U}/` ? NomalizePath<U>
     : T;
 
-export interface Routing<Path extends string, ParamKeys extends string = never> {
+export interface Routing<out Path extends string, out ParamKeys extends string = never> {
     path: Path;
     paramKeys: ParamKeys;
 }
