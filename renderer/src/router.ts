@@ -41,7 +41,8 @@ export interface LinkBuilder<in T extends string> {
     ): Link<U>;
 }
 
-export interface Route<in Path extends string, out ParamKeys extends string, out R = unknown> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export interface Route<in _Path extends string, out ParamKeys extends string, out R = unknown> {
     get(path: string[], matchParams: MatchParams<ParamKeys>): R | null;
 }
 
