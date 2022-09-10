@@ -33,7 +33,7 @@ export const BookList: React.FC<{
             <ul className={BookListStyle}>
                 {data.books.edges.map(({ node }) => (
                     <li key={node.id}>
-                        <Link pattern="books/:id" params={{ id: node.id }}>
+                        <Link pattern="books/:bookId" params={{ bookId: node.id }}>
                             <p>{node.title}</p>
                         </Link>
                     </li>

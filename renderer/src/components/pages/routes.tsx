@@ -7,7 +7,11 @@ export type RootRoutes = Routes<{
     books: Routes<{
         "": Page;
         new: Page;
-        ":id": Page;
+        ":bookId": Routes<{
+            "": Page;
+            ":memoId": Page;
+            "settings": Page;
+        }>;
     }>;
     ":any*": Page;
 }>;
@@ -22,7 +26,7 @@ export const routes = Router.routes<RootRoutes, JSX.Element>({
     books: Router.routes({
         "": Router.page(() => <BookListPage />),
         new: Router.page(() => <NewBookPage />),
-        ":id": Router.page(params => <BookPage id={params.id} />),
+        ":bookId": Router.child((path, params) => <BookPage path={path} id={params.bookId} />),
     }),
     ":any*": Router.page(params => <>404: {params.any}</>),
 });

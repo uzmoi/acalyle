@@ -18,7 +18,7 @@ export const NewBookPage: React.FC = () => {
         commitNewBook({
             variables: { title },
             onCompleted({ createBook }) {
-                hashNavigate("books/:id", { id: createBook.id });
+                hashNavigate("books/:bookId", { bookId: createBook.id });
             },
         });
     };

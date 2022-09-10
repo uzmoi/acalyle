@@ -1,10 +1,26 @@
 import { graphql, useLazyLoadQuery, useMutation } from "react-relay";
+import { Router } from "~/router";
 import { hashNavigate } from "~/router-react";
 import { Book } from "../data/Book";
 import { bookDeleteMutation } from "./__generated__/bookDeleteMutation.graphql";
-import { bookQuery } from "./__generated__/bookQuery.graphql";
+import { bookQuery, bookQuery$data } from "./__generated__/bookQuery.graphql";
+import type { RootRoutes } from "./routes";
 
-export const BookPage: React.FC<{ id: string }> = ({ id }) => {
+const route = Router.routes<
+    Router.GetRoute<RootRoutes, "books/:bookId">,
+    (book: NonNullable<bookQuery$data["book"]>) => JSX.Element
+>({
+    /* eslint-disable react/display-name */
+    "": Router.page(params => book => <Book id={params.bookId} book={book} />),
+    ":memoId": Router.page(() => () => <></>),
+    settings: Router.page(() => () => <></>),
+    /* eslint-enable react/display-name */
+});
+
+export const BookPage: React.FC<{
+    path: string[];
+    id: string;
+}> = ({ path, id }) => {
     const { book } = useLazyLoadQuery<bookQuery>(graphql`
         query bookQuery($id: ID!, $count: Int = 100, $cursor: String) {
             book(id: $id) {
@@ -36,7 +52,7 @@ export const BookPage: React.FC<{ id: string }> = ({ id }) => {
 
     return (
         <div>
-            <Book id={id} book={book} />
+            {route.get(path, { bookId: id })?.(book)}
             <button onClick={deleteBook} disabled={isInFlight}>delete book</button>
         </div>
     );
