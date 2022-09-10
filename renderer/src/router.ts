@@ -52,43 +52,9 @@ type RouteEntries<in T extends string, out ParamKeys extends string, R> = {
 };
 
 export class Route<in Path extends string, out ParamKeys extends string, out R = unknown> {
-    private routes: { part: Part, route: Route<string, ParamKeys, R> }[];
-    protected constructor(routes: object) {
-        this.routes = Object.keys(routes).map(key => {
-            const pattern = parsePattern(key);
-            return {
-                part: pattern.shift() ?? "",
-                route: pattern.reduceRight<Route<string, ParamKeys, R>>(
-                    (accum, part) => new Route({
-                        [typeof part === "string" ? part : ":" + part.key + part.mark]: accum,
-                    }),
-                    routes[key as keyof typeof routes],
-                ),
-            };
-        });
-    }
-    protected get(path: string[], matchParams: MatchParams<ParamKeys>): R | null {
-        for(const { part, route } of this.routes) {
-            const path$ = [...path];
-            const matchParams$ = { ...matchParams };
-            if(typeof part === "string") {
-                if(part !== "" && path$.shift() !== part) {
-                    continue;
-                }
-            } else {
-                if((part.mark === "+" || part.mark === "") && path$.length === 0) {
-                    continue;
-                }
-                matchParams$[part.key as never] = part.mark === "+" || part.mark === "*"
-                    ? path$ as never : path$.shift() as never;
-            }
-            const result = route.get(path$, matchParams$);
-            if(result !== null) {
-                return result;
-            }
-        }
-        return null;
-    }
+    protected constructor(
+        readonly get: (path: string[], matchParams: MatchParams<ParamKeys>) => R | null
+    ) {}
     match(
         link: Link<Path>,
         ...args: [ParamKeys] extends [never]
@@ -119,24 +85,50 @@ export class Route<in Path extends string, out ParamKeys extends string, out R =
     static routes<T extends string, ParamKeys extends string, R>(
         routes: Nomalize<RouteEntries<T, ParamKeys, R>>,
     ): Route<T, ParamKeys, R> {
-        return new Route(routes);
+        const routeEntries = Object.keys(routes).map(key => {
+            const pattern = parsePattern(key);
+            return {
+                part: pattern.shift() ?? "",
+                route: pattern.reduceRight<Route<string, ParamKeys, R>>(
+                    (accum, part) => Route.routes({
+                        [typeof part === "string" ? part : ":" + part.key + part.mark]: accum,
+                    }),
+                    routes[key as keyof typeof routes] as Route<string, ParamKeys, R>,
+                ),
+            };
+        });
+        return new Route<T, ParamKeys, R>((path, matchParams) => {
+            for(const { part, route } of routeEntries) {
+                const path$ = [...path];
+                const matchParams$ = { ...matchParams };
+                if(typeof part === "string") {
+                    if(part !== "" && path$.shift() !== part) {
+                        continue;
+                    }
+                } else {
+                    if((part.mark === "+" || part.mark === "") && path$.length === 0) {
+                        continue;
+                    }
+                    matchParams$[part.key as never] = part.mark === "+" || part.mark === "*"
+                        ? path$ as never : path$.shift() as never;
+                }
+                const result = route.get(path$, matchParams$);
+                if(result !== null) {
+                    return result;
+                }
+            }
+            return null;
+        });
     }
     static page<ParamKeys extends string, R>(
         page: (params: MatchParams<ParamKeys>) => R,
-    ): Page<ParamKeys, R> {
-        return new Page(page);
-    }
-}
-
-class Page<out ParamKeys extends string, out R> extends Route<"", ParamKeys, R> {
-    constructor(private readonly route: (params: MatchParams<ParamKeys>) => R) {
-        super({});
-    }
-    protected override get(path: string[], matchParams: MatchParams<ParamKeys>): R | null {
-        if(path.length !== 0) {
-            return null;
-        }
-        return this.route(matchParams);
+    ): Route<"", ParamKeys, R> {
+        return new Route((path, matchParams) => {
+            if(path.length !== 0) {
+                return null;
+            }
+            return page(matchParams);
+        });
     }
 }
 
