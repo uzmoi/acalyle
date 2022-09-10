@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from "react";
-import { MatchParams, ParseStringPath, Route } from "./router";
+import { MatchParams, ParseStringPath, link } from "./router";
 
 type AcaRoutePath = AcaRoute["route"]["path"];
 
@@ -23,7 +23,7 @@ export const useHashLocation = () => useSyncExternalStore(
 );
 
 export const hashNavigate: Navigate<AcaRoutePath> = (pattern, params?) => {
-    window.location.hash = Route.link()(pattern, params as never);
+    window.location.hash = link()(pattern, params as never);
 };
 
 export const Link = <T extends AcaRoutePath>(props: (
@@ -39,7 +39,7 @@ export const Link = <T extends AcaRoutePath>(props: (
     return (
         <a
             {...rest}
-            href={"#" + Route.link()(pattern, params as never)}
+            href={"#" + link()(pattern, params as never)}
             onClick={e => {
                 if(e.defaultPrevented) return;
                 e.preventDefault();

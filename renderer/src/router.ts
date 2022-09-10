@@ -41,6 +41,36 @@ export interface LinkBuilder<in T extends string> {
     ): Link<U>;
 }
 
+export interface Route<in Path extends string, out ParamKeys extends string, out R = unknown> {
+    get(path: string[], matchParams: MatchParams<ParamKeys>): R | null;
+}
+
+export const match: <Path extends string, ParamKeys extends string, R>(
+    route: Route<Path, ParamKeys, R>,
+    link: Link<Path>,
+    ...args: [ParamKeys] extends [never]
+        ? [] : [matchParams: MatchParams<ParamKeys>]
+) => R | null = <Path extends string, ParamKeys extends string, R>(
+    route: Route<Path, ParamKeys, R>,
+    link: Link<Path>,
+    matchParams: MatchParams<ParamKeys> = {} as never,
+): R | null => {
+    const path = link.split("/").filter(Boolean);
+    return route.get(path, matchParams);
+};
+
+export const link = <T extends Routing<string, string>>(): LinkBuilder<NomalizePath<T["path"]>> => {
+    return <U extends string>(pattern: U, params?: MatchParams<ParseStringPath<U>>) =>
+        parsePattern(pattern).flatMap(part => {
+            if(typeof part === "string") {
+                return part;
+            }
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            const param = params![part.key as keyof typeof params] as string[] | string | undefined;
+            return part.mark === "?" && param === undefined ? [] : param;
+        }).join("/") as Link<never>;
+};
+
 type RouteEntries<in T extends string, out ParamKeys extends string, R> = {
     [P in T as RemoveTail<P, `/${string}`>]: (
         Route<
@@ -51,53 +81,30 @@ type RouteEntries<in T extends string, out ParamKeys extends string, R> = {
     );
 };
 
-export class Route<in Path extends string, out ParamKeys extends string, out R = unknown> {
-    protected constructor(
-        readonly get: (path: string[], matchParams: MatchParams<ParamKeys>) => R | null
-    ) {}
-    match(
-        link: Link<Path>,
-        ...args: [ParamKeys] extends [never]
-            ? [] : [matchParams: MatchParams<ParamKeys>]
-    ): R | null;
-    match(link: Link<Path>, matchParams: MatchParams<ParamKeys> = {} as never): R | null {
-        const path = link.split("/").filter(Boolean);
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return this.get(path, matchParams);
-    }
-    static link<T extends Routing<string, string>>(): LinkBuilder<NomalizePath<T["path"]>> {
-        return <U extends string>(pattern: U, params?: MatchParams<ParseStringPath<U>>) =>
-            parsePattern(pattern).flatMap(part => {
-                if(typeof part === "string") {
-                    return part;
-                }
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                const param = params![part.key as keyof typeof params] as string[] | string | undefined;
-                return part.mark === "?" && param === undefined ? [] : param;
-            }).join("/") as Link<never>;
-    }
-    static routes<T extends string, ParamKeys extends string, R>(
+export const routes: {
+    <T extends string, ParamKeys extends string, R>(
         routes: Nomalize<RouteEntries<T, ParamKeys, R>>,
     ): Route<T, ParamKeys, R>;
-    static routes<T extends Routing<string, string>, R>(
+    <T extends Routing<string, string>, R>(
         routes: Nomalize<RouteEntries<T["path"], T["paramKeys"], R>>,
-    ): Route<T["path"], T["paramKeys"], R>;
-    static routes<T extends string, ParamKeys extends string, R>(
-        routes: Nomalize<RouteEntries<T, ParamKeys, R>>,
-    ): Route<T, ParamKeys, R> {
-        const routeEntries = Object.keys(routes).map(key => {
-            const pattern = parsePattern(key);
-            return {
-                part: pattern.shift() ?? "",
-                route: pattern.reduceRight<Route<string, ParamKeys, R>>(
-                    (accum, part) => Route.routes({
-                        [typeof part === "string" ? part : ":" + part.key + part.mark]: accum,
-                    }),
-                    routes[key as keyof typeof routes] as Route<string, ParamKeys, R>,
-                ),
-            };
-        });
-        return new Route<T, ParamKeys, R>((path, matchParams) => {
+    ): Route<T["path"], T["paramKeys"], R>
+} = <T extends string, ParamKeys extends string, R>(
+    routeRecord: Nomalize<RouteEntries<T, ParamKeys, R>>,
+): Route<T, ParamKeys, R> => {
+    const routeEntries = Object.keys(routeRecord).map(key => {
+        const pattern = parsePattern(key);
+        return {
+            part: pattern.shift() ?? "",
+            route: pattern.reduceRight<Route<string, ParamKeys, R>>(
+                (accum, part) => routes({
+                    [typeof part === "string" ? part : ":" + part.key + part.mark]: accum,
+                }),
+                routeRecord[key as keyof typeof routeRecord] as Route<string, ParamKeys, R>,
+            ),
+        };
+    });
+    return {
+        get(path, matchParams) {
             for(const { part, route } of routeEntries) {
                 const path$ = [...path];
                 const matchParams$ = { ...matchParams };
@@ -118,19 +125,22 @@ export class Route<in Path extends string, out ParamKeys extends string, out R =
                 }
             }
             return null;
-        });
-    }
-    static page<ParamKeys extends string, R>(
-        page: (params: MatchParams<ParamKeys>) => R,
-    ): Route<"", ParamKeys, R> {
-        return new Route((path, matchParams) => {
+        }
+    };
+};
+
+export const page = <ParamKeys extends string, R>(
+    page: (params: MatchParams<ParamKeys>) => R,
+): Route<"", ParamKeys, R> => {
+    return {
+        get(path, matchParams) {
             if(path.length !== 0) {
                 return null;
             }
             return page(matchParams);
-        });
-    }
-}
+        },
+    };
+};
 
 export type NomalizePath<T extends string> =
     T extends `${infer Pre}//${infer Post}` ? NomalizePath<`${Pre}/${Post}`>
@@ -142,65 +152,56 @@ export interface Routing<out Path extends string, out ParamKeys extends string =
     paramKeys: ParamKeys;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-namespace
-export declare namespace Route {
-    type NestRoutes<
-        T extends Record<string, Routing<string, string>>,
-        K extends keyof T,
-    > = Routing<
-        NomalizePath<
-            K extends "" ? T[K]["path"]
-            : K extends string ? `${K}/${T[K]["path"]}`
+type NestRoutes<
+    T extends Record<string, Routing<string, string>>,
+    K extends keyof T,
+> = Routing<
+    NomalizePath<
+        K extends "" ? T[K]["path"]
+        : K extends string ? `${K}/${T[K]["path"]}`
+        : never
+    >,
+    K extends string
+        ? T[K] extends Routing<string, infer ParamKeys>
+            ? Exclude<ParamKeys, RemoveHead<K, ":">>
             : never
-        >,
-        K extends string
-            ? T[K] extends Routing<string, infer ParamKeys>
-                ? Exclude<ParamKeys, RemoveHead<K, ":">>
-                : never
-            : never
-    >;
-    export type Routes<T extends Record<string, Routing<string, string>>> = NestRoutes<T, Extract<keyof T, string>>;
-    export type Page<ParamKeys extends string = never> = Routing<"", ParamKeys>;
-}
+        : never
+>;
+export type Routes<T extends Record<string, Routing<string, string>>> = NestRoutes<T, Extract<keyof T, string>>;
+export type Page<ParamKeys extends string = never> = Routing<"", ParamKeys>;
+
+// eslint-disable-next-line import/no-self-import
+export * as Router from "./router";
 
 if(import.meta.vitest) {
-    const { it, expect } = import.meta.vitest;
-    const link = Route.link();
+    const { vi, it, expect } = import.meta.vitest;
+    const link_ = link();
     it("link", () => {
-        expect(link("")).toBe("");
-        expect(link("hoge")).toBe("hoge");
-        expect(link("/a///b")).toBe("a/b");
-        expect(link("normal/://:option?/:many*/", {
+        expect(link_("")).toBe("");
+        expect(link_("hoge")).toBe("hoge");
+        expect(link_("/a///b")).toBe("a/b");
+        expect(link_("normal/://:option?/:many*/", {
             "": "any",
             option: undefined,
             many: ["a", "b"],
         })).toBe("normal/any/a/b");
     });
     it("constructor", () => {
-        expect(Route.routes({})).toEqual({ routes: [] });
-        expect(Route.routes({
-            hoge: parsePattern as never,
-            ":fuga": parsePattern as never,
-            "piyo/piyoyo": parsePattern as never,
-        })).toEqual({
-            routes: [
-                { part: "hoge", route: parsePattern },
-                { part: parsePatternPart(":fuga"), route: parsePattern },
-                {
-                    part: "piyo",
-                    route: {
-                        routes: [{ part: "piyoyo", route: parsePattern }]
-                    },
-                },
-            ],
+        const route = routes({
+            hoge: child(vi.fn()),
+            ":fuga": child(vi.fn()),
+            "piyo/piyoyo": child(vi.fn()),
         });
+        expect(route.get(["hoge"], {})).toBeUndefined();
+        expect(route.get(["fugafuga"], {})).toBeUndefined();
+        expect(route.get(["piyo/piyoyo"], {})).toBeUndefined();
     });
     it("match path", () => {
         type P = Routing<string, never>;
         type R = MatchParams<never>;
-        const page = Route.page<never, R>(params => params);
-        expect(page.match(link(""))).toEqual({});
-        expect(Route.routes<P, R>({ "": page }).match(link(""))).toEqual({});
-        expect(Route.routes<P, R>({ hoge: page }).match(link("hoge"))).toEqual({});
+        const $page = page<never, R>(params => params);
+        expect(match($page, link_(""))).toEqual({});
+        expect(match(routes<P, R>({ "": $page }), link_(""))).toEqual({});
+        expect(match(routes<P, R>({ hoge: $page }), link_("hoge"))).toEqual({});
     });
 }

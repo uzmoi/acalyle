@@ -1,15 +1,15 @@
-import { Route } from "~/router";
+import { Page, Router, Routes } from "~/router";
 import { BookPage } from "./book";
 import { BookListPage } from "./books";
 import { NewBookPage } from "./new-book";
 
-export type RootRoutes = Route.Routes<{
-    books: Route.Routes<{
-        "": Route.Page;
-        new: Route.Page;
-        ":id": Route.Page;
+export type RootRoutes = Routes<{
+    books: Routes<{
+        "": Page;
+        new: Page;
+        ":id": Page;
     }>;
-    ":any*": Route.Page;
+    ":any*": Page;
 }>;
 
 declare global {
@@ -18,11 +18,11 @@ declare global {
     }
 }
 
-export const routes = Route.routes<RootRoutes, JSX.Element>({
-    books: Route.routes({
-        "": Route.page(() => <BookListPage />),
-        new: Route.page(() => <NewBookPage />),
-        ":id": Route.page(params => <BookPage id={params.id} />),
+export const routes = Router.routes<RootRoutes, JSX.Element>({
+    books: Router.routes({
+        "": Router.page(() => <BookListPage />),
+        new: Router.page(() => <NewBookPage />),
+        ":id": Router.page(params => <BookPage id={params.id} />),
     }),
-    ":any*": Route.page(params => <>404: {params.any}</>),
+    ":any*": Router.page(params => <>404: {params.any}</>),
 });

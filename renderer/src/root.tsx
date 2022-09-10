@@ -4,6 +4,7 @@ import { RelayEnvironmentProvider } from "react-relay";
 import { acalyle, relayEnv } from "./acalyle";
 import { Header } from "./components/page-parts/header";
 import { routes } from "./components/pages/routes";
+import { match } from "./router";
 import { hashNavigate, useHashLocation } from "./router-react";
 import { colors, fonts, themeClassNames, useColorScheme } from "./styles/theme";
 
@@ -52,7 +53,7 @@ export const App: React.FC = () => {
         <div className={cx(RootStyle, themeClassNames[theme])}>
             <Header />
             <Suspense fallback="loading">
-                {routes.match(location as never)}
+                {match(routes, location as never)}
             </Suspense>
         </div>
     );
