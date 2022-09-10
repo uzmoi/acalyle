@@ -142,6 +142,12 @@ export const page = <ParamKeys extends string, R>(
     };
 };
 
+export const child = <T extends string, ParamKeys extends string, R>(
+    child: (path: string[], params: MatchParams<ParamKeys>) => R | null,
+): Route<T, ParamKeys, R> => {
+    return { get: child };
+};
+
 export type NomalizePath<T extends string> =
     T extends `${infer Pre}//${infer Post}` ? NomalizePath<`${Pre}/${Post}`>
     : T extends `/${infer U}` | `${infer U}/` ? NomalizePath<U>
@@ -169,6 +175,19 @@ type NestRoutes<
 >;
 export type Routes<T extends Record<string, Routing<string, string>>> = NestRoutes<T, Extract<keyof T, string>>;
 export type Page<ParamKeys extends string = never> = Routing<"", ParamKeys>;
+
+type GetPath<T extends string> =
+    T extends `${infer U}/${infer Rest}` ? U | `${U}/${GetPath<Rest>}` : T;
+
+export type GetRoute<T extends Routing<string, string>, P extends GetPath<T["path"]>> =
+    T extends Routing<infer Path, infer ParamKeys>
+        ? Routing<
+            Path extends `${P}/${infer U}` ? U
+            : Path extends P ? ""
+            : never,
+            ParamKeys | ParseStringPath<P>
+        >
+        : never;
 
 // eslint-disable-next-line import/no-self-import
 export * as Router from "./router";
