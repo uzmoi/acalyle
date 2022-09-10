@@ -81,6 +81,30 @@ type RouteEntries<in T extends string, out ParamKeys extends string, R> = {
     );
 };
 
+const matchPart = <T extends string>(part: Part, path: string[], matchParams: MatchParams<T>) => {
+    if(typeof part === "string") {
+        if(part === "" || path[0] === part) {
+            return { path: path.slice(1), matchParams };
+        }
+        return;
+    } else {
+        if((part.mark === "+" || part.mark === "") && path.length === 0) {
+            return;
+        }
+        if(part.mark === "+" || part.mark === "*") {
+            return {
+                path: [],
+                matchParams: { ...matchParams, [part.key]: path },
+            };
+        } else {
+            return {
+                path: path.slice(1),
+                matchParams: { ...matchParams, [part.key]: path[0] },
+            };
+        }
+    }
+};
+
 export const routes: {
     <T extends string, ParamKeys extends string, R>(
         routes: Nomalize<RouteEntries<T, ParamKeys, R>>,
@@ -106,22 +130,12 @@ export const routes: {
     return {
         get(path, matchParams) {
             for(const { part, route } of routeEntries) {
-                const path$ = [...path];
-                const matchParams$ = { ...matchParams };
-                if(typeof part === "string") {
-                    if(part !== "" && path$.shift() !== part) {
-                        continue;
+                const partMatchResult = matchPart(part, path, matchParams);
+                if(partMatchResult != null) {
+                    const result = route.get(partMatchResult.path, partMatchResult.matchParams);
+                    if(result !== null) {
+                        return result;
                     }
-                } else {
-                    if((part.mark === "+" || part.mark === "") && path$.length === 0) {
-                        continue;
-                    }
-                    matchParams$[part.key as never] = part.mark === "+" || part.mark === "*"
-                        ? path$ as never : path$.shift() as never;
-                }
-                const result = route.get(path$, matchParams$);
-                if(result !== null) {
-                    return result;
                 }
             }
             return null;
