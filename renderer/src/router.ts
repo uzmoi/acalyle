@@ -106,7 +106,10 @@ type RouteEntries<in T extends string, out ParamKeys extends string, R> = {
 const matchPart = <T extends string>(part: Part, path: string[], matchParams: MatchParams<T>) => {
     if(typeof part === "string") {
         if(part === "" || path[0] === part) {
-            return { path: path.slice(1), matchParams };
+            return {
+                path: part === "" ? path : path.slice(1),
+                matchParams,
+            };
         }
         return;
     } else {
