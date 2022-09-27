@@ -18,7 +18,7 @@ const route = Router.routes<
 });
 
 export const BookPage: React.FC<{
-    path: string[];
+    path: readonly string[];
     id: string;
 }> = ({ path, id }) => {
     const { book } = useLazyLoadQuery<bookQuery>(graphql`

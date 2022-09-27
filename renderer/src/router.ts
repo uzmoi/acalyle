@@ -33,7 +33,7 @@ const parsePattern = (pattern: string): Part[] =>
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface Route<in _Path extends string, out ParamKeys extends string, out R = unknown> {
-    get(path: string[], matchParams: MatchParams<ParamKeys>): R | null;
+    get(path: readonly string[], matchParams: MatchParams<ParamKeys>): R | null;
 }
 
 export const match: <Path extends string, ParamKeys extends string, R>(
@@ -104,7 +104,11 @@ type RouteEntries<in T extends string, out ParamKeys extends string, R> = {
     );
 };
 
-const matchPart = <T extends string>(part: Part, path: string[], matchParams: MatchParams<T>) => {
+const matchPart = <T extends string>(
+    part: Part,
+    path: readonly string[],
+    matchParams: MatchParams<T>,
+) => {
     if(typeof part === "string") {
         if(part === "" || path[0] === part) {
             return {
@@ -269,7 +273,7 @@ export const page = <ParamKeys extends string, R>(
 };
 
 export const child = <T extends string, ParamKeys extends string, R>(
-    child: (path: string[], params: MatchParams<ParamKeys>) => R | null,
+    child: (path: readonly string[], params: MatchParams<ParamKeys>) => R | null,
 ): Route<T, ParamKeys, R> => {
     return { get: child };
 };
