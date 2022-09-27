@@ -1,6 +1,7 @@
 import { css, cx } from "@linaria/core";
 import { StrictMode, Suspense, useEffect, useState } from "react";
 import { RelayEnvironmentProvider } from "react-relay";
+import { RecoilRoot } from "recoil";
 import { acalyle, relayEnv } from "./acalyle";
 import { Header } from "./components/page-parts/header";
 import { routes } from "./components/pages/routes";
@@ -61,9 +62,11 @@ export const App: React.FC = () => {
 
 export const root = (
     <StrictMode>
-        <RelayEnvironmentProvider environment={relayEnv}>
-            <App />
-        </RelayEnvironmentProvider>
+        <RecoilRoot>
+            <RelayEnvironmentProvider environment={relayEnv}>
+                <App />
+            </RelayEnvironmentProvider>
+        </RecoilRoot>
     </StrictMode>
 );
 
