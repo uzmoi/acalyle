@@ -72,6 +72,27 @@ export const link = <T extends Routing<string, string>>(): LinkBuilder<NomalizeP
         }).join("/") as Link<never>;
 };
 
+if(import.meta.vitest) {
+    const { it, describe, expect } = import.meta.vitest;
+    describe("link", () => {
+        it("変換なし", () => {
+            expect(link()("")).toBe("");
+            expect(link()("hoge")).toBe("hoge");
+            expect(link()("hoge/fuga")).toBe("hoge/fuga");
+        });
+        it("normalize path", () => {
+            expect(link()("/hoge///fuga/")).toBe("hoge/fuga");
+        });
+        it("params埋め込み", () => {
+            expect(link()("normal/:/:option?/:many*", {
+                "": "any",
+                option: undefined,
+                many: ["foo", "bar"],
+            })).toBe("normal/any/foo/bar");
+        });
+    });
+}
+
 type RouteEntries<in T extends string, out ParamKeys extends string, R> = {
     [P in T as RemoveTail<P, `/${string}`>]: (
         Route<
@@ -105,6 +126,65 @@ const matchPart = <T extends string>(part: Part, path: string[], matchParams: Ma
         }
     }
 };
+
+if(import.meta.vitest) {
+    const { it, describe, expect } = import.meta.vitest;
+    describe("matchPart", () => {
+        describe("string part", () => {
+            it("pathが空", () => {
+                expect(matchPart("hoge", [], {})).toBeUndefined();
+            });
+            it("pathがpartと不一致", () => {
+                expect(matchPart("hoge", ["foo"], {})).toBeUndefined();
+            });
+            it("pathがpartと一致", () => {
+                expect(matchPart("hoge", ["hoge", "fuga"], {})).toEqual({
+                    path: ["fuga"],
+                    matchParams: {},
+                });
+            });
+        });
+        describe.each<{
+            part: string;
+            empty: ReturnType<typeof matchPart<never>>;
+            nonEmpty: ReturnType<typeof matchPart<never>>;
+        }>([
+            {
+                part: "",
+                empty: { path: [], matchParams: {} },
+                nonEmpty: { path: ["foo", "bar"], matchParams: {} },
+            },
+            {
+                part: ":hoge",
+                empty: undefined,
+                nonEmpty: { path: ["bar"], matchParams: { hoge: "foo" } },
+            },
+            {
+                part: ":hoge?",
+                empty: { path: [], matchParams: { hoge: undefined } },
+                nonEmpty: { path: ["bar"], matchParams: { hoge: "foo" } },
+            },
+            {
+                part: ":hoge*",
+                empty: { path: [], matchParams: { hoge: [] } },
+                nonEmpty: { path: [], matchParams: { hoge: ["foo", "bar"] } },
+            },
+            {
+                part: ":hoge+",
+                empty: undefined,
+                nonEmpty: { path: [], matchParams: { hoge: ["foo", "bar"] } },
+            },
+        ])('part: "$part"', ({ part, empty, nonEmpty }) => {
+            const partObject = parsePatternPart(part);
+            it("空のpath", () => {
+                expect(matchPart(partObject, [], {})).toEqual(empty);
+            });
+            it("空ではない任意のpath", () => {
+                expect(matchPart(partObject, ["foo", "bar"], {})).toEqual(nonEmpty);
+            });
+        });
+    });
+}
 
 export const routes: {
     <T extends string, ParamKeys extends string, R>(
@@ -143,6 +223,34 @@ export const routes: {
         }
     };
 };
+
+if(import.meta.vitest) {
+    const { it, describe, expect } = import.meta.vitest;
+    describe("routes", () => {
+        it("空文字列キー", () => {
+            const route = routes({ "": page(() => "page") });
+            expect(route.get([], {})).toBe("page");
+        });
+        it("pattern part", () => {
+            const route = routes({ "page": page(() => "page") });
+            expect(route.get(["page"], {})).toBe("page");
+        });
+        it("pattern", () => {
+            const route = routes({ "nest/page": page(() => "page") });
+            expect(route.get(["nest", "page"], {})).toBe("page");
+        });
+        it("複数キー", () => {
+            const route = routes({
+                "": page(() => 0),
+                ":hoge": page(() => 1),
+                ":fuga/piyo": page(() => 2),
+            });
+            expect(route.get([], {})).toBe(0);
+            expect(route.get(["foo"], {})).toBe(1);
+            expect(route.get(["bar", "piyo"], {})).toBe(2);
+        });
+    });
+}
 
 export const page = <ParamKeys extends string, R>(
     page: (params: MatchParams<ParamKeys>) => R,
@@ -206,36 +314,3 @@ export type GetRoute<T extends Routing<string, string>, P extends GetPath<T["pat
 
 // eslint-disable-next-line import/no-self-import
 export * as Router from "./router";
-
-if(import.meta.vitest) {
-    const { vi, it, expect } = import.meta.vitest;
-    const link_ = link();
-    it("link", () => {
-        expect(link_("")).toBe("");
-        expect(link_("hoge")).toBe("hoge");
-        expect(link_("/a///b")).toBe("a/b");
-        expect(link_("normal/://:option?/:many*/", {
-            "": "any",
-            option: undefined,
-            many: ["a", "b"],
-        })).toBe("normal/any/a/b");
-    });
-    it("constructor", () => {
-        const route = routes({
-            hoge: child(vi.fn()),
-            ":fuga": child(vi.fn()),
-            "piyo/piyoyo": child(vi.fn()),
-        });
-        expect(route.get(["hoge"], {})).toBeUndefined();
-        expect(route.get(["fugafuga"], {})).toBeUndefined();
-        expect(route.get(["piyo/piyoyo"], {})).toBeUndefined();
-    });
-    it("match path", () => {
-        type P = Routing<string, never>;
-        type R = MatchParams<never>;
-        const $page = page<never, R>(params => params);
-        expect(match($page, link_(""))).toEqual({});
-        expect(match(routes<P, R>({ "": $page }), link_(""))).toEqual({});
-        expect(match(routes<P, R>({ hoge: $page }), link_("hoge"))).toEqual({});
-    });
-}
