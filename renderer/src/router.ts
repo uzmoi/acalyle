@@ -6,11 +6,12 @@ type RemoveTail<S extends string, Tail extends string> = S extends `${infer P}${
 type Mark = "+" | "*" | "?";
 
 export type MatchParams<in T extends string> = {
-    [P in T as RemoveTail<P, Mark>]:
+    [P in T as RemoveTail<P, Mark>]: (
         P extends `${string}+` ? [string, ...string[]]
         : P extends `${string}*` ? string[]
         : P extends `${string}?` ? string | undefined
-        : string;
+        : string
+    );
 };
 
 type ParamKey<T extends string> = T extends `:${infer U}` ? U : never;
@@ -19,7 +20,7 @@ export type ParseStringPath<T extends string> = T extends `${infer U}/${infer Re
     ? ParamKey<U> | ParseStringPath<Rest>
     : ParamKey<T>;
 
-type Part = string | { key: string, mark: Mark | "" }
+type Part = string | { key: string, mark: Mark | "" };
 
 const parsePatternPart = (part: string): Part => {
     const match = /^:(\w*)([+*?]?)/.exec(part);
@@ -30,17 +31,6 @@ const parsePatternPart = (part: string): Part => {
 const parsePattern = (pattern: string): Part[] =>
     pattern.split("/").filter(Boolean).map(parsePatternPart);
 
-export type Link<T extends string = string> =  Meta<string, `link:${T}`>;
-
-export interface LinkBuilder<in T extends string> {
-    <U extends T>(pattern: U, params: MatchParams<ParseStringPath<U>>): Link<U>;
-    <U extends T>(
-        pattern: U,
-        ...args: U extends `${string}/:${string}` | `:${string}`
-            ? [params: MatchParams<ParseStringPath<U>>] : []
-    ): Link<U>;
-}
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface Route<in _Path extends string, out ParamKeys extends string, out R = unknown> {
     get(path: string[], matchParams: MatchParams<ParamKeys>): R | null;
@@ -50,15 +40,26 @@ export const match: <Path extends string, ParamKeys extends string, R>(
     route: Route<Path, ParamKeys, R>,
     link: Link<Path>,
     ...args: [ParamKeys] extends [never]
-        ? [] : [matchParams: MatchParams<ParamKeys>]
+        ? [] : [params: MatchParams<ParamKeys>]
 ) => R | null = <Path extends string, ParamKeys extends string, R>(
     route: Route<Path, ParamKeys, R>,
     link: Link<Path>,
-    matchParams: MatchParams<ParamKeys> = {} as never,
+    params: MatchParams<ParamKeys> = {} as never,
 ): R | null => {
     const path = link.split("/").filter(Boolean);
-    return route.get(path, matchParams);
+    return route.get(path, params);
 };
+
+export type Link<T extends string = string> = Meta<string, `link:${T}`>;
+
+export interface LinkBuilder<in T extends string> {
+    <U extends T>(pattern: U, params: MatchParams<ParseStringPath<U>>): Link<U>;
+    <U extends T>(
+        pattern: U,
+        ...args: U extends `${string}/:${string}` | `:${string}`
+            ? [params: MatchParams<ParseStringPath<U>>] : []
+    ): Link<U>;
+}
 
 export const link = <T extends Routing<string, string>>(): LinkBuilder<NomalizePath<T["path"]>> => {
     return <U extends string>(pattern: U, params?: MatchParams<ParseStringPath<U>>) =>
@@ -200,16 +201,15 @@ export const routes: {
     routeRecord: Nomalize<RouteEntries<T, ParamKeys, R>>,
 ): Route<T, ParamKeys, R> => {
     const routeEntries = Object.keys(routeRecord).map(key => {
-        const pattern = parsePattern(key);
-        return {
-            part: pattern.shift() ?? "",
-            route: pattern.reduceRight<Route<string, ParamKeys, R>>(
-                (accum, part) => routes({
-                    [typeof part === "string" ? part : ":" + part.key + part.mark]: accum,
-                }),
-                routeRecord[key as keyof typeof routeRecord] as Route<string, ParamKeys, R>,
-            ),
-        };
+        const [part = "", ...restPattern] = parsePattern(key);
+        const route = restPattern.reduceRight<Route<string, ParamKeys, R>>(
+            (accum, part) => {
+                const partString = typeof part === "string" ? part : ":" + part.key + part.mark;
+                return routes({ [partString]: accum });
+            },
+            routeRecord[key as keyof typeof routeRecord] as Route<string, ParamKeys, R>,
+        );
+        return { part, route };
     });
     return {
         get(path, matchParams) {
