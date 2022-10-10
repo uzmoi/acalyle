@@ -1,10 +1,10 @@
 import { graphql, useLazyLoadQuery, useMutation } from "react-relay";
-import { Router } from "~/router";
-import { useNavigate } from "~/router-react";
-import { Book } from "../data/Book";
+import { useNavigate } from "~/shared/router/react";
+import { Router } from "~/shared/router/router";
+import { Book } from "~/widgets/book/Book";
+import type { RootRoutes } from "../routes";
 import { bookDeleteMutation } from "./__generated__/bookDeleteMutation.graphql";
 import { bookQuery, bookQuery$data } from "./__generated__/bookQuery.graphql";
-import type { RootRoutes } from "./routes";
 
 const route = Router.routes<
     Router.GetRoute<RootRoutes, "books/:bookId">,

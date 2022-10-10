@@ -1,6 +1,6 @@
 import { graphql, useLazyLoadQuery } from "react-relay";
-import { Link } from "~/router-react";
-import { BookList } from "../data/BookList";
+import { Link } from "~/shared/router/react";
+import { BookList } from "~/widgets/book/BookList";
 import { booksQuery } from "./__generated__/booksQuery.graphql";
 
 export const BookListPage: React.FC = () => {

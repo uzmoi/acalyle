@@ -1,6 +1,6 @@
 import { css } from "@linaria/core";
-import { Link } from "~/router-react";
-import { colors } from "~/styles/theme";
+import { Link } from "~/shared/router/react";
+import { colors } from "~/shared/ui/styles/theme";
 
 export const Header: React.FC = () => {
     return (

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { graphql, useMutation } from "react-relay";
-import { useNavigate } from "~/router-react";
+import { useNavigate } from "~/shared/router/react";
 import { newBookCreateMutation } from "./__generated__/newBookCreateMutation.graphql";
 
 export const NewBookPage: React.FC = () => {

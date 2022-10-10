@@ -1,7 +1,7 @@
 import { css } from "@linaria/core";
 import { clamp } from "emnorst";
 import { graphql, useFragment } from "react-relay";
-import { colors } from "~/styles/theme";
+import { colors } from "~/shared/ui/styles/theme";
 import { MemoFragment$key } from "./__generated__/MemoFragment.graphql";
 
 export const contentsHeight = (contents: readonly string[]) => {

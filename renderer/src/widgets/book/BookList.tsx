@@ -1,7 +1,7 @@
 import { css } from "@linaria/core";
 import { graphql, usePaginationFragment } from "react-relay";
-import { Link } from "~/router-react";
-import { colors } from "~/styles/theme";
+import { Link } from "~/shared/router/react";
+import { colors } from "~/shared/ui/styles/theme";
 import { BookListFragment$key } from "./__generated__/BookListFragment.graphql";
 import { BookListPaginationQuery } from "./__generated__/BookListPaginationQuery.graphql";
 
