@@ -1,4 +1,5 @@
-import { useSyncExternalStore } from "react";
+import { useCallback } from "react";
+import { AtomEffect, atom, useRecoilValue, useSetRecoilState } from "recoil";
 import { MatchParams, ParseStringPath, link } from "./router";
 
 type AcaRoutePath = AcaRoute["route"]["path"];
@@ -12,19 +13,30 @@ interface Navigate<T extends string> {
     ): void;
 }
 
-export const useHashLocation = () => useSyncExternalStore(
-    onStoreChange => {
-        window.addEventListener("hashchange", onStoreChange);
-        return () => {
-            window.removeEventListener("hashchange", onStoreChange);
-        };
-    },
-    () => window.location.hash.slice(1),
-);
-
-export const hashNavigate: Navigate<AcaRoutePath> = (pattern, params?) => {
-    window.location.hash = link()(pattern, params as never);
+const hashLocationEffect: AtomEffect<string> = ({ setSelf, onSet }) => {
+    const change = () => {
+        setSelf(window.location.hash.slice(1));
+    };
+    change();
+    window.addEventListener("hashchange", change);
+    onSet(hash => {
+        location.hash = hash;
+    });
 };
+
+const LocationState = atom<string>({
+    key: "Location",
+    effects: [hashLocationEffect],
+});
+
+export const useNavigate = (): Navigate<AcaRoutePath> => {
+    const setLocation = useSetRecoilState(LocationState);
+    return useCallback((pattern, params?) => {
+        setLocation(link()(pattern, params as never));
+    }, [setLocation]);
+};
+
+export const useLocation = () => useRecoilValue(LocationState);
 
 export const Link = <T extends AcaRoutePath>(props: (
     { pattern: T }
@@ -35,6 +47,7 @@ export const Link = <T extends AcaRoutePath>(props: (
     & Omit<React.ComponentPropsWithoutRef<"a">, "href">
 )): React.ReactElement => {
     const { pattern, params, ...rest } = props;
+    const navigate = useNavigate();
 
     return (
         <a
@@ -43,7 +56,7 @@ export const Link = <T extends AcaRoutePath>(props: (
             onClick={e => {
                 if(e.defaultPrevented) return;
                 e.preventDefault();
-                hashNavigate(pattern, params as never);
+                navigate(pattern, params as never);
             }}
         />
     );

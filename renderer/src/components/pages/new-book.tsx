@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { graphql, useMutation } from "react-relay";
-import { hashNavigate } from "~/router-react";
+import { useNavigate } from "~/router-react";
 import { newBookCreateMutation } from "./__generated__/newBookCreateMutation.graphql";
 
 export const NewBookPage: React.FC = () => {
@@ -13,12 +13,13 @@ export const NewBookPage: React.FC = () => {
         }
     `);
 
+    const navigate = useNavigate();
     const onSubmit: React.FormEventHandler<HTMLFormElement> = e => {
         e.preventDefault();
         commitNewBook({
             variables: { title },
             onCompleted({ createBook }) {
-                hashNavigate("books/:bookId", { bookId: createBook.id });
+                navigate("books/:bookId", { bookId: createBook.id });
             },
         });
     };

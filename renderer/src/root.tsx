@@ -6,7 +6,7 @@ import { acalyle, relayEnv } from "./acalyle";
 import { Header } from "./components/page-parts/header";
 import { routes } from "./components/pages/routes";
 import { match } from "./router";
-import { hashNavigate, useHashLocation } from "./router-react";
+import { useLocation, useNavigate } from "./router-react";
 import { colors, fonts, themeClassNames, useColorScheme } from "./styles/theme";
 
 css`
@@ -40,13 +40,14 @@ const RootStyle = css`
 `;
 
 export const App: React.FC = () => {
-    const location = useHashLocation();
-
+    const location = useLocation();
+    
+    const navigate = useNavigate();
     useEffect(() => {
         if(window.location.hash === "") {
-            hashNavigate("books");
+            navigate("books");
         }
-    }, []);
+    }, [navigate]);
 
     const theme = useColorScheme();
 

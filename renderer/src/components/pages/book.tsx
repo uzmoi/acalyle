@@ -1,6 +1,6 @@
 import { graphql, useLazyLoadQuery, useMutation } from "react-relay";
 import { Router } from "~/router";
-import { hashNavigate } from "~/router-react";
+import { useNavigate } from "~/router-react";
 import { Book } from "../data/Book";
 import { bookDeleteMutation } from "./__generated__/bookDeleteMutation.graphql";
 import { bookQuery, bookQuery$data } from "./__generated__/bookQuery.graphql";
@@ -37,6 +37,8 @@ export const BookPage: React.FC<{
         }
     `);
 
+    const navigate = useNavigate();
+
     if(book == null) {
         return <div>book not found (id: {id})</div>;
     }
@@ -45,7 +47,7 @@ export const BookPage: React.FC<{
         commitDeleteBook({
             variables: { id },
             onCompleted() {
-                hashNavigate("books");
+                navigate("books");
             },
         });
     };
