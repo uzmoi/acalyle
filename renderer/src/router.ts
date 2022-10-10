@@ -94,16 +94,6 @@ if(import.meta.vitest) {
     });
 }
 
-type RouteEntries<in T extends string, out ParamKeys extends string, R> = {
-    [P in T as RemoveTail<P, `/${string}`>]: (
-        Route<
-            P extends `${string}/${infer P}` ? P : "",
-            (P extends `:${infer P}` ? RemoveTail<P, `/${string}`> : never) | ParamKeys,
-            R
-        >
-    );
-};
-
 const matchPart = <T extends string>(
     part: Part,
     path: readonly string[],
@@ -193,6 +183,16 @@ if(import.meta.vitest) {
         });
     });
 }
+
+type RouteEntries<in T extends string, out ParamKeys extends string, R> = {
+    [P in T as RemoveTail<P, `/${string}`>]: (
+        Route<
+            P extends `${string}/${infer P}` ? P : "",
+            (P extends `:${infer P}` ? RemoveTail<P, `/${string}`> : never) | ParamKeys,
+            R
+        >
+    );
+};
 
 export const routes: {
     <T extends string, ParamKeys extends string, R>(
