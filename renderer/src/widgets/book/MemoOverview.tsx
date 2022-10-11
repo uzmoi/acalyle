@@ -2,7 +2,7 @@ import { css } from "@linaria/core";
 import { clamp } from "emnorst";
 import { graphql, useFragment } from "react-relay";
 import { colors } from "~/shared/ui/styles/theme";
-import { MemoFragment$key } from "./__generated__/MemoFragment.graphql";
+import { MemoOverviewFragment$key } from "./__generated__/MemoOverviewFragment.graphql";
 
 export const contentsHeight = (contents: readonly string[]) => {
     const contentsLines = contents.reduce<number>(
@@ -12,11 +12,11 @@ export const contentsHeight = (contents: readonly string[]) => {
     return clamp(Math.floor(contentsLines / 8), 1, 4);
 };
 
-export const Memo: React.FC<{
-    fragmentRef: MemoFragment$key;
+export const MemoOverview: React.FC<{
+    fragmentRef: MemoOverviewFragment$key;
 }> = ({ fragmentRef }) => {
-    const memo = useFragment<MemoFragment$key>(graphql`
-        fragment MemoFragment on Memo {
+    const memo = useFragment<MemoOverviewFragment$key>(graphql`
+        fragment MemoOverviewFragment on Memo {
             id
             createdAt
             updatedAt
@@ -27,7 +27,7 @@ export const Memo: React.FC<{
     const tile = contentsHeight(memo.contents);
 
     return (
-        <article id={memo.id} className={MemoStyle} style={{ "--height": tile }}>
+        <article id={memo.id} className={MemoOverviewStyle} style={{ "--height": tile }}>
             {memo.contents.map(content => (
                 <div key={content}>
                     {content}
@@ -37,7 +37,7 @@ export const Memo: React.FC<{
     );
 };
 
-export const MemoStyle = css`
+export const MemoOverviewStyle = css`
     height: calc(var(--height) * 8em);
     padding: 0.4em;
     background-color: ${colors.bgSub};

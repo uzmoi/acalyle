@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { graphql, useMutation, usePaginationFragment } from "react-relay";
 import { useResize } from "~/shared/ui/hooks/use-resize";
 import { columnSplit } from "~/shared/util/column-split";
-import { Memo, MemoStyle, contentsHeight } from "./Memo";
+import { MemoOverview, MemoOverviewStyle, contentsHeight } from "./MemoOverview";
 import { BookMemoCreateMutation } from "./__generated__/BookMemoCreateMutation.graphql";
 import { BookMemosFragment$key } from "./__generated__/BookMemosFragment.graphql";
 
@@ -27,7 +27,7 @@ export const Book: React.FC<{
                     node {
                         id
                         contents
-                        ...MemoFragment
+                        ...MemoOverviewFragment
                     }
                 }
             }
@@ -37,7 +37,7 @@ export const Book: React.FC<{
         mutation BookMemoCreateMutation($bookId: ID!, $connections: [ID!]!) {
             createMemo(bookId: $bookId) {
                 node @appendNode(connections: $connections, edgeTypeName: "Memo") {
-                    ...MemoFragment
+                    ...MemoOverviewFragment
                 }
             }
         }
@@ -79,7 +79,7 @@ export const Book: React.FC<{
                 {columns.map((column, i) => (
                     <div key={i} className={ColumnStyle}>
                         {column.map(node => (
-                            <Memo key={node.id} fragmentRef={node} />
+                            <MemoOverview key={node.id} fragmentRef={node} />
                         ))}
                     </div>
                 ))}
@@ -114,7 +114,7 @@ const ColumnListStyle = css`
 const ColumnStyle = css`
     flex-grow: 1;
     flex-shrink: 0;
-    .${MemoStyle} {
+    .${MemoOverviewStyle} {
         margin: 1em;
     }
 `;
