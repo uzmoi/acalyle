@@ -20,6 +20,28 @@ const Node = interfaceType({
     }
 });
 
+interface PaginationArgs {
+    after?: string | null;
+    before?: string | null;
+    first?: number | null;
+    last?: number | null;
+}
+
+const pagination = (args: PaginationArgs) => {
+    let cursor: string | null | undefined;
+    let take: number | undefined;
+    if(args.first != null) {
+        // forward pagination
+        cursor = args.after;
+        take = args.first + 1;
+    } else if(args.last != null) {
+        // backward pagination
+        cursor = args.before;
+        take = -(args.last + 1);
+    }
+    return { cursor, take };
+};
+
 const Book = objectType({
     name: "Book",
     definition(t) {
@@ -30,21 +52,11 @@ const Book = objectType({
             type: Memo,
             cursorFromNode: node => node.id,
             async nodes(book, args, { prisma }) {
-                let cursor: string | null | undefined;
-                let take: number | undefined;
-                if(args.first != null) {
-                    // forward pagination
-                    cursor = args.after;
-                    take = args.first + 1;
-                } else if(args.last != null) {
-                    // backward pagination
-                    cursor = args.before;
-                    take = -(args.last + 1);
-                }
+                const p = pagination(args);
                 const nodes = await prisma.memo.findMany({
-                    cursor: cursor != null ? { id: cursor } : undefined,
-                    skip: cursor != null ? 1 : 0,
-                    take,
+                    cursor: p.cursor != null ? { id: p.cursor } : undefined,
+                    skip: p.cursor != null ? 1 : 0,
+                    take: p.take,
                     orderBy: { createdAt: "desc" },
                     where: { bookId: book.id },
                 });
