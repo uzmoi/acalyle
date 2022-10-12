@@ -31,7 +31,7 @@ export const MemoPage: React.FC<{
             <Link pattern="books/:bookId" params={{ bookId }}>
                 return to book
             </Link>
-            <Memo fragmentRef={book.memo} />
+            <Memo bookId={bookId} fragmentRef={book.memo} />
         </div>
     );
 };
