@@ -48,6 +48,19 @@ const Book = objectType({
         t.implements(Node);
         t.string("title");
         t.string("createdAt", { description: "ISO8601" });
+        t.field("memo", {
+            type: Memo,
+            args: { id: nonNull("ID") },
+            async resolve(book, args, { prisma }) {
+                const memo = await prisma.memo.findUnique({
+                    where: { id: args.id },
+                });
+                if(memo == null || memo.bookId !== book.id) {
+                    throw "memo not found";
+                }
+                return gqlMemo(memo);
+            },
+        });
         t.connectionField("memos", {
             type: Memo,
             cursorFromNode: node => node.id,
