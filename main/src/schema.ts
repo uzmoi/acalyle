@@ -155,6 +155,14 @@ const Query = [
 
 const BookTitle = z.string().min(1).max(16);
 
+// for relay directive
+const MemoWrapper = objectType({
+    name: "MemoWrapper",
+    definition(t) {
+        t.field("node", { type: Memo });
+    },
+});
+
 const Mutation = [
     mutationField("createBook", {
         type: Book,
@@ -198,13 +206,7 @@ const Mutation = [
         }
     }),
     mutationField("createMemo", {
-        type: objectType({
-            // for relay directive
-            name: "MemoWrapper",
-            definition(t) {
-                t.field("node", { type: Memo });
-            },
-        }),
+        type: MemoWrapper,
         args: { bookId: nonNull("ID") },
         async resolve(_, args, { prisma }) {
             const memo = await prisma.memo.create({
@@ -214,6 +216,24 @@ const Mutation = [
                     updatedAt: new Date(),
                     contents: "",
                     bookId: args.bookId,
+                },
+            });
+            return { node: gqlMemo(memo) };
+        }
+    }),
+    mutationField("editMemo", {
+        type: MemoWrapper,
+        args: {
+            bookId: nonNull("ID"),
+            memoId: nonNull("ID"),
+            contents: "String",
+        },
+        async resolve(_, args, { prisma }) {
+            const memo = await prisma.memo.update({
+                where: { id: args.memoId },
+                data: {
+                    contents: args.contents ?? undefined,
+                    updatedAt: new Date(),
                 },
             });
             return { node: gqlMemo(memo) };
