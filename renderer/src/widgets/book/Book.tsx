@@ -79,7 +79,7 @@ export const Book: React.FC<{
                 {columns.map((column, i) => (
                     <div key={i} className={ColumnStyle}>
                         {column.map(node => (
-                            <MemoOverview key={node.id} fragmentRef={node} />
+                            <MemoOverview key={node.id} bookId={id} fragmentRef={node} />
                         ))}
                     </div>
                 ))}
