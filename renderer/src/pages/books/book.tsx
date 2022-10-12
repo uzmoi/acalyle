@@ -5,6 +5,7 @@ import { Book } from "~/widgets/book/Book";
 import type { RootRoutes } from "../routes";
 import { bookDeleteMutation } from "./__generated__/bookDeleteMutation.graphql";
 import { bookQuery, bookQuery$data } from "./__generated__/bookQuery.graphql";
+import { MemoPage } from "./memo";
 
 const route = Router.routes<
     Router.GetRoute<RootRoutes, "books/:bookId">,
@@ -12,7 +13,7 @@ const route = Router.routes<
 >({
     /* eslint-disable react/display-name */
     "": Router.page(params => book => <Book id={params.bookId} book={book} />),
-    ":memoId": Router.page(() => () => <></>),
+    ":memoId": Router.page(params => () => <MemoPage bookId={params.bookId} memoId={params.memoId} />),
     settings: Router.page(() => () => <></>),
     /* eslint-enable react/display-name */
 });
