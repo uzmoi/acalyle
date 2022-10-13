@@ -49,10 +49,14 @@ export const MemoOverviewStyle = css`
     display: flex;
     height: calc(var(--height) * 8em);
     padding: 0.4em;
+    overflow: hidden;
+    white-space: pre;
     background-color: ${colors.bgSub};
 `;
 
 const MemoOverviewContentsLinkStyle = css`
     display: block;
     flex: 1 0;
+    color: currentcolor;
+    text-decoration: none;
 `;
