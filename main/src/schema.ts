@@ -97,7 +97,7 @@ const Memo = objectType({
 const gqlMemo = (memo: Memo) => ({
     ...memo,
     createdAt: memo.createdAt.toISOString(),
-    updatedAt: memo.createdAt.toISOString(),
+    updatedAt: memo.updatedAt.toISOString(),
     contents: memo.contents.split(","),
 });
 
