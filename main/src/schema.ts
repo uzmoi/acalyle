@@ -202,7 +202,11 @@ const Mutation = [
         type: "ID",
         args: { id: nonNull("ID") },
         async resolve(_, args, { prisma }) {
-            return (await prisma.book.delete({ where: { id: args.id } })).id;
+            const deletedBook = await prisma.book.delete({
+                where: { id: args.id },
+                select: { id: true },
+            });
+            return deletedBook.id;
         }
     }),
     mutationField("createMemo", {
