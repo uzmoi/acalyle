@@ -112,8 +112,8 @@ const ColumnListStyle = css`
 `;
 
 const ColumnStyle = css`
-    flex-grow: 1;
-    flex-shrink: 0;
+    flex: 1 0 0;
+    min-width: 0;
     .${MemoOverviewStyle} {
         margin: 1em;
     }
