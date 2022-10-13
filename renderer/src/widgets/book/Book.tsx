@@ -2,6 +2,7 @@ import { css } from "@linaria/core";
 import { clamp } from "emnorst";
 import { useMemo, useState } from "react";
 import { graphql, useMutation, usePaginationFragment } from "react-relay";
+import { Link } from "~/shared/router/react";
 import { useResize } from "~/shared/ui/hooks/use-resize";
 import { columnSplit } from "~/shared/util/column-split";
 import { MemoOverview, MemoOverviewStyle, contentsHeight } from "./MemoOverview";
@@ -72,6 +73,11 @@ export const Book: React.FC<{
                 <ul className={ButtonListStyle}>
                     <li>
                         <button onClick={addMemo}>add memo</button>
+                    </li>
+                    <li>
+                        <Link pattern="books/:bookId/settings" params={{ bookId: id }}>
+                            settings
+                        </Link>
                     </li>
                 </ul>
             </div>
