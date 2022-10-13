@@ -1,13 +1,13 @@
 export const columnSplit = <T>(
-    nodes: T[],
+    nodes: readonly T[],
     columnsCount: number,
     contentsHeight: (node: T) => number,
-) => {
+): T[][] => {
     interface Column {
         height: number;
         nodes: T[];
     }
-    const columns: Column[] = Array.from(
+    const columns: readonly Column[] = Array.from(
         { length: columnsCount },
         () => ({ height: 0, nodes: [] }),
     );
