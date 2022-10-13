@@ -11,7 +11,7 @@ export const booksRoute = routes<GetRoute<RootRoutes, "books">, JSX.Element>({
     new: page(() => <NewBookPage />),
     ":bookId": routes({
         "": page(params => <BookPage bookId={params.bookId} />),
-        ":memoId": page(params => <MemoPage bookId={params.bookId} memoId={params.memoId} />),
         settings: page(params => <BookSettingsPage id={params.bookId} />),
+        ":memoId": page(params => <MemoPage bookId={params.bookId} memoId={params.memoId} />),
     }),
 });
