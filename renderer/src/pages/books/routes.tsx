@@ -1,11 +1,17 @@
-import { GetRoute, child, page, routes } from "~/shared/router/router";
+import { GetRoute, page, routes } from "~/shared/router/router";
 import type { RootRoutes } from "../routes";
-import { BookChild } from "./book";
+import { BookPage } from "./book";
+import { BookSettingsPage } from "./book-settings";
 import { BookListPage } from "./books";
+import { MemoPage } from "./memo";
 import { NewBookPage } from "./new-book";
 
 export const booksRoute = routes<GetRoute<RootRoutes, "books">, JSX.Element>({
     "": page(() => <BookListPage />),
     new: page(() => <NewBookPage />),
-    ":bookId": child((path, params) => <BookChild path={path} id={params.bookId} />),
+    ":bookId": routes({
+        "": page(params => <BookPage bookId={params.bookId} />),
+        ":memoId": page(params => <MemoPage bookId={params.bookId} memoId={params.memoId} />),
+        settings: page(params => <BookSettingsPage id={params.bookId} />),
+    }),
 });
