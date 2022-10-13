@@ -58,29 +58,29 @@ export const Memo: React.FC<{
             ) : (
                 <div className={MemoContentsStyle}>
                     {memo.contents.map(contentBlock => (
-                        <div key={contentBlock} className={MemoContentBlockStyle}>
-                            {contentBlock}
-                        </div>
+                        <div key={contentBlock}>{contentBlock}</div>
                     ))}
                     <button onClick={() => setContents(memo.contents.join())}>
                         edit
                     </button>
                 </div>
             )}
-            <p>updated at {new Date(memo.updatedAt).toLocaleDateString()}</p>
-            <p>created at {new Date(memo.createdAt).toLocaleDateString()}</p>
+            <div className={MemoFooterStyle}>
+                <p>updated at {new Date(memo.updatedAt).toLocaleDateString()}</p>
+                <p>created at {new Date(memo.createdAt).toLocaleDateString()}</p>
+            </div>
         </div>
     );
 };
 
 const MemoStyle = css`
-    /* - */
+    padding: 1em;
 `;
 
 const MemoContentsStyle = css`
-    /* - */
+    white-space: pre;
 `;
 
-const MemoContentBlockStyle = css`
-    /* - */
+const MemoFooterStyle = css`
+    font-size: 0.8em;
 `;
