@@ -1,10 +1,9 @@
-import { graphql, useLazyLoadQuery, useMutation } from "react-relay";
-import { useNavigate } from "~/shared/router/react";
+import { graphql, useLazyLoadQuery } from "react-relay";
 import { Router } from "~/shared/router/router";
 import { Book } from "~/widgets/book/Book";
 import type { RootRoutes } from "../routes";
-import { bookDeleteMutation } from "./__generated__/bookDeleteMutation.graphql";
 import { bookQuery } from "./__generated__/bookQuery.graphql";
+import { BookSettingsPage } from "./book-settings";
 import { MemoPage } from "./memo";
 
 const BookPage: React.FC<{
@@ -33,7 +32,7 @@ const route = Router.routes<Router.GetRoute<RootRoutes, "books/:bookId">, JSX.El
     /* eslint-disable react/display-name */
     "": Router.page(params => <BookPage bookId={params.bookId} />),
     ":memoId": Router.page(params => <MemoPage bookId={params.bookId} memoId={params.memoId} />),
-    settings: Router.page(() => <></>),
+    settings: Router.page(params => <BookSettingsPage id={params.bookId} />),
     /* eslint-enable react/display-name */
 });
 
@@ -41,27 +40,9 @@ export const BookChild: React.FC<{
     path: readonly string[];
     id: string;
 }> = ({ path, id }) => {
-    const [commitDeleteBook, isInFlight] = useMutation<bookDeleteMutation>(graphql`
-        mutation bookDeleteMutation($id: ID!) {
-            deleteBook(id: $id)
-        }
-    `);
-
-    const navigate = useNavigate();
-
-    const deleteBook = () => {
-        commitDeleteBook({
-            variables: { id },
-            onCompleted() {
-                navigate("books");
-            },
-        });
-    };
-
     return (
         <div>
             {route.get(path, { bookId: id })}
-            <button onClick={deleteBook} disabled={isInFlight}>delete book</button>
         </div>
     );
 };
