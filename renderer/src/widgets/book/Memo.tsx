@@ -1,6 +1,7 @@
 import { css } from "@linaria/core";
 import { useState } from "react";
 import { graphql, useFragment, useMutation } from "react-relay";
+import { Button } from "~/shared/control";
 import { MemoEditMemoContentsMutation } from "./__generated__/MemoEditMemoContentsMutation.graphql";
 import { MemoFragment$key } from "./__generated__/MemoFragment.graphql";
 
@@ -39,10 +40,10 @@ export const Memo: React.FC<{
                         onChange={e => setContents(e.target.value)}
                         disabled={isInFlight}
                     />
-                    <button onClick={() => setContents(null)}>
+                    <Button onClick={() => setContents(null)}>
                         cancel
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                         onClick={() => {
                             commitEditMemo({
                                 variables: { bookId, memoId: memo.id, contents },
@@ -53,16 +54,16 @@ export const Memo: React.FC<{
                         }}
                     >
                         save
-                    </button>
+                    </Button>
                 </div>
             ) : (
                 <div className={MemoContentsStyle}>
                     {memo.contents.map(contentBlock => (
                         <div key={contentBlock}>{contentBlock}</div>
                     ))}
-                    <button onClick={() => setContents(memo.contents.join())}>
+                    <Button onClick={() => setContents(memo.contents.join())}>
                         edit
-                    </button>
+                    </Button>
                 </div>
             )}
             <div className={MemoFooterStyle}>

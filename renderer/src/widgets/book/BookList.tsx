@@ -1,5 +1,6 @@
 import { css } from "@linaria/core";
 import { graphql, usePaginationFragment } from "react-relay";
+import { Button } from "~/shared/control";
 import { Link } from "~/shared/router/react";
 import { colors } from "~/shared/ui/styles/theme";
 import { BookListFragment$key } from "./__generated__/BookListFragment.graphql";
@@ -39,9 +40,9 @@ export const BookList: React.FC<{
                     </li>
                 ))}
             </ul>
-            <button onClick={() => loadNext(16)} disabled={!hasNext || isLoadingNext}>
+            <Button onClick={() => loadNext(16)} disabled={!hasNext || isLoadingNext}>
                 load more books
-            </button>
+            </Button>
         </div>
     );
 };

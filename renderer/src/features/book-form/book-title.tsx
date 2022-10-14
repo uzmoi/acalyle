@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { graphql, useMutation } from "react-relay";
+import { Button, TextInput } from "~/shared/control";
 import { bookTitleMutation } from "./__generated__/bookTitleMutation.graphql";
 
 export const BookTitle: React.FC<{
@@ -7,9 +8,6 @@ export const BookTitle: React.FC<{
     currentTitle: string;
 }> = ({ id, currentTitle }) => {
     const [title, setTitle] = useState(currentTitle);
-    const handleChange: React.ChangeEventHandler<HTMLInputElement> = e => {
-        setTitle(e.target.value);
-    };
 
     const [commit, isInFlight] = useMutation<bookTitleMutation>(graphql`
         mutation bookTitleMutation($id: ID!, $title: String) {
@@ -27,8 +25,12 @@ export const BookTitle: React.FC<{
     return (
         <form onSubmit={handleSubmit}>
             <label>Book title</label>
-            <input value={title} onChange={handleChange} disabled={isInFlight} />
-            <button>Rename</button>
+            <TextInput
+                value={title}
+                onValueChange={setTitle}
+                disabled={isInFlight}
+            />
+            <Button>Rename</Button>
         </form>
     );
 };

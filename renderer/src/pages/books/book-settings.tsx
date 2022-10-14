@@ -1,6 +1,7 @@
 import { css } from "@linaria/core";
 import { graphql, useLazyLoadQuery, useMutation } from "react-relay";
 import { BookTitleForm } from "~/features/book-form";
+import { Button } from "~/shared/control";
 import { useNavigate } from "~/shared/router/react";
 import { bookSettingsDataQuery } from "./__generated__/bookSettingsDataQuery.graphql";
 import { bookSettingsDeleteMutation } from "./__generated__/bookSettingsDeleteMutation.graphql";
@@ -40,9 +41,9 @@ export const BookSettingsPage: React.FC<{
     return (
         <div className={BookSettingsPageStyle}>
             <BookTitleForm id={id} currentTitle={book.title} />
-            <button onClick={deleteBook} disabled={isInFlight}>
+            <Button onClick={deleteBook} disabled={isInFlight}>
                 delete book
-            </button>
+            </Button>
         </div>
     );
 };

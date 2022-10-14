@@ -2,6 +2,7 @@ import { css } from "@linaria/core";
 import { clamp } from "emnorst";
 import { useMemo, useState } from "react";
 import { graphql, useMutation, usePaginationFragment } from "react-relay";
+import { Button } from "~/shared/control";
 import { Link } from "~/shared/router/react";
 import { useResize } from "~/shared/ui/hooks/use-resize";
 import { columnSplit } from "~/shared/util/column-split";
@@ -72,7 +73,7 @@ export const Book: React.FC<{
                 <h2 className={BookTitleStyle}>{data.title}</h2>
                 <ul className={ButtonListStyle}>
                     <li>
-                        <button onClick={addMemo}>add memo</button>
+                        <Button onClick={addMemo}>add memo</Button>
                     </li>
                     <li>
                         <Link pattern="books/:bookId/settings" params={{ bookId: id }}>
