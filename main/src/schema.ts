@@ -12,6 +12,7 @@ import {
 import path = require("path");
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
+import { Upload } from "./scalar";
 
 const Node = interfaceType({
     name: "Node",
@@ -246,7 +247,7 @@ const Mutation = [
 ];
 
 export const graphQLSchema = makeSchema({
-    types: [...Query, ...Mutation],
+    types: [Upload, ...Query, ...Mutation],
     plugins: [
         connectionPlugin({
             extendConnection: {
