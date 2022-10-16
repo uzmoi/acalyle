@@ -1,11 +1,14 @@
 import { css } from "@linaria/core";
+import { Thumbnail } from "~/entities/book/thumbnail";
 import { colors } from "~/shared/ui/styles/theme";
 
 export const BookOverview: React.FC<{
+    thumbnail: string;
     title: string;
-}> = ({ title }) => {
+}> = ({ thumbnail, title }) => {
     return (
         <div className={BookOverviewStyle}>
+            <Thumbnail src={thumbnail} />
             <p className={BookOverviewTitleStyle}>
                 {title}
             </p>
@@ -14,6 +17,7 @@ export const BookOverview: React.FC<{
 };
 
 const BookOverviewStyle = css`
+    display: flex;
     height: 6em;
     background-color: ${colors.bgSub};
 `;

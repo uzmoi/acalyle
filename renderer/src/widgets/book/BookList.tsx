@@ -23,6 +23,7 @@ export const BookList: React.FC<{
                     node {
                         id
                         title
+                        thumbnail
                     }
                 }
             }
@@ -35,7 +36,7 @@ export const BookList: React.FC<{
                 {data.books.edges.map(({ node }) => (
                     <li key={node.id}>
                         <Link pattern="books/:bookId" params={{ bookId: node.id }}>
-                            <BookOverview title={node.title} />
+                            <BookOverview thumbnail={node.thumbnail} title={node.title} />
                         </Link>
                     </li>
                 ))}
