@@ -2,7 +2,7 @@ import { css } from "@linaria/core";
 import { graphql, usePaginationFragment } from "react-relay";
 import { Button } from "~/shared/control";
 import { Link } from "~/shared/router/react";
-import { colors } from "~/shared/ui/styles/theme";
+import { BookOverview } from "./BookOverview";
 import { BookListFragment$key } from "./__generated__/BookListFragment.graphql";
 import { BookListPaginationQuery } from "./__generated__/BookListPaginationQuery.graphql";
 
@@ -35,7 +35,7 @@ export const BookList: React.FC<{
                 {data.books.edges.map(({ node }) => (
                     <li key={node.id}>
                         <Link pattern="books/:bookId" params={{ bookId: node.id }}>
-                            <p>{node.title}</p>
+                            <BookOverview title={node.title} />
                         </Link>
                     </li>
                 ))}
@@ -53,13 +53,7 @@ const BookListStyle = css`
         a {
             display: inline-block;
             width: 100%;
-            height: 6em;
-            padding: 1em;
             cursor: pointer;
-            background-color: ${colors.bgSub};
-            p {
-                font-size: 2em;
-            }
         }
     }
 `;
