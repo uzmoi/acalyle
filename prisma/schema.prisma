@@ -9,6 +9,7 @@ generator client {
 
 model Book {
     id        String   @id
+    thumbnail String
     title     String
     createdAt DateTime
     memos     Memo[]

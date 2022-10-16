@@ -25,11 +25,16 @@ const createWindow = () => {
 
 const handleIpc = <T extends string>(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ipc: Record<T, (...args: any) => unknown>,
+    ipc: Record<T, (this: {
+        event: Electron.IpcMainInvokeEvent;
+        app: Electron.App;
+    }, ...args: any) => unknown>,
     ipcChannels: Record<T, string>,
 ) => {
     for(const name of Object.keys(ipcChannels) as (keyof typeof ipcChannels)[]) {
-        ipcMain.handle(ipcChannels[name], (_, ...args) => ipc[name].apply(null, args));
+        ipcMain.handle(ipcChannels[name], (e, ...args) => {
+            return ipc[name].apply({ event: e, app }, args);
+        });
     }
 };
 

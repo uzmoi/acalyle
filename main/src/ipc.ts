@@ -1,6 +1,6 @@
 import { JsonValue } from "emnorst";
 import { ExecutionResult, graphql } from "graphql";
-import { context } from "./context";
+import { createContext } from "./context";
 import { graphQLSchema } from "./schema";
 
 export const ipcChannels: Record<keyof typeof ipc, string> = {
@@ -13,6 +13,7 @@ export const ipc = {
         return process.cwd();
     },
     graphql(
+        this: { app: Electron.App },
         query: string,
         variables: Record<string, JsonValue>,
         bufs: Record<string, ArrayBuffer> = {},
@@ -28,7 +29,7 @@ export const ipc = {
             obj[lastKey] = new DataView(bufs[key]);
         }
         return graphql({
-            contextValue: context,
+            contextValue: createContext(this.app),
             schema: graphQLSchema,
             source: query,
             variableValues: variables,

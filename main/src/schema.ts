@@ -1,4 +1,5 @@
 import { Book, Memo } from "@prisma/client";
+import { mkdir, writeFile } from "fs/promises";
 import {
     connectionPlugin,
     interfaceType,
@@ -48,6 +49,7 @@ const Book = objectType({
     definition(t) {
         t.implements(Node);
         t.string("title");
+        t.string("thumbnail");
         t.string("createdAt", { description: "ISO8601" });
         t.field("memo", {
             type: Memo,
@@ -102,8 +104,11 @@ const gqlMemo = (memo: Memo) => ({
     contents: memo.contents.split(","),
 });
 
-const gqlBook = (book: Book) => ({
+const gqlBook = (book: Book, bookDataPath: string) => ({
     ...book,
+    thumbnail: book.thumbnail === "#image"
+        ? `@fs${bookDataPath}/${book.id}.thumbnail`
+        : `color:hsl(${Math.random() * 360}deg,80%,40%)`,
     createdAt: book.createdAt.toISOString(),
 });
 
@@ -116,18 +121,18 @@ const Query = [
     queryField("book", {
         type: nullable(Book),
         args: { id: nonNull("ID") },
-        async resolve(_, args, { prisma }) {
+        async resolve(_, args, { prisma, bookDataPath }) {
             const book = await prisma.book.findUnique({
                 where: { id: args.id },
             });
-            return book && gqlBook(book);
+            return book && gqlBook(book, bookDataPath);
         }
     }),
     queryField(t => {
         t.connectionField("books", {
             type: Book,
             cursorFromNode: node => node.id,
-            async nodes(_, args, { prisma }) {
+            async nodes(_, args, { prisma, bookDataPath }) {
                 let cursor: string | null | undefined;
                 let take: number | undefined;
                 if(args.first != null) {
@@ -145,7 +150,7 @@ const Query = [
                     take,
                     orderBy: { createdAt: "desc" },
                 });
-                return nodes.map(gqlBook);
+                return nodes.map(book => gqlBook(book, bookDataPath));
             },
             totalCount(_, __, { prisma }) {
                 return prisma.book.count();
@@ -170,16 +175,17 @@ const Mutation = [
         args: {
             title: nonNull("String"),
         },
-        async resolve(_, args, { prisma }) {
+        async resolve(_, args, { prisma, bookDataPath }) {
             const validBookTitle = await BookTitle.parseAsync(args.title);
             const book = await prisma.book.create({
                 data: {
                     title: validBookTitle,
+                    thumbnail: "",
                     id: uuidv4(),
                     createdAt: new Date(),
                 },
             });
-            return gqlBook(book);
+            return gqlBook(book, bookDataPath);
         }
     }),
     mutationField("editBook", {
@@ -187,16 +193,23 @@ const Mutation = [
         args: {
             id: nonNull("ID"),
             title: "String",
+            thumbnail: "Upload",
         },
-        async resolve(_, args, { prisma }) {
+        async resolve(_, args, { prisma, bookDataPath }) {
             const title = BookTitle.safeParse(args.title);
             const book = await prisma.book.update({
                 where: { id: args.id },
                 data: {
                     title: title.success ? title.data : undefined,
+                    thumbnail: args.thumbnail ? "#image" : undefined,
                 },
             });
-            return gqlBook(book);
+            if(args.thumbnail != null) {
+                await mkdir(bookDataPath, { recursive: true });
+                const thumbnailPath = path.join(bookDataPath, `${args.id}.thumbnail`);
+                await writeFile(thumbnailPath, new Int8Array(args.thumbnail.buffer));
+            }
+            return gqlBook(book, bookDataPath);
         }
     }),
     mutationField("deleteBook", {
