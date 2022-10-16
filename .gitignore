@@ -1,9 +1,11 @@
-app/
 node_modules/
 __generated__/
-prisma/*
-!schema.prisma
-data/schema.graphql
+
+/app
+/data/schema.graphql
+
+/prisma/*
+!/prisma/schema.prisma
 
 _*
 *.local
