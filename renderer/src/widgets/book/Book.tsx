@@ -1,38 +1,22 @@
 import { css } from "@linaria/core";
-import { clamp } from "emnorst";
-import { useMemo, useState } from "react";
-import { graphql, useMutation, usePaginationFragment } from "react-relay";
+import { graphql, useFragment, useMutation } from "react-relay";
 import { Button } from "~/shared/control";
 import { Link } from "~/shared/router/react";
-import { useResize } from "~/shared/ui/hooks/use-resize";
-import { columnSplit } from "~/shared/util/column-split";
-import { MemoOverview, MemoOverviewStyle, contentsHeight } from "./MemoOverview";
+import { MemoList } from "./MemoList";
 import { BookMemoCreateMutation } from "./__generated__/BookMemoCreateMutation.graphql";
 import { BookMemosFragment$key } from "./__generated__/BookMemosFragment.graphql";
-
-const columnWidth = 256;
 
 export const Book: React.FC<{
     id: string;
     book: BookMemosFragment$key;
 }> = ({ id, book }) => {
-    const {
-        data,
-    } = usePaginationFragment(graphql`
-        fragment BookMemosFragment on Book
-        @refetchable(queryName: "MemosPaginationQuery") {
+    const data = useFragment(graphql`
+        fragment BookMemosFragment on Book {
             title
-            memos(first: $count, after: $cursor)
-            @connection(key: "BookMemosFragment_memos") {
+            memos(first: $count, after: $cursor) {
                 __id
-                edges {
-                    node {
-                        id
-                        contents
-                        ...MemoOverviewFragment
-                    }
-                }
             }
+            ...MemoListFragment
         }
     `, book);
     const [commitAddMemo] = useMutation<BookMemoCreateMutation>(graphql`
@@ -44,19 +28,6 @@ export const Book: React.FC<{
             }
         }
     `);
-
-    const [columnsCount, setColumnsCount] = useState(16);
-    const columnsEl = useResize<HTMLDivElement>(entry => {
-        setColumnsCount(clamp(Math.floor(entry.contentRect.width / columnWidth), 1, 6));
-    });
-
-    const columns = useMemo(() => {
-        return columnSplit(
-            data.memos.edges.map(x => x.node),
-            columnsCount,
-            node => contentsHeight(node.contents),
-        );
-    }, [data.memos.edges, columnsCount]);
 
     const addMemo = () => {
         commitAddMemo({
@@ -82,15 +53,7 @@ export const Book: React.FC<{
                     </li>
                 </ul>
             </div>
-            <div ref={columnsEl} className={ColumnListStyle}>
-                {columns.map((column, i) => (
-                    <div key={i} className={ColumnStyle}>
-                        {column.map(node => (
-                            <MemoOverview key={node.id} bookId={id} fragmentRef={node} />
-                        ))}
-                    </div>
-                ))}
-            </div>
+            <MemoList fragmentRef={data} />
         </div>
     );
 };
@@ -111,17 +74,5 @@ const ButtonListStyle = css`
     flex-shrink: 0;
     > li ~ li {
         margin-left: 0.8em;
-    }
-`;
-
-const ColumnListStyle = css`
-    display: flex;
-`;
-
-const ColumnStyle = css`
-    flex: 1 0 0;
-    min-width: 0;
-    .${MemoOverviewStyle} {
-        margin: 1em;
     }
 `;
