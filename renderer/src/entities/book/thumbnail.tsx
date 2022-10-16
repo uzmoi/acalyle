@@ -13,7 +13,7 @@ export const Thumbnail: React.FC<{
 
     return (
         <div className={ThumbnailStyle}>
-            <img src={src} alt="book thumbnail of book" className={ThumbnailImageStyle} />
+            <img src={src} alt="book thumbnail" className={ThumbnailImageStyle} />
         </div>
     );
 };
