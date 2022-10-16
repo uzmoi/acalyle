@@ -1,3 +1,4 @@
+import { css, cx } from "@linaria/core";
 import { useCallback } from "react";
 import { AtomEffect, atom, useRecoilValue, useSetRecoilState } from "recoil";
 import { MatchParams, ParseStringPath, link } from "./router";
@@ -46,12 +47,13 @@ export const Link = <T extends AcaRoutePath>(props: (
     )
     & Omit<React.ComponentPropsWithoutRef<"a">, "href">
 )): React.ReactElement => {
-    const { pattern, params, ...rest } = props;
+    const { pattern, params, className, ...rest } = props;
     const navigate = useNavigate();
 
     return (
         <a
             {...rest}
+            className={cx(LinkStyle, className)}
             href={"#" + link()(pattern, params as never)}
             onClick={e => {
                 if(e.defaultPrevented) return;
@@ -61,3 +63,8 @@ export const Link = <T extends AcaRoutePath>(props: (
         />
     );
 };
+
+const LinkStyle = css`
+    color: inherit;
+    text-decoration: none;
+`;
