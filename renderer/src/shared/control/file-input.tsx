@@ -1,13 +1,47 @@
 import { css, cx } from "@linaria/core";
 import { ControlPartResetStyle } from "./base";
 
+type OmitPropNames = (
+    // overrided
+    | "type"
+    // type="text"
+    | "autoComplete"
+    | "autoCapitalize"
+    | "autoCorrect"
+    | "spellCheck"
+    // string
+    | "minLength"
+    | "maxLength"
+    | "pattern"
+    | "placeholder"
+    | "size"
+    // numeric
+    | "min"
+    | "max"
+    | "step"
+    // type="checkbox", type="radio"
+    | "checked"
+    | "defaultChecked"
+    // type="image"
+    | "src"
+    | "alt"
+    | "width"
+    | "height"
+    // type="image", type="submit"
+    | "formAction"
+    | "formEncType"
+    | "formMethod"
+    | "formNoValidate"
+    | "formTarget"
+);
+
 export const FileInput: React.FC<({
     multiple?: false;
     onFileChange?: (file: File) => void;
 } | {
     multiple: true;
     onFileChange?: (fileList: FileList) => void;
-}) & Omit<React.ComponentPropsWithoutRef<"input">, "type">> = ({
+}) & Omit<React.ComponentPropsWithoutRef<"input">, OmitPropNames>> = ({
     onChange,
     onFileChange,
     multiple,
