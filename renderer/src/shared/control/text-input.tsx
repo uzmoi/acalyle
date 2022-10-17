@@ -60,5 +60,11 @@ export const TextInput: React.FC<{
 };
 
 const TextInputStyle = cx(ControlPartResetStyle, ControlPartBorderStyle, css`
-    /* - */
+    transition: border-color 400ms;
+    &:focus {
+        border-color: lightgreen;
+    }
+    &:invalid, &[aria-invalid="true"] {
+        border-color: red;
+    }
 `);
