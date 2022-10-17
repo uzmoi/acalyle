@@ -40,7 +40,7 @@ export const BookSettingsPage: React.FC<{
 
     return (
         <div className={BookSettingsPageStyle}>
-            <BookTitleForm id={id} currentTitle={book.title} />
+            <BookTitleForm bookId={id} currentTitle={book.title} />
             <BookThumbnailForm bookId={id} />
             <Button onClick={deleteBook} disabled={isInFlight}>
                 delete book

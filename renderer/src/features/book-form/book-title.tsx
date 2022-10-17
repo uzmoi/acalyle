@@ -4,9 +4,9 @@ import { Button, TextInput } from "~/shared/control";
 import { bookTitleMutation } from "./__generated__/bookTitleMutation.graphql";
 
 export const BookTitle: React.FC<{
-    id: string;
+    bookId: string;
     currentTitle: string;
-}> = ({ id, currentTitle }) => {
+}> = ({ bookId, currentTitle }) => {
     const [title, setTitle] = useState(currentTitle);
 
     const [commit, isInFlight] = useMutation<bookTitleMutation>(graphql`
@@ -18,7 +18,7 @@ export const BookTitle: React.FC<{
     `);
     const handleSubmit = () => {
         commit({
-            variables: { id, title },
+            variables: { id: bookId, title },
         });
     };
 
