@@ -1,3 +1,4 @@
+import { css } from "@linaria/core";
 import { useId, useState } from "react";
 import { graphql, useMutation } from "react-relay";
 import { Button, TextInput } from "~/shared/control";
@@ -25,15 +26,42 @@ export const BookTitle: React.FC<{
     const htmlBookTitleId = useId();
 
     return (
-        <form onSubmit={handleSubmit}>
-            <label htmlFor={htmlBookTitleId}>Book title</label>
-            <TextInput
-                id={htmlBookTitleId}
-                value={title}
-                onValueChange={setTitle}
-                disabled={isInFlight}
-            />
+        <form onSubmit={handleSubmit} className={BookTitleFormStyle}>
+            <dl className={DlStyle}>
+                <dt>
+                    <label htmlFor={htmlBookTitleId} className={LabelStyle}>
+                        Book title
+                    </label>
+                </dt>
+                <dd>
+                    <TextInput
+                        id={htmlBookTitleId}
+                        className={InputStyle}
+                        value={title}
+                        onValueChange={setTitle}
+                        disabled={isInFlight}
+                    />
+                </dd>
+            </dl>
             <Button>Rename</Button>
         </form>
     );
 };
+
+const BookTitleFormStyle = css`
+    font-size: 0.9em;
+`;
+
+const DlStyle = css`
+    display: inline-block;
+    margin-right: 0.4em;
+`;
+
+const LabelStyle = css`
+    font-size: 0.9em;
+    font-weight: bold;
+`;
+
+const InputStyle = css`
+    width: 16em;
+`;
