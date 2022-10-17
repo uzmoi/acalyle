@@ -25,7 +25,7 @@ export const BookThumbnail: React.FC<{
 
     return (
         <form onSubmit={handleSubmit}>
-            <FileInput onFileChange={setFile} />
+            <FileInput onFileChange={setFile} accept="image/*" />
             <Button disabled={file == null || isInFlight}>
                 Submit
             </Button>
