@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { graphql, useMutation } from "react-relay";
 import { Button, TextInput } from "~/shared/control";
 import { bookTitleMutation } from "./__generated__/bookTitleMutation.graphql";
@@ -22,10 +22,13 @@ export const BookTitle: React.FC<{
         });
     };
 
+    const htmlBookTitleId = useId();
+
     return (
         <form onSubmit={handleSubmit}>
-            <label>Book title</label>
+            <label htmlFor={htmlBookTitleId}>Book title</label>
             <TextInput
+                id={htmlBookTitleId}
                 value={title}
                 onValueChange={setTitle}
                 disabled={isInFlight}
