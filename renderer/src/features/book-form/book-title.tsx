@@ -39,6 +39,8 @@ export const BookTitle: React.FC<{
                         className={InputStyle}
                         value={title}
                         onValueChange={setTitle}
+                        required
+                        maxLength={32}
                         disabled={isInFlight}
                     />
                 </dd>
