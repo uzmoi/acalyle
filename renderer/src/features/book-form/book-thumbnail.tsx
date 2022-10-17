@@ -9,11 +9,11 @@ export const BookThumbnail: React.FC<{
     const [file, setFile] = useState<File | null>(null);
 
     const [commitChangeThumbnail, isInFlight] = useMutation<bookThumbnailChangeMutation>(graphql`
-    mutation bookThumbnailChangeMutation($id: ID!, $thumbnail: Upload!) {
-        editBook(id: $id, thumbnail: $thumbnail) {
-            thumbnail
+        mutation bookThumbnailChangeMutation($id: ID!, $thumbnail: Upload!) {
+            editBook(id: $id, thumbnail: $thumbnail) {
+                thumbnail
+            }
         }
-    }
     `);
     const handleSubmit = () => {
         if(file == null) return;
