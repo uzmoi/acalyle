@@ -1,4 +1,6 @@
 /* eslint-disable import/unambiguous */
+
+// https://github.com/facebook/relay/blob/main/packages/relay-compiler/README.md
 module.exports = {
     src: "./renderer",
     schema: "./data/schema.graphql",
