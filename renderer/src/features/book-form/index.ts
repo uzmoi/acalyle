@@ -1,3 +1,3 @@
 export { BookThumbnail as BookThumbnailForm } from "./book-thumbnail";
-export { BookTitle as BookTitleForm } from "./book-title";
+export { BookTitle, BookTitleForm } from "./book-title";
 export { BookDeleteForm } from "./delete";

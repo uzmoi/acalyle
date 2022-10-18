@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { graphql, useMutation } from "react-relay";
-import { Button, TextInput } from "~/shared/control";
+import { BookTitle } from "~/features/book-form/book-title";
+import { Button } from "~/shared/control";
 import { useNavigate } from "~/shared/router/react";
 import { newBookCreateMutation } from "./__generated__/newBookCreateMutation.graphql";
 
@@ -28,15 +29,7 @@ export const NewBookPage: React.FC = () => {
     return (
         <form onSubmit={onSubmit}>
             <h1>Create a new book</h1>
-            <div>
-                <label htmlFor="book_title">Book title</label>
-                <TextInput
-                    id="book_title"
-                    value={title}
-                    onValueChange={setTitle}
-                    readOnly={isInFlight}
-                />
-            </div>
+            <BookTitle title={title} setTitle={setTitle} disabled={isInFlight} />
             <Button disabled={isInFlight}>create book</Button>
         </form>
     );

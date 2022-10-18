@@ -4,7 +4,7 @@ import { graphql, useMutation } from "react-relay";
 import { Button, TextInput } from "~/shared/control";
 import { bookTitleMutation } from "./__generated__/bookTitleMutation.graphql";
 
-export const BookTitle: React.FC<{
+export const BookTitleForm: React.FC<{
     bookId: string;
     currentTitle: string;
 }> = ({ bookId, currentTitle }) => {
@@ -23,28 +23,9 @@ export const BookTitle: React.FC<{
         });
     };
 
-    const htmlBookTitleId = useId();
-
     return (
         <form onSubmit={handleSubmit} className={BookTitleFormStyle}>
-            <dl className={DlStyle}>
-                <dt>
-                    <label htmlFor={htmlBookTitleId} className={LabelStyle}>
-                        Book title
-                    </label>
-                </dt>
-                <dd>
-                    <TextInput
-                        id={htmlBookTitleId}
-                        className={InputStyle}
-                        value={title}
-                        onValueChange={setTitle}
-                        required
-                        maxLength={32}
-                        disabled={isInFlight}
-                    />
-                </dd>
-            </dl>
+            <BookTitle title={title} setTitle={setTitle} disabled={isInFlight} />
             <Button>Rename</Button>
         </form>
     );
@@ -53,6 +34,35 @@ export const BookTitle: React.FC<{
 const BookTitleFormStyle = css`
     font-size: 0.9em;
 `;
+
+export const BookTitle: React.FC<{
+    title: string;
+    setTitle: (title: string) => void;
+    disabled?: boolean;
+}> = ({ title, setTitle, disabled }) => {
+    const htmlBookTitleId = useId();
+
+    return (
+        <dl className={DlStyle}>
+            <dt>
+                <label htmlFor={htmlBookTitleId} className={LabelStyle}>
+                    Book title
+                </label>
+            </dt>
+            <dd>
+                <TextInput
+                    id={htmlBookTitleId}
+                    className={InputStyle}
+                    value={title}
+                    onValueChange={setTitle}
+                    required
+                    maxLength={32}
+                    disabled={disabled}
+                />
+            </dd>
+        </dl>
+    );
+};
 
 const DlStyle = css`
     display: inline-block;
