@@ -107,8 +107,10 @@ const gqlMemo = (memo: Memo) => ({
 const gqlBook = (book: Book, bookDataPath: string) => ({
     ...book,
     thumbnail: book.thumbnail === "#image"
-        ? `@fs${bookDataPath}/${book.id}.thumbnail`
-        : `color:hsl(${Math.random() * 360}deg,80%,40%)`,
+        ? process.env.NODE_ENV === "development"
+            ? `@fs${bookDataPath}/${book.id}.thumbnail`
+            : `file://${bookDataPath}/${book.id}.thumbnail`
+        : book.thumbnail,
     createdAt: book.createdAt.toISOString(),
 });
 
@@ -180,7 +182,7 @@ const Mutation = [
             const book = await prisma.book.create({
                 data: {
                     title: validBookTitle,
-                    thumbnail: "",
+                    thumbnail: `color:hsl(${Math.random() * 360}deg,80%,40%)`,
                     id: uuidv4(),
                     createdAt: new Date(),
                 },
