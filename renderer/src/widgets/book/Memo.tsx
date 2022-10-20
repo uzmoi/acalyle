@@ -58,10 +58,8 @@ export const Memo: React.FC<{
                 </div>
             ) : (
                 <div className={MemoContentsStyle}>
-                    {memo.contents.map(contentBlock => (
-                        <div key={contentBlock}>{contentBlock}</div>
-                    ))}
-                    <Button onClick={() => setContents(memo.contents.join())}>
+                    {memo.contents}
+                    <Button onClick={() => setContents(memo.contents)}>
                         edit
                     </Button>
                 </div>

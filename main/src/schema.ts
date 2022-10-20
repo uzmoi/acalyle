@@ -93,7 +93,7 @@ const Memo = objectType({
         t.implements(Node);
         t.string("createdAt", { description: "ISO8601" });
         t.string("updatedAt", { description: "ISO8601" });
-        t.list.string("contents");
+        t.string("contents");
     }
 });
 
@@ -101,7 +101,6 @@ const gqlMemo = (memo: Memo) => ({
     ...memo,
     createdAt: memo.createdAt.toISOString(),
     updatedAt: memo.updatedAt.toISOString(),
-    contents: memo.contents.split(","),
 });
 
 const gqlBook = (book: Book, bookDataPath: string) => ({

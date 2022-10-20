@@ -5,11 +5,8 @@ import { Link } from "~/shared/router/react";
 import { colors } from "~/shared/ui/styles/theme";
 import { MemoOverviewFragment$key } from "./__generated__/MemoOverviewFragment.graphql";
 
-export const contentsHeight = (contents: readonly string[]) => {
-    const contentsLines = contents.reduce<number>(
-        (accum, content) => accum + content.split("\n").length,
-        0,
-    );
+export const contentsHeight = (contents: string) => {
+    const contentsLines = contents.split("\n").length;
     return clamp(Math.floor(contentsLines / 8), 1, 4);
 };
 
@@ -35,11 +32,7 @@ export const MemoOverview: React.FC<{
                 params={{ bookId, memoId: memo.id }}
                 className={MemoOverviewContentsLinkStyle}
             >
-                {memo.contents.map(content => (
-                    <div key={content}>
-                        {content}
-                    </div>
-                ))}
+                {memo.contents}
             </Link>
         </article>
     );
