@@ -45,8 +45,8 @@ export const TextArea: React.FC<{
                 spellCheck="false"
             />
             <div className={PreStyle} aria-hidden>
-                {/* for min-height */}
-                {value || ZeroWidthSpace}
+                {value}
+                {ZeroWidthSpace}
             </div>
         </div>
     );
