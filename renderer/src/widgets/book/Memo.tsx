@@ -1,7 +1,7 @@
 import { css } from "@linaria/core";
 import { useState } from "react";
 import { graphql, useFragment, useMutation } from "react-relay";
-import { Button } from "~/shared/control";
+import { Button, TextArea } from "~/shared/control";
 import { MemoEditMemoContentsMutation } from "./__generated__/MemoEditMemoContentsMutation.graphql";
 import { MemoFragment$key } from "./__generated__/MemoFragment.graphql";
 
@@ -35,9 +35,9 @@ export const Memo: React.FC<{
         <div className={MemoStyle}>
             {contents != null ? (
                 <div className={MemoContentsStyle}>
-                    <textarea
+                    <TextArea
                         value={contents}
-                        onChange={e => setContents(e.target.value)}
+                        onValueChange={setContents}
                         disabled={isInFlight}
                     />
                     <Button onClick={() => setContents(null)}>
