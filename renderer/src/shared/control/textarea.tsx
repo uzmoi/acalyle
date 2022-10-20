@@ -1,6 +1,8 @@
 import { css, cx } from "@linaria/core";
 import { ControlPartBorderStyle, ControlPartResetStyle } from "./base";
 
+const ZeroWidthSpace = "\u200b";
+
 export const TextArea: React.FC<{
     value?: string;
     onValueChange?: (value: string) => void;
@@ -43,7 +45,8 @@ export const TextArea: React.FC<{
                 spellCheck="false"
             />
             <div className={PreStyle} aria-hidden>
-                {value}
+                {/* for min-height */}
+                {value || ZeroWidthSpace}
             </div>
         </div>
     );
@@ -78,6 +81,7 @@ const TextAreaStyle = cx(ControlPartResetStyle, css`
 `);
 
 const PreStyle = css`
+    min-height: 1em;
     pointer-events: none;
     user-select: none;
 `;
