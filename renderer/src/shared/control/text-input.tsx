@@ -33,6 +33,7 @@ type OmitPropNames = (
 );
 
 export const TextInput: React.FC<{
+    value?: string;
     onValueChange?: (value: string) => void;
 } & Omit<React.ComponentPropsWithoutRef<"input">, OmitPropNames>> = ({
     onChange,
