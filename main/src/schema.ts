@@ -1,8 +1,10 @@
 import { Book, Memo } from "@prisma/client";
+import { assert } from "emnorst";
 import { mkdir, writeFile } from "fs/promises";
 import {
     connectionPlugin,
     interfaceType,
+    list,
     makeSchema,
     mutationField,
     nonNull,
@@ -14,6 +16,7 @@ import path = require("path");
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 import { Upload } from "./scalar";
+import { parseTag, stringifyTag } from "./tag";
 
 const Node = interfaceType({
     name: "Node",
@@ -84,6 +87,21 @@ const Book = objectType({
                 });
             },
         });
+        t.list.string("tags", {
+            async resolve(book, __, { prisma }) {
+                const tags = await prisma.tag.findMany({
+                    where: { bookId: book.id },
+                });
+                return tags.map(tag => {
+                    assert.as<"normal" | "control">(tag.type);
+                    return stringifyTag({
+                        type: tag.type,
+                        name: tag.name,
+                        args: null,
+                    });
+                });
+            },
+        });
     }
 });
 
@@ -94,6 +112,22 @@ const Memo = objectType({
         t.string("createdAt", { description: "ISO8601" });
         t.string("updatedAt", { description: "ISO8601" });
         t.string("contents");
+        t.list.string("tags", {
+            async resolve(memo, __, { prisma }) {
+                const memoTags = await prisma.memoTag.findMany({
+                    where: { memoId: memo.id },
+                    select: { tag: true, args: true },
+                });
+                return memoTags.map(memoTag => {
+                    assert.as<"normal" | "control">(memoTag.tag.type);
+                    return stringifyTag({
+                        type: memoTag.tag.type,
+                        name: memoTag.tag.name,
+                        args: memoTag.args,
+                    });
+                });
+            },
+        });
     }
 });
 
@@ -246,15 +280,66 @@ const Mutation = [
             bookId: nonNull("ID"),
             memoId: nonNull("ID"),
             contents: "String",
+            tags: list(nonNull("String")),
         },
         async resolve(_, args, { prisma }) {
-            const memo = await prisma.memo.update({
+            const updateMemo = prisma.memo.update({
                 where: { id: args.memoId },
                 data: {
                     contents: args.contents ?? undefined,
                     updatedAt: new Date(),
                 },
             });
+            if(args.tags == null) {
+                return { node: gqlMemo(await updateMemo) };
+            }
+            const tags = args.tags.slice(0, 32).map(parseTag);
+            const memoTags = await prisma.memoTag.findMany({
+                where: { memoId: args.memoId },
+                include: { tag: true },
+            });
+            const upserts = tags
+                .filter(tag => {
+                    return memoTags.some(memoTag => memoTag.tag.type !== tag.type);
+                })
+                .map(tag => prisma.memoTag.upsert({
+                    where: {
+                        memoId_tagName: {
+                            memoId: args.memoId,
+                            tagName: tag.name,
+                        },
+                    },
+                    create: {
+                        tag: {
+                            connectOrCreate: {
+                                where: { name: tag.name },
+                                create: {
+                                    type: tag.type,
+                                    name: tag.name,
+                                    bookId: args.bookId,
+                                },
+                            },
+                        },
+                        Memo: {
+                            connect: { id: args.memoId },
+                        },
+                        args: tag.args,
+                    },
+                    update: {
+                        args: { set: tag.args },
+                    },
+                }));
+            const [memo] = await prisma.$transaction([
+                updateMemo,
+                ...upserts,
+                prisma.memoTag.deleteMany({
+                    where: {
+                        OR: memoTags.filter(memoTag => {
+                            return tags.every(tag => memoTag.tagName !== tag.name);
+                        }),
+                    },
+                }),
+            ]);
             return { node: gqlMemo(memo) };
         }
     }),

@@ -13,13 +13,33 @@ model Book {
     title     String
     createdAt DateTime
     memos     Memo[]
+    tags      Tag[]
 }
 
 model Memo {
-    id        String   @id
+    id        String    @id
     contents  String
+    tags      MemoTag[]
     createdAt DateTime
     updatedAt DateTime
-    Book      Book     @relation(fields: [bookId], references: [id])
+    Book      Book      @relation(fields: [bookId], references: [id])
     bookId    String
+}
+
+model Tag {
+    type     String
+    name     String    @id
+    memoTags MemoTag[]
+    Book     Book      @relation(fields: [bookId], references: [id])
+    bookId   String
+}
+
+model MemoTag {
+    tag     Tag     @relation(fields: [tagName], references: [name])
+    tagName String
+    args    String?
+    Memo    Memo    @relation(fields: [memoId], references: [id])
+    memoId  String
+
+    @@id([memoId, tagName])
 }
