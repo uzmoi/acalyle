@@ -13,10 +13,11 @@ import {
     queryField,
 } from "nexus";
 import path = require("path");
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { parseTag, stringifyTag } from "renderer/src/entities/book/tag";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 import { Upload } from "./scalar";
-import { parseTag, stringifyTag } from "./tag";
 
 const Node = interfaceType({
     name: "Node",
@@ -293,7 +294,8 @@ const Mutation = [
             if(args.tags == null) {
                 return { node: gqlMemo(await updateMemo) };
             }
-            const tags = args.tags.slice(0, 32).map(parseTag);
+            const tags = args.tags.slice(0, 32).map(parseTag)
+                .filter(<T>(value: T): value is NonNullable<T> => value != null);
             const memoTags = await prisma.memoTag.findMany({
                 where: { memoId: args.memoId },
                 include: { tag: true },
