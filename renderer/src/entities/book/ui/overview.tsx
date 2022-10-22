@@ -1,6 +1,6 @@
 import { css } from "@linaria/core";
-import { Thumbnail } from "~/entities/book/thumbnail";
 import { colors } from "~/shared/ui/styles/theme";
+import { BookThumbnail } from "./thumbnail";
 
 export const BookOverview: React.FC<{
     thumbnail: string;
@@ -8,7 +8,7 @@ export const BookOverview: React.FC<{
 }> = ({ thumbnail, title }) => {
     return (
         <div className={BookOverviewStyle}>
-            <Thumbnail src={thumbnail} />
+            <BookThumbnail src={thumbnail} />
             <p className={BookOverviewTitleStyle}>
                 {title}
             </p>

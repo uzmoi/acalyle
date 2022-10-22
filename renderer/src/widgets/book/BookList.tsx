@@ -1,8 +1,8 @@
 import { css } from "@linaria/core";
 import { graphql, usePaginationFragment } from "react-relay";
+import { BookOverview } from "~/entities/book";
 import { Button } from "~/shared/control";
 import { Link } from "~/shared/router/react";
-import { BookOverview } from "./BookOverview";
 import { BookListFragment$key } from "./__generated__/BookListFragment.graphql";
 import { BookListPaginationQuery } from "./__generated__/BookListPaginationQuery.graphql";
 

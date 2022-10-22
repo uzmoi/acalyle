@@ -1,6 +1,6 @@
 import { css } from "@linaria/core";
 
-export const Thumbnail: React.FC<{
+export const BookThumbnail: React.FC<{
     src: string;
 }> = ({ src }) => {
     const prefix = "color:";
