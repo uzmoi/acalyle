@@ -1,6 +1,7 @@
 import { css } from "@linaria/core";
 import { clamp } from "emnorst";
 import { graphql, useFragment } from "react-relay";
+import { Tag } from "~/entities/tag";
 import { Link } from "~/shared/router/react";
 import { colors } from "~/shared/ui/styles/theme";
 import { MemoOverviewFragment$key } from "./__generated__/MemoOverviewFragment.graphql";
@@ -20,6 +21,7 @@ export const MemoOverview: React.FC<{
             createdAt
             updatedAt
             contents
+            tags
         }
     `, fragmentRef);
 
@@ -34,12 +36,16 @@ export const MemoOverview: React.FC<{
             >
                 {memo.contents}
             </Link>
+            <div className={TagListStyle}>
+                {memo.tags.map(tag => <Tag key={tag} tag={tag} />)}
+            </div>
         </article>
     );
 };
 
 export const MemoOverviewStyle = css`
     display: flex;
+    flex-flow: column nowrap;
     height: calc(var(--height) * 8em);
     padding: 0.4em;
     overflow: hidden;
@@ -52,4 +58,9 @@ const MemoOverviewContentsLinkStyle = css`
     flex: 1 0;
     color: currentcolor;
     text-decoration: none;
+`;
+
+const TagListStyle = css`
+    flex: 0;
+    font-size: 0.75em;
 `;

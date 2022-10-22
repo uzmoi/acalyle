@@ -2,6 +2,7 @@ import { css } from "@linaria/core";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { graphql, useFragment, useMutation } from "react-relay";
+import { Tag } from "~/entities/tag";
 import { Button, TextArea } from "~/shared/control";
 import { MemoEditMemoContentsMutation } from "./__generated__/MemoEditMemoContentsMutation.graphql";
 import { MemoFragment$key } from "./__generated__/MemoFragment.graphql";
@@ -14,6 +15,7 @@ export const Memo: React.FC<{
         fragment MemoFragment on Memo {
             id
             contents
+            tags
             createdAt
             updatedAt
         }
@@ -70,6 +72,13 @@ export const Memo: React.FC<{
             <div className={MemoFooterStyle}>
                 <p>updated at {new Date(memo.updatedAt).toLocaleDateString()}</p>
                 <p>created at {new Date(memo.createdAt).toLocaleDateString()}</p>
+                <ul>
+                    {memo.tags.map(tag => (
+                        <li key={tag}>
+                            <Tag tag={tag} />
+                        </li>
+                    ))}
+                </ul>
             </div>
         </div>
     );

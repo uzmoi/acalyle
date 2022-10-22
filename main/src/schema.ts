@@ -14,7 +14,7 @@ import {
 } from "nexus";
 import path = require("path");
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { parseTag, stringifyTag } from "renderer/src/entities/book/tag";
+import { parseTag, stringifyTag } from "renderer/src/entities/tag/lib/tag";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 import { Upload } from "./scalar";
