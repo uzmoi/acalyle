@@ -6,10 +6,13 @@ import { CodeProps } from "react-markdown/lib/ast-to-react";
 import SyntaxHighlighter from "react-syntax-highlighter/dist/esm/prism-light";
 import coldarkCold from "react-syntax-highlighter/dist/esm/styles/prism/coldark-cold";
 import coldarkDark from "react-syntax-highlighter/dist/esm/styles/prism/coldark-dark";
+import { useColorScheme } from "~/shared/ui/styles/theme";
 
 const components = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     code: ({ node: _, inline, className, children, ...restProps }: CodeProps) => {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const colorScheme = useColorScheme();
         if(inline) {
             return (
                 <code className={className} {...restProps}>
@@ -27,7 +30,7 @@ const components = {
                 {...restProps}
                 language={lang}
                 PreTag="div"
-                style={coldarkDark}
+                style={colorScheme === "light" ? coldarkCold : coldarkDark}
             >
                 {String(children)}
             </SyntaxHighlighter>
