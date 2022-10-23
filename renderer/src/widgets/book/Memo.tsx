@@ -1,7 +1,7 @@
 import { css } from "@linaria/core";
 import { useState } from "react";
-import ReactMarkdown from "react-markdown";
 import { graphql, useFragment, useMutation } from "react-relay";
+import { MemoContents } from "~/entities/memo";
 import { Tag } from "~/entities/tag";
 import { Button, TextArea } from "~/shared/control";
 import { MemoEditMemoContentsMutation } from "./__generated__/MemoEditMemoContentsMutation.graphql";
@@ -61,9 +61,7 @@ export const Memo: React.FC<{
                 </div>
             ) : (
                 <div>
-                    <ReactMarkdown className={MarkdownStyle}>
-                        {memo.contents}
-                    </ReactMarkdown>
+                    <MemoContents contents={memo.contents} />
                     <Button onClick={() => setContents(memo.contents)}>
                         edit
                     </Button>
@@ -86,12 +84,6 @@ export const Memo: React.FC<{
 
 const MemoStyle = css`
     padding: 1em;
-`;
-
-const MarkdownStyle = css`
-    a {
-        color: #48e;
-    }
 `;
 
 const MemoFooterStyle = css`
