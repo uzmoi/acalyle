@@ -29,7 +29,7 @@ describe("normal tag", () => {
     });
 });
 
-it("control tag", () => {
+describe("control tag", () => {
     it("引数無し", () => {
         expect(parseTag("@tag")).toEqual({
             type: "control",
