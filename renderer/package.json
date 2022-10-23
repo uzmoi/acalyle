@@ -33,6 +33,7 @@
     "@vitejs/plugin-react": "^2.1.0",
     "babel-plugin-module-resolver": "^4.1.0",
     "happy-dom": "^7.5.12",
+    "rollup-plugin-visualizer": "^5.8.3",
     "stylelint": "^14.14.0",
     "stylelint-config-recess-order": "^3.0.0",
     "stylelint-config-standard": "^29.0.0",

@@ -2,6 +2,7 @@ import type {} from "vitest";
 import linaria from "@linaria/rollup";
 import react from "@vitejs/plugin-react";
 // eslint-disable-next-line import/no-extraneous-dependencies
+import { visualizer } from "rollup-plugin-visualizer";
 import { Plugin, defineConfig } from "vite";
 import relay from "vite-plugin-relay";
 
@@ -60,6 +61,9 @@ export default defineConfig(env => ({
         assetsDir: "",
         emptyOutDir: false,
         sourcemap: env.mode === "develepment",
+        rollupOptions: {
+            plugins: [visualizer({ emitFile: true })],
+        },
     },
     test: {
         globals: true,
