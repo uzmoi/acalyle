@@ -27,9 +27,15 @@ export const parseTag = (tagString: string): Tag | null => {
                 // normalに引数は無い
                 return null;
             }
+            if(char === ")") {
+                return null;
+            }
             name += char;
             break;
         case "args":
+            if(char === "(") {
+                return null;
+            }
             if(char === ")") {
                 if(i !== tagString.length - 1) {
                     // 入力を消費しきっていない
@@ -67,25 +73,56 @@ export const stringifyTag = (tag: Tag): string => {
 };
 
 if(import.meta.vitest) {
-    const { it, expect } = import.meta.vitest;
-    it("normalに引数は無い", () => {
-        expect(parseTag("#tag()")).toBeNull();
-    });
-    it("nameが空", () => {
+    const { describe, it, expect } = import.meta.vitest;
+    it("nameは1文字以上必要", () => {
         expect(parseTag("#")).toBeNull();
     });
-    it("valid", () => {
-        expect(parseTag("#tag")).toEqual({
-            type: "normal",
-            name: "tag",
-            args: null,
+    it("nameに')'は使用できない", () => {
+        expect(parseTag("#tag)")).toBeNull();
+    });
+    describe("normal tag", () => {
+        it("valid", () => {
+            expect(parseTag("#tag")).toEqual({
+                type: "normal",
+                name: "tag",
+                args: null,
+            });
+        });
+        it("#は省略できる", () => {
+            expect(parseTag("tag")).toEqual({
+                type: "normal",
+                name: "tag",
+                args: null,
+            });
+        });
+        it("引数は使用できない", () => {
+            expect(parseTag("#tag()")).toBeNull();
         });
     });
-    it("#の省略", () => {
-        expect(parseTag("tag")).toEqual({
-            type: "normal",
-            name: "tag",
-            args: null,
+    it("control tag", () => {
+        it("引数無し", () => {
+            expect(parseTag("@tag")).toEqual({
+                type: "control",
+                name: "tag",
+                args: null,
+            });
+        });
+        it("引数が空", () => {
+            expect(parseTag("@tag()")).toEqual({
+                type: "control",
+                name: "tag",
+                args: null,
+            });
+        });
+        it("引数有り", () => {
+            expect(parseTag("@tag(args)")).toEqual({
+                type: "control",
+                name: "tag",
+                args: "args",
+            });
+        });
+        it("argsに'('は使用できない", () => {
+            expect(parseTag("@tag(()")).toBeNull();
         });
     });
 }
