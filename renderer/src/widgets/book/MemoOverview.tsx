@@ -55,9 +55,9 @@ export const MemoOverviewStyle = css`
 
 const MemoOverviewContentsLinkStyle = css`
     display: block;
-    flex: 1 0;
+    flex: 1;
+    overflow: hidden;
     color: currentcolor;
-    text-decoration: none;
 `;
 
 const TagListStyle = css`
