@@ -1,8 +1,11 @@
+/// <reference types="react-syntax-highlighter" />
+
 import { css } from "@linaria/core";
 import ReactMarkdown from "react-markdown";
 import { CodeProps } from "react-markdown/lib/ast-to-react";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { coldarkCold, coldarkDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import SyntaxHighlighter from "react-syntax-highlighter/dist/esm/prism-light";
+import coldarkCold from "react-syntax-highlighter/dist/esm/styles/prism/coldark-cold";
+import coldarkDark from "react-syntax-highlighter/dist/esm/styles/prism/coldark-dark";
 
 const components = {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
