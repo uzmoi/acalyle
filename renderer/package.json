@@ -16,6 +16,7 @@
     "react-dom": "^18.2.0",
     "react-markdown": "^8.0.3",
     "react-relay": "^14.1.0",
+    "react-syntax-highlighter": "^15.5.0",
     "recoil": "^0.7.5"
   },
   "devDependencies": {
@@ -28,6 +29,7 @@
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "@types/react-relay": "^14.1.2",
+    "@types/react-syntax-highlighter": "^15.5.5",
     "@vitejs/plugin-react": "^2.1.0",
     "babel-plugin-module-resolver": "^4.1.0",
     "happy-dom": "^7.5.12",
