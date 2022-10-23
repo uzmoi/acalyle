@@ -1,6 +1,6 @@
 import { css } from "@linaria/core";
 import { fonts } from "~/shared/ui/styles/theme";
-import { parseTag } from "../lib/tag";
+import { parseTag } from "../lib/parse";
 
 export const Tag: React.FC<{
     tag: string;

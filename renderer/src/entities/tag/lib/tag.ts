@@ -5,59 +5,10 @@ export interface Tag {
     args: string | null;
 }
 
-const tagTypeTable = {
+export const tagTypeTable = {
     "@": "control",
     "#": "normal",
 } as const;
-
-export const parseTag = (tagString: string): Tag | null => {
-    const type = (tagTypeTable as Record<string, TagType | undefined>)[tagString[0]];
-    let status: "name" | "args" | "done" = "name";
-    let name = "";
-    let args = "";
-    for(let i = type == null ? 0 : 1; i < tagString.length; i++) {
-        const char = tagString[i];
-        switch(status) {
-        case "name":
-            if(char === "(") {
-                if(type === "control") {
-                    status = "args";
-                    break;
-                }
-                // normalに引数は無い
-                return null;
-            }
-            if(char === ")") {
-                return null;
-            }
-            name += char;
-            break;
-        case "args":
-            if(char === "(") {
-                return null;
-            }
-            if(char === ")") {
-                if(i !== tagString.length - 1) {
-                    // 入力を消費しきっていない
-                    return null;
-                }
-                status = "done";
-                break;
-            }
-            args += char;
-            break;
-        }
-    }
-    if(name === "" || status === "args") {
-        // unexpected end of input.
-        return null;
-    }
-    return {
-        type: type ?? "normal",
-        name,
-        args: args === "" ? null : args,
-    };
-};
 
 const tagHeadTable: Record<TagType, keyof typeof tagTypeTable> = {
     control: "@",
@@ -71,58 +22,3 @@ export const stringifyTag = (tag: Tag): string => {
     }
     return tagString;
 };
-
-if(import.meta.vitest) {
-    const { describe, it, expect } = import.meta.vitest;
-    it("nameは1文字以上必要", () => {
-        expect(parseTag("#")).toBeNull();
-    });
-    it("nameに')'は使用できない", () => {
-        expect(parseTag("#tag)")).toBeNull();
-    });
-    describe("normal tag", () => {
-        it("valid", () => {
-            expect(parseTag("#tag")).toEqual({
-                type: "normal",
-                name: "tag",
-                args: null,
-            });
-        });
-        it("#は省略できる", () => {
-            expect(parseTag("tag")).toEqual({
-                type: "normal",
-                name: "tag",
-                args: null,
-            });
-        });
-        it("引数は使用できない", () => {
-            expect(parseTag("#tag()")).toBeNull();
-        });
-    });
-    it("control tag", () => {
-        it("引数無し", () => {
-            expect(parseTag("@tag")).toEqual({
-                type: "control",
-                name: "tag",
-                args: null,
-            });
-        });
-        it("引数が空", () => {
-            expect(parseTag("@tag()")).toEqual({
-                type: "control",
-                name: "tag",
-                args: null,
-            });
-        });
-        it("引数有り", () => {
-            expect(parseTag("@tag(args)")).toEqual({
-                type: "control",
-                name: "tag",
-                args: "args",
-            });
-        });
-        it("argsに'('は使用できない", () => {
-            expect(parseTag("@tag(()")).toBeNull();
-        });
-    });
-}
