@@ -17,27 +17,29 @@ export const parseTag = (tagString: string): Tag | null => {
     let args = "";
     for(let i = type == null ? 0 : 1; i < tagString.length; i++) {
         const char = tagString[i];
-        if(status === "name") {
+        switch(status) {
+        case "name":
             if(char === "(") {
                 if(type === "control") {
                     status = "args";
-                } else {
-                    // normalに引数は無い
-                    return null;
+                    break;
                 }
-            } else {
-                name += char;
+                // normalに引数は無い
+                return null;
             }
-        } else if(status === "args") {
+            name += char;
+            break;
+        case "args":
             if(char === ")") {
                 if(i !== tagString.length - 1) {
                     // 入力を消費しきっていない
                     return null;
                 }
                 status = "done";
-            } else {
-                args += char;
+                break;
             }
+            args += char;
+            break;
         }
     }
     if(name === "" || status === "args") {
