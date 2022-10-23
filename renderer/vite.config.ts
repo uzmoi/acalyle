@@ -62,7 +62,17 @@ export default defineConfig(env => ({
         emptyOutDir: false,
         sourcemap: env.mode === "develepment",
         rollupOptions: {
-            plugins: [visualizer({ emitFile: true })],
+            plugins: [
+                visualizer({ gzipSize: true, brotliSize: true }),
+            ],
+            output: {
+                manualChunks: {
+                    recoil: ["recoil"],
+                    relay: ["react-relay", "relay-runtime"],
+                    "react-markdown": ["react-markdown"],
+                    "react-syntax-highlighter": ["react-syntax-highlighter"],
+                },
+            },
         },
     },
     test: {
