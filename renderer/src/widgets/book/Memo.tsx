@@ -1,11 +1,10 @@
 import { css } from "@linaria/core";
 import { useState } from "react";
-import { graphql, useFragment, useMutation } from "react-relay";
+import { graphql, useFragment } from "react-relay";
 import { MemoContents } from "~/entities/memo";
 import { Tag } from "~/entities/tag";
-import { MemoTagsForm } from "~/features/memo-form";
-import { Button, TextArea } from "~/shared/control";
-import { MemoEditMemoContentsMutation } from "./__generated__/MemoEditMemoContentsMutation.graphql";
+import { MemoContentsForm, MemoTagsForm } from "~/features/memo-form";
+import { Button } from "~/shared/control";
 import { MemoFragment$key } from "./__generated__/MemoFragment.graphql";
 
 export const Memo: React.FC<{
@@ -22,49 +21,24 @@ export const Memo: React.FC<{
         }
     `, fragmentRef);
 
-    const [commitEditMemo, isInFlight] = useMutation<MemoEditMemoContentsMutation>(graphql`
-        mutation MemoEditMemoContentsMutation($bookId: ID!, $memoId: ID!, $contents: String!) {
-            updateMemoContents(bookId: $bookId, memoId: $memoId, contents: $contents) {
-                node {
-                    contents
-                    updatedAt
-                }
-            }
-        }
-    `);
-
-    const [contents, setContents] = useState<null | string>(null);
+    const [isEditContents, setIsEditContents] = useState(false);
     const [isEditTag, setIsEditTag] = useState(false);
 
     return (
         <div className={MemoStyle}>
-            {contents != null ? (
+            {isEditContents ? (
                 <div>
-                    <TextArea
-                        value={contents}
-                        onValueChange={setContents}
-                        disabled={isInFlight}
+                    <MemoContentsForm
+                        bookId={bookId}
+                        memoId={memo.id}
+                        contents={memo.contents}
+                        onClose={() => setIsEditContents(false)}
                     />
-                    <Button onClick={() => setContents(null)}>
-                        cancel
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            commitEditMemo({
-                                variables: { bookId, memoId: memo.id, contents },
-                                onCompleted() {
-                                    setContents(null);
-                                },
-                            });
-                        }}
-                    >
-                        save
-                    </Button>
                 </div>
             ) : (
                 <div>
                     <MemoContents contents={memo.contents} />
-                    <Button onClick={() => setContents(memo.contents)}>
+                    <Button onClick={() => setIsEditContents(true)}>
                         edit
                     </Button>
                 </div>
