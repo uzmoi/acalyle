@@ -3,6 +3,7 @@ import { useState } from "react";
 import { graphql, useFragment, useMutation } from "react-relay";
 import { MemoContents } from "~/entities/memo";
 import { Tag } from "~/entities/tag";
+import { MemoTagsForm } from "~/features/memo-form";
 import { Button, TextArea } from "~/shared/control";
 import { MemoEditMemoContentsMutation } from "./__generated__/MemoEditMemoContentsMutation.graphql";
 import { MemoFragment$key } from "./__generated__/MemoFragment.graphql";
@@ -33,6 +34,7 @@ export const Memo: React.FC<{
     `);
 
     const [contents, setContents] = useState<null | string>(null);
+    const [isEditTag, setIsEditTag] = useState(false);
 
     return (
         <div className={MemoStyle}>
@@ -70,13 +72,25 @@ export const Memo: React.FC<{
             <div className={MemoFooterStyle}>
                 <p>updated at {new Date(memo.updatedAt).toLocaleDateString()}</p>
                 <p>created at {new Date(memo.createdAt).toLocaleDateString()}</p>
-                <ul>
-                    {memo.tags.map(tag => (
-                        <li key={tag}>
-                            <Tag tag={tag} />
-                        </li>
-                    ))}
-                </ul>
+                {isEditTag ? (
+                    <MemoTagsForm
+                        bookId={bookId}
+                        memoId={memo.id}
+                        tags={memo.tags}
+                        onClose={() => setIsEditTag(false)}
+                    />
+                ) : (
+                    <>
+                        <ul>
+                            {memo.tags.map(tag => (
+                                <li key={tag}>
+                                    <Tag tag={tag} />
+                                </li>
+                            ))}
+                        </ul>
+                        <Button onClick={() => setIsEditTag(true)}>edit tags</Button>
+                    </>
+                )}
             </div>
         </div>
     );
