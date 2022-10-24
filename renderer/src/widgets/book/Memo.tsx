@@ -23,7 +23,7 @@ export const Memo: React.FC<{
 
     const [commitEditMemo, isInFlight] = useMutation<MemoEditMemoContentsMutation>(graphql`
         mutation MemoEditMemoContentsMutation($bookId: ID!, $memoId: ID!, $contents: String!) {
-            editMemo(bookId: $bookId, memoId: $memoId, contents: $contents) {
+            updateMemoContents(bookId: $bookId, memoId: $memoId, contents: $contents) {
                 node {
                     contents
                     updatedAt

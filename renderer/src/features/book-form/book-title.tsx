@@ -12,7 +12,7 @@ export const BookTitleForm: React.FC<{
 
     const [commit, isInFlight] = useMutation<bookTitleMutation>(graphql`
         mutation bookTitleMutation($id: ID!, $title: String) {
-            editBook(id: $id, title: $title) {
+            updateBookTitle(id: $id, title: $title) {
                 id
             }
         }

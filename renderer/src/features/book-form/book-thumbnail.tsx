@@ -10,7 +10,7 @@ export const BookThumbnail: React.FC<{
 
     const [commitChangeThumbnail, isInFlight] = useMutation<bookThumbnailChangeMutation>(graphql`
         mutation bookThumbnailChangeMutation($id: ID!, $thumbnail: Upload!) {
-            editBook(id: $id, thumbnail: $thumbnail) {
+            updateBookThumbnail(id: $id, thumbnail: $thumbnail) {
                 thumbnail
             }
         }
