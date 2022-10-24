@@ -17,10 +17,10 @@ export const Tag: React.FC<{
         <span className={TagStyle} data-tag-type={tag.type}>
             {tag.type === "normal" && (
                 <Link pattern="books/:bookId" params={{ bookId }}>
-                    {tag.name}
+                    {tagString}
                 </Link>
             )}
-            {tag.type !== "normal" && tag.name}
+            {tag.type !== "normal" && tagString}
         </span>
     );
 };
@@ -28,10 +28,4 @@ export const Tag: React.FC<{
 const TagStyle = css`
     padding: 0.2em;
     font-family: ${fonts.mono};
-    &[data-tag-type="normal"]::before {
-        content: "#";
-    }
-    &[data-tag-type="control"]::before {
-        content: "@";
-    }
 `;
