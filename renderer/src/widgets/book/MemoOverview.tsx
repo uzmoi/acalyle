@@ -37,7 +37,7 @@ export const MemoOverview: React.FC<{
                 {memo.contents}
             </Link>
             <div className={TagListStyle}>
-                {memo.tags.map(tag => <Tag key={tag} tag={tag} />)}
+                {memo.tags.map(tag => <Tag key={tag} tag={tag} bookId={bookId} />)}
             </div>
         </article>
     );

@@ -58,7 +58,7 @@ export const Memo: React.FC<{
                         <ul>
                             {memo.tags.map(tag => (
                                 <li key={tag}>
-                                    <Tag tag={tag} />
+                                    <Tag tag={tag} bookId={bookId} />
                                 </li>
                             ))}
                         </ul>
