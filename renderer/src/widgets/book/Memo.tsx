@@ -2,7 +2,7 @@ import { css } from "@linaria/core";
 import { useState } from "react";
 import { graphql, useFragment } from "react-relay";
 import { MemoContents } from "~/entities/memo";
-import { Tag } from "~/entities/tag";
+import { TagList } from "~/entities/tag";
 import { MemoContentsForm, MemoTagsForm } from "~/features/memo-form";
 import { Button } from "~/shared/control";
 import { MemoFragment$key } from "./__generated__/MemoFragment.graphql";
@@ -55,13 +55,7 @@ export const Memo: React.FC<{
                     />
                 ) : (
                     <>
-                        <ul>
-                            {memo.tags.map(tag => (
-                                <li key={tag}>
-                                    <Tag tag={tag} bookId={bookId} />
-                                </li>
-                            ))}
-                        </ul>
+                        <TagList tags={memo.tags} bookId={bookId} />
                         <Button onClick={() => setIsEditTag(true)}>edit tags</Button>
                     </>
                 )}

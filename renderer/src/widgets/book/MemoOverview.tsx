@@ -1,7 +1,7 @@
 import { css } from "@linaria/core";
 import { clamp } from "emnorst";
 import { graphql, useFragment } from "react-relay";
-import { Tag } from "~/entities/tag";
+import { TagList } from "~/entities/tag";
 import { Link } from "~/shared/router/react";
 import { colors } from "~/shared/ui/styles/theme";
 import { MemoOverviewFragment$key } from "./__generated__/MemoOverviewFragment.graphql";
@@ -37,7 +37,7 @@ export const MemoOverview: React.FC<{
                 {memo.contents}
             </Link>
             <div className={TagListStyle}>
-                {memo.tags.map(tag => <Tag key={tag} tag={tag} bookId={bookId} />)}
+                <TagList tags={memo.tags} bookId={bookId} />
             </div>
         </article>
     );
