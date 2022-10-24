@@ -4,7 +4,8 @@ export const parseTag = (tagString: string): Tag | null => {
     const type = (tagTypeTable as Record<string, TagType | undefined>)[tagString[0]];
     let status: "name" | "args" | "done" = "name";
     let name = "";
-    let args = "";
+    let arg = "";
+    const args: string[] = [];
     for(let i = type == null ? 0 : 1; i < tagString.length; i++) {
         const char = tagString[i];
         switch(status) {
@@ -31,10 +32,19 @@ export const parseTag = (tagString: string): Tag | null => {
                     // 入力を消費しきっていない
                     return null;
                 }
+                if(arg !== "") {
+                    args.push(arg.trim());
+                    arg = "";
+                }
                 status = "done";
                 break;
             }
-            args += char;
+            if(char === ",") {
+                args.push(arg.trim());
+                arg = "";
+                break;
+            }
+            arg += char;
             break;
         }
     }
@@ -45,6 +55,6 @@ export const parseTag = (tagString: string): Tag | null => {
     return {
         type: type ?? "normal",
         name,
-        args: args === "" ? null : args,
+        args: args.length === 0 ? null : args,
     };
 };

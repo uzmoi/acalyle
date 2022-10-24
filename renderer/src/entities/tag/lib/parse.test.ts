@@ -45,10 +45,10 @@ describe("control tag", () => {
         });
     });
     it("引数有り", () => {
-        expect(parseTag("@tag(args)")).toEqual({
+        expect(parseTag("@tag(arg1, arg2)")).toEqual({
             type: "control",
             name: "tag",
-            args: "args",
+            args: ["arg1", "arg2"],
         });
     });
     it("argsに'('は使用できない", () => {

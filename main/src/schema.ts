@@ -108,6 +108,16 @@ const Book = objectType({
     }
 });
 
+const delimiter = "\x1f";
+
+const toSearchableString = (array: readonly string[]) => {
+    return delimiter + array.join(delimiter) + delimiter;
+};
+
+const parseSearchableString = (string: string) => {
+    return string.split(delimiter).slice(1, -1);
+};
+
 const Memo = objectType({
     name: "Memo",
     definition(t) {
@@ -126,7 +136,7 @@ const Memo = objectType({
                     return stringifyTag({
                         type: memoTag.tag.type,
                         name: memoTag.tag.name,
-                        args: memoTag.args,
+                        args: memoTag.args ? parseSearchableString(memoTag.args) : null,
                     });
                 });
             },
@@ -327,10 +337,10 @@ const Mutation = [
                         Memo: {
                             connect: { id: args.memoId },
                         },
-                        args: tag.args,
+                        args: tag.args ? toSearchableString(tag.args) : null,
                     },
                     update: {
-                        args: { set: tag.args },
+                        args: { set: tag.args ? toSearchableString(tag.args) : null },
                     },
                 }));
             const [memo] = await prisma.$transaction([
