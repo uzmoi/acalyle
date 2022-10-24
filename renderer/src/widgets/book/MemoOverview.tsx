@@ -61,6 +61,19 @@ const MemoOverviewContentsLinkStyle = css`
 `;
 
 const TagListStyle = css`
-    flex: 0;
+    position: relative;
+    flex: 0 0 1;
+    overflow: hidden;
     font-size: 0.75em;
+    &::before {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: block;
+        pointer-events: none;
+        content: "";
+        box-shadow: inset -1em 0 0.5em -0.5em ${colors.bgSub};
+    }
 `;
