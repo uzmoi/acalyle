@@ -4,10 +4,10 @@ import path = require("path");
 
 export type UploadType = ArrayBufferView;
 
-export const Upload = scalarType({
+export const UploadScalar = scalarType({
     name: "Upload",
     sourceType: {
-        module: path.join(__dirname, "../main/src/scalar.ts"),
+        module: path.join(__dirname, "../main/src/gql-schema/scalar.ts"),
         export: "UploadType",
     },
     parseValue(value) {

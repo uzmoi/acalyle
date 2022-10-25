@@ -1,7 +1,7 @@
 import { JsonValue } from "emnorst";
 import { ExecutionResult, graphql } from "graphql";
-import { createContext } from "./context";
-import { graphQLSchema } from "./schema";
+import { graphQLSchema } from "./gql-schema";
+import { createContext } from "./gql-schema/context";
 
 export const ipcChannels: Record<keyof typeof ipc, string> = {
     cwd: "cwd",
