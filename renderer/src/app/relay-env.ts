@@ -20,7 +20,13 @@ const network = Network.create(async (
             const bufEntries = await Promise.all(bufPromises);
             bufs = Object.fromEntries(bufEntries);
         }
-        const result = await acalyle.graphql(request.text, variables, bufs);
+        const result = await acalyle.graphql(
+            JSON.stringify({
+                query: request.text,
+                variables,
+            }),
+            bufs,
+        );
         return {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             data: result.data || undefined!,

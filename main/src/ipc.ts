@@ -14,25 +14,28 @@ export const ipc = {
     },
     graphql(
         this: { app: Electron.App },
-        query: string,
-        variables: Record<string, JsonValue>,
+        body: string,
         bufs: Record<string, ArrayBuffer> = {},
     ): Promise<ExecutionResult> {
+        const bodyData = JSON.parse(body) as {
+            query: string;
+            variables: Record<string, JsonValue>;
+        };
         for(const key of Object.keys(bufs)) {
             const path = key.split(".");
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const lastKey = path.pop()!;
             const obj = path.reduce<Record<string, JsonValue | DataView>>(
                 (obj, key) => obj[key] as Record<string, JsonValue>,
-                { variables },
+                bodyData,
             );
             obj[lastKey] = new DataView(bufs[key]);
         }
         return graphql({
             contextValue: createContext(this.app),
             schema: graphQLSchema,
-            source: query,
-            variableValues: variables,
+            source: bodyData.query,
+            variableValues: bodyData.variables,
         });
     },
 };
