@@ -1,7 +1,7 @@
 import { css } from "@linaria/core";
 import { useState } from "react";
 import { graphql, useFragment } from "react-relay";
-import { MemoContents } from "~/entities/memo";
+import { MemoContents, MemoInfo } from "~/entities/memo";
 import { TagList } from "~/entities/tag";
 import { MemoContentsForm, MemoTagsForm } from "~/features/memo-form";
 import { Button } from "~/shared/control";
@@ -44,8 +44,7 @@ export const Memo: React.FC<{
                 </div>
             )}
             <div className={MemoFooterStyle}>
-                <p>updated at {new Date(memo.updatedAt).toLocaleDateString()}</p>
-                <p>created at {new Date(memo.createdAt).toLocaleDateString()}</p>
+                <MemoInfo createdAt={memo.createdAt} updatedAt={memo.updatedAt} />
                 {isEditTag ? (
                     <MemoTagsForm
                         bookId={bookId}
