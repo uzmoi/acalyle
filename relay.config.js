@@ -5,7 +5,8 @@ module.exports = {
     src: "./renderer",
     schema: "./data/schema.graphql",
     customScalars: {
-        Upload: "null"
+        Upload: "null",
+        DateTime: "string",
     },
     exclude: [
         "**/node_modules/**",
