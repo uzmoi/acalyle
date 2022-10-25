@@ -29,14 +29,14 @@ export const types = [
             t.string("thumbnail");
             t.dateTime("createdAt");
             t.field("memo", {
-                type: "Memo",
+                type: nullable("Memo"),
                 args: { id: nonNull("ID") },
                 async resolve(book, args, { prisma }) {
                     const memo = await prisma.memo.findUnique({
                         where: { id: args.id },
                     });
                     if(memo == null || memo.bookId !== book.id) {
-                        throw "memo not found";
+                        return null;
                     }
                     return memo;
                 },
