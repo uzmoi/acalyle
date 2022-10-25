@@ -86,7 +86,7 @@ export const MemoTagsForm: React.FC<{
             </ul>
             <Button onClick={addTag} disabled={isInFlight}>add</Button>
             <Button onClick={onClose} disabled={isInFlight}>cancel</Button>
-            <Button disabled={isInFlight}>save</Button>
+            <Button type="submit" disabled={isInFlight}>save</Button>
         </form>
     );
 };

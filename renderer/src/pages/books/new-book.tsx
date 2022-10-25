@@ -30,7 +30,7 @@ export const NewBookPage: React.FC = () => {
         <form onSubmit={onSubmit}>
             <h1>Create a new book</h1>
             <BookTitle title={title} setTitle={setTitle} disabled={isInFlight} />
-            <Button disabled={isInFlight}>create book</Button>
+            <Button type="submit" disabled={isInFlight}>create book</Button>
         </form>
     );
 };

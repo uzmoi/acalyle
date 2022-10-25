@@ -32,7 +32,7 @@ export const MemoContentsForm: React.FC<{
         <form onSubmit={handleSubmit}>
             <TextArea value={contents} onValueChange={setContents} disabled={isInFlight} />
             <Button onClick={onClose} disabled={isInFlight}>cancel</Button>
-            <Button disabled={isInFlight}>save</Button>
+            <Button type="submit" disabled={isInFlight}>save</Button>
         </form>
     );
 };

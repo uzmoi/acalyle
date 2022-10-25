@@ -26,7 +26,7 @@ export const BookDeleteForm: React.FC<{
 
     return (
         <form className={BookDeleteFormStyle}>
-            <Button onClick={deleteBook} disabled={isInFlight}>
+            <Button type="submit" onClick={deleteBook} disabled={isInFlight}>
                 delete book
             </Button>
         </form>

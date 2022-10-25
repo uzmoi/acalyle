@@ -26,7 +26,7 @@ export const BookTitleForm: React.FC<{
     return (
         <form onSubmit={handleSubmit} className={BookTitleFormStyle}>
             <BookTitle title={title} setTitle={setTitle} disabled={isInFlight} />
-            <Button>Rename</Button>
+            <Button type="submit">Rename</Button>
         </form>
     );
 };

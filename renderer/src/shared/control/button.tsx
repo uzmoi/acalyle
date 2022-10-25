@@ -6,6 +6,7 @@ export const Button: React.FC<{
 } & React.ComponentPropsWithoutRef<"button">> = ({ className, ...restProps }) => {
     return (
         <button
+            type="button"
             {...restProps}
             className={cx(ButtonStyle, className)}
         />
