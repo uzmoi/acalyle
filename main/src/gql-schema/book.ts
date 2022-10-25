@@ -7,7 +7,6 @@ import path = require("path");
 import { stringifyTag } from "renderer/src/entities/tag/lib/tag";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
-import { gqlMemo } from "./memo";
 import { Node, pagination } from "./util";
 
 export const gqlBook = (book: Book, bookDataPath: string) => ({
@@ -17,7 +16,6 @@ export const gqlBook = (book: Book, bookDataPath: string) => ({
             ? `@fs${bookDataPath}/${book.id}.thumbnail`
             : `file://${bookDataPath}/${book.id}.thumbnail`
         : book.thumbnail,
-    createdAt: book.createdAt.toISOString(),
 });
 
 const BookTitle = z.string().min(1).max(16);
@@ -29,7 +27,7 @@ export const types = [
             t.implements(Node);
             t.string("title");
             t.string("thumbnail");
-            t.string("createdAt", { description: "ISO8601" });
+            t.dateTime("createdAt");
             t.field("memo", {
                 type: "Memo",
                 args: { id: nonNull("ID") },
@@ -40,22 +38,21 @@ export const types = [
                     if(memo == null || memo.bookId !== book.id) {
                         throw "memo not found";
                     }
-                    return gqlMemo(memo);
+                    return memo;
                 },
             });
             t.connectionField("memos", {
                 type: "Memo",
                 cursorFromNode: node => node.id,
-                async nodes(book, args, { prisma }) {
+                nodes(book, args, { prisma }) {
                     const p = pagination(args);
-                    const nodes = await prisma.memo.findMany({
+                    return prisma.memo.findMany({
                         cursor: p.cursor != null ? { id: p.cursor } : undefined,
                         skip: p.cursor != null ? 1 : 0,
                         take: p.take,
                         orderBy: { createdAt: "desc" },
                         where: { bookId: book.id },
                     });
-                    return nodes.map(gqlMemo);
                 },
                 totalCount(book, __, { prisma }) {
                     return prisma.memo.count({

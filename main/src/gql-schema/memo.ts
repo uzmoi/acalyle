@@ -1,4 +1,4 @@
-import { Memo, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { assert } from "emnorst";
 import { list, mutationField, nonNull, objectType } from "nexus";
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -8,19 +8,13 @@ import { stringifyTag } from "renderer/src/entities/tag/lib/tag";
 import { v4 as uuidv4 } from "uuid";
 import { Node, nonNullable, parseSearchableString, toSearchableString } from "./util";
 
-export const gqlMemo = (memo: Memo) => ({
-    ...memo,
-    createdAt: memo.createdAt.toISOString(),
-    updatedAt: memo.updatedAt.toISOString(),
-});
-
 export const types = [
     objectType({
         name: "Memo",
         definition(t) {
             t.implements(Node);
-            t.string("createdAt", { description: "ISO8601" });
-            t.string("updatedAt", { description: "ISO8601" });
+            t.dateTime("createdAt");
+            t.dateTime("updatedAt");
             t.string("contents");
             t.list.string("tags", {
                 async resolve(memo, __, { prisma }) {
@@ -60,7 +54,7 @@ export const types = [
                     bookId: args.bookId,
                 },
             });
-            return { node: gqlMemo(memo) };
+            return { node: memo };
         }
     }),
     mutationField("updateMemoContents", {
@@ -71,14 +65,14 @@ export const types = [
             contents: "String",
         },
         async resolve(_, args, { prisma }) {
-            const updateMemo = prisma.memo.update({
+            const memo = await prisma.memo.update({
                 where: { id: args.memoId },
                 data: {
                     contents: args.contents ?? undefined,
                     updatedAt: new Date(),
                 },
             });
-            return { node: gqlMemo(await updateMemo) };
+            return { node: memo };
         }
     }),
     mutationField("addMemoTags", {
@@ -110,7 +104,7 @@ export const types = [
                     updatedAt: new Date(),
                 },
             });
-            return { node: gqlMemo(memo) };
+            return { node: memo };
         }
     }),
     mutationField("updateMemoTagsArgs", {
@@ -140,7 +134,7 @@ export const types = [
                     updatedAt: new Date(),
                 },
             });
-            return { node: gqlMemo(memo) };
+            return { node: memo };
         }
     }),
     mutationField("removeMemoTags", {
@@ -164,7 +158,7 @@ export const types = [
                     updatedAt: new Date(),
                 },
             });
-            return { node: gqlMemo(memo) };
+            return { node: memo };
         }
     }),
 ];

@@ -2,7 +2,7 @@ import { connectionPlugin, makeSchema, nonNull, nullable, queryField } from "nex
 import path = require("path");
 import { types as bookTypes } from "./book";
 import { types as memoTypes } from "./memo";
-import { UploadScalar } from "./scalar";
+import { DateTimeScalar, UploadScalar } from "./scalar";
 
 const types = [
     queryField("data", { type: "String", resolve: () => "Hello nexus" }),
@@ -13,7 +13,7 @@ const types = [
 ];
 
 export const graphQLSchema = makeSchema({
-    types: [UploadScalar, types, bookTypes, memoTypes],
+    types: [DateTimeScalar, UploadScalar, types, bookTypes, memoTypes],
     plugins: [
         connectionPlugin({
             extendConnection: {
