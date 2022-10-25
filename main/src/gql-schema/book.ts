@@ -9,12 +9,15 @@ import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 import { Node, pagination } from "./util";
 
+const getBookThumbnailPath = (bookDataPath: string, bookId: string) => {
+    const path = `${bookDataPath}/${bookId}.thumbnail`;
+    return process.env.NODE_ENV === "development" ? `@fs${path}` : `file://${path}`;
+};
+
 export const gqlBook = (book: Book, bookDataPath: string) => ({
     ...book,
     thumbnail: book.thumbnail === "#image"
-        ? process.env.NODE_ENV === "development"
-            ? `@fs${bookDataPath}/${book.id}.thumbnail`
-            : `file://${bookDataPath}/${book.id}.thumbnail`
+        ? getBookThumbnailPath(bookDataPath, book.id)
         : book.thumbnail,
 });
 
