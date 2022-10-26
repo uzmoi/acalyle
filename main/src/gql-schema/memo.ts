@@ -19,11 +19,11 @@ export const types = [
                 async resolve(memo, __, { prisma }) {
                     const memoTags = await prisma.memoTag.findMany({
                         where: { memoId: memo.id },
-                        select: { tag: true, args: true },
+                        select: { Tag: true, args: true },
                     });
-                    return memoTags.map(({ tag, args }) => stringifyTag({
-                        type: tag.type as "normal" | "control",
-                        name: tag.name,
+                    return memoTags.map(({ Tag, args }) => stringifyTag({
+                        type: Tag.type as "normal" | "control",
+                        name: Tag.name,
                         args: args ? parseSearchableString(args) : null,
                     }));
                 },
@@ -84,9 +84,9 @@ export const types = [
             const memoTagCreate: Prisma.MemoTagCreateWithoutMemoInput[] | undefined =
                 args.tags?.map(parseTag).filter(nonNullable)
                 .map(tag => ({
-                    tag: {
+                    Tag: {
                         connectOrCreate: {
-                            where: { name: tag.name },
+                            where: { bookId_name: { bookId, name: tag.name } },
                             create: {
                                 type: tag.type,
                                 name: tag.name,

@@ -28,14 +28,17 @@ model Memo {
 
 model Tag {
     type     String
-    name     String    @id
+    name     String
     memoTags MemoTag[]
     Book     Book      @relation(fields: [bookId], references: [id])
     bookId   String
+
+    @@id([bookId, name])
 }
 
 model MemoTag {
-    tag     Tag     @relation(fields: [tagName], references: [name])
+    Tag     Tag     @relation(fields: [bookId, tagName], references: [bookId, name])
+    bookId  String
     tagName String
     args    String?
     Memo    Memo    @relation(fields: [memoId], references: [id])
