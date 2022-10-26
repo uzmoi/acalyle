@@ -1,4 +1,6 @@
 import { css } from "@linaria/core";
+import { parseTag } from "../lib/parse";
+import { compareTags, stringifyTag } from "../lib/tag";
 import { Tag } from "./tag";
 
 export const TagList: React.FC<{
@@ -7,7 +9,12 @@ export const TagList: React.FC<{
 }> = ({ tags, bookId }) => {
     return (
         <ul className={TagListStyle}>
-            {tags.map(tag => (
+            {tags
+            .map(parseTag)
+            .filter(<T,>(v: T): v is NonNullable<T> => v != null)
+            .sort(compareTags)
+            .map(stringifyTag)
+            .map(tag => (
                 <li key={tag} className={TagListItemStyle}>
                     <Tag tag={tag} bookId={bookId} />
                 </li>
