@@ -56,7 +56,6 @@ export const types = [
     mutationField("updateMemoContents", {
         type: "MemoWrapper",
         args: {
-            bookId: nonNull("ID"),
             memoId: nonNull("ID"),
             contents: "String",
         },
@@ -74,11 +73,14 @@ export const types = [
     mutationField("addMemoTags", {
         type: "MemoWrapper",
         args: {
-            bookId: nonNull("ID"),
             memoId: nonNull("ID"),
             tags: list(nonNull("String")),
         },
         async resolve(_, args, { prisma }) {
+            const { bookId } = await prisma.memo.findUniqueOrThrow({
+                where: { id: args.memoId },
+                select: { bookId: true },
+            });
             const memoTagCreate: Prisma.MemoTagCreateWithoutMemoInput[] | undefined =
                 args.tags?.map(parseTag).filter(nonNullable)
                 .map(tag => ({
@@ -88,7 +90,7 @@ export const types = [
                             create: {
                                 type: tag.type,
                                 name: tag.name,
-                                bookId: args.bookId,
+                                bookId,
                             },
                         },
                     },
@@ -107,7 +109,6 @@ export const types = [
     mutationField("updateMemoTagsArgs", {
         type: "MemoWrapper",
         args: {
-            bookId: nonNull("ID"),
             memoId: nonNull("ID"),
             tags: list(nonNull("String")),
         },
@@ -138,7 +139,6 @@ export const types = [
     mutationField("removeMemoTags", {
         type: "MemoWrapper",
         args: {
-            bookId: nonNull("ID"),
             memoId: nonNull("ID"),
             tags: list(nonNull("String")),
         },

@@ -4,16 +4,15 @@ import { Button, TextArea } from "~/shared/control";
 import { memoContentsUpdateMutation } from "./__generated__/memoContentsUpdateMutation.graphql";
 
 export const MemoContentsForm: React.FC<{
-    bookId: string;
     memoId: string;
     contents: string;
     onClose: () => void;
-}> = ({ bookId, memoId, contents: memoContents, onClose }) => {
+}> = ({ memoId, contents: memoContents, onClose }) => {
     const [contents, setContents] = useState(memoContents);
 
     const [commit, isInFlight] = useMutation<memoContentsUpdateMutation>(graphql`
-        mutation memoContentsUpdateMutation($bookId: ID!, $memoId: ID!, $contents: String!) {
-            updateMemoContents(bookId: $bookId, memoId: $memoId, contents: $contents) {
+        mutation memoContentsUpdateMutation($memoId: ID!, $contents: String!) {
+            updateMemoContents(memoId: $memoId, contents: $contents) {
                 node {
                     contents
                     updatedAt
@@ -23,7 +22,7 @@ export const MemoContentsForm: React.FC<{
     `);
     const handleSubmit = () => {
         commit({
-            variables: { bookId, memoId, contents },
+            variables: { memoId, contents },
             onCompleted: onClose,
         });
     };

@@ -29,7 +29,6 @@ export const Memo: React.FC<{
             {isEditContents ? (
                 <div>
                     <MemoContentsForm
-                        bookId={bookId}
                         memoId={memo.id}
                         contents={memo.contents}
                         onClose={() => setIsEditContents(false)}
@@ -47,7 +46,6 @@ export const Memo: React.FC<{
                 <MemoInfo createdAt={memo.createdAt} updatedAt={memo.updatedAt} />
                 {isEditTag ? (
                     <MemoTagsForm
-                        bookId={bookId}
                         memoId={memo.id}
                         tags={memo.tags}
                         onClose={() => setIsEditTag(false)}

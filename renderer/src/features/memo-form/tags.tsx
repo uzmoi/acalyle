@@ -5,32 +5,30 @@ import { Button, TextInput } from "~/shared/control";
 import { tagsUpdateMutation } from "./__generated__/tagsUpdateMutation.graphql";
 
 export const MemoTagsForm: React.FC<{
-    bookId: string;
     memoId: string;
     tags: readonly string[];
     onClose: () => void;
-}> = ({ bookId, memoId, tags: memoTags, onClose }) => {
+}> = ({ memoId, tags: memoTags, onClose }) => {
     const [tags, setTags] = useState<readonly string[]>(memoTags);
 
     const [commit, isInFlight] = useMutation<tagsUpdateMutation>(graphql`
         mutation tagsUpdateMutation(
-            $bookId: ID!,
             $memoId: ID!,
             $removeTags: [String!]!,
             $updateTags: [String!]!,
             $addTags: [String!]!,
         ) {
-            removeMemoTags(bookId: $bookId, memoId: $memoId, tags: $removeTags) {
+            removeMemoTags(memoId: $memoId, tags: $removeTags) {
                 node {
                     updatedAt
                 }
             }
-            updateMemoTagsArgs(bookId: $bookId, memoId: $memoId, tags: $updateTags) {
+            updateMemoTagsArgs(memoId: $memoId, tags: $updateTags) {
                 node {
                     updatedAt
                 }
             }
-            addMemoTags(bookId: $bookId, memoId: $memoId, tags: $addTags) {
+            addMemoTags(memoId: $memoId, tags: $addTags) {
                 node {
                     tags
                     updatedAt
@@ -44,7 +42,6 @@ export const MemoTagsForm: React.FC<{
         const tagNames = tags.map(getTagName);
         commit({
             variables: {
-                bookId,
                 memoId,
                 // tags & memo.tags
                 updateTags: tags.filter(tag => memoTagNames.includes(getTagName(tag))),
