@@ -3,6 +3,7 @@ import path = require("path");
 import { types as bookTypes } from "./book";
 import { types as memoTypes } from "./memo";
 import { DateTimeScalar, UploadScalar } from "./scalar";
+import { Node } from "./util";
 
 const types = [
     queryField("data", { type: "String", resolve: () => "Hello nexus" }),
@@ -13,7 +14,7 @@ const types = [
 ];
 
 export const graphQLSchema = makeSchema({
-    types: [DateTimeScalar, UploadScalar, types, bookTypes, memoTypes],
+    types: [Node, DateTimeScalar, UploadScalar, types, bookTypes, memoTypes],
     plugins: [
         connectionPlugin({
             extendConnection: {

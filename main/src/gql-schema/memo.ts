@@ -6,13 +6,13 @@ import { parseTag } from "renderer/src/entities/tag/lib/parse";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { stringifyTag } from "renderer/src/entities/tag/lib/tag";
 import { v4 as uuidv4 } from "uuid";
-import { Node, nonNullable, parseSearchableString, toSearchableString } from "./util";
+import { nonNullable, parseSearchableString, toSearchableString } from "./util";
 
 export const types = [
     objectType({
         name: "Memo",
         definition(t) {
-            t.implements(Node);
+            t.implements("Node");
             t.dateTime("createdAt");
             t.dateTime("updatedAt");
             t.string("contents");

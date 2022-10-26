@@ -7,7 +7,7 @@ import path = require("path");
 import { stringifyTag } from "renderer/src/entities/tag/lib/tag";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
-import { Node, pagination } from "./util";
+import { pagination } from "./util";
 
 const getBookThumbnailPath = (bookDataPath: string, bookId: string) => {
     const path = `${bookDataPath}/${bookId}.thumbnail`;
@@ -27,7 +27,7 @@ export const types = [
     objectType({
         name: "Book",
         definition(t) {
-            t.implements(Node);
+            t.implements("Node");
             t.string("title");
             t.string("thumbnail");
             t.dateTime("createdAt");
