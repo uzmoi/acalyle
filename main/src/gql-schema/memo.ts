@@ -57,7 +57,7 @@ export const types = [
         type: "MemoWrapper",
         args: {
             memoId: nonNull("ID"),
-            contents: "String",
+            contents: nonNull("String"),
         },
         async resolve(_, args, { prisma }) {
             const memo = await prisma.memo.update({
@@ -74,7 +74,7 @@ export const types = [
         type: "MemoWrapper",
         args: {
             memoId: nonNull("ID"),
-            tags: list(nonNull("String")),
+            tags: nonNull(list(nonNull("String"))),
         },
         async resolve(_, args, { prisma }) {
             const { bookId } = await prisma.memo.findUniqueOrThrow({
@@ -110,7 +110,7 @@ export const types = [
         type: "MemoWrapper",
         args: {
             memoId: nonNull("ID"),
-            tags: list(nonNull("String")),
+            tags: nonNull(list(nonNull("String"))),
         },
         async resolve(_, args, { prisma }) {
             const memoTagUpdate: Prisma.MemoTagUpdateWithWhereUniqueWithoutMemoInput[] | undefined =
@@ -140,7 +140,7 @@ export const types = [
         type: "MemoWrapper",
         args: {
             memoId: nonNull("ID"),
-            tags: list(nonNull("String")),
+            tags: nonNull(list(nonNull("String"))),
         },
         async resolve(_, args, { prisma }) {
             const memoTagDelete: Prisma.MemoTagScalarWhereInput = {
