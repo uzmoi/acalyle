@@ -167,11 +167,11 @@ export const types = [
         type: "ID",
         args: { id: nonNull("ID") },
         async resolve(_, args, { prisma }) {
-            const deletedBook = await prisma.book.delete({
+            await prisma.book.delete({
                 where: { id: args.id },
-                select: { id: true },
+                select: {},
             });
-            return deletedBook.id;
+            return args.id;
         }
     }),
 ];

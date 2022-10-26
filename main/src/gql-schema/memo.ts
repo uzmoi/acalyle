@@ -1,5 +1,4 @@
 import { Prisma } from "@prisma/client";
-import { assert } from "emnorst";
 import { list, mutationField, nonNull, objectType } from "nexus";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { parseTag } from "renderer/src/entities/tag/lib/parse";
@@ -22,14 +21,11 @@ export const types = [
                         where: { memoId: memo.id },
                         select: { tag: true, args: true },
                     });
-                    return memoTags.map(memoTag => {
-                        assert.as<"normal" | "control">(memoTag.tag.type);
-                        return stringifyTag({
-                            type: memoTag.tag.type,
-                            name: memoTag.tag.name,
-                            args: memoTag.args ? parseSearchableString(memoTag.args) : null,
-                        });
-                    });
+                    return memoTags.map(({ tag, args }) => stringifyTag({
+                        type: tag.type as "normal" | "control",
+                        name: tag.name,
+                        args: args ? parseSearchableString(args) : null,
+                    }));
                 },
             });
         }
@@ -84,7 +80,8 @@ export const types = [
         },
         async resolve(_, args, { prisma }) {
             const memoTagCreate: Prisma.MemoTagCreateWithoutMemoInput[] | undefined =
-                args.tags?.map(parseTag).filter(nonNullable).map(tag => ({
+                args.tags?.map(parseTag).filter(nonNullable)
+                .map(tag => ({
                     tag: {
                         connectOrCreate: {
                             where: { name: tag.name },
@@ -116,7 +113,8 @@ export const types = [
         },
         async resolve(_, args, { prisma }) {
             const memoTagUpdate: Prisma.MemoTagUpdateWithWhereUniqueWithoutMemoInput[] | undefined =
-                args.tags?.map(parseTag).filter(nonNullable).map(tag => ({
+                args.tags?.map(parseTag).filter(nonNullable)
+                .map(tag => ({
                     where: {
                         memoId_tagName: {
                             memoId: args.memoId,
@@ -147,9 +145,8 @@ export const types = [
         async resolve(_, args, { prisma }) {
             const memoTagDelete: Prisma.MemoTagScalarWhereInput = {
                 memoId: args.memoId,
-                OR: args.tags?.map(parseTag).filter(nonNullable).map(tag => {
-                    return { tagName: tag.name };
-                }),
+                OR: args.tags.map(parseTag).filter(nonNullable)
+                    .map(tag => ({ tagName: tag.name })),
             };
             const memo = await prisma.memo.update({
                 where: { id: args.memoId },
