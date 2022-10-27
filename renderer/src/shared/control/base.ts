@@ -16,10 +16,11 @@ export const ControlPartBorderStyle = css`
     padding: 0.2em 0.8em;
     border: 1px solid ${vars.color.text};
     border-radius: ${borderRadius};
+    transition: border-color 400ms;
     &:focus {
-        border-color: var(--color-accent);
+        border-color: lightgreen;
     }
-    &[aria-invalid="true"] {
-        border-color: var(--color-error);
+    &:invalid, &[aria-invalid="true"] {
+        border-color: red;
     }
 `;

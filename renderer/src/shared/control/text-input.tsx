@@ -1,4 +1,4 @@
-import { css, cx } from "@linaria/core";
+import { cx } from "@linaria/core";
 import { ControlPartBorderStyle, ControlPartResetStyle } from "./base";
 
 type OmitPropNames = (
@@ -60,12 +60,4 @@ export const TextInput: React.FC<{
     );
 };
 
-const TextInputStyle = cx(ControlPartResetStyle, ControlPartBorderStyle, css`
-    transition: border-color 400ms;
-    &:focus {
-        border-color: lightgreen;
-    }
-    &:invalid, &[aria-invalid="true"] {
-        border-color: red;
-    }
-`);
+const TextInputStyle = cx(ControlPartResetStyle, ControlPartBorderStyle);
