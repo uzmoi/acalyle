@@ -2,8 +2,8 @@ import { css } from "@linaria/core";
 import { clamp } from "emnorst";
 import { useMemo, useState } from "react";
 import { graphql, usePaginationFragment } from "react-relay";
+import { columnSplit } from "~/shared/columns";
 import { useResize } from "~/shared/ui/hooks/use-resize";
-import { columnSplit } from "~/shared/util/column-split";
 import { MemoOverview, MemoOverviewStyle, contentsHeight } from "./MemoOverview";
 import { MemoListFragment$key } from "./__generated__/MemoListFragment.graphql";
 
@@ -39,9 +39,11 @@ export const MemoList: React.FC<{
 
     const columns = useMemo(() => {
         return columnSplit(
-            data.memos.edges.map(x => x.node),
+            data.memos.edges.map(({ node }) => ({
+                node,
+                height: contentsHeight(node.contents),
+            })),
             columnsCount,
-            node => contentsHeight(node.contents),
         );
     }, [data.memos.edges, columnsCount]);
 
@@ -49,7 +51,7 @@ export const MemoList: React.FC<{
         <div ref={columnsEl} className={ColumnListStyle}>
             {columns.map((column, i) => (
                 <div key={i} className={ColumnStyle}>
-                    {column.map(node => (
+                    {column.map(({ node }) => (
                         <MemoOverview key={node.id} bookId={data.id} fragmentRef={node} />
                     ))}
                 </div>
