@@ -1,6 +1,6 @@
 import { css } from "@linaria/core";
+import { vars } from "~/entities/theme";
 import { Link } from "~/shared/router/react";
-import { fonts } from "~/shared/ui/styles/theme";
 import { parseTag } from "../lib/parse";
 
 export const Tag: React.FC<{
@@ -27,5 +27,5 @@ export const Tag: React.FC<{
 
 const TagStyle = css`
     padding: 0.2em;
-    font-family: ${fonts.mono};
+    font-family: ${vars.font.mono};
 `;

@@ -1,6 +1,6 @@
 import { css } from "@linaria/core";
+import { vars } from "~/entities/theme";
 import { Link } from "~/shared/router/react";
-import { colors } from "~/shared/ui/styles/theme";
 
 export const Header: React.FC = () => {
     return (
@@ -16,7 +16,7 @@ const HeaderStyle = css`
     display: flex;
     align-items: center;
     height: 3em;
-    background-color: ${colors.bgSub};
+    background-color: ${vars.color.bgsub};
 `;
 
 const TitleStyle = css`

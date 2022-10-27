@@ -2,8 +2,8 @@ import { css } from "@linaria/core";
 import { clamp } from "emnorst";
 import { graphql, useFragment } from "react-relay";
 import { TagList } from "~/entities/tag";
+import { vars } from "~/entities/theme";
 import { Link } from "~/shared/router/react";
-import { colors } from "~/shared/ui/styles/theme";
 import { MemoOverviewFragment$key } from "./__generated__/MemoOverviewFragment.graphql";
 
 export const contentsHeight = (contents: string) => {
@@ -50,7 +50,7 @@ export const MemoOverviewStyle = css`
     padding: 0.4em;
     overflow: hidden;
     white-space: pre;
-    background-color: ${colors.bgSub};
+    background-color: ${vars.color.bgsub};
 `;
 
 const MemoOverviewContentsLinkStyle = css`
@@ -74,6 +74,6 @@ const TagListStyle = css`
         display: block;
         pointer-events: none;
         content: "";
-        box-shadow: inset -1em 0 0.5em -0.5em ${colors.bgSub};
+        box-shadow: inset -1em 0 0.5em -0.5em ${vars.color.bgsub};
     }
 `;

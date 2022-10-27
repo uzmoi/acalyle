@@ -1,5 +1,5 @@
 import { css } from "@linaria/core";
-import { colors } from "~/shared/ui/styles/theme";
+import { vars } from "~/entities/theme";
 import { BookThumbnail } from "./thumbnail";
 
 export const BookOverview: React.FC<{
@@ -19,7 +19,7 @@ export const BookOverview: React.FC<{
 const BookOverviewStyle = css`
     display: flex;
     height: 6em;
-    background-color: ${colors.bgSub};
+    background-color: ${vars.color.bgsub};
 `;
 
 const BookOverviewTitleStyle = css`
