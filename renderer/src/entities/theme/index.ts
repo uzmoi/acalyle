@@ -2,13 +2,11 @@ import { themeNames } from "~/shared/theme";
 
 export const vars = themeNames("acalyle", {
     color: ["text", "bg", "bgsub"],
-    font: ["sans", "mono"],
+    font: {
+        sans: "'Noto Sans JP', sans-serif",
+        mono: "'Roboto Mono', monospace",
+    },
 } as const);
-
-const font = {
-    sans: "'Noto Sans JP', sans-serif",
-    mono: "'Roboto Mono', monospace",
-};
 
 export const lightThemeStyle = vars.createTheme({
     color: {
@@ -16,7 +14,6 @@ export const lightThemeStyle = vars.createTheme({
         "bg": "#d0d0d0",
         "bgsub": "#e0e0e0",
     },
-    font,
 });
 
 export const darkThemeStyle = vars.createTheme({
@@ -25,5 +22,4 @@ export const darkThemeStyle = vars.createTheme({
         "bg": "#101214",
         "bgsub": "#181a1c",
     },
-    font,
 });
