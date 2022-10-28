@@ -53,7 +53,7 @@ export const themeNames = <T extends ThemeSourceMap>(
 };
 
 interface CreateTheme<T extends ThemeSourceMap> {
-    createTheme: (themeSource: ThemeSource<T, string>) => Record<`--${string}`, string>;
+    createTheme: (themeSource: Normalize<ThemeSource<T, string>>) => Record<`--${string}`, string>;
 }
 
 const createTheme = <T extends ThemeSourceMap>(
