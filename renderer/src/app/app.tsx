@@ -1,10 +1,10 @@
 import { css, cx } from "@linaria/core";
 import { Suspense, useEffect } from "react";
-import { darkThemeStyle, lightThemeStyle, vars } from "~/entities/theme";
+import { vars } from "~/entities/theme";
 import { routes } from "~/pages/routes";
 import { useLocation, useNavigate } from "~/shared/router/react";
 import { match } from "~/shared/router/router";
-import { useColorScheme } from "~/shared/theme";
+import { useThemeStyle } from "~/shared/theme";
 import { Header } from "~/widgets/layouts/header";
 
 export const App: React.FC = () => {
@@ -17,10 +17,10 @@ export const App: React.FC = () => {
         }
     }, [navigate]);
 
-    const theme = useColorScheme();
+    const themeStyle = useThemeStyle();
 
     return (
-        <div className={cx(RootStyle)} style={theme === "light" ? lightThemeStyle : darkThemeStyle}>
+        <div className={cx(RootStyle)} style={themeStyle}>
             <Header />
             <Suspense fallback="loading">
                 {match(routes, location as never)}
