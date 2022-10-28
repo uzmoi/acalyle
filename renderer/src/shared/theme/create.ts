@@ -13,15 +13,22 @@ const valueNames = (valueNamesSource: ValueNamesOrValueDefaults): ValueNames => 
     return Object.keys(valueNamesSource);
 };
 
-export interface ThemeSourceMap {
+interface ThemeSourceMap {
     [valueTypeName: string]: ValueNamesOrValueDefaults;
 }
 
-type ThemeSource<T extends ThemeSourceMap, Value> = PartiallyPartial<
+type ThemeVars<T extends ThemeSourceMap> = {
+    [P in keyof T]: Record<
+        T[P] extends readonly (infer U extends string)[] ? U : keyof T[P],
+        `var(--${string})`
+    >
+};
+
+type ThemeSource<T extends ThemeSourceMap> = PartiallyPartial<
     {
         [P in keyof T]: T[P] extends readonly (infer U extends string)[]
-            ? { readonly [_ in U]: Value }
-            : { readonly [_ in keyof T[P]]?: Value }
+            ? { readonly [_ in U]: string }
+            : { readonly [_ in keyof T[P]]?: string }
     },
     {
         [P in keyof T]: T[P] extends readonly unknown[]
@@ -32,7 +39,7 @@ type ThemeSource<T extends ThemeSourceMap, Value> = PartiallyPartial<
 export const themeNames = <T extends ThemeSourceMap>(
     prefix: string,
     themeSourceMap: T,
-): Normalize<ThemeSource<T, `var(--${string})`> & CreateTheme<T>> => {
+): Normalize<ThemeVars<T> & CreateTheme<T>> => {
     const themeSourceEntries = Object.entries(themeSourceMap).map(entry => {
         const [valueTypeName, themeSourceValues] = entry;
         const varMapEntries = valueNames(themeSourceValues).map(valueName => [
@@ -47,18 +54,18 @@ export const themeNames = <T extends ThemeSourceMap>(
     return Object.fromEntries([
         ...themeSourceEntries,
         ["createTheme", (
-            themeSource: ThemeSource<T, string>,
+            themeSource: ThemeSource<T>,
         ) => createTheme(prefix, themeSource, themeSourceMap)],
-    ]) as Normalize<ThemeSource<T, `var(--${string})`> & CreateTheme<T>>;
+    ]) as Normalize<ThemeVars<T> & CreateTheme<T>>;
 };
 
 interface CreateTheme<T extends ThemeSourceMap> {
-    createTheme: (themeSource: Normalize<ThemeSource<T, string>>) => Record<`--${string}`, string>;
+    createTheme: (themeSource: Normalize<ThemeSource<T>>) => Record<`--${string}`, string>;
 }
 
 const createTheme = <T extends ThemeSourceMap>(
     prefix: string,
-    themeSource: ThemeSource<T, string>,
+    themeSource: ThemeSource<T>,
     themeSourceMap: T,
 ): Record<`--${string}`, string> => {
     const themeStyle: Record<`--${string}`, string> = {};
