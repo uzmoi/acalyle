@@ -1,4 +1,6 @@
+import { css } from "@linaria/core";
 import { graphql, useLazyLoadQuery } from "react-relay";
+import { ControlPartBorderStyle } from "~/shared/control/base";
 import { Link } from "~/shared/router/react";
 import { BookList } from "~/widgets/book/BookList";
 import { booksQuery } from "./__generated__/booksQuery.graphql";
@@ -12,8 +14,18 @@ export const BookListPage: React.FC = () => {
 
     return (
         <div>
-            <Link pattern="books/new">new</Link>
+            <div className={HeaderStyle}>
+                <Link pattern="books/new" className={ControlPartBorderStyle}>
+                    New
+                </Link>
+            </div>
             <BookList queryRef={queryRef} />
         </div>
     );
 };
+
+const HeaderStyle = css`
+    display: flex;
+    padding-block: 1em;
+    padding-inline: 2em;
+`;
