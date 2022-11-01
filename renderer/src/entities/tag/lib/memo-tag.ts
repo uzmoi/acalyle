@@ -17,8 +17,11 @@ export class MemoTag {
     getHeadChar(): "#" | "@" {
         return tagHeadTable[this.type];
     }
+    getName(): string {
+        return this.name.join("/");
+    }
     toBookTag(): string {
-        return this.getHeadChar() + this.name.join("/");
+        return this.getHeadChar() + this.getName();
     }
     toString(): string {
         let tagString = this.toBookTag();

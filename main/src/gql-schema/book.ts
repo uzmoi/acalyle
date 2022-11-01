@@ -4,6 +4,8 @@ import { mkdir, writeFile } from "fs/promises";
 import { mutationField, nonNull, nullable, objectType, queryField } from "nexus";
 import path = require("path");
 // eslint-disable-next-line import/no-extraneous-dependencies
+import { MemoTag } from "renderer/src/entities/tag/lib/memo-tag";
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { stringifyTag } from "renderer/src/entities/tag/lib/tag";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
@@ -47,14 +49,58 @@ export const types = [
             t.connectionField("memos", {
                 type: "Memo",
                 cursorFromNode: node => node.id,
+                additionalArgs: {
+                    search: "String",
+                },
                 nodes(book, args, { prisma }) {
                     const p = pagination(args);
+                    const includeContents: string[] = [];
+                    const excludeContents: string[] = [];
+                    const includeTags: MemoTag[] = [];
+                    const excludeTags: MemoTag[] = [];
+                    if(args.search) {
+                        for(let searchPart of args.search.split(/\s+/)) {
+                            let isExclude = false;
+                            if(searchPart.startsWith("-")) {
+                                isExclude = true;
+                                searchPart = searchPart.slice(1);
+                            }
+                            const tag = MemoTag.parse(searchPart);
+                            if(tag == null) {
+                                (isExclude ? excludeContents : includeContents).push(searchPart);
+                            } else {
+                                (isExclude ? excludeTags : includeTags).push(tag);
+                            }
+                        }
+                    }
+                    const tagWhere = (memoTag: MemoTag) => ({
+                        type: memoTag.type,
+                        name: memoTag.getName(),
+                    });
                     return prisma.memo.findMany({
                         cursor: p.cursor != null ? { id: p.cursor } : undefined,
                         skip: p.cursor != null ? 1 : 0,
                         take: p.take,
                         orderBy: { createdAt: "desc" },
-                        where: { bookId: book.id },
+                        where: {
+                            bookId: book.id,
+                            AND: [
+                                ...includeContents.map(searchString => ({
+                                    contains: searchString,
+                                })),
+                                ...excludeContents.map(searchString => ({
+                                    not: { contains: searchString },
+                                })),
+                            ].map(contents => ({ contents })),
+                            tags: {
+                                some: includeTags.length === 0 ? undefined : {
+                                    Tag: { AND: includeTags.map(tagWhere) },
+                                },
+                                none: excludeTags.length === 0 ? undefined : {
+                                    Tag: { OR: excludeTags.map(tagWhere) },
+                                },
+                            },
+                        },
                     });
                 },
                 totalCount(book, __, { prisma }) {
