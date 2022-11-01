@@ -1,6 +1,7 @@
 import { css } from "@linaria/core";
+import { useState } from "react";
 import { graphql, useFragment, useMutation } from "react-relay";
-import { Button } from "~/shared/control";
+import { Button, TextInput } from "~/shared/control";
 import { Link } from "~/shared/router/react";
 import { MemoList } from "./MemoList";
 import { BookMemoCreateMutation } from "./__generated__/BookMemoCreateMutation.graphql";
@@ -38,11 +39,16 @@ export const Book: React.FC<{
         });
     };
 
+    const [searchString, setSearchString] = useState("");
+
     return (
         <div>
             <div className={BookHeaderStyle}>
                 <h2 className={BookTitleStyle}>{data.title}</h2>
                 <ul className={ButtonListStyle}>
+                    <li>
+                        <TextInput value={searchString} onValueChange={setSearchString} />
+                    </li>
                     <li>
                         <Button onClick={addMemo}>add memo</Button>
                     </li>
@@ -53,7 +59,7 @@ export const Book: React.FC<{
                     </li>
                 </ul>
             </div>
-            <MemoList fragmentRef={data} />
+            <MemoList fragmentRef={data} search={searchString} />
         </div>
     );
 };

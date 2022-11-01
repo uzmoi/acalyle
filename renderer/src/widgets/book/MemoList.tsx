@@ -1,24 +1,28 @@
 import { css } from "@linaria/core";
 import { clamp } from "emnorst";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { graphql, usePaginationFragment } from "react-relay";
 import { columnSplit } from "~/shared/columns";
 import { useResize } from "~/shared/ui/hooks/use-resize";
 import { MemoOverview, MemoOverviewStyle, contentsHeight } from "./MemoOverview";
 import { MemoListFragment$key } from "./__generated__/MemoListFragment.graphql";
+import { MemoListPaginationQuery } from "./__generated__/MemoListPaginationQuery.graphql";
 
 const columnWidth = 256;
 
 export const MemoList: React.FC<{
     fragmentRef: MemoListFragment$key;
-}> = ({ fragmentRef }) => {
+    search?: string;
+}> = ({ fragmentRef, search }) => {
     const {
         data,
-    } = usePaginationFragment(graphql`
+        refetch,
+    } = usePaginationFragment<MemoListPaginationQuery, MemoListFragment$key>(graphql`
         fragment MemoListFragment on Book
+        @argumentDefinitions(search: { type: "String" })
         @refetchable(queryName: "MemoListPaginationQuery") {
             id
-            memos(first: $count, after: $cursor)
+            memos(first: $count, after: $cursor, search: $search)
             @connection(key: "MemoListFragment_memos") {
                 __id
                 edges {
@@ -31,6 +35,10 @@ export const MemoList: React.FC<{
             }
         }
     `, fragmentRef);
+
+    useEffect(() => {
+        refetch({ search });
+    }, [refetch, search]);
 
     const [columnsCount, setColumnsCount] = useState(16);
     const columnsEl = useResize<HTMLDivElement>(entry => {
