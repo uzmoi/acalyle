@@ -10,7 +10,7 @@ export const tagTypeTable = {
     "#": "normal",
 } as const;
 
-const tagHeadTable: Record<TagType, keyof typeof tagTypeTable> = {
+export const tagHeadTable: Record<TagType, keyof typeof tagTypeTable> = {
     control: "@",
     normal: "#",
 };
