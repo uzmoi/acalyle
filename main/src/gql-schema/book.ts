@@ -66,10 +66,10 @@ export const types = [
                                 searchPart = searchPart.slice(1);
                             }
                             const tag = MemoTag.parse(searchPart);
-                            if(tag == null) {
-                                (isExclude ? excludeContents : includeContents).push(searchPart);
-                            } else {
+                            if(tag != null && !searchPart.startsWith(tag.name[0])) {
                                 (isExclude ? excludeTags : includeTags).push(tag);
+                            } else {
+                                (isExclude ? excludeContents : includeContents).push(searchPart);
                             }
                         }
                     }
