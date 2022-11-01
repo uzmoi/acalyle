@@ -10,7 +10,7 @@ export const Book: React.FC<{
     id: string;
     book: BookMemosFragment$key;
 }> = ({ id, book }) => {
-    const data = useFragment(graphql`
+    const data = useFragment<BookMemosFragment$key>(graphql`
         fragment BookMemosFragment on Book {
             title
             memos(first: $count, after: $cursor) {
