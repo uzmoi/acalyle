@@ -5,7 +5,6 @@ import { parseTag } from "renderer/src/entities/tag/lib/parse";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { stringifyTag } from "renderer/src/entities/tag/lib/tag";
 import { v4 as uuidv4 } from "uuid";
-import { gqlBook } from "./book";
 import { nonNullable, parseSearchableString, toSearchableString } from "./util";
 
 export const types = [
@@ -31,12 +30,12 @@ export const types = [
             });
             t.field("book", {
                 type: nonNull("Book"),
-                async resolve(memo, __, { prisma, bookDataPath }) {
+                async resolve(memo, __, { prisma }) {
                     const { Book } = await prisma.memo.findUniqueOrThrow({
                         where: { id: memo.id },
                         select: { Book: true },
                     });
-                    return gqlBook(Book, bookDataPath);
+                    return Book;
                 },
             });
         }

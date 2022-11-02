@@ -16,13 +16,6 @@ const getBookThumbnailPath = (bookDataPath: string, bookId: string) => {
     return process.env.NODE_ENV === "development" ? `@fs${path}` : `file://${path}`;
 };
 
-export const gqlBook = (book: Book, bookDataPath: string) => ({
-    ...book,
-    thumbnail: book.thumbnail === "#image"
-        ? getBookThumbnailPath(bookDataPath, book.id)
-        : book.thumbnail,
-});
-
 const BookTitle = z.string().min(1).max(16);
 
 export const types = [
@@ -31,7 +24,13 @@ export const types = [
         definition(t) {
             t.implements("Node");
             t.string("title");
-            t.string("thumbnail");
+            t.string("thumbnail", {
+                resolve(book, _, { bookDataPath }) {
+                    return book.thumbnail === "#image"
+                        ? getBookThumbnailPath(bookDataPath, book.id)
+                        : book.thumbnail;
+                },
+            });
             t.dateTime("createdAt");
             t.field("memo", {
                 type: nullable("Memo"),
@@ -129,26 +128,24 @@ export const types = [
     queryField("book", {
         type: nullable("Book"),
         args: { id: nonNull("ID") },
-        async resolve(_, args, { prisma, bookDataPath }) {
-            const book = await prisma.book.findUnique({
+        resolve(_, args, { prisma }) {
+            return prisma.book.findUnique({
                 where: { id: args.id },
             });
-            return book && gqlBook(book, bookDataPath);
         }
     }),
     queryField(t => {
         t.connectionField("books", {
             type: "Book",
             cursorFromNode: node => node.id,
-            async nodes(_, args, { prisma, bookDataPath }) {
+            nodes(_, args, { prisma }) {
                 const p = pagination(args);
-                const nodes = await prisma.book.findMany({
+                return prisma.book.findMany({
                     cursor: p.cursor != null ? { id: p.cursor } : undefined,
                     skip: p.cursor != null ? 1 : 0,
                     take: p.take,
                     orderBy: { createdAt: "desc" },
                 });
-                return nodes.map(book => gqlBook(book, bookDataPath));
             },
             totalCount(_, __, { prisma }) {
                 return prisma.book.count();
@@ -160,9 +157,9 @@ export const types = [
         args: {
             title: nonNull("String"),
         },
-        async resolve(_, args, { prisma, bookDataPath }) {
+        async resolve(_, args, { prisma }) {
             const validBookTitle = await BookTitle.parseAsync(args.title);
-            const book = await prisma.book.create({
+            return prisma.book.create({
                 data: {
                     title: validBookTitle,
                     thumbnail: `color:hsl(${Math.random() * 360}deg,80%,40%)`,
@@ -170,7 +167,6 @@ export const types = [
                     createdAt: new Date(),
                 },
             });
-            return gqlBook(book, bookDataPath);
         }
     }),
     mutationField("updateBookTitle", {
@@ -179,13 +175,12 @@ export const types = [
             id: nonNull("ID"),
             title: "String",
         },
-        async resolve(_, args, { prisma, bookDataPath }) {
+        resolve(_, args, { prisma }) {
             const title = BookTitle.safeParse(args.title);
-            const book = await prisma.book.update({
+            return prisma.book.update({
                 where: { id: args.id },
                 data: { title: title.success ? title.data : undefined },
             });
-            return gqlBook(book, bookDataPath);
         }
     }),
     mutationField("updateBookThumbnail", {
@@ -195,18 +190,17 @@ export const types = [
             thumbnail: "Upload",
         },
         async resolve(_, args, { prisma, bookDataPath }) {
-            const book = await prisma.book.update({
-                where: { id: args.id },
-                data: {
-                    thumbnail: args.thumbnail ? "#image" : undefined,
-                },
-            });
             if(args.thumbnail != null) {
                 await mkdir(bookDataPath, { recursive: true });
                 const thumbnailPath = path.join(bookDataPath, `${args.id}.thumbnail`);
                 await writeFile(thumbnailPath, new Int8Array(args.thumbnail.buffer));
             }
-            return gqlBook(book, bookDataPath);
+            return prisma.book.update({
+                where: { id: args.id },
+                data: {
+                    thumbnail: args.thumbnail ? "#image" : undefined,
+                },
+            });
         }
     }),
     mutationField("deleteBook", {
