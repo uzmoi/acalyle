@@ -14,6 +14,7 @@ model Book {
     createdAt DateTime
     memos     Memo[]
     tags      Tag[]
+    settings  Bytes
 }
 
 model Memo {

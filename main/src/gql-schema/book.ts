@@ -1,6 +1,7 @@
 import { assert } from "emnorst";
 import { mkdir, writeFile } from "fs/promises";
-import { mutationField, nonNull, nullable, objectType, queryField } from "nexus";
+import { pack, unpack } from "msgpackr";
+import { list, mutationField, nonNull, nullable, objectType, queryField } from "nexus";
 import path = require("path");
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { MemoTag } from "renderer/src/entities/tag/lib/memo-tag";
@@ -16,8 +17,23 @@ const getBookThumbnailPath = (bookDataPath: string, bookId: string) => {
 };
 
 const BookTitle = z.string().min(1).max(16);
+const BookSetting = z.object({
+    extentions: z.string().array(),
+});
+
+const BookSettingDefault = {
+    extentions: [],
+};
 
 export const types = [
+    objectType({
+        name: "BookSetting",
+        definition(t) {
+            t.field("extentions", {
+                type: list("String"),
+            });
+        },
+    }),
     objectType({
         name: "Book",
         sourceType: { module: "@prisma/client", export: "Book" },
@@ -32,6 +48,16 @@ export const types = [
                 },
             });
             t.dateTime("createdAt");
+            t.field("settings", {
+                type: "BookSetting",
+                resolve(book) {
+                    try {
+                        return BookSetting.parse(unpack(book.settings) as unknown);
+                    } catch(e) {
+                        return BookSettingDefault;
+                    }
+                },
+            });
             t.field("memo", {
                 type: nullable("Memo"),
                 args: { id: nonNull("ID") },
@@ -165,6 +191,7 @@ export const types = [
                     thumbnail: `color:hsl(${Math.random() * 360}deg,80%,40%)`,
                     id: uuidv4(),
                     createdAt: new Date(),
+                    settings: pack(BookSettingDefault),
                 },
             });
         }
