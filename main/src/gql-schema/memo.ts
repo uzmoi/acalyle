@@ -10,6 +10,7 @@ import { nonNullable, parseSearchableString, toSearchableString } from "./util";
 export const types = [
     objectType({
         name: "Memo",
+        sourceType: { module: "@prisma/client", export: "Memo" },
         definition(t) {
             t.implements("Node");
             t.dateTime("createdAt");

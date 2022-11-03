@@ -1,4 +1,3 @@
-import { Book } from "@prisma/client";
 import { assert } from "emnorst";
 import { mkdir, writeFile } from "fs/promises";
 import { mutationField, nonNull, nullable, objectType, queryField } from "nexus";
@@ -21,6 +20,7 @@ const BookTitle = z.string().min(1).max(16);
 export const types = [
     objectType({
         name: "Book",
+        sourceType: { module: "@prisma/client", export: "Book" },
         definition(t) {
             t.implements("Node");
             t.string("title");
