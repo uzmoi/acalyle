@@ -44,6 +44,11 @@ export class MemoTag {
     getName(): string {
         return this.name.join("/");
     }
+    getOption(name: string): string | undefined {
+        return this.options
+            ?.find(option => option.trim().startsWith(`${name}=`))
+            ?.slice(name.length);
+    }
     toBookTag(): string {
         return this.getHeadChar() + this.getName();
     }
@@ -53,10 +58,5 @@ export class MemoTag {
             tagString += "(" + this.options.join() + ")";
         }
         return tagString;
-    }
-    getOption(name: string): string | undefined {
-        return this.options
-            ?.find(option => option.trim().startsWith(`${name}=`))
-            ?.slice(name.length);
     }
 }
