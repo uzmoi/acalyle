@@ -2,6 +2,18 @@ import { interfaceType } from "nexus";
 
 export const nonNullable = <T>(value: T): value is NonNullable<T> => value != null;
 
+export const createEscapeTag = <T>(escape: (value: T) => string) => (
+    template: TemplateStringsArray,
+    ...values: T[]
+): string => {
+    let result = template.raw[0];
+    for(let i = 0; i < values.length; i++) {
+        result += escape(values[i]);
+        result += template.raw[i + 1];
+    }
+    return result;
+};
+
 export const Node = interfaceType({
     name: "Node",
     definition(t) {
