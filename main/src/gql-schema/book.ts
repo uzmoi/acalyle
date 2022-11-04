@@ -90,7 +90,7 @@ export const types = [
                                 isExclude = true;
                                 searchPart = searchPart.slice(1);
                             }
-                            const tag = MemoTag.parse(searchPart);
+                            const tag = MemoTag.fromString(searchPart);
                             if(tag != null && !searchPart.startsWith(tag.name[0])) {
                                 (isExclude ? excludeTags : includeTags).push(tag);
                             } else {
