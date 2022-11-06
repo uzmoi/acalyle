@@ -1,0 +1,13 @@
+__generated__/
+
+*.json
+*.js
+*.html
+
+/app
+/data/schema.graphql
+
+/renderer/src/shared/router/router.ts
+
+_*
+*.local
