@@ -4,16 +4,23 @@ export const BookThumbnail: React.FC<{
     src: string;
 }> = ({ src }) => {
     const prefix = "color:";
-    if(src.startsWith(prefix)) {
+    if (src.startsWith(prefix)) {
         const color = src.slice(prefix.length);
         return (
-            <div className={ThumbnailStyle} style={{ backgroundColor: color }} />
+            <div
+                className={ThumbnailStyle}
+                style={{ backgroundColor: color }}
+            />
         );
     }
 
     return (
         <div className={ThumbnailStyle}>
-            <img src={src} alt="book thumbnail" className={ThumbnailImageStyle} />
+            <img
+                src={src}
+                alt="book thumbnail"
+                className={ThumbnailImageStyle}
+            />
         </div>
     );
 };

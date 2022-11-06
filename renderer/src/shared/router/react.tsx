@@ -10,7 +10,8 @@ interface Navigate<T extends string> {
     <U extends T>(
         pattern: U,
         ...args: U extends `${string}/:${string}` | `:${string}`
-            ? [params: MatchParams<ParseStringPath<U>>] : []
+            ? [params: MatchParams<ParseStringPath<U>>]
+            : []
     ): void;
 }
 
@@ -32,21 +33,22 @@ const LocationState = atom<string>({
 
 export const useNavigate = (): Navigate<AcaRoutePath> => {
     const setLocation = useSetRecoilState(LocationState);
-    return useCallback((pattern, params?) => {
-        setLocation(link()(pattern, params as never));
-    }, [setLocation]);
+    return useCallback(
+        (pattern, params?) => {
+            setLocation(link()(pattern, params as never));
+        },
+        [setLocation],
+    );
 };
 
 export const useLocation = () => useRecoilValue(LocationState);
 
-export const Link = <T extends AcaRoutePath>(props: (
-    { pattern: T }
-    & (T extends `${string}/:${string}` | `:${string}`
+export const Link = <T extends AcaRoutePath>(
+    props: { pattern: T } & (T extends `${string}/:${string}` | `:${string}`
         ? { params: MatchParams<ParseStringPath<T>> }
-        : { params?: undefined }
-    )
-    & Omit<React.ComponentPropsWithoutRef<"a">, "href">
-)): React.ReactElement => {
+        : { params?: undefined }) &
+        Omit<React.ComponentPropsWithoutRef<"a">, "href">,
+): React.ReactElement => {
     const { pattern, params, className, ...rest } = props;
     const navigate = useNavigate();
 
@@ -56,7 +58,7 @@ export const Link = <T extends AcaRoutePath>(props: (
             className={cx(LinkStyle, className)}
             href={"#" + link()(pattern, params as never)}
             onClick={e => {
-                if(e.defaultPrevented) return;
+                if (e.defaultPrevented) return;
                 e.preventDefault();
                 navigate(pattern, params as never);
             }}

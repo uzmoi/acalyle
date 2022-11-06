@@ -8,6 +8,7 @@ export const BookThumbnail: React.FC<{
 }> = ({ bookId }) => {
     const [file, setFile] = useState<File | null>(null);
 
+    // prettier-ignore
     const [commitChangeThumbnail, isInFlight] = useMutation<bookThumbnailChangeMutation>(graphql`
         mutation bookThumbnailChangeMutation($id: ID!, $thumbnail: Upload!) {
             updateBookThumbnail(id: $id, thumbnail: $thumbnail) {
@@ -16,7 +17,7 @@ export const BookThumbnail: React.FC<{
         }
     `);
     const handleSubmit = () => {
-        if(file == null) return;
+        if (file == null) return;
         commitChangeThumbnail({
             variables: { id: bookId, thumbnail: null },
             uploadables: { "variables.thumbnail": file },

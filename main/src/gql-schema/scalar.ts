@@ -13,7 +13,7 @@ export const UploadScalar = scalarType({
 });
 
 const parseDate = (value: unknown) => {
-    if(value instanceof Date) {
+    if (value instanceof Date) {
         return value;
     }
     return new Date(String(value));
@@ -25,7 +25,7 @@ export const DateTimeScalar = scalarType({
     sourceType: "Date",
     parseValue: parseDate,
     parseLiteral(node) {
-        if(node.kind === Kind.STRING) {
+        if (node.kind === Kind.STRING) {
             return new Date(node.value);
         }
         return null;

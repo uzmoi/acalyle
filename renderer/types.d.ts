@@ -13,6 +13,7 @@ declare module "react" {
 declare global {
     namespace jest {
         // eslint-disable-next-line
-        interface Matchers<R = void, T = {}> extends TestingLibraryMatchers<typeof expect.stringContaining, R> {}
+        interface Matchers<R = void, T = {}>
+            extends TestingLibraryMatchers<typeof expect.stringContaining, R> {}
     }
 }

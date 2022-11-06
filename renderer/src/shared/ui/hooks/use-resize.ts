@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 
 const els = new WeakMap<Element, (entry: ResizeObserverEntry) => void>();
 const resizeObserver = new ResizeObserver(entries => {
-    for(const entry of entries) {
+    for (const entry of entries) {
         els.get(entry.target)?.(entry);
     }
 });

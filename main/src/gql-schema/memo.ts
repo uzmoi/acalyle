@@ -22,11 +22,13 @@ export const types = [
                         where: { memoId: memo.id },
                         select: { Tag: true, args: true },
                     });
-                    return memoTags.map(({ Tag, args }) => stringifyTag({
-                        type: Tag.type as "normal" | "control",
-                        name: Tag.name,
-                        args: args ? parseSearchableString(args) : null,
-                    }));
+                    return memoTags.map(({ Tag, args }) => {
+                        return stringifyTag({
+                            type: Tag.type as "normal" | "control",
+                            name: Tag.name,
+                            args: args ? parseSearchableString(args) : null,
+                        });
+                    });
                 },
             });
             t.field("book", {
@@ -39,7 +41,7 @@ export const types = [
                     return Book;
                 },
             });
-        }
+        },
     }),
     // for relay directive
     objectType({
@@ -62,7 +64,7 @@ export const types = [
                 },
             });
             return { node: memo };
-        }
+        },
     }),
     mutationField("updateMemoContents", {
         type: "MemoWrapper",
@@ -79,7 +81,7 @@ export const types = [
                 },
             });
             return { node: memo };
-        }
+        },
     }),
     mutationField("addMemoTags", {
         type: "MemoWrapper",
@@ -92,8 +94,11 @@ export const types = [
                 where: { id: args.memoId },
                 select: { bookId: true },
             });
-            const memoTagCreate: Prisma.MemoTagCreateWithoutMemoInput[] | undefined =
-                args.tags?.map(parseTag).filter(nonNullable)
+            const memoTagCreate:
+                | Prisma.MemoTagCreateWithoutMemoInput[]
+                | undefined = args.tags
+                ?.map(parseTag)
+                .filter(nonNullable)
                 .map(tag => ({
                     Tag: {
                         connectOrCreate: {
@@ -115,7 +120,7 @@ export const types = [
                 },
             });
             return { node: memo };
-        }
+        },
     }),
     mutationField("updateMemoTagsArgs", {
         type: "MemoWrapper",
@@ -124,8 +129,11 @@ export const types = [
             tags: nonNull(list(nonNull("String"))),
         },
         async resolve(_, args, { prisma }) {
-            const memoTagUpdate: Prisma.MemoTagUpdateWithWhereUniqueWithoutMemoInput[] | undefined =
-                args.tags?.map(parseTag).filter(nonNullable)
+            const memoTagUpdate:
+                | Prisma.MemoTagUpdateWithWhereUniqueWithoutMemoInput[]
+                | undefined = args.tags
+                ?.map(parseTag)
+                .filter(nonNullable)
                 .map(tag => ({
                     where: {
                         memoId_tagName: {
@@ -134,7 +142,9 @@ export const types = [
                         },
                     },
                     data: {
-                        args: { set: tag.args ? toSearchableString(tag.args) : null },
+                        args: {
+                            set: tag.args ? toSearchableString(tag.args) : null,
+                        },
                     },
                 }));
             const memo = await prisma.memo.update({
@@ -145,7 +155,7 @@ export const types = [
                 },
             });
             return { node: memo };
-        }
+        },
     }),
     mutationField("removeMemoTags", {
         type: "MemoWrapper",
@@ -156,7 +166,9 @@ export const types = [
         async resolve(_, args, { prisma }) {
             const memoTagDelete: Prisma.MemoTagScalarWhereInput = {
                 memoId: args.memoId,
-                OR: args.tags.map(parseTag).filter(nonNullable)
+                OR: args.tags
+                    .map(parseTag)
+                    .filter(nonNullable)
                     .map(tag => ({ tagName: tag.name })),
             };
             const memo = await prisma.memo.update({
@@ -167,6 +179,6 @@ export const types = [
                 },
             });
             return { node: memo };
-        }
+        },
     }),
 ];

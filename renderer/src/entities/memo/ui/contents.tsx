@@ -9,11 +9,17 @@ import coldarkDark from "react-syntax-highlighter/dist/esm/styles/prism/coldark-
 import { useColorScheme } from "~/shared/theme";
 
 const components = {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    code: ({ node: _, inline, className, children, ...restProps }: CodeProps) => {
+    code: ({
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        node: _,
+        inline,
+        className,
+        children,
+        ...restProps
+    }: CodeProps) => {
         // eslint-disable-next-line react-hooks/rules-of-hooks
         const colorScheme = useColorScheme();
-        if(inline) {
+        if (inline) {
             return (
                 <code className={className} {...restProps}>
                     {children}
@@ -21,10 +27,12 @@ const components = {
             );
         }
         const prefix = "language-";
-        const lang = className?.split(" ")
+        const lang = className
+            ?.split(" ")
             .find(className => className.startsWith(prefix))
             ?.slice(prefix.length)
-            .split(":").at(0);
+            .split(":")
+            .at(0);
         return (
             <SyntaxHighlighter
                 {...restProps}

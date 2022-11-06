@@ -10,20 +10,21 @@ export const TagList: React.FC<{
     return (
         <ul className={TagListStyle}>
             {tags
-            .map(parseTag)
-            .filter(<T,>(v: T): v is NonNullable<T> => v != null)
-            .sort(compareTags)
-            .map(stringifyTag)
-            .map(tag => (
-                <li key={tag} className={TagListItemStyle}>
-                    <Tag tag={tag} bookId={bookId} />
-                </li>
-            ))}
+                .map(parseTag)
+                .filter(<T,>(v: T): v is NonNullable<T> => v != null)
+                .sort(compareTags)
+                .map(stringifyTag)
+                .map(tag => (
+                    <li key={tag} className={TagListItemStyle}>
+                        <Tag tag={tag} bookId={bookId} />
+                    </li>
+                ))}
         </ul>
     );
 };
 
 const TagListStyle = css`
+    /* - */
 `;
 
 const TagListItemStyle = css`

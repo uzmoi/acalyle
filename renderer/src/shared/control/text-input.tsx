@@ -1,6 +1,7 @@
 import { cx } from "@linaria/core";
 import { ControlPartBorderStyle, ControlPartResetStyle } from "./base";
 
+// prettier-ignore
 type OmitPropNames = (
     // overrided
     | "type"
@@ -32,26 +33,34 @@ type OmitPropNames = (
     | "formTarget"
 );
 
-export const TextInput: React.FC<{
-    value?: string;
-    onValueChange?: (value: string) => void;
-} & Omit<React.ComponentPropsWithoutRef<"input">, OmitPropNames>> = ({
+export const TextInput: React.FC<
+    {
+        value?: string;
+        onValueChange?: (value: string) => void;
+    } & Omit<React.ComponentPropsWithoutRef<"input">, OmitPropNames>
+> = ({
     onChange,
     onValueChange,
     className,
     ...restProps
 }) => {
-    const handleChange = (onChange || onValueChange) && ((e: React.ChangeEvent<HTMLInputElement>) => {
-        onChange?.(e);
-        onValueChange?.(e.target.value);
-    });
+    const handleChange =
+        (onChange || onValueChange) &&
+        ((e: React.ChangeEvent<HTMLInputElement>) => {
+            onChange?.(e);
+            onValueChange?.(e.target.value);
+        });
 
     return (
         <input
             {...restProps}
             onChange={handleChange}
             type="text"
-            className={cx(TextInputStyle, className)}
+            className={cx(
+                ControlPartResetStyle,
+                ControlPartBorderStyle,
+                className,
+            )}
             autoComplete="off"
             autoCapitalize="off"
             autoCorrect="off"
@@ -60,4 +69,3 @@ export const TextInput: React.FC<{
     );
 };
 
-const TextInputStyle = cx(ControlPartResetStyle, ControlPartBorderStyle);

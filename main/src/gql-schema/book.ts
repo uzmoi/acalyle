@@ -1,7 +1,14 @@
 import { assert } from "emnorst";
 import { mkdir, writeFile } from "fs/promises";
 import { pack, unpack } from "msgpackr";
-import { list, mutationField, nonNull, nullable, objectType, queryField } from "nexus";
+import {
+    list,
+    mutationField,
+    nonNull,
+    nullable,
+    objectType,
+    queryField,
+} from "nexus";
 import path = require("path");
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { MemoTag } from "renderer/src/entities/tag/lib/memo-tag";
@@ -13,7 +20,9 @@ import { createEscapeTag, pagination } from "./util";
 
 const getBookThumbnailPath = (bookDataPath: string, bookId: string) => {
     const path = `${bookDataPath}/${bookId}.thumbnail`;
-    return process.env.NODE_ENV === "development" ? `@fs${path}` : `file://${path}`;
+    return process.env.NODE_ENV === "development"
+        ? `@fs${path}`
+        : `file://${path}`;
 };
 
 const BookTitle = z.string().min(1).max(16);
@@ -52,8 +61,10 @@ export const types = [
                 type: "BookSetting",
                 resolve(book) {
                     try {
-                        return BookSetting.parse(unpack(book.settings) as unknown);
-                    } catch(e) {
+                        return BookSetting.parse(
+                            unpack(book.settings) as unknown,
+                        );
+                    } catch (e) {
                         return BookSettingDefault;
                     }
                 },
@@ -65,7 +76,7 @@ export const types = [
                     const memo = await prisma.memo.findUnique({
                         where: { id: args.id },
                     });
-                    if(memo == null || memo.bookId !== book.id) {
+                    if (memo == null || memo.bookId !== book.id) {
                         return null;
                     }
                     return memo;
@@ -83,18 +94,28 @@ export const types = [
                     const excludeContents: string[] = [];
                     const includeTags: MemoTag[] = [];
                     const excludeTags: MemoTag[] = [];
-                    if(args.search) {
-                        for(let searchPart of args.search.split(/\s+/)) {
+                    if (args.search) {
+                        for (let searchPart of args.search.split(/\s+/)) {
                             let isExclude = false;
-                            if(searchPart.startsWith("-")) {
+                            if (searchPart.startsWith("-")) {
                                 isExclude = true;
                                 searchPart = searchPart.slice(1);
                             }
                             const tag = MemoTag.fromString(searchPart);
-                            if(tag != null && !searchPart.startsWith(tag.name[0])) {
-                                (isExclude ? excludeTags : includeTags).push(tag);
+                            if (
+                                tag != null &&
+                                !searchPart.startsWith(tag.name[0])
+                            ) {
+                                // prettier-ignore
+                                (isExclude
+                                    ? excludeTags
+                                    : includeTags
+                                ).push(tag);
                             } else {
-                                (isExclude ? excludeContents : includeContents).push(searchPart);
+                                (isExclude
+                                    ? excludeContents
+                                    : includeContents
+                                ).push(searchPart);
                             }
                         }
                     }
@@ -118,9 +139,11 @@ export const types = [
                                 })),
                             ].map(contents => ({ contents })),
                             tags: {
+                                // prettier-ignore
                                 some: includeTags.length === 0 ? undefined : {
                                     Tag: { AND: includeTags.map(tagWhere) },
                                 },
+                                // prettier-ignore
                                 none: excludeTags.length === 0 ? undefined : {
                                     Tag: { OR: excludeTags.map(tagWhere) },
                                 },
@@ -149,7 +172,7 @@ export const types = [
                     });
                 },
             });
-        }
+        },
     }),
     queryField("book", {
         type: nullable("Book"),
@@ -158,7 +181,7 @@ export const types = [
             return prisma.book.findUnique({
                 where: { id: args.id },
             });
-        }
+        },
     }),
     queryField(t => {
         t.connectionField("books", {
@@ -194,7 +217,7 @@ export const types = [
                     settings: pack(BookSettingDefault),
                 },
             });
-        }
+        },
     }),
     mutationField("updateBookTitle", {
         type: "Book",
@@ -208,7 +231,7 @@ export const types = [
                 where: { id: args.id },
                 data: { title: title.success ? title.data : undefined },
             });
-        }
+        },
     }),
     mutationField("updateBookThumbnail", {
         type: "Book",
@@ -217,10 +240,16 @@ export const types = [
             thumbnail: "Upload",
         },
         async resolve(_, args, { prisma, bookDataPath }) {
-            if(args.thumbnail != null) {
+            if (args.thumbnail != null) {
                 await mkdir(bookDataPath, { recursive: true });
-                const thumbnailPath = path.join(bookDataPath, `${args.id}.thumbnail`);
-                await writeFile(thumbnailPath, new Int8Array(args.thumbnail.buffer));
+                const thumbnailPath = path.join(
+                    bookDataPath,
+                    `${args.id}.thumbnail`,
+                );
+                await writeFile(
+                    thumbnailPath,
+                    new Int8Array(args.thumbnail.buffer),
+                );
             }
             return prisma.book.update({
                 where: { id: args.id },
@@ -228,7 +257,7 @@ export const types = [
                     thumbnail: args.thumbnail ? "#image" : undefined,
                 },
             });
-        }
+        },
     }),
     mutationField("deleteBook", {
         type: "ID",
@@ -239,7 +268,7 @@ export const types = [
                 select: {},
             });
             return args.id;
-        }
+        },
     }),
     mutationField("renameTag", {
         type: nonNull("String"),
@@ -259,14 +288,21 @@ export const types = [
                 ;`,
                 prisma.$executeRaw`
                     UPDATE Tag
-                    SET name = REPLACE(${STX} || Tag.name, ${STX + args.old + "/"}, ${args.new + "/"})
-                    WHERE Tag.bookId = ${args.bookId} AND Tag.name GLOB ${sqlGlob`${args.old}/*`}
+                    SET name = REPLACE(
+                        ${STX} || Tag.name,
+                        ${STX + args.old + "/"},
+                        ${args.new + "/"},
+                    )
+                    WHERE Tag.bookId = ${args.bookId}
+                    AND Tag.name GLOB ${sqlGlob`${args.old}/*`}
                 ;`,
             ]);
             return "";
-        }
+        },
     }),
 ];
 
 // const sqlPattern = createEscapeTag<string>(string => string.replace(/[%_]/g, "\\$&"));
-const sqlGlob = createEscapeTag<string>(string => string.replace(/[[\]*?]/g, "[$&]"));
+const sqlGlob = createEscapeTag<string>(string =>
+    string.replace(/[[\]*?]/g, "[$&]"),
+);

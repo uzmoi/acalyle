@@ -1,9 +1,15 @@
-import { BrowserWindow, LoadExtensionOptions, app, ipcMain, nativeTheme } from "electron/main";
+import {
+    BrowserWindow,
+    LoadExtensionOptions,
+    app,
+    ipcMain,
+    nativeTheme,
+} from "electron/main";
 import path = require("path");
 import { ipc, ipcChannels } from "./ipc";
 
 app.disableHardwareAcceleration();
-if(process.env.NODE_ENV === "development") {
+if (process.env.NODE_ENV === "development") {
     nativeTheme.themeSource = "dark";
 }
 
@@ -15,7 +21,7 @@ const createWindow = () => {
         width: 800,
         height: 600,
     });
-    if(process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV === "development") {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         void win.loadURL(process.env.DEV_SERVER_URL!);
     } else {
@@ -24,14 +30,17 @@ const createWindow = () => {
 };
 
 const handleIpc = <T extends string>(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // prettier-ignore
     ipc: Record<T, (this: {
         event: Electron.IpcMainInvokeEvent;
         app: Electron.App;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }, ...args: any) => unknown>,
     ipcChannels: Record<T, string>,
 ) => {
-    for(const name of Object.keys(ipcChannels) as (keyof typeof ipcChannels)[]) {
+    for (const name of Object.keys(
+        ipcChannels,
+    ) as (keyof typeof ipcChannels)[]) {
         ipcMain.handle(ipcChannels[name], (e, ...args) => {
             return ipc[name].apply({ event: e, app }, args);
         });
@@ -39,7 +48,7 @@ const handleIpc = <T extends string>(
 };
 
 void app.whenReady().then(() => {
-    if(process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV === "development") {
         void (async () => {
             const RELAY_DEVELOPER_TOOLS = "ncedobpgnmkhcmnnkcimnobpfepidadl";
             const {
@@ -47,25 +56,30 @@ void app.whenReady().then(() => {
                 REACT_DEVELOPER_TOOLS,
                 // eslint-disable-next-line import/no-extraneous-dependencies
             } = await import("electron-devtools-installer");
-            const loadExtensionOptions: LoadExtensionOptions = { allowFileAccess: true };
-            await installExtension([
-                REACT_DEVELOPER_TOOLS,
-                RELAY_DEVELOPER_TOOLS,
-            ], { loadExtensionOptions });
+            const loadExtensionOptions: LoadExtensionOptions = {
+                allowFileAccess: true,
+            };
+            await installExtension(
+                [REACT_DEVELOPER_TOOLS, RELAY_DEVELOPER_TOOLS],
+                { loadExtensionOptions },
+            );
         })().catch(console.error);
     }
-    createWindow();
-    if(process.env.NODE_ENV === "development") {
+    void createWindow();
+    if (process.env.NODE_ENV === "development") {
         type Dispose = () => void;
         type HmrAction = (...x: never[]) => Dispose | void;
         const hmr = async (paths: string[], hmrAction: HmrAction) => {
             let dispose: Dispose | void;
             const chokidar = await import("chokidar");
-            const watcher = chokidar.watch(paths.map(path => require.resolve(path)), {
-                cwd: __dirname,
-            });
+            const watcher = chokidar.watch(
+                paths.map(path => require.resolve(path)),
+                { cwd: __dirname },
+            );
             watcher.on("all", (_, updatedFilePath) => {
-                const resolvedPath = require.resolve(path.join(__dirname, updatedFilePath));
+                const resolvedPath = require.resolve(
+                    path.join(__dirname, updatedFilePath),
+                );
                 console.log("hmr", path.relative(process.cwd(), resolvedPath));
                 delete require.cache[resolvedPath];
                 dispose?.();
@@ -74,6 +88,7 @@ void app.whenReady().then(() => {
                 dispose = hmrAction(...paths.map(require));
             });
         };
+        // prettier-ignore
         void hmr(["./ipc"], ({ ipc, ipcChannels }: typeof import("./ipc")) => {
             handleIpc(ipc, ipcChannels);
             return () => {
@@ -88,11 +103,11 @@ void app.whenReady().then(() => {
 });
 
 app.on("window-all-closed", () => {
-    if(process.platform !== "darwin") {
+    if (process.platform !== "darwin") {
         app.quit();
     }
 });
 
 app.on("activate", () => {
-    createWindow();
+    void createWindow();
 });

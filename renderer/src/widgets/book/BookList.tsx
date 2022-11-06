@@ -9,6 +9,7 @@ import { BookListPaginationQuery } from "./__generated__/BookListPaginationQuery
 export const BookList: React.FC<{
     queryRef: BookListFragment$key;
 }> = ({ queryRef }) => {
+    // prettier-ignore
     const {
         data,
         hasNext,
@@ -35,13 +36,22 @@ export const BookList: React.FC<{
             <ul className={BookListStyle}>
                 {data.books.edges.map(({ node }) => (
                     <li key={node.id}>
-                        <Link pattern="books/:bookId" params={{ bookId: node.id }}>
-                            <BookOverview thumbnail={node.thumbnail} title={node.title} />
+                        <Link
+                            pattern="books/:bookId"
+                            params={{ bookId: node.id }}
+                        >
+                            <BookOverview
+                                thumbnail={node.thumbnail}
+                                title={node.title}
+                            />
                         </Link>
                     </li>
                 ))}
             </ul>
-            <Button onClick={() => loadNext(16)} disabled={!hasNext || isLoadingNext}>
+            <Button
+                onClick={() => loadNext(16)}
+                disabled={!hasNext || isLoadingNext}
+            >
                 load more books
             </Button>
         </div>

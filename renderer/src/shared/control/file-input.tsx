@@ -1,6 +1,7 @@
 import { css, cx } from "@linaria/core";
 import { ControlPartResetStyle } from "./base";
 
+// prettier-ignore
 type OmitPropNames = (
     // overrided
     | "type"
@@ -35,30 +36,35 @@ type OmitPropNames = (
     | "formTarget"
 );
 
-export const FileInput: React.FC<({
-    multiple?: false;
-    onFileChange?: (file: File) => void;
-} | {
-    multiple: true;
-    onFileChange?: (fileList: FileList) => void;
-}) & Omit<React.ComponentPropsWithoutRef<"input">, OmitPropNames>> = ({
-    onChange,
-    onFileChange,
-    multiple,
-    className,
-    ...restProps
-}) => {
-    const handleChange = (onChange || onFileChange) && ((e: React.ChangeEvent<HTMLInputElement>) => {
-        onChange?.(e);
-        const files = e.target.files;
-        if(files != null) {
-            if(multiple) {
-                onFileChange?.(files);
-            } else {
-                onFileChange?.(files[0]);
+// prettier-ignore
+type FileInputProps = (
+    | {
+        multiple?: false;
+        onFileChange?: (file: File) => void;
+    }
+    | {
+        multiple: true;
+        onFileChange?: (fileList: FileList) => void;
+    }
+);
+
+export const FileInput: React.FC<
+    FileInputProps &
+        Omit<React.ComponentPropsWithoutRef<"input">, OmitPropNames>
+> = ({ onChange, onFileChange, multiple, className, ...restProps }) => {
+    const handleChange =
+        (onChange || onFileChange) &&
+        ((e: React.ChangeEvent<HTMLInputElement>) => {
+            onChange?.(e);
+            const files = e.target.files;
+            if (files != null) {
+                if (multiple) {
+                    onFileChange?.(files);
+                } else {
+                    onFileChange?.(files[0]);
+                }
             }
-        }
-    });
+        });
 
     return (
         <input
@@ -66,11 +72,11 @@ export const FileInput: React.FC<({
             onChange={handleChange}
             type="file"
             multiple={multiple}
-            className={cx(FileInputStyle, className)}
+            className={cx(ControlPartResetStyle, FileInputStyle, className)}
         />
     );
 };
 
-const FileInputStyle = cx(ControlPartResetStyle, css`
+const FileInputStyle = css`
     /* - */
-`);
+`;

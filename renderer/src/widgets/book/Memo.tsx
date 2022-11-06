@@ -11,6 +11,7 @@ export const Memo: React.FC<{
     bookId: string;
     fragmentRef: MemoFragment$key;
 }> = ({ bookId, fragmentRef }) => {
+    // prettier-ignore
     const memo = useFragment<MemoFragment$key>(graphql`
         fragment MemoFragment on Memo {
             id
@@ -43,7 +44,10 @@ export const Memo: React.FC<{
                 </div>
             )}
             <div className={MemoFooterStyle}>
-                <MemoInfo createdAt={memo.createdAt} updatedAt={memo.updatedAt} />
+                <MemoInfo
+                    createdAt={memo.createdAt}
+                    updatedAt={memo.updatedAt}
+                />
                 {isEditTag ? (
                     <MemoTagsForm
                         memoId={memo.id}
@@ -53,7 +57,9 @@ export const Memo: React.FC<{
                 ) : (
                     <>
                         <TagList tags={memo.tags} bookId={bookId} />
-                        <Button onClick={() => setIsEditTag(true)}>edit tags</Button>
+                        <Button onClick={() => setIsEditTag(true)}>
+                            edit tags
+                        </Button>
                     </>
                 )}
             </div>

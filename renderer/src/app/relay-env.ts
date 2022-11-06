@@ -1,9 +1,16 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { Environment, GraphQLResponse, Network, RecordSource, Store } from "relay-runtime";
+import {
+    Environment,
+    GraphQLResponse,
+    Network,
+    RecordSource,
+    Store,
+} from "relay-runtime";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { LogFunction } from "relay-runtime/lib/store/RelayStoreTypes";
 import { acalyle } from "./ipc";
 
+// prettier-ignore
 const network = Network.create(async (
     request,
     variables,
@@ -43,15 +50,15 @@ const network = Network.create(async (
 const store = new Store(new RecordSource());
 
 const log: LogFunction = logEvent => {
-    switch(logEvent.name) {
-    case "network.start":
-    case "network.next":
-    case "network.info":
-    case "network.error":
-    case "network.complete":
-    case "network.unsubscribe":
-        console.log(logEvent);
-        break;
+    switch (logEvent.name) {
+        case "network.start":
+        case "network.next":
+        case "network.info":
+        case "network.error":
+        case "network.complete":
+        case "network.unsubscribe":
+            console.log(logEvent);
+            break;
     }
 };
 

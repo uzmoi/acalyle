@@ -7,6 +7,7 @@ import { newBookCreateMutation } from "./__generated__/newBookCreateMutation.gra
 
 export const NewBookPage: React.FC = () => {
     const [title, setTitle] = useState("");
+    // prettier-ignore
     const [commitNewBook, isInFlight] = useMutation<newBookCreateMutation>(graphql`
         mutation newBookCreateMutation($title: String!) {
             createBook(title: $title) {
@@ -29,8 +30,14 @@ export const NewBookPage: React.FC = () => {
     return (
         <form onSubmit={onSubmit}>
             <h1>Create a new book</h1>
-            <BookTitle title={title} setTitle={setTitle} disabled={isInFlight} />
-            <Button type="submit" disabled={isInFlight}>create book</Button>
+            <BookTitle
+                title={title}
+                setTitle={setTitle}
+                disabled={isInFlight}
+            />
+            <Button type="submit" disabled={isInFlight}>
+                create book
+            </Button>
         </form>
     );
 };

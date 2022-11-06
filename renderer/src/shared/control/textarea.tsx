@@ -3,15 +3,17 @@ import { ControlPartBorderStyle, ControlPartResetStyle } from "./base";
 
 const ZeroWidthSpace = "\u200b";
 
-export const TextArea: React.FC<{
-    value?: string;
-    onValueChange?: (value: string) => void;
-    textareaId?: string;
-    placeholder?: string;
-    autoFocus?: boolean;
-    disabled?: boolean;
-    readOnly?: boolean;
-} & React.ComponentPropsWithoutRef<"div">> = ({
+export const TextArea: React.FC<
+    {
+        value?: string;
+        onValueChange?: (value: string) => void;
+        textareaId?: string;
+        placeholder?: string;
+        autoFocus?: boolean;
+        disabled?: boolean;
+        readOnly?: boolean;
+    } & React.ComponentPropsWithoutRef<"div">
+> = ({
     value,
     onValueChange,
     textareaId,
@@ -22,19 +24,24 @@ export const TextArea: React.FC<{
     className,
     ...restProps
 }) => {
-    const handleChange = onValueChange && ((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        onValueChange(e.target.value);
-    });
+    const handleChange =
+        onValueChange &&
+        ((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+            onValueChange(e.target.value);
+        });
 
     return (
-        <div {...restProps} className={cx(ContainerStyle, className)}>
+        <div
+            {...restProps}
+            className={cx(ControlPartBorderStyle, ContainerStyle, className)}
+        >
             <textarea
                 id={textareaId}
                 // form={form}
                 // name={name}
                 value={value}
                 onChange={handleChange}
-                className={TextAreaStyle}
+                className={cx(ControlPartResetStyle, TextAreaStyle)}
                 autoFocus={autoFocus}
                 placeholder={placeholder}
                 disabled={disabled}
@@ -52,14 +59,14 @@ export const TextArea: React.FC<{
     );
 };
 
-const ContainerStyle = cx(ControlPartBorderStyle, css`
+const ContainerStyle = css`
     position: relative;
     overflow-wrap: break-word;
     white-space: pre-wrap;
     --caret-color: white /* currentcolor */;
-`);
+`;
 
-const TextAreaStyle = cx(ControlPartResetStyle, css`
+const TextAreaStyle = css`
     position: absolute;
     top: 0;
     left: 0;
@@ -78,7 +85,7 @@ const TextAreaStyle = cx(ControlPartResetStyle, css`
     word-spacing: inherit;
     caret-color: var(--caret-color);
     /* opacity: 0; */
-`);
+`;
 
 const PreStyle = css`
     min-height: 1em;

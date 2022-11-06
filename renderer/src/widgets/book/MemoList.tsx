@@ -4,7 +4,11 @@ import { useEffect, useMemo, useState } from "react";
 import { graphql, usePaginationFragment } from "react-relay";
 import { columnSplit } from "~/shared/columns";
 import { useResize } from "~/shared/ui/hooks/use-resize";
-import { MemoOverview, MemoOverviewStyle, contentsHeight } from "./MemoOverview";
+import {
+    MemoOverview,
+    MemoOverviewStyle,
+    contentsHeight,
+} from "./MemoOverview";
 import { MemoListFragment$key } from "./__generated__/MemoListFragment.graphql";
 import { MemoListPaginationQuery } from "./__generated__/MemoListPaginationQuery.graphql";
 
@@ -14,6 +18,7 @@ export const MemoList: React.FC<{
     fragmentRef: MemoListFragment$key;
     search?: string;
 }> = ({ fragmentRef, search }) => {
+    // prettier-ignore
     const {
         data,
         refetch,
@@ -42,7 +47,9 @@ export const MemoList: React.FC<{
 
     const [columnsCount, setColumnsCount] = useState(16);
     const columnsEl = useResize<HTMLDivElement>(entry => {
-        setColumnsCount(clamp(Math.floor(entry.contentRect.width / columnWidth), 1, 6));
+        setColumnsCount(
+            clamp(Math.floor(entry.contentRect.width / columnWidth), 1, 6),
+        );
     });
 
     const columns = useMemo(() => {
@@ -60,7 +67,11 @@ export const MemoList: React.FC<{
             {columns.map((column, i) => (
                 <div key={i} className={ColumnStyle}>
                     {column.map(({ node }) => (
-                        <MemoOverview key={node.id} bookId={data.id} fragmentRef={node} />
+                        <MemoOverview
+                            key={node.id}
+                            bookId={data.id}
+                            fragmentRef={node}
+                        />
                     ))}
                 </div>
             ))}

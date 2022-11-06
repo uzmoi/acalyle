@@ -15,6 +15,7 @@ export const MemoOverview: React.FC<{
     bookId: string;
     fragmentRef: MemoOverviewFragment$key;
 }> = ({ bookId, fragmentRef }) => {
+    // prettier-ignore
     const memo = useFragment<MemoOverviewFragment$key>(graphql`
         fragment MemoOverviewFragment on Memo {
             id
@@ -28,7 +29,11 @@ export const MemoOverview: React.FC<{
     const tile = contentsHeight(memo.contents);
 
     return (
-        <article id={memo.id} className={MemoOverviewStyle} style={{ "--height": tile }}>
+        <article
+            id={memo.id}
+            className={MemoOverviewStyle}
+            style={{ "--height": tile }}
+        >
             <Link
                 pattern="books/:bookId/:memoId"
                 params={{ bookId, memoId: memo.id }}

@@ -20,7 +20,8 @@ export const ControlPartBorderStyle = css`
     &:focus {
         border-color: lightgreen;
     }
-    &:invalid, &[aria-invalid="true"] {
+    &:invalid,
+    &[aria-invalid="true"] {
         border-color: red;
     }
 `;

@@ -1,24 +1,24 @@
 import { interfaceType } from "nexus";
 
-export const nonNullable = <T>(value: T): value is NonNullable<T> => value != null;
+export const nonNullable = <T>(value: T): value is NonNullable<T> =>
+    value != null;
 
-export const createEscapeTag = <T>(escape: (value: T) => string) => (
-    template: TemplateStringsArray,
-    ...values: T[]
-): string => {
-    let result = template.raw[0];
-    for(let i = 0; i < values.length; i++) {
-        result += escape(values[i]);
-        result += template.raw[i + 1];
-    }
-    return result;
-};
+export const createEscapeTag =
+    <T>(escape: (value: T) => string) =>
+    (template: TemplateStringsArray, ...values: T[]): string => {
+        let result = template.raw[0];
+        for (let i = 0; i < values.length; i++) {
+            result += escape(values[i]);
+            result += template.raw[i + 1];
+        }
+        return result;
+    };
 
 export const Node = interfaceType({
     name: "Node",
     definition(t) {
         t.id("id");
-    }
+    },
 });
 
 export interface PaginationArgs {
@@ -31,11 +31,11 @@ export interface PaginationArgs {
 export const pagination = (args: PaginationArgs) => {
     let cursor: string | null | undefined;
     let take: number | undefined;
-    if(args.first != null) {
+    if (args.first != null) {
         // forward pagination
         cursor = args.after;
         take = args.first + 1;
-    } else if(args.last != null) {
+    } else if (args.last != null) {
         // backward pagination
         cursor = args.before;
         take = -(args.last + 1);

@@ -13,10 +13,10 @@ export const MemoTagsForm: React.FC<{
 
     const [commit, isInFlight] = useMutation<tagsUpdateMutation>(graphql`
         mutation tagsUpdateMutation(
-            $memoId: ID!,
-            $removeTags: [String!]!,
-            $updateTags: [String!]!,
-            $addTags: [String!]!,
+            $memoId: ID!
+            $removeTags: [String!]!
+            $updateTags: [String!]!
+            $addTags: [String!]!
         ) {
             removeMemoTags(memoId: $memoId, tags: $removeTags) {
                 node {
@@ -44,11 +44,17 @@ export const MemoTagsForm: React.FC<{
             variables: {
                 memoId,
                 // tags & memo.tags
-                updateTags: tags.filter(tag => memoTagNames.includes(getTagName(tag))),
+                updateTags: tags.filter(tag =>
+                    memoTagNames.includes(getTagName(tag)),
+                ),
                 // tags - memo.tags
-                addTags: tags.filter(tag => !memoTagNames.includes(getTagName(tag))),
+                addTags: tags.filter(
+                    tag => !memoTagNames.includes(getTagName(tag)),
+                ),
                 // memo.tags - tags
-                removeTags: memoTags.filter(tag => !tagNames.includes(getTagName(tag))),
+                removeTags: memoTags.filter(
+                    tag => !tagNames.includes(getTagName(tag)),
+                ),
             },
             onCompleted: onClose,
         });
@@ -81,9 +87,15 @@ export const MemoTagsForm: React.FC<{
                     </li>
                 ))}
             </ul>
-            <Button onClick={addTag} disabled={isInFlight}>add</Button>
-            <Button onClick={onClose} disabled={isInFlight}>cancel</Button>
-            <Button type="submit" disabled={isInFlight}>save</Button>
+            <Button onClick={addTag} disabled={isInFlight}>
+                add
+            </Button>
+            <Button onClick={onClose} disabled={isInFlight}>
+                cancel
+            </Button>
+            <Button type="submit" disabled={isInFlight}>
+                save
+            </Button>
         </form>
     );
 };

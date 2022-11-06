@@ -17,7 +17,7 @@ export const tagHeadTable: Record<TagType, keyof typeof tagTypeTable> = {
 
 export const stringifyTag = (tag: Tag): string => {
     let tagString = tagHeadTable[tag.type] + tag.name;
-    if(tag.args != null) {
+    if (tag.args != null) {
         tagString += "(" + tag.args.join() + ")";
     }
     return tagString;
@@ -31,7 +31,7 @@ const collator = new Intl.Collator(undefined, {
 
 export const compareTags = (tag1: Tag, tag2: Tag): number => {
     const diff = tagTypes.indexOf(tag1.type) - tagTypes.indexOf(tag2.type);
-    if(diff !== 0) {
+    if (diff !== 0) {
         return diff;
     }
     return collator.compare(tag1.name, tag2.name);

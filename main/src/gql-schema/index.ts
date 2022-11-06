@@ -1,4 +1,10 @@
-import { connectionPlugin, makeSchema, nonNull, nullable, queryField } from "nexus";
+import {
+    connectionPlugin,
+    makeSchema,
+    nonNull,
+    nullable,
+    queryField,
+} from "nexus";
 import path = require("path");
 import { types as bookTypes } from "./book";
 import { types as memoTypes } from "./memo";
@@ -25,7 +31,10 @@ export const graphQLSchema = makeSchema({
     nonNullDefaults: { output: true },
     outputs: {
         schema: path.join(__dirname, "../data/schema.graphql"),
-        typegen: path.join(__dirname, "../main/src/gql-schema/__generated__/nexus.d.ts"),
+        typegen: path.join(
+            __dirname,
+            "../main/src/gql-schema/__generated__/nexus.d.ts",
+        ),
     },
     contextType: {
         module: path.join(__dirname, "../main/src/gql-schema/context.ts"),

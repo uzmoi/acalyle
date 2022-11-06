@@ -9,7 +9,7 @@ export const Tag: React.FC<{
 }> = ({ tag: tagString, bookId }) => {
     const tag = parseTag(tagString);
 
-    if(tag === null) {
+    if (tag === null) {
         return null;
     }
 

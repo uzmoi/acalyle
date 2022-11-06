@@ -9,10 +9,10 @@ import { Header } from "~/widgets/layouts/header";
 
 export const App: React.FC = () => {
     const location = useLocation();
-    
+
     const navigate = useNavigate();
     useEffect(() => {
-        if(window.location.hash === "") {
+        if (window.location.hash === "") {
             navigate("books");
         }
     }, [navigate]);

@@ -9,9 +9,7 @@ export const BookOverview: React.FC<{
     return (
         <div className={BookOverviewStyle}>
             <BookThumbnail src={thumbnail} />
-            <p className={BookOverviewTitleStyle}>
-                {title}
-            </p>
+            <p className={BookOverviewTitleStyle}>{title}</p>
         </div>
     );
 };

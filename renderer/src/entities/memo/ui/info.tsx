@@ -6,9 +6,11 @@ export const MemoInfo: React.FC<{
 }> = ({ createdAt, updatedAt }) => {
     return (
         <div>
-            {createdAt !== updatedAt && <p className={MemoInfoItemStyle}>
-                updated at {new Date(updatedAt).toLocaleDateString()}
-            </p>}
+            {createdAt !== updatedAt && (
+                <p className={MemoInfoItemStyle}>
+                    updated at {new Date(updatedAt).toLocaleDateString()}
+                </p>
+            )}
             <p className={MemoInfoItemStyle}>
                 created at {new Date(createdAt).toLocaleDateString()}
             </p>

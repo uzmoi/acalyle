@@ -1,11 +1,16 @@
 import { css } from "@linaria/core";
 import { graphql, useLazyLoadQuery } from "react-relay";
-import { BookDeleteForm, BookThumbnailForm, BookTitleForm } from "~/features/book-form";
+import {
+    BookDeleteForm,
+    BookThumbnailForm,
+    BookTitleForm,
+} from "~/features/book-form";
 import { bookSettingsDataQuery } from "./__generated__/bookSettingsDataQuery.graphql";
 
 export const BookSettingsPage: React.FC<{
     id: string;
 }> = ({ id }) => {
+    // prettier-ignore
     const { book } = useLazyLoadQuery<bookSettingsDataQuery>(graphql`
         query bookSettingsDataQuery($id: ID!) {
             book(id: $id) {
@@ -14,7 +19,7 @@ export const BookSettingsPage: React.FC<{
         }
     `, { id });
 
-    if(book == null) {
+    if (book == null) {
         return <div>book not found (id: {id})</div>;
     }
 

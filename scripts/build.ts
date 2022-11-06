@@ -26,7 +26,7 @@ const spawnWithLogger = (
     const child = spawn(path, args);
     process.once("exit", () => child.killed || child.kill());
     child.once("exit", code => {
-        if(shouldExitOnExit || code !== 0) {
+        if (shouldExitOnExit || code !== 0) {
             process.exit(code ?? void 0);
         }
     });
@@ -40,9 +40,13 @@ const spawnWithLogger = (
 
 (async () => {
     await mkdir("app", { recursive: true });
-    await Promise.all((await readdir("app")).map(file =>
-        rm(path.join("app", file), { recursive: true, force: true })
-    ));
+    await Promise.all(
+        (
+            await readdir("app")
+        ).map(file =>
+            rm(path.join("app", file), { recursive: true, force: true }),
+        ),
+    );
     await mkdir("data", { recursive: true });
     await (await open("data/schema.graphql", "a")).close();
 
@@ -57,17 +61,23 @@ const spawnWithLogger = (
         },
     };
 
-    spawnWithLogger("relay-compiler", String(relayPath), DEV ? ["--watch"] : [], false);
+    spawnWithLogger(
+        "relay-compiler",
+        String(relayPath),
+        DEV ? ["--watch"] : [],
+        false,
+    );
 
     const rendererViteConfig: ViteInlineConfig = {
         configFile: "renderer/vite.config.ts",
     };
-    if(DEV) {
+    if (DEV) {
         const viteDevServer = await createViteServer(rendererViteConfig);
         await viteDevServer.listen();
         const { base, server } = viteDevServer.config;
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         Object.assign(esbuildOptions.define!, {
+            // prettier-ignore
             // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
             "process.env.DEV_SERVER_URL": `"http://localhost:${server.port + base}"`,
         });
@@ -77,9 +87,9 @@ const spawnWithLogger = (
 
     await esbuild({
         ...esbuildOptions,
-        entryPoints: ["main/src/main.ts", ...DEV ? ["main/src/ipc.ts"] : []],
-        ...DEV ? { outdir: "app" } : { outfile: "app/main.js" },
-        external: ["electron", ...DEV ? ["./ipc"] : []],
+        entryPoints: ["main/src/main.ts", ...(DEV ? ["main/src/ipc.ts"] : [])],
+        ...(DEV ? { outdir: "app" } : { outfile: "app/main.js" }),
+        external: ["electron", ...(DEV ? ["./ipc"] : [])],
     });
     await esbuild({
         ...esbuildOptions,
@@ -88,7 +98,7 @@ const spawnWithLogger = (
         external: ["electron/renderer"],
     });
 
-    if(DEV) {
+    if (DEV) {
         spawnWithLogger("electron", String(electronPath), ["."], true);
     }
 })().catch(err => {

@@ -8,6 +8,7 @@ export const MemoPage: React.FC<{
     bookId: string;
     memoId: string;
 }> = ({ bookId, memoId }) => {
+    // prettier-ignore
     const { book } = useLazyLoadQuery<memoQuery>(graphql`
         query memoQuery($bookId: ID!, $memoId: ID!) {
             book(id: $bookId) {
@@ -18,12 +19,8 @@ export const MemoPage: React.FC<{
         }
     `, { bookId, memoId });
 
-    if(book == null) {
-        return (
-            <div className={MemoPageStyle}>
-                book not found.
-            </div>
-        );
+    if (book == null) {
+        return <div className={MemoPageStyle}>book not found.</div>;
     }
 
     return (

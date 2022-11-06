@@ -10,6 +10,7 @@ export const MemoContentsForm: React.FC<{
 }> = ({ memoId, contents: memoContents, onClose }) => {
     const [contents, setContents] = useState(memoContents);
 
+    // prettier-ignore
     const [commit, isInFlight] = useMutation<memoContentsUpdateMutation>(graphql`
         mutation memoContentsUpdateMutation($memoId: ID!, $contents: String!) {
             updateMemoContents(memoId: $memoId, contents: $contents) {
@@ -29,9 +30,17 @@ export const MemoContentsForm: React.FC<{
 
     return (
         <form onSubmit={handleSubmit}>
-            <TextArea value={contents} onValueChange={setContents} disabled={isInFlight} />
-            <Button onClick={onClose} disabled={isInFlight}>cancel</Button>
-            <Button type="submit" disabled={isInFlight}>save</Button>
+            <TextArea
+                value={contents}
+                onValueChange={setContents}
+                disabled={isInFlight}
+            />
+            <Button onClick={onClose} disabled={isInFlight}>
+                cancel
+            </Button>
+            <Button type="submit" disabled={isInFlight}>
+                save
+            </Button>
         </form>
     );
 };

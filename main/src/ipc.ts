@@ -21,7 +21,7 @@ export const ipc = {
             query: string;
             variables: Record<string, JsonValue>;
         };
-        for(const key of Object.keys(bufs)) {
+        for (const key of Object.keys(bufs)) {
             const path = key.split(".");
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const lastKey = path.pop()!;

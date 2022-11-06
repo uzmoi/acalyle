@@ -6,6 +6,7 @@ import { BookList } from "~/widgets/book/BookList";
 import { booksQuery } from "./__generated__/booksQuery.graphql";
 
 export const BookListPage: React.FC = () => {
+    // prettier-ignore
     const queryRef = useLazyLoadQuery<booksQuery>(graphql`
         query booksQuery($count: Int!, $cursor: String) {
             ...BookListFragment

@@ -11,6 +11,7 @@ export const Book: React.FC<{
     id: string;
     book: BookMemosFragment$key;
 }> = ({ id, book }) => {
+    // prettier-ignore
     const data = useFragment<BookMemosFragment$key>(graphql`
         fragment BookMemosFragment on Book {
             title
@@ -23,7 +24,11 @@ export const Book: React.FC<{
     const [commitAddMemo] = useMutation<BookMemoCreateMutation>(graphql`
         mutation BookMemoCreateMutation($bookId: ID!, $connections: [ID!]!) {
             createMemo(bookId: $bookId) {
-                node @appendNode(connections: $connections, edgeTypeName: "Memo") {
+                node
+                    @appendNode(
+                        connections: $connections
+                        edgeTypeName: "Memo"
+                    ) {
                     ...MemoOverviewFragment
                 }
             }
@@ -47,13 +52,19 @@ export const Book: React.FC<{
                 <h2 className={BookTitleStyle}>{data.title}</h2>
                 <ul className={ButtonListStyle}>
                     <li>
-                        <TextInput value={searchString} onValueChange={setSearchString} />
+                        <TextInput
+                            value={searchString}
+                            onValueChange={setSearchString}
+                        />
                     </li>
                     <li>
                         <Button onClick={addMemo}>add memo</Button>
                     </li>
                     <li>
-                        <Link pattern="books/:bookId/settings" params={{ bookId: id }}>
+                        <Link
+                            pattern="books/:bookId/settings"
+                            params={{ bookId: id }}
+                        >
                             settings
                         </Link>
                     </li>
