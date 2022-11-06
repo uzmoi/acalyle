@@ -11,7 +11,7 @@ const parseOptions = (options: string) => {
 };
 
 export class MemoTag {
-    static parse(tagString: string): MemoTagParseResult {
+    static parse(this: void, tagString: string): MemoTagParseResult {
         const head = tagString[0];
         const hasHead = head in tagTypeTable;
         const i = tagString.indexOf("(");
@@ -23,8 +23,8 @@ export class MemoTag {
                 : parseOptions(tagString.slice(i).replace(/^\(|\)$/g, "")),
         };
     }
-    static fromString(tagString: string): MemoTag | null {
-        const { head, name, options } = this.parse(tagString);
+    static fromString(this: void, tagString: string): MemoTag | null {
+        const { head, name, options } = MemoTag.parse(tagString);
         const tagName = name.split("/").filter(Boolean);
         if(name.length === 0) {
             // name empty
