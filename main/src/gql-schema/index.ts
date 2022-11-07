@@ -1,26 +1,20 @@
-import {
-    connectionPlugin,
-    makeSchema,
-    nonNull,
-    nullable,
-    queryField,
-} from "nexus";
+import { connectionPlugin, makeSchema, nonNull, queryField } from "nexus";
 import path = require("path");
 import { types as bookTypes } from "./book";
 import { types as memoTypes } from "./memo";
+import { Node, nodeQuery } from "./node";
 import { DateTimeScalar, UploadScalar } from "./scalar";
-import { Node } from "./util";
-
-const types = [
-    queryField("data", { type: "String", resolve: () => "Hello nexus" }),
-    queryField("node", {
-        type: nullable("Node"),
-        args: { id: nonNull("ID") },
-    }),
-];
 
 export const graphQLSchema = makeSchema({
-    types: [Node, DateTimeScalar, UploadScalar, types, bookTypes, memoTypes],
+    types: [
+        queryField("data", { type: "String", resolve: () => "Hello nexus" }),
+        Node,
+        nodeQuery,
+        DateTimeScalar,
+        UploadScalar,
+        bookTypes,
+        memoTypes,
+    ],
     plugins: [
         connectionPlugin({
             extendConnection: {

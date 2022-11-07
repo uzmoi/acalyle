@@ -1,5 +1,3 @@
-import { interfaceType } from "nexus";
-
 export const nonNullable = <T>(value: T): value is NonNullable<T> =>
     value != null;
 
@@ -14,12 +12,22 @@ export const createEscapeTag =
         return result;
     };
 
-export const Node = interfaceType({
-    name: "Node",
-    definition(t) {
-        t.id("id");
-    },
-});
+export type ResolveUnion<T extends Record<string, () => unknown>> = {
+    [P in keyof T]: Awaited<ReturnType<T[P]>> & { __typename: P };
+}[keyof T];
+
+export const resolveUnion = async <T extends Record<string, () => unknown>>(
+    resolvers: T,
+): Promise<ResolveUnion<T> | null> => {
+    type Entries = [keyof T, T[keyof T]][];
+    for (const [__typename, resolver] of Object.entries(resolvers) as Entries) {
+        const result = await resolver();
+        if (result != null) {
+            return { ...result, __typename } as ResolveUnion<T>;
+        }
+    }
+    return null;
+};
 
 export interface PaginationArgs {
     after?: string | null;
