@@ -25,7 +25,7 @@ export const BookTitleForm: React.FC<{
 
     return (
         <form onSubmit={handleSubmit} className={BookTitleFormStyle}>
-            <BookTitle
+            <BookTitleFormBlock
                 title={title}
                 setTitle={setTitle}
                 disabled={isInFlight}
@@ -39,7 +39,7 @@ const BookTitleFormStyle = css`
     font-size: 0.9em;
 `;
 
-export const BookTitle: React.FC<{
+export const BookTitleFormBlock: React.FC<{
     title: string;
     setTitle: (title: string) => void;
     disabled?: boolean;

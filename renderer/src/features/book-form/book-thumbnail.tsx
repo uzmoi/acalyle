@@ -3,7 +3,7 @@ import { graphql, useMutation } from "react-relay";
 import { Button, FileInput } from "~/shared/control";
 import { bookThumbnailChangeMutation } from "./__generated__/bookThumbnailChangeMutation.graphql";
 
-export const BookThumbnail: React.FC<{
+export const BookThumbnailForm: React.FC<{
     bookId: string;
 }> = ({ bookId }) => {
     const [file, setFile] = useState<File | null>(null);
