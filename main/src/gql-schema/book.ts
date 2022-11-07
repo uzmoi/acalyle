@@ -16,6 +16,7 @@ import { MemoTag } from "renderer/src/entities/tag/lib/memo-tag";
 import { stringifyTag } from "renderer/src/entities/tag/lib/tag";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
+import { MemoFilters, parseSearchQuery } from "./search";
 import { createEscapeTag, pagination } from "./util";
 
 const getBookThumbnailPath = (bookDataPath: string, bookId: string) => {
@@ -90,34 +91,9 @@ export const types = [
                 },
                 nodes(book, args, { prisma }) {
                     const p = pagination(args);
-                    const includeContents: string[] = [];
-                    const excludeContents: string[] = [];
-                    const includeTags: MemoTag[] = [];
-                    const excludeTags: MemoTag[] = [];
-                    if (args.search) {
-                        for (let searchPart of args.search.split(/\s+/)) {
-                            let isExclude = false;
-                            if (searchPart.startsWith("-")) {
-                                isExclude = true;
-                                searchPart = searchPart.slice(1);
-                            }
-                            const tag = MemoTag.fromString(searchPart);
-                            if (
-                                tag != null &&
-                                !searchPart.startsWith(tag.name[0])
-                            ) {
-                                // prettier-ignore
-                                (isExclude
-                                    ? excludeTags
-                                    : includeTags
-                                ).push(tag);
-                            } else {
-                                (isExclude
-                                    ? excludeContents
-                                    : includeContents
-                                ).push(searchPart);
-                            }
-                        }
+                    let filters: MemoFilters | undefined;
+                    if (args.search != null) {
+                        filters = parseSearchQuery(args.search);
                     }
                     const tagWhere = (memoTag: MemoTag) => ({
                         type: memoTag.type,
@@ -130,24 +106,25 @@ export const types = [
                         orderBy: { createdAt: "desc" },
                         where: {
                             bookId: book.id,
-                            AND: [
-                                ...includeContents.map(searchString => ({
+                            // prettier-ignore
+                            AND: filters && [
+                                ...filters.contents.include.map(searchString => ({
                                     contains: searchString,
                                 })),
-                                ...excludeContents.map(searchString => ({
+                                ...filters.contents.exclude.map(searchString => ({
                                     not: { contains: searchString },
                                 })),
                             ].map(contents => ({ contents })),
-                            tags: {
+                            tags: filters?.tags.to((include, exclude) => ({
                                 // prettier-ignore
-                                some: includeTags.length === 0 ? undefined : {
-                                    Tag: { AND: includeTags.map(tagWhere) },
+                                some: include && {
+                                    Tag: { AND: include.map(tagWhere) },
                                 },
                                 // prettier-ignore
-                                none: excludeTags.length === 0 ? undefined : {
-                                    Tag: { OR: excludeTags.map(tagWhere) },
+                                none: exclude && {
+                                    Tag: { OR: exclude.map(tagWhere) },
                                 },
-                            },
+                            })),
                         },
                     });
                 },
