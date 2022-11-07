@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { graphql, useMutation } from "react-relay";
 import { parseTag } from "~/entities/tag";
-import { Button, TextInput } from "~/shared/control";
+import { Button, Form, TextInput } from "~/shared/control";
 import { tagsUpdateMutation } from "./__generated__/tagsUpdateMutation.graphql";
 
 export const MemoTagsForm: React.FC<{
@@ -63,7 +63,7 @@ export const MemoTagsForm: React.FC<{
     const addTag = useCallback(() => setTags(tags => [...tags, ""]), []);
 
     return (
-        <form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit}>
             <ul>
                 {tags.map((tag, i) => (
                     <li key={i}>
@@ -96,6 +96,6 @@ export const MemoTagsForm: React.FC<{
             <Button type="submit" disabled={isInFlight}>
                 save
             </Button>
-        </form>
+        </Form>
     );
 };

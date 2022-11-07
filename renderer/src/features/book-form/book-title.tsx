@@ -1,7 +1,7 @@
 import { css } from "@linaria/core";
 import { useId, useState } from "react";
 import { graphql, useMutation } from "react-relay";
-import { Button, TextInput } from "~/shared/control";
+import { Button, Form, TextInput } from "~/shared/control";
 import { bookTitleMutation } from "./__generated__/bookTitleMutation.graphql";
 
 export const BookTitleForm: React.FC<{
@@ -24,14 +24,14 @@ export const BookTitleForm: React.FC<{
     };
 
     return (
-        <form onSubmit={handleSubmit} className={BookTitleFormStyle}>
+        <Form onSubmit={handleSubmit} className={BookTitleFormStyle}>
             <BookTitleFormBlock
                 title={title}
                 setTitle={setTitle}
                 disabled={isInFlight}
             />
             <Button type="submit">Rename</Button>
-        </form>
+        </Form>
     );
 };
 

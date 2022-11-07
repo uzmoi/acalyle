@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { graphql, useMutation } from "react-relay";
 import { BookTitleFormBlock } from "~/features/book-form";
-import { Button } from "~/shared/control";
+import { Button, Form } from "~/shared/control";
 import { useNavigate } from "~/shared/router/react";
 import { newBookCreateMutation } from "./__generated__/newBookCreateMutation.graphql";
 
@@ -17,8 +17,7 @@ export const NewBookPage: React.FC = () => {
     `);
 
     const navigate = useNavigate();
-    const onSubmit: React.FormEventHandler<HTMLFormElement> = e => {
-        e.preventDefault();
+    const onSubmit = () => {
         commitNewBook({
             variables: { title },
             onCompleted({ createBook }) {
@@ -28,7 +27,7 @@ export const NewBookPage: React.FC = () => {
     };
 
     return (
-        <form onSubmit={onSubmit}>
+        <Form onSubmit={onSubmit}>
             <h1>Create a new book</h1>
             <BookTitleFormBlock
                 title={title}
@@ -38,6 +37,6 @@ export const NewBookPage: React.FC = () => {
             <Button type="submit" disabled={isInFlight}>
                 create book
             </Button>
-        </form>
+        </Form>
     );
 };

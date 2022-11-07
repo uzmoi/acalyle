@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { graphql, useMutation } from "react-relay";
-import { Button, FileInput } from "~/shared/control";
+import { Button, FileInput, Form } from "~/shared/control";
 import { bookThumbnailChangeMutation } from "./__generated__/bookThumbnailChangeMutation.graphql";
 
 export const BookThumbnailForm: React.FC<{
@@ -25,11 +25,11 @@ export const BookThumbnailForm: React.FC<{
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit}>
             <FileInput onFileChange={setFile} accept="image/*" />
             <Button type="submit" disabled={file == null || isInFlight}>
                 Submit
             </Button>
-        </form>
+        </Form>
     );
 };

@@ -1,6 +1,6 @@
 import { css } from "@linaria/core";
 import { graphql, useMutation } from "react-relay";
-import { Button } from "~/shared/control";
+import { Button, Form } from "~/shared/control";
 import { useNavigate } from "~/shared/router/react";
 import { deleteMutation } from "./__generated__/deleteMutation.graphql";
 
@@ -25,11 +25,11 @@ export const BookDeleteForm: React.FC<{
     };
 
     return (
-        <form className={BookDeleteFormStyle}>
+        <Form className={BookDeleteFormStyle}>
             <Button type="submit" onClick={deleteBook} disabled={isInFlight}>
                 delete book
             </Button>
-        </form>
+        </Form>
     );
 };
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { graphql, useMutation } from "react-relay";
-import { Button, TextArea } from "~/shared/control";
+import { Button, Form, TextArea } from "~/shared/control";
 import { memoContentsUpdateMutation } from "./__generated__/memoContentsUpdateMutation.graphql";
 
 export const MemoContentsForm: React.FC<{
@@ -29,7 +29,7 @@ export const MemoContentsForm: React.FC<{
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit}>
             <TextArea
                 value={contents}
                 onValueChange={setContents}
@@ -41,6 +41,6 @@ export const MemoContentsForm: React.FC<{
             <Button type="submit" disabled={isInFlight}>
                 save
             </Button>
-        </form>
+        </Form>
     );
 };
