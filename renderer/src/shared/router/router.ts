@@ -1,4 +1,4 @@
-import { Meta, Nomalize } from "emnorst";
+import { Meta, Normalize } from "emnorst";
 
 type RemoveHead<S extends string, Head extends string> = S extends `${Head}${infer P}` ? P : S;
 type RemoveTail<S extends string, Tail extends string> = S extends `${infer P}${Tail}` ? P : S;
@@ -61,7 +61,7 @@ export interface LinkBuilder<in T extends string> {
     ): Link<U>;
 }
 
-export const link = <T extends Routing<string, string>>(): LinkBuilder<NomalizePath<T["path"]>> => {
+export const link = <T extends Routing<string, string>>(): LinkBuilder<NormalizePath<T["path"]>> => {
     return <U extends string>(pattern: U, params?: MatchParams<ParseStringPath<U>>) =>
         parsePattern(pattern).flatMap(part => {
             if(typeof part === "string") {
@@ -196,13 +196,13 @@ type RouteEntries<in T extends string, out ParamKeys extends string, R> = {
 
 export const routes: {
     <T extends string, ParamKeys extends string, R>(
-        routes: Nomalize<RouteEntries<T, ParamKeys, R>>,
+        routes: Normalize<RouteEntries<T, ParamKeys, R>>,
     ): Route<T, ParamKeys, R>;
     <T extends Routing<string, string>, R>(
-        routes: Nomalize<RouteEntries<T["path"], T["paramKeys"], R>>,
-    ): Route<T["path"], T["paramKeys"], R>
+        routes: Normalize<RouteEntries<T["path"], T["paramKeys"], R>>,
+    ): Route<T["path"], T["paramKeys"], R>;
 } = <T extends string, ParamKeys extends string, R>(
-    routeRecord: Nomalize<RouteEntries<T, ParamKeys, R>>,
+    routeRecord: Normalize<RouteEntries<T, ParamKeys, R>>,
 ): Route<T, ParamKeys, R> => {
     const routeEntries = Object.keys(routeRecord).map(key => {
         const [part = "", ...restPattern] = parsePattern(key);
@@ -278,9 +278,9 @@ export const child = <T extends string, ParamKeys extends string, R>(
     return { get: child };
 };
 
-export type NomalizePath<T extends string> =
-    T extends `${infer Pre}//${infer Post}` ? NomalizePath<`${Pre}/${Post}`>
-    : T extends `/${infer U}` | `${infer U}/` ? NomalizePath<U>
+export type NormalizePath<T extends string> =
+    T extends `${infer Pre}//${infer Post}` ? NormalizePath<`${Pre}/${Post}`>
+    : T extends `/${infer U}` | `${infer U}/` ? NormalizePath<U>
     : T;
 
 export interface Routing<out Path extends string, out ParamKeys extends string = never> {
@@ -292,11 +292,7 @@ type NestRoutes<
     T extends Record<string, Routing<string, string>>,
     K extends keyof T,
 > = Routing<
-    NomalizePath<
-        K extends "" ? T[K]["path"]
-        : K extends string ? `${K}/${T[K]["path"]}`
-        : never
-    >,
+    NormalizePath<K extends string ? `${K}/${T[K]["path"]}` : never>,
     K extends string
         ? T[K] extends Routing<string, infer ParamKeys>
             ? Exclude<ParamKeys, RemoveHead<K, ":">>

@@ -10,14 +10,14 @@
   },
   "dependencies": {
     "@linaria/core": "^3.0.0-beta.19",
-    "emnorst": "^0.6.0",
+    "emnorst": "^1.0.0-next.0",
     "polished": "^4.2.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-markdown": "^8.0.3",
     "react-relay": "^14.1.0",
     "react-syntax-highlighter": "^15.5.0",
-    "recoil": "^0.7.5"
+    "recoil": "^0.7.6"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.18.6",
@@ -26,8 +26,8 @@
     "@stylelint/postcss-css-in-js": "^0.38.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
-    "@types/react": "^18.0.15",
-    "@types/react-dom": "^18.0.6",
+    "@types/react": "^18.0.25",
+    "@types/react-dom": "^18.0.8",
     "@types/react-relay": "^14.1.2",
     "@types/react-syntax-highlighter": "^15.5.5",
     "@vitejs/plugin-react": "^2.1.0",
