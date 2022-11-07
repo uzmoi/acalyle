@@ -1,4 +1,4 @@
-import { Normalize } from "emnorst";
+import { Normalize, ValueOf, isArray } from "emnorst";
 
 // TODO: to emnorst
 type PartiallyPartial<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
@@ -9,8 +9,8 @@ type ValueNamesOrValueDefaults = ValueNames | { [valueName: string]: string };
 const valueNames = (
     valueNamesSource: ValueNamesOrValueDefaults,
 ): ValueNames => {
-    if (Array.isArray(valueNamesSource)) {
-        return valueNamesSource as ValueNames;
+    if (isArray(valueNamesSource)) {
+        return valueNamesSource;
     }
     return Object.keys(valueNamesSource);
 };
@@ -82,7 +82,7 @@ const createTheme = <T extends ThemeSourceMap>(
             const cssVarValue = String(
                 themeSource[valueTypeName as never]?.[valueName] ??
                     themeSourceMap[valueTypeName as keyof T][
-                        valueName as keyof T[keyof T]
+                        valueName as keyof ValueOf<T>
                     ],
             );
             themeStyle[cssVarName] = cssVarValue;

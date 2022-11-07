@@ -1,11 +1,12 @@
 import { Prisma } from "@prisma/client";
+import { nonNullable } from "emnorst";
 import { list, mutationField, nonNull, objectType } from "nexus";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { parseTag } from "renderer/src/entities/tag/lib/parse";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { stringifyTag } from "renderer/src/entities/tag/lib/tag";
 import { v4 as uuidv4 } from "uuid";
-import { nonNullable, parseSearchableString, toSearchableString } from "./util";
+import { parseSearchableString, toSearchableString } from "./util";
 
 export const types = [
     objectType({

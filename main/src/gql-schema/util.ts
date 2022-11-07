@@ -1,5 +1,4 @@
-export const nonNullable = <T>(value: T): value is NonNullable<T> =>
-    value != null;
+import { ValueOf } from "emnorst";
 
 export const createEscapeTag =
     <T>(escape: (value: T) => string) =>
@@ -19,7 +18,7 @@ export type ResolveUnion<T extends Record<string, () => unknown>> = {
 export const resolveUnion = async <T extends Record<string, () => unknown>>(
     resolvers: T,
 ): Promise<ResolveUnion<T> | null> => {
-    type Entries = [keyof T, T[keyof T]][];
+    type Entries = [keyof T, ValueOf<T>][];
     for (const [__typename, resolver] of Object.entries(resolvers) as Entries) {
         const result = await resolver();
         if (result != null) {

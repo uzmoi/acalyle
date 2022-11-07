@@ -1,4 +1,6 @@
-export type TagType = typeof tagTypeTable[keyof typeof tagTypeTable];
+import { ValueOf } from "emnorst";
+
+export type TagType = ValueOf<typeof tagTypeTable>;
 export interface Tag {
     type: TagType;
     name: string;
