@@ -1,7 +1,6 @@
 import type {} from "vitest";
 import linaria from "@linaria/rollup";
 import react from "@vitejs/plugin-react";
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig } from "vite";
 import relay from "vite-plugin-relay";

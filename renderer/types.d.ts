@@ -1,5 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
-
 import "vite/client";
 import "vitest/importMeta";
 import { TestingLibraryMatchers } from "@testing-library/jest-dom/matchers";
