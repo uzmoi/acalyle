@@ -3,31 +3,9 @@ import linaria from "@linaria/rollup";
 import react from "@vitejs/plugin-react";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { visualizer } from "rollup-plugin-visualizer";
-import { Plugin, defineConfig } from "vite";
+import { defineConfig } from "vite";
 import relay from "vite-plugin-relay";
-
-const html = (define: Record<string, string> = {}): Plugin => ({
-    name: "html-replace",
-    transformIndexHtml: html => html
-        .replace(/\$\w+/g, varName => String(define[varName.slice(1)]))
-        .replace(
-            /<!--\s*if(.+?)\s*-->[^]*?<!--\s*fi\s*-->/g,
-            (match, test: string) => {
-                const eq = /^\[(\w+)([!=^$*]=)(\w+)\]$/.exec(test.replace(/\s+/g, ""));
-                if(eq) {
-                    const [, lhs, op, rhs] = eq;
-                    return {
-                        "=": lhs === rhs,
-                        "!": lhs !== rhs,
-                        "^": lhs.startsWith(rhs),
-                        "$": lhs.endsWith(rhs),
-                        "*": lhs.includes(rhs),
-                    }[op[0]] ? match : "";
-                }
-                return match;
-            },
-        ),
-});
+import { htmlReplace } from "./vite-plugin-html-replace";
 
 // https://vitejs.dev/config/
 export default defineConfig(env => ({
@@ -46,11 +24,13 @@ export default defineConfig(env => ({
             sourceMap: env.mode === "develepment",
             babelOptions: {
                 presets: ["@babel/preset-typescript"],
-                plugins: [["module-resolver", { alias: { "~": `${__dirname}/src` } }]],
+                plugins: [
+                    ["module-resolver", { alias: { "~": `${__dirname}/src` } }],
+                ],
             },
         }),
         relay,
-        html({
+        htmlReplace({
             mode: env.mode,
         }),
     ],
@@ -62,9 +42,7 @@ export default defineConfig(env => ({
         emptyOutDir: false,
         sourcemap: env.mode === "develepment",
         rollupOptions: {
-            plugins: [
-                visualizer({ gzipSize: true, brotliSize: true }),
-            ],
+            plugins: [visualizer({ gzipSize: true, brotliSize: true })],
             output: {
                 manualChunks: {
                     recoil: ["recoil"],
