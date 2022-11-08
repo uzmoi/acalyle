@@ -13,14 +13,14 @@ export const Tag: React.FC<{
         return null;
     }
 
+    const options = tag.getOptions();
+
     return (
         <span className={TagStyle} data-tag-type={tag.type}>
-            {tag.type === "normal" && (
-                <Link pattern="books/:bookId" params={{ bookId }}>
-                    {tag.toBookTag()}
-                </Link>
-            )}
-            {tag.type !== "normal" && tag.toString()}
+            <Link pattern="books/:bookId" params={{ bookId }}>
+                {tag.toBookTag()}
+            </Link>
+            {options != null && `(${options})`}
         </span>
     );
 };
