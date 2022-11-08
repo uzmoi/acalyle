@@ -1,7 +1,6 @@
 import { css } from "@linaria/core";
 import { nonNullable } from "emnorst";
-import { parseTag } from "../lib/parse";
-import { compareTags, stringifyTag } from "../lib/tag";
+import { MemoTag } from "../lib/memo-tag";
 import { Tag } from "./tag";
 
 export const TagList: React.FC<{
@@ -11,10 +10,10 @@ export const TagList: React.FC<{
     return (
         <ul className={TagListStyle}>
             {tags
-                .map(parseTag)
+                .map(MemoTag.fromString)
                 .filter(nonNullable)
-                .sort(compareTags)
-                .map(stringifyTag)
+                .sort(MemoTag.compare)
+                .map(String)
                 .map(tag => (
                     <li key={tag} className={TagListItemStyle}>
                         <Tag tag={tag} bookId={bookId} />

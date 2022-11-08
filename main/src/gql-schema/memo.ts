@@ -2,6 +2,8 @@ import { Prisma } from "@prisma/client";
 import { nonNullable } from "emnorst";
 import { list, mutationField, nonNull, objectType } from "nexus";
 // eslint-disable-next-line import/no-extraneous-dependencies
+import { MemoTag } from "renderer/src/entities/tag/lib/memo-tag";
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { parseTag } from "renderer/src/entities/tag/lib/parse";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { stringifyTag } from "renderer/src/entities/tag/lib/tag";
@@ -168,9 +170,9 @@ export const types = [
             const memoTagDelete: Prisma.MemoTagScalarWhereInput = {
                 memoId: args.memoId,
                 OR: args.tags
-                    .map(parseTag)
+                    .map(MemoTag.fromString)
                     .filter(nonNullable)
-                    .map(tag => ({ tagName: tag.name })),
+                    .map(tag => ({ tagName: tag.getName() })),
             };
             const memo = await prisma.memo.update({
                 where: { id: args.memoId },

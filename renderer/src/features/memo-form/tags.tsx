@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { graphql, useMutation } from "react-relay";
-import { parseTag } from "~/entities/tag";
+import { MemoTag } from "~/entities/tag";
 import { Button, Form, TextInput } from "~/shared/control";
 import { tagsUpdateMutation } from "./__generated__/tagsUpdateMutation.graphql";
 
@@ -37,7 +37,7 @@ export const MemoTagsForm: React.FC<{
         }
     `);
     const handleSubmit = () => {
-        const getTagName = (tag: string) => parseTag(tag)?.name;
+        const getTagName = (tag: string) => MemoTag.fromString(tag)?.name;
         const memoTagNames = memoTags.map(getTagName);
         const tagNames = tags.map(getTagName);
         commit({
