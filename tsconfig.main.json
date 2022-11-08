@@ -1,0 +1,8 @@
+{
+    "extends": "./config/tsconfig.node.json",
+    "include": ["main/src"],
+    "compilerOptions": {
+        "types": ["electron", "uuid"],
+        "composite": true,
+    },
+}

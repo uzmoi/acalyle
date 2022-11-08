@@ -1,0 +1,12 @@
+{
+    "extends": "./config/tsconfig.web.json",
+    "include": ["renderer/src", "renderer/types.d.ts"],
+    "compilerOptions": {
+        "jsx": "react-jsx",
+        "types": ["react", "react-dom"],
+        "typeRoots": [],
+        "baseUrl": "./renderer",
+        "paths": { "~/*": ["./src/*"] },
+        "composite": true,
+    },
+}

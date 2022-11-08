@@ -14,7 +14,4 @@
     "editor.codeActionsOnSave": {
         "source.fixAll": true,
     },
-    "eslint.workingDirectories": [
-        "renderer"
-    ],
 }

@@ -9,6 +9,7 @@
   "scripts": {
     "build": "esbuild scripts/build.ts --format=cjs | node",
     "dev": "esbuild scripts/build.ts --format=cjs | node - --dev",
+    "lint": "eslint -c .eslintrc.js .",
     "test": "npm test -w renderer",
     "coverage": "npm run coverage -w renderer"
   },

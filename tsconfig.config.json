@@ -1,0 +1,12 @@
+{
+    "extends": "./config/tsconfig.node.json",
+    "include": [
+        ".*",
+        "main/*",
+        "renderer/*",
+        "scripts/*",
+    ],
+    "compilerOptions": {
+        "composite": true,
+    },
+}

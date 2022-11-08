@@ -1,17 +1,9 @@
 {
-    "include": ["**/*", ".*"],
-    "compilerOptions": {
-        "target": "ES2020",
-        "useDefineForClassFields": true,
-        "lib": ["ES2020"],
-        "allowJs": false,
-        "skipLibCheck": true,
-        "strict": true,
-        "forceConsistentCasingInFileNames": true,
-        "module": "CommonJS",
-        "moduleResolution": "Node",
-        "isolatedModules": true,
-        "noEmit": true,
-        "typeRoots": ["./node_modules/@types"],
-    },
+    "files": [],
+    "references": [
+        { "path": "./tsconfig.config.json" },
+        { "path": "./tsconfig.main.json" },
+        { "path": "./tsconfig.preload.json" },
+        { "path": "./tsconfig.renderer.json" },
+    ],
 }

@@ -5,9 +5,22 @@
 module.exports = {
     extends: ["plugin:oreore-config/standard"],
     parserOptions: {
-        project: "tsconfig.json",
+        project: "tsconfig.config.json",
     },
-    ignorePatterns: ["app", "**/__generated__/**"],
+    settings: {
+        "import/resolver": {
+            typescript: {
+                project: [
+                    "tsconfig.config.json",
+                    "tsconfig.main.json",
+                    "tsconfig.preload.json",
+                    "tsconfig.renderer.json",
+                ],
+            },
+        },
+    },
+    ignorePatterns: ["/app", "**/__generated__/**"],
+    reportUnusedDisableDirectives: true,
     overrides: [
         {
             files: "*.config.*",
@@ -16,16 +29,31 @@ module.exports = {
             },
         },
         {
-            files: "main/**",
-            parserOptions: {
-                project: "main/tsconfig.json",
+            files: "*.tsx",
+            extends: [
+                "plugin:react/recommended",
+                "plugin:react/jsx-runtime",
+                "plugin:react-hooks/recommended",
+                // "plugin:oreore-config/react",
+            ],
+            settings: {
+                react: { version: "detect" },
+            },
+            rules: {
+                "react/prop-types": "off",
             },
         },
         {
-            files: "preload/**",
-            parserOptions: {
-                project: "preload/tsconfig.json",
-            },
+            files: ["main/src/**"],
+            parserOptions: { project: "tsconfig.main.json" },
+        },
+        {
+            files: ["preload/src/**"],
+            parserOptions: { project: "tsconfig.preload.json" },
+        },
+        {
+            files: ["renderer/src/**", "renderer/types.d.ts"],
+            parserOptions: { project: "tsconfig.renderer.json" },
         },
     ],
     rules: {
