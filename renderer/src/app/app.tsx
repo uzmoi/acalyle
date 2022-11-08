@@ -36,4 +36,7 @@ const RootStyle = css`
     font-family: ${vars.font.sans};
     color: ${vars.color.text};
     background-color: ${vars.color.bg};
+    ::selection {
+        background-color: ${vars.color.selection};
+    }
 `;
