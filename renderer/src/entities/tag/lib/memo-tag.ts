@@ -50,6 +50,9 @@ export class MemoTag {
             ?.find(option => option.trim().startsWith(`${name}=`))
             ?.slice(name.length);
     }
+    getOptions(): string | undefined {
+        return this.options?.join();
+    }
     toBookTag(): string {
         return this.getHeadChar() + this.getName();
     }
