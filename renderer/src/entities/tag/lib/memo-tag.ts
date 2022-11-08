@@ -60,4 +60,28 @@ export class MemoTag {
         }
         return tagString;
     }
+    static readonly tagTypeOrder: readonly TagType[] = ["normal", "control"];
+    private static readonly collator = new Intl.Collator(undefined, {
+        numeric: true,
+        caseFirst: "upper",
+    });
+    static compare(this: void, tag1: MemoTag, tag2: MemoTag): number {
+        const diff =
+            MemoTag.tagTypeOrder.indexOf(tag1.type) -
+            MemoTag.tagTypeOrder.indexOf(tag2.type);
+        if (diff !== 0) {
+            return diff;
+        }
+        const minLength = Math.min(tag1.name.length, tag2.name.length);
+        for (let i = 0; i < minLength; i++) {
+            const direction = MemoTag.collator.compare(
+                tag1.name[i],
+                tag2.name[i],
+            );
+            if (direction !== 0) {
+                return direction;
+            }
+        }
+        return tag1.name.length - tag2.name.length;
+    }
 }
