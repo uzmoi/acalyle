@@ -32,8 +32,13 @@ const parsePattern = (pattern: string): Part[] =>
     pattern.split("/").filter(Boolean).map(parsePatternPart);
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export interface Route<in _Path extends string, out ParamKeys extends string, out R = unknown> {
-    get(path: readonly string[], matchParams: MatchParams<ParamKeys>): R | null;
+export class Route<in _Path extends string, out ParamKeys extends string, out R = unknown> {
+    constructor(
+        readonly get: (
+            path: readonly string[],
+            matchParams: MatchParams<ParamKeys>,
+        )=> R | null,
+    ) {}
 }
 
 export const match: <Path extends string, ParamKeys extends string, R>(
@@ -215,20 +220,18 @@ export const routes: {
         );
         return { part, route };
     });
-    return {
-        get(path, matchParams) {
-            for(const { part, route } of routeEntries) {
-                const partMatchResult = matchPart(part, path, matchParams);
-                if(partMatchResult != null) {
-                    const result = route.get(partMatchResult.path, partMatchResult.matchParams);
-                    if(result !== null) {
-                        return result;
-                    }
+    return new Route((path, matchParams) => {
+        for(const { part, route } of routeEntries) {
+            const partMatchResult = matchPart(part, path, matchParams);
+            if(partMatchResult != null) {
+                const result = route.get(partMatchResult.path, partMatchResult.matchParams);
+                if(result !== null) {
+                    return result;
                 }
             }
-            return null;
         }
-    };
+        return null;
+    });
 };
 
 if(import.meta.vitest) {
@@ -262,20 +265,18 @@ if(import.meta.vitest) {
 export const page = <ParamKeys extends string, R>(
     page: (params: MatchParams<ParamKeys>) => R,
 ): Route<"", ParamKeys, R> => {
-    return {
-        get(path, matchParams) {
-            if(path.length !== 0) {
-                return null;
-            }
-            return page(matchParams);
-        },
-    };
+    return new Route((path, matchParams) => {
+        if(path.length !== 0) {
+            return null;
+        }
+        return page(matchParams);
+    });
 };
 
 export const child = <T extends string, ParamKeys extends string, R>(
     child: (path: readonly string[], params: MatchParams<ParamKeys>) => R | null,
 ): Route<T, ParamKeys, R> => {
-    return { get: child };
+    return new Route(child);
 };
 
 export type NormalizePath<T extends string> =
