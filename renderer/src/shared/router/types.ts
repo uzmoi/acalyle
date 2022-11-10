@@ -1,4 +1,4 @@
-import type { NormalizePath, ParseStringPath } from "./pattern";
+import type { MatchParamKeyOf, NormalizePath } from "./pattern";
 import type { RemoveHead } from "./util";
 
 export interface Routing<
@@ -38,6 +38,6 @@ export type GetRoute<T extends Routing<string, string>, P extends GetPath<T["pat
             Path extends `${P}/${infer U}` ? U
             : Path extends P ? ""
             : never,
-            ParamKeys | ParseStringPath<P>
+            ParamKeys | MatchParamKeyOf<P>
         >
         : never;

@@ -82,15 +82,13 @@ if (import.meta.vitest) {
                 empty: undefined,
                 nonEmpty: { path: [], matchParams: { hoge: ["foo", "bar"] } },
             },
-        ])('part: "$part"', ({ part, empty, nonEmpty }) => {
-            const [partObject] = parsePattern(part);
+        ])('part: "$part"', ({ part: partString, empty, nonEmpty }) => {
+            const [part = ""] = parsePattern(partString).parts;
             it("空のpath", () => {
-                expect(matchPart(partObject, [], {})).toEqual(empty);
+                expect(matchPart(part, [], {})).toEqual(empty);
             });
             it("空ではない任意のpath", () => {
-                expect(matchPart(partObject, ["foo", "bar"], {})).toEqual(
-                    nonEmpty,
-                );
+                expect(matchPart(part, ["foo", "bar"], {})).toEqual(nonEmpty);
             });
         });
     });
@@ -118,7 +116,7 @@ export const routes: {
     routeRecord: Normalize<RouteEntries<T, ParamKeys, R>>,
 ): Route<T, ParamKeys, R> => {
     const routeEntries = Object.keys(routeRecord).map(key => {
-        const [part = "", ...restPattern] = parsePattern(key);
+        const [part = "", ...restPattern] = parsePattern(key).parts;
         const route = restPattern.reduceRight<Route<string, ParamKeys, R>>(
             (accum, part) => {
                 const partString =

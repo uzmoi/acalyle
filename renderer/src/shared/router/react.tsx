@@ -1,16 +1,16 @@
 import { css, cx } from "@linaria/core";
 import { useCallback } from "react";
 import { AtomEffect, atom, useRecoilValue, useSetRecoilState } from "recoil";
-import { MatchParams, ParseStringPath, link } from ".";
+import { MatchParamKeyOf, MatchParams, WithSearchParams, link } from ".";
 
 type AcaRoutePath = AcaRoute["route"]["path"];
 
 interface Navigate<T extends string> {
-    <U extends T>(pattern: U, params: MatchParams<ParseStringPath<U>>): void;
+    <U extends T>(pattern: U, params: MatchParams<MatchParamKeyOf<U>>): void;
     <U extends T>(
         pattern: U,
         ...args: U extends `${string}/:${string}` | `:${string}`
-            ? [params: MatchParams<ParseStringPath<U>>]
+            ? [params: MatchParams<MatchParamKeyOf<U>>]
             : []
     ): void;
 }
@@ -31,7 +31,7 @@ const LocationState = atom<string>({
     effects: [hashLocationEffect],
 });
 
-export const useNavigate = (): Navigate<AcaRoutePath> => {
+export const useNavigate = (): Navigate<WithSearchParams<AcaRoutePath>> => {
     const setLocation = useSetRecoilState(LocationState);
     return useCallback(
         (pattern, params?) => {
@@ -43,9 +43,9 @@ export const useNavigate = (): Navigate<AcaRoutePath> => {
 
 export const useLocation = () => useRecoilValue(LocationState);
 
-export const Link = <T extends AcaRoutePath>(
+export const Link = <T extends WithSearchParams<AcaRoutePath>>(
     props: { pattern: T } & (T extends `${string}/:${string}` | `:${string}`
-        ? { params: MatchParams<ParseStringPath<T>> }
+        ? { params: MatchParams<MatchParamKeyOf<T>> }
         : { params?: undefined }) &
         Omit<React.ComponentPropsWithoutRef<"a">, "href">,
 ): React.ReactElement => {
