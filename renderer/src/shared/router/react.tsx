@@ -1,7 +1,7 @@
 import { css, cx } from "@linaria/core";
 import { useCallback } from "react";
 import { AtomEffect, atom, useRecoilValue, useSetRecoilState } from "recoil";
-import { MatchParams, ParseStringPath, link } from "./router";
+import { MatchParams, ParseStringPath, link } from ".";
 
 type AcaRoutePath = AcaRoute["route"]["path"];
 

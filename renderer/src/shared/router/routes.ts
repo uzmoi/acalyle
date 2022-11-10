@@ -1,122 +1,8 @@
-import { Meta, Normalize } from "emnorst";
-
-type RemoveHead<
-    S extends string,
-    Head extends string,
-> = S extends `${Head}${infer P}` ? P : S;
-
-type RemoveTail<
-    S extends string,
-    Tail extends string,
-> = S extends `${infer P}${Tail}` ? P : S;
-
-type Mark = "+" | "*" | "?";
-
-// prettier-ignore
-export type MatchParams<in T extends string> = {
-    [P in T as RemoveTail<P, Mark>]: (
-        P extends `${string}+` ? [string, ...string[]]
-        : P extends `${string}*` ? string[]
-        : P extends `${string}?` ? string | undefined
-        : string
-    );
-};
-
-type ParamKey<T extends string> = T extends `:${infer U}` ? U : never;
-
-// prettier-ignore
-export type ParseStringPath<T extends string> = T extends `${infer U}/${infer Rest}`
-    ? ParamKey<U> | ParseStringPath<Rest>
-    : ParamKey<T>;
-
-type Part = string | { key: string; mark: Mark | "" };
-
-const parsePatternPart = (part: string): Part => {
-    const match = /^:(\w*)([+*?]?)/.exec(part);
-    return match == null
-        ? part
-        : { key: match[1], mark: match[2] as Mark | "" };
-};
-
-const parsePattern = (pattern: string): Part[] =>
-    pattern.split("/").filter(Boolean).map(parsePatternPart);
-
-export class Route<
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    in _Path extends string,
-    out ParamKeys extends string,
-    out R = unknown,
-> {
-    constructor(
-        readonly get: (
-            path: readonly string[],
-            matchParams: MatchParams<ParamKeys>,
-        ) => R | null,
-    ) {}
-}
-
-// prettier-ignore
-export const match: <Path extends string, ParamKeys extends string, R>(
-    route: Route<Path, ParamKeys, R>,
-    link: Link<Path>,
-    ...args: [ParamKeys] extends [never]
-        ? [] : [params: MatchParams<ParamKeys>]
-) => R | null = <Path extends string, ParamKeys extends string, R>(
-    route: Route<Path, ParamKeys, R>,
-    link: Link<Path>,
-    params: MatchParams<ParamKeys> = {} as never,
-): R | null => {
-    const path = link.split("/").filter(Boolean);
-    return route.get(path, params);
-};
-
-export type Link<T extends string = string> = Meta<string, `link:${T}`>;
-
-// prettier-ignore
-export interface LinkBuilder<in T extends string> {
-    <U extends T>(pattern: U, params: MatchParams<ParseStringPath<U>>): Link<U>;
-    <U extends T>(
-        pattern: U,
-        ...args: U extends `${string}/:${string}` | `:${string}`
-            ? [params: MatchParams<ParseStringPath<U>>] : []
-    ): Link<U>;
-}
-
-// prettier-ignore
-export const link = <T extends Routing<string, string>>(): LinkBuilder<NormalizePath<T["path"]>> => {
-    return <U extends string>(pattern: U, params?: MatchParams<ParseStringPath<U>>) =>
-        parsePattern(pattern).flatMap(part => {
-            if(typeof part === "string") {
-                return part;
-            }
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            const param = params![part.key as keyof typeof params] as string[] | string | undefined;
-            return part.mark === "?" && param === undefined ? [] : param;
-        }).join("/") as Link<never>;
-};
-
-if (import.meta.vitest) {
-    const { it, describe, expect } = import.meta.vitest;
-    describe("link", () => {
-        it("変換なし", () => {
-            expect(link()("")).toBe("");
-            expect(link()("hoge")).toBe("hoge");
-            expect(link()("hoge/fuga")).toBe("hoge/fuga");
-        });
-        it("normalize path", () => {
-            expect(link()("/hoge///fuga/")).toBe("hoge/fuga");
-        });
-        it("params埋め込み", () => {
-            expect(
-                link()("normal/:/:option?/:many*", {
-                    "": "any",
-                    option: undefined,
-                    many: ["foo", "bar"],
-                }),
-            ).toBe("normal/any/foo/bar");
-        });
-    });
-}
+import type { Normalize } from "emnorst";
+import { type MatchParams, type Part, parsePattern } from "./pattern";
+import { Route } from "./route";
+import type { Routing } from "./types";
+import type { RemoveTail } from "./util";
 
 const matchPart = <T extends string>(
     part: Part,
@@ -197,7 +83,7 @@ if (import.meta.vitest) {
                 nonEmpty: { path: [], matchParams: { hoge: ["foo", "bar"] } },
             },
         ])('part: "$part"', ({ part, empty, nonEmpty }) => {
-            const partObject = parsePatternPart(part);
+            const [partObject] = parsePattern(part);
             it("空のpath", () => {
                 expect(matchPart(partObject, [], {})).toEqual(empty);
             });
@@ -310,53 +196,3 @@ export const child = <T extends string, ParamKeys extends string, R>(
 ): Route<T, ParamKeys, R> => {
     return new Route(child);
 };
-
-// prettier-ignore
-export type NormalizePath<T extends string> =
-    T extends `${infer Pre}//${infer Post}` ? NormalizePath<`${Pre}/${Post}`>
-    : T extends `/${infer U}` | `${infer U}/` ? NormalizePath<U>
-    : T;
-
-export interface Routing<
-    out Path extends string,
-    out ParamKeys extends string = never,
-> {
-    path: Path;
-    paramKeys: ParamKeys;
-}
-
-// prettier-ignore
-type NestRoutes<
-    T extends Record<string, Routing<string, string>>,
-    K extends keyof T,
-> = Routing<
-    NormalizePath<K extends string ? `${K}/${T[K]["path"]}` : never>,
-    K extends string
-        ? T[K] extends Routing<string, infer ParamKeys>
-            ? Exclude<ParamKeys, RemoveHead<K, ":">>
-            : never
-        : never
->;
-
-export type Routes<T extends Record<string, Routing<string, string>>> =
-    NestRoutes<T, Extract<keyof T, string>>;
-
-export type Page<ParamKeys extends string = never> = Routing<"", ParamKeys>;
-
-// prettier-ignore
-type GetPath<T extends string> =
-    T extends `${infer U}/${infer Rest}` ? U | `${U}/${GetPath<Rest>}` : T;
-
-// prettier-ignore
-export type GetRoute<T extends Routing<string, string>, P extends GetPath<T["path"]>> =
-    T extends Routing<infer Path, infer ParamKeys>
-        ? Routing<
-            Path extends `${P}/${infer U}` ? U
-            : Path extends P ? ""
-            : never,
-            ParamKeys | ParseStringPath<P>
-        >
-        : never;
-
-// eslint-disable-next-line import/no-self-import
-export * as Router from "./router";
