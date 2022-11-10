@@ -1,10 +1,18 @@
 import { Meta, Normalize } from "emnorst";
 
-type RemoveHead<S extends string, Head extends string> = S extends `${Head}${infer P}` ? P : S;
-type RemoveTail<S extends string, Tail extends string> = S extends `${infer P}${Tail}` ? P : S;
+type RemoveHead<
+    S extends string,
+    Head extends string,
+> = S extends `${Head}${infer P}` ? P : S;
+
+type RemoveTail<
+    S extends string,
+    Tail extends string,
+> = S extends `${infer P}${Tail}` ? P : S;
 
 type Mark = "+" | "*" | "?";
 
+// prettier-ignore
 export type MatchParams<in T extends string> = {
     [P in T as RemoveTail<P, Mark>]: (
         P extends `${string}+` ? [string, ...string[]]
@@ -16,31 +24,38 @@ export type MatchParams<in T extends string> = {
 
 type ParamKey<T extends string> = T extends `:${infer U}` ? U : never;
 
+// prettier-ignore
 export type ParseStringPath<T extends string> = T extends `${infer U}/${infer Rest}`
     ? ParamKey<U> | ParseStringPath<Rest>
     : ParamKey<T>;
 
-type Part = string | { key: string, mark: Mark | "" };
+type Part = string | { key: string; mark: Mark | "" };
 
 const parsePatternPart = (part: string): Part => {
     const match = /^:(\w*)([+*?]?)/.exec(part);
-    return match == null ? part
+    return match == null
+        ? part
         : { key: match[1], mark: match[2] as Mark | "" };
 };
 
 const parsePattern = (pattern: string): Part[] =>
     pattern.split("/").filter(Boolean).map(parsePatternPart);
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export class Route<in _Path extends string, out ParamKeys extends string, out R = unknown> {
+export class Route<
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    in _Path extends string,
+    out ParamKeys extends string,
+    out R = unknown,
+> {
     constructor(
         readonly get: (
             path: readonly string[],
             matchParams: MatchParams<ParamKeys>,
-        )=> R | null,
+        ) => R | null,
     ) {}
 }
 
+// prettier-ignore
 export const match: <Path extends string, ParamKeys extends string, R>(
     route: Route<Path, ParamKeys, R>,
     link: Link<Path>,
@@ -57,6 +72,7 @@ export const match: <Path extends string, ParamKeys extends string, R>(
 
 export type Link<T extends string = string> = Meta<string, `link:${T}`>;
 
+// prettier-ignore
 export interface LinkBuilder<in T extends string> {
     <U extends T>(pattern: U, params: MatchParams<ParseStringPath<U>>): Link<U>;
     <U extends T>(
@@ -66,6 +82,7 @@ export interface LinkBuilder<in T extends string> {
     ): Link<U>;
 }
 
+// prettier-ignore
 export const link = <T extends Routing<string, string>>(): LinkBuilder<NormalizePath<T["path"]>> => {
     return <U extends string>(pattern: U, params?: MatchParams<ParseStringPath<U>>) =>
         parsePattern(pattern).flatMap(part => {
@@ -78,7 +95,7 @@ export const link = <T extends Routing<string, string>>(): LinkBuilder<Normalize
         }).join("/") as Link<never>;
 };
 
-if(import.meta.vitest) {
+if (import.meta.vitest) {
     const { it, describe, expect } = import.meta.vitest;
     describe("link", () => {
         it("変換なし", () => {
@@ -90,11 +107,13 @@ if(import.meta.vitest) {
             expect(link()("/hoge///fuga/")).toBe("hoge/fuga");
         });
         it("params埋め込み", () => {
-            expect(link()("normal/:/:option?/:many*", {
-                "": "any",
-                option: undefined,
-                many: ["foo", "bar"],
-            })).toBe("normal/any/foo/bar");
+            expect(
+                link()("normal/:/:option?/:many*", {
+                    "": "any",
+                    option: undefined,
+                    many: ["foo", "bar"],
+                }),
+            ).toBe("normal/any/foo/bar");
         });
     });
 }
@@ -104,8 +123,8 @@ const matchPart = <T extends string>(
     path: readonly string[],
     matchParams: MatchParams<T>,
 ) => {
-    if(typeof part === "string") {
-        if(part === "" || path[0] === part) {
+    if (typeof part === "string") {
+        if (part === "" || path[0] === part) {
             return {
                 path: part === "" ? path : path.slice(1),
                 matchParams,
@@ -113,10 +132,10 @@ const matchPart = <T extends string>(
         }
         return;
     } else {
-        if((part.mark === "+" || part.mark === "") && path.length === 0) {
+        if ((part.mark === "+" || part.mark === "") && path.length === 0) {
             return;
         }
-        if(part.mark === "+" || part.mark === "*") {
+        if (part.mark === "+" || part.mark === "*") {
             return {
                 path: [],
                 matchParams: { ...matchParams, [part.key]: path },
@@ -130,7 +149,7 @@ const matchPart = <T extends string>(
     }
 };
 
-if(import.meta.vitest) {
+if (import.meta.vitest) {
     const { it, describe, expect } = import.meta.vitest;
     describe("matchPart", () => {
         describe("string part", () => {
@@ -183,12 +202,15 @@ if(import.meta.vitest) {
                 expect(matchPart(partObject, [], {})).toEqual(empty);
             });
             it("空ではない任意のpath", () => {
-                expect(matchPart(partObject, ["foo", "bar"], {})).toEqual(nonEmpty);
+                expect(matchPart(partObject, ["foo", "bar"], {})).toEqual(
+                    nonEmpty,
+                );
             });
         });
     });
 }
 
+// prettier-ignore
 type RouteEntries<in T extends string, out ParamKeys extends string, R> = {
     [P in T as RemoveTail<P, `/${string}`>]: (
         Route<
@@ -213,19 +235,26 @@ export const routes: {
         const [part = "", ...restPattern] = parsePattern(key);
         const route = restPattern.reduceRight<Route<string, ParamKeys, R>>(
             (accum, part) => {
-                const partString = typeof part === "string" ? part : ":" + part.key + part.mark;
+                const partString =
+                    typeof part === "string"
+                        ? part
+                        : ":" + part.key + part.mark;
                 return routes({ [partString]: accum });
             },
+            // prettier-ignore
             routeRecord[key as keyof typeof routeRecord] as Route<string, ParamKeys, R>,
         );
         return { part, route };
     });
     return new Route((path, matchParams) => {
-        for(const { part, route } of routeEntries) {
+        for (const { part, route } of routeEntries) {
             const partMatchResult = matchPart(part, path, matchParams);
-            if(partMatchResult != null) {
-                const result = route.get(partMatchResult.path, partMatchResult.matchParams);
-                if(result !== null) {
+            if (partMatchResult != null) {
+                const result = route.get(
+                    partMatchResult.path,
+                    partMatchResult.matchParams,
+                );
+                if (result !== null) {
                     return result;
                 }
             }
@@ -234,7 +263,7 @@ export const routes: {
     });
 };
 
-if(import.meta.vitest) {
+if (import.meta.vitest) {
     const { it, describe, expect } = import.meta.vitest;
     describe("routes", () => {
         it("空文字列キー", () => {
@@ -242,7 +271,7 @@ if(import.meta.vitest) {
             expect(route.get([], {})).toBe("page");
         });
         it("pattern part", () => {
-            const route = routes({ "page": page(() => "page") });
+            const route = routes({ page: page(() => "page") });
             expect(route.get(["page"], {})).toBe("page");
         });
         it("pattern", () => {
@@ -266,7 +295,7 @@ export const page = <ParamKeys extends string, R>(
     page: (params: MatchParams<ParamKeys>) => R,
 ): Route<"", ParamKeys, R> => {
     return new Route((path, matchParams) => {
-        if(path.length !== 0) {
+        if (path.length !== 0) {
             return null;
         }
         return page(matchParams);
@@ -274,21 +303,29 @@ export const page = <ParamKeys extends string, R>(
 };
 
 export const child = <T extends string, ParamKeys extends string, R>(
-    child: (path: readonly string[], params: MatchParams<ParamKeys>) => R | null,
+    child: (
+        path: readonly string[],
+        params: MatchParams<ParamKeys>,
+    ) => R | null,
 ): Route<T, ParamKeys, R> => {
     return new Route(child);
 };
 
+// prettier-ignore
 export type NormalizePath<T extends string> =
     T extends `${infer Pre}//${infer Post}` ? NormalizePath<`${Pre}/${Post}`>
     : T extends `/${infer U}` | `${infer U}/` ? NormalizePath<U>
     : T;
 
-export interface Routing<out Path extends string, out ParamKeys extends string = never> {
+export interface Routing<
+    out Path extends string,
+    out ParamKeys extends string = never,
+> {
     path: Path;
     paramKeys: ParamKeys;
 }
 
+// prettier-ignore
 type NestRoutes<
     T extends Record<string, Routing<string, string>>,
     K extends keyof T,
@@ -300,12 +337,17 @@ type NestRoutes<
             : never
         : never
 >;
-export type Routes<T extends Record<string, Routing<string, string>>> = NestRoutes<T, Extract<keyof T, string>>;
+
+export type Routes<T extends Record<string, Routing<string, string>>> =
+    NestRoutes<T, Extract<keyof T, string>>;
+
 export type Page<ParamKeys extends string = never> = Routing<"", ParamKeys>;
 
+// prettier-ignore
 type GetPath<T extends string> =
     T extends `${infer U}/${infer Rest}` ? U | `${U}/${GetPath<Rest>}` : T;
 
+// prettier-ignore
 export type GetRoute<T extends Routing<string, string>, P extends GetPath<T["path"]>> =
     T extends Routing<infer Path, infer ParamKeys>
         ? Routing<

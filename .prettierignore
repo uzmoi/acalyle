@@ -7,7 +7,5 @@ __generated__/
 /app
 /data/schema.graphql
 
-/renderer/src/shared/router/router.ts
-
 _*
 *.local
