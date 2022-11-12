@@ -4,7 +4,6 @@ import { ControlPartBorderStyle, ControlPartResetStyle } from "./base";
 // prettier-ignore
 type OmitPropNames = (
     // overrided
-    | "type"
     | "autoComplete"
     | "autoCapitalize"
     | "autoCorrect"
@@ -33,12 +32,24 @@ type OmitPropNames = (
     | "formTarget"
 );
 
+// prettier-ignore
+type TextInputType = (
+    | "text"
+    | "search"
+    | "password"
+    | "url"
+    | "email"
+    | "tel"
+);
+
 export const TextInput: React.FC<
     {
+        type?: TextInputType;
         value?: string;
         onValueChange?: (value: string) => void;
     } & Omit<React.ComponentPropsWithoutRef<"input">, OmitPropNames>
 > = ({
+    type = "text",
     onChange,
     onValueChange,
     className,
@@ -55,7 +66,7 @@ export const TextInput: React.FC<
         <input
             {...restProps}
             onChange={handleChange}
-            type="text"
+            type={type}
             className={cx(
                 ControlPartResetStyle,
                 ControlPartBorderStyle,
