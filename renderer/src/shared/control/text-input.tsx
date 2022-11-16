@@ -1,5 +1,5 @@
 import { cx } from "@linaria/core";
-import { ControlPartBorderStyle, ControlPartResetStyle } from "./base";
+import { ControlPartOutlineStyle, ControlPartResetStyle } from "./base";
 
 // prettier-ignore
 type OmitPropNames = (
@@ -69,7 +69,7 @@ export const TextInput: React.FC<
             type={type}
             className={cx(
                 ControlPartResetStyle,
-                ControlPartBorderStyle,
+                ControlPartOutlineStyle,
                 className,
             )}
             autoComplete="off"

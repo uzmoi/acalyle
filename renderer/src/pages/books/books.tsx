@@ -1,6 +1,6 @@
 import { css } from "@linaria/core";
 import { graphql, useLazyLoadQuery } from "react-relay";
-import { ControlPartBorderStyle } from "~/shared/control/base";
+import { ControlPartOutlineStyle } from "~/shared/control/base";
 import { Link } from "~/shared/router/react";
 import { BookList } from "~/widgets/book/BookList";
 import { booksQuery } from "./__generated__/booksQuery.graphql";
@@ -16,7 +16,7 @@ export const BookListPage: React.FC = () => {
     return (
         <div>
             <div className={HeaderStyle}>
-                <Link pattern="books/new" className={ControlPartBorderStyle}>
+                <Link pattern="books/new" className={ControlPartOutlineStyle}>
                     New
                 </Link>
             </div>

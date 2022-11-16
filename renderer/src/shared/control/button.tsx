@@ -1,5 +1,5 @@
 import { css, cx } from "@linaria/core";
-import { ControlPartBorderStyle, ControlPartResetStyle } from "./base";
+import { ControlPartOutlineStyle, ControlPartResetStyle } from "./base";
 
 export type ButtonVariant = keyof typeof variantStyles;
 
@@ -28,6 +28,6 @@ const ButtonStyle = css`
 `;
 
 const variantStyles = {
-    outline: ControlPartBorderStyle,
+    outline: ControlPartOutlineStyle,
     inline: "",
 }; // TODO: satisfies Record<string, string>;

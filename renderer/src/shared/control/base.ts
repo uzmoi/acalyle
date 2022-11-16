@@ -12,7 +12,7 @@ export const ControlPartResetStyle = css`
 `;
 
 export const borderRadius = "4px";
-export const ControlPartBorderStyle = css`
+export const ControlPartOutlineStyle = css`
     padding: 0.2em 0.8em;
     border: 1px solid ${vars.color.text};
     border-radius: ${borderRadius};

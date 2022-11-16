@@ -1,5 +1,5 @@
 import { css, cx } from "@linaria/core";
-import { ControlPartBorderStyle, ControlPartResetStyle } from "./base";
+import { ControlPartOutlineStyle, ControlPartResetStyle } from "./base";
 
 const ZeroWidthSpace = "\u200b";
 
@@ -33,7 +33,7 @@ export const TextArea: React.FC<
     return (
         <div
             {...restProps}
-            className={cx(ControlPartBorderStyle, ContainerStyle, className)}
+            className={cx(ControlPartOutlineStyle, ContainerStyle, className)}
         >
             <textarea
                 id={textareaId}
