@@ -1,19 +1,21 @@
 import { css, cx } from "@linaria/core";
 import { ControlPartBorderStyle, ControlPartResetStyle } from "./base";
 
+export type ButtonVariant = keyof typeof variantStyles;
+
 export const Button: React.FC<
     {
-        //
+        variant?: ButtonVariant;
     } & React.ComponentPropsWithoutRef<"button">
-> = ({ className, ...restProps }) => {
+> = ({ variant = "outline", className, ...restProps }) => {
     return (
         <button
             type="button"
             {...restProps}
             className={cx(
                 ControlPartResetStyle,
-                ControlPartBorderStyle,
                 ButtonStyle,
+                variantStyles[variant],
                 className,
             )}
         />
@@ -24,3 +26,8 @@ const ButtonStyle = css`
     font-weight: bold;
     cursor: pointer;
 `;
+
+const variantStyles = {
+    outline: ControlPartBorderStyle,
+    inline: "",
+}; // TODO: satisfies Record<string, string>;
