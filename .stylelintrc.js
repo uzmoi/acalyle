@@ -1,5 +1,6 @@
 /** @type {import("stylelint").Config} */
 module.exports = {
+    ignorePatterns: "!renderer/**/*",
     extends: [
         "stylelint-config-standard",
         "stylelint-config-recess-order",
