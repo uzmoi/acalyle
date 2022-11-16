@@ -27,7 +27,10 @@ module.exports = {
         {
             files: "**/*.(ts|tsx)",
             rules: {
+                "indentation": 4,
                 "no-empty-first-line": null,
+                "no-eol-whitespace": null,
+                "no-missing-end-of-source-newline": null,
                 "rule-empty-line-before": "never",
                 "at-rule-empty-line-before": "never",
                 "comment-empty-line-before": "never",
