@@ -1,4 +1,4 @@
-import { cx } from "@linaria/core";
+import { css, cx } from "@linaria/core";
 import { ControlPartOutlineStyle, ControlPartResetStyle } from "./base";
 
 // prettier-ignore
@@ -42,14 +42,18 @@ type TextInputType = (
     | "tel"
 );
 
+export type TextInputVariant = keyof typeof variantStyles;
+
 export const TextInput: React.FC<
     {
         type?: TextInputType;
+        variant?: TextInputVariant;
         value?: string;
         onValueChange?: (value: string) => void;
     } & Omit<React.ComponentPropsWithoutRef<"input">, OmitPropNames>
 > = ({
     type = "text",
+    variant = "outline",
     onChange,
     onValueChange,
     className,
@@ -69,7 +73,8 @@ export const TextInput: React.FC<
             type={type}
             className={cx(
                 ControlPartResetStyle,
-                ControlPartOutlineStyle,
+                InputStyle,
+                variantStyles[variant],
                 className,
             )}
             autoComplete="off"
@@ -80,3 +85,11 @@ export const TextInput: React.FC<
     );
 };
 
+const InputStyle = css`
+    /* - */
+`;
+
+const variantStyles = {
+    outline: ControlPartOutlineStyle,
+    inline: "",
+}; // TODO: satisfies Record<string, string>;
