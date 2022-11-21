@@ -28,18 +28,18 @@ const getBookThumbnailPath = (bookDataPath: string, bookId: string) => {
 
 const BookTitle = z.string().min(1).max(16);
 const BookSetting = z.object({
-    extentions: z.string().array(),
+    extensions: z.string().array(),
 });
 
 const BookSettingDefault = {
-    extentions: [],
+    extensions: [],
 };
 
 export const types = [
     objectType({
         name: "BookSetting",
         definition(t) {
-            t.field("extentions", {
+            t.field("extensions", {
                 type: list("String"),
             });
         },
