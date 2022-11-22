@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import { assert } from "emnorst";
 import { mkdir, writeFile } from "fs/promises";
 import { pack, unpack } from "msgpackr";
@@ -14,7 +15,6 @@ import path = require("path");
 import { MemoTag } from "renderer/src/entities/tag/lib/memo-tag";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { stringifyTag } from "renderer/src/entities/tag/lib/tag";
-import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 import { MemoFilters, parseSearchQuery } from "./search";
 import { createEscapeTag, pagination } from "./util";
@@ -189,7 +189,7 @@ export const types = [
                 data: {
                     title: validBookTitle,
                     thumbnail: `color:hsl(${Math.random() * 360}deg,80%,40%)`,
-                    id: uuidv4(),
+                    id: randomUUID(),
                     createdAt: new Date(),
                     settings: pack(BookSettingDefault),
                 },

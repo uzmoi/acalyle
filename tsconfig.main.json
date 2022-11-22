@@ -2,7 +2,7 @@
     "extends": "./config/tsconfig.node.json",
     "include": ["main/src"],
     "compilerOptions": {
-        "types": ["electron", "uuid"],
+        "types": ["electron"],
         "composite": true,
     },
 }

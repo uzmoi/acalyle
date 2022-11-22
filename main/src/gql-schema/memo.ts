@@ -1,4 +1,5 @@
 import { Prisma } from "@prisma/client";
+import { randomUUID } from "crypto";
 import { nonNullable } from "emnorst";
 import { list, mutationField, nonNull, objectType } from "nexus";
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -7,7 +8,6 @@ import { MemoTag } from "renderer/src/entities/tag/lib/memo-tag";
 import { parseTag } from "renderer/src/entities/tag/lib/parse";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { stringifyTag } from "renderer/src/entities/tag/lib/tag";
-import { v4 as uuidv4 } from "uuid";
 import { parseSearchableString, toSearchableString } from "./util";
 
 export const types = [
@@ -59,7 +59,7 @@ export const types = [
         async resolve(_, args, { prisma }) {
             const memo = await prisma.memo.create({
                 data: {
-                    id: uuidv4(),
+                    id: randomUUID(),
                     createdAt: new Date(),
                     updatedAt: new Date(),
                     contents: "",
