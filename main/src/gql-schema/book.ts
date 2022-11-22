@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 import { assert } from "emnorst";
-import { mkdir, writeFile } from "fs/promises";
+import { mkdir } from "fs/promises";
 import { pack, unpack } from "msgpackr";
 import {
     list,
@@ -15,6 +15,7 @@ import path = require("path");
 import { MemoTag } from "renderer/src/entities/tag/lib/memo-tag";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { stringifyTag } from "renderer/src/entities/tag/lib/tag";
+import sharp = require("sharp");
 import { z } from "zod";
 import { MemoFilters, parseSearchQuery } from "./search";
 import { createEscapeTag, pagination } from "./util";
@@ -233,10 +234,11 @@ export const types = [
                     bookDataPath,
                     args.id,
                 );
-                await writeFile(
-                    thumbnailPath,
-                    new Int8Array(args.thumbnail.buffer),
-                );
+                await sharp(new Int8Array(args.thumbnail.buffer))
+                    .resize(512, 512, {})
+                    .png()
+                    .flatten({ background: "#888" })
+                    .toFile(thumbnailPath);
                 thumbnail = "#image";
             } else {
                 thumbnail = randomHueColor();

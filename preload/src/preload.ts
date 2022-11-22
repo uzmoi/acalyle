@@ -1,8 +1,11 @@
 import { contextBridge, ipcRenderer } from "electron/renderer";
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { IPC, ipcChannels } from "main/src/ipc";
+import type { IPC } from "main/src/ipc";
 
 const ipc: Partial<IPC> = {};
+const ipcChannels: Record<keyof typeof ipc, string> = {
+    cwd: "cwd",
+    graphql: "graphql",
+};
 
 for (const name of Object.keys(ipcChannels) as (keyof typeof ipcChannels)[]) {
     ipc[name] = (...args: unknown[]) =>

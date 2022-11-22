@@ -89,7 +89,7 @@ const spawnWithLogger = (
         ...esbuildOptions,
         entryPoints: ["main/src/main.ts", ...(DEV ? ["main/src/ipc.ts"] : [])],
         ...(DEV ? { outdir: "app" } : { outfile: "app/main.js" }),
-        external: ["electron", ...(DEV ? ["./ipc"] : [])],
+        external: ["electron", "sharp", ...(DEV ? ["./ipc"] : [])],
     });
     await esbuild({
         ...esbuildOptions,
