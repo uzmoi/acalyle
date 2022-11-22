@@ -19,11 +19,11 @@ import { z } from "zod";
 import { MemoFilters, parseSearchQuery } from "./search";
 import { createEscapeTag, pagination } from "./util";
 
+const randomHueColor = () => `color:hsl(${Math.random() * 360}deg,80%,40%)`;
+
+const bookThumbnailFileName = "thumbnail.png";
 const getBookThumbnailPath = (bookDataPath: string, bookId: string) => {
-    const path = `${bookDataPath}/${bookId}.thumbnail`;
-    return process.env.NODE_ENV === "development"
-        ? `@fs${path}`
-        : `file://${path}`;
+    return path.join(bookDataPath, bookId, bookThumbnailFileName);
 };
 
 const BookTitle = z.string().min(1).max(16);
@@ -52,9 +52,17 @@ export const types = [
             t.string("title");
             t.string("thumbnail", {
                 resolve(book, _, { bookDataPath }) {
-                    return book.thumbnail === "#image"
-                        ? getBookThumbnailPath(bookDataPath, book.id)
-                        : book.thumbnail;
+                    if (book.thumbnail === "#image") {
+                        const path = getBookThumbnailPath(
+                            bookDataPath,
+                            book.id,
+                        );
+                        return process.env.NODE_ENV === "development"
+                            ? `@fs${path}`
+                            : `file://${path}`;
+                    } else {
+                        return book.thumbnail;
+                    }
                 },
             });
             t.dateTime("createdAt");
@@ -183,13 +191,15 @@ export const types = [
         args: {
             title: nonNull("String"),
         },
-        async resolve(_, args, { prisma }) {
+        async resolve(_, args, { prisma, bookDataPath }) {
             const validBookTitle = await BookTitle.parseAsync(args.title);
+            const bookId = randomUUID();
+            await mkdir(path.join(bookDataPath, bookId), { recursive: true });
             return prisma.book.create({
                 data: {
+                    id: bookId,
                     title: validBookTitle,
-                    thumbnail: `color:hsl(${Math.random() * 360}deg,80%,40%)`,
-                    id: randomUUID(),
+                    thumbnail: randomHueColor(),
                     createdAt: new Date(),
                     settings: pack(BookSettingDefault),
                 },
@@ -217,22 +227,23 @@ export const types = [
             thumbnail: "Upload",
         },
         async resolve(_, args, { prisma, bookDataPath }) {
+            let thumbnail: string;
             if (args.thumbnail != null) {
-                await mkdir(bookDataPath, { recursive: true });
-                const thumbnailPath = path.join(
+                const thumbnailPath = getBookThumbnailPath(
                     bookDataPath,
-                    `${args.id}.thumbnail`,
+                    args.id,
                 );
                 await writeFile(
                     thumbnailPath,
                     new Int8Array(args.thumbnail.buffer),
                 );
+                thumbnail = "#image";
+            } else {
+                thumbnail = randomHueColor();
             }
             return prisma.book.update({
                 where: { id: args.id },
-                data: {
-                    thumbnail: args.thumbnail ? "#image" : undefined,
-                },
+                data: { thumbnail },
             });
         },
     }),
