@@ -3,8 +3,11 @@ import { ControlPartOutlineStyle, ControlPartResetStyle } from "./base";
 
 const ZeroWidthSpace = "\u200b";
 
+export type TextAreaVariant = keyof typeof variantStyles;
+
 export const TextArea: React.FC<
     {
+        variant?: TextAreaVariant;
         value?: string;
         onValueChange?: (value: string) => void;
         textareaId?: string;
@@ -14,6 +17,7 @@ export const TextArea: React.FC<
         readOnly?: boolean;
     } & React.ComponentPropsWithoutRef<"div">
 > = ({
+    variant = "outline",
     value,
     onValueChange,
     textareaId,
@@ -33,7 +37,7 @@ export const TextArea: React.FC<
     return (
         <div
             {...restProps}
-            className={cx(ControlPartOutlineStyle, ContainerStyle, className)}
+            className={cx(variantStyles[variant], ContainerStyle, className)}
         >
             <textarea
                 id={textareaId}
@@ -65,6 +69,11 @@ const ContainerStyle = css`
     white-space: pre-wrap;
     --caret-color: white /* currentcolor */;
 `;
+
+const variantStyles = {
+    outline: ControlPartOutlineStyle,
+    unstyled: "",
+}; // TODO: satisfies Record<string, string>;
 
 const TextAreaStyle = css`
     position: absolute;
