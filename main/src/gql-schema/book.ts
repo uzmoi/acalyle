@@ -15,17 +15,14 @@ import path = require("path");
 import { MemoTag } from "renderer/src/entities/tag/lib/memo-tag";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { stringifyTag } from "renderer/src/entities/tag/lib/tag";
-import sharp = require("sharp");
 import { z } from "zod";
+import {
+    getDefaultThumbnail,
+    resolveBookThumbnail,
+    types as thumbnailTypes,
+} from "./book-thumbnail";
 import { MemoFilters, parseSearchQuery } from "./search";
 import { createEscapeTag, pagination } from "./util";
-
-const randomHueColor = () => `color:hsl(${Math.random() * 360}deg,80%,40%)`;
-
-const bookThumbnailFileName = "thumbnail.png";
-const getBookThumbnailPath = (bookDataPath: string, bookId: string) => {
-    return path.join(bookDataPath, bookId, bookThumbnailFileName);
-};
 
 const BookTitle = z.string().min(1).max(16);
 const BookSetting = z.object({
@@ -37,6 +34,7 @@ const BookSettingDefault = {
 };
 
 export const types = [
+    ...thumbnailTypes,
     objectType({
         name: "BookSetting",
         definition(t) {
@@ -53,17 +51,11 @@ export const types = [
             t.string("title");
             t.string("thumbnail", {
                 resolve(book, _, { bookDataPath }) {
-                    if (book.thumbnail === "#image") {
-                        const path = getBookThumbnailPath(
-                            bookDataPath,
-                            book.id,
-                        );
-                        return process.env.NODE_ENV === "development"
-                            ? `@fs${path}`
-                            : `file://${path}`;
-                    } else {
-                        return book.thumbnail;
-                    }
+                    return resolveBookThumbnail(
+                        book.thumbnail,
+                        bookDataPath,
+                        book.id,
+                    );
                 },
             });
             t.dateTime("createdAt");
@@ -200,7 +192,7 @@ export const types = [
                 data: {
                     id: bookId,
                     title: validBookTitle,
-                    thumbnail: randomHueColor(),
+                    thumbnail: getDefaultThumbnail(),
                     createdAt: new Date(),
                     settings: pack(BookSettingDefault),
                 },
@@ -218,34 +210,6 @@ export const types = [
             return prisma.book.update({
                 where: { id: args.id },
                 data: { title: title.success ? title.data : undefined },
-            });
-        },
-    }),
-    mutationField("updateBookThumbnail", {
-        type: "Book",
-        args: {
-            id: nonNull("ID"),
-            thumbnail: "Upload",
-        },
-        async resolve(_, args, { prisma, bookDataPath }) {
-            let thumbnail: string;
-            if (args.thumbnail != null) {
-                const thumbnailPath = getBookThumbnailPath(
-                    bookDataPath,
-                    args.id,
-                );
-                await sharp(new Int8Array(args.thumbnail.buffer))
-                    .resize(512, 512, {})
-                    .png()
-                    .flatten({ background: "#888" })
-                    .toFile(thumbnailPath);
-                thumbnail = "#image";
-            } else {
-                thumbnail = randomHueColor();
-            }
-            return prisma.book.update({
-                where: { id: args.id },
-                data: { thumbnail },
             });
         },
     }),
