@@ -48,7 +48,7 @@ export class MemoTag {
     getOption(name: string): string | undefined {
         return this.options
             ?.find(option => option.trim().startsWith(`${name}=`))
-            ?.slice(name.length);
+            ?.slice(name.length + 1);
     }
     getOptions(): string | undefined {
         return this.options?.join();
