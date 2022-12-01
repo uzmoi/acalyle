@@ -91,5 +91,5 @@ const InputStyle = css`
 
 const variantStyles = {
     outline: ControlPartOutlineStyle,
-    inline: "",
+    unstyled: "",
 } satisfies Record<string, string>;
