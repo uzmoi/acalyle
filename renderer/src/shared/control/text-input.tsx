@@ -92,4 +92,4 @@ const InputStyle = css`
 const variantStyles = {
     outline: ControlPartOutlineStyle,
     inline: "",
-}; // TODO: satisfies Record<string, string>;
+} satisfies Record<string, string>;

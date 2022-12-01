@@ -73,7 +73,7 @@ const ContainerStyle = css`
 const variantStyles = {
     outline: ControlPartOutlineStyle,
     unstyled: "",
-}; // TODO: satisfies Record<string, string>;
+} satisfies Record<string, string>;
 
 const TextAreaStyle = css`
     position: absolute;
