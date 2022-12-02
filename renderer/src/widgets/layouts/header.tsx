@@ -16,7 +16,7 @@ const HeaderStyle = css`
     display: flex;
     align-items: center;
     height: 3em;
-    background-color: ${vars.color.bgsub};
+    background-color: ${vars.color.bg2};
 `;
 
 const TitleStyle = css`

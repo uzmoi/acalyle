@@ -17,7 +17,7 @@ export const BookOverview: React.FC<{
 const BookOverviewStyle = css`
     display: flex;
     height: 6em;
-    background-color: ${vars.color.bgsub};
+    background-color: ${vars.color.bg3};
 `;
 
 const BookOverviewTitleStyle = css`

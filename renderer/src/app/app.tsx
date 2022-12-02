@@ -34,7 +34,7 @@ const RootStyle = css`
     overflow-y: auto;
     font-family: ${vars.font.sans};
     color: ${vars.color.text};
-    background-color: ${vars.color.bg};
+    background-color: ${vars.color.bg1};
     ::selection {
         background-color: ${vars.color.selection};
     }

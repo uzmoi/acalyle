@@ -55,7 +55,7 @@ export const MemoOverviewStyle = css`
     padding: 0.4em;
     overflow: hidden;
     white-space: pre;
-    background-color: ${vars.color.bgsub};
+    background-color: ${vars.color.bg3};
 `;
 
 const MemoOverviewContentsLinkStyle = css`
@@ -79,6 +79,6 @@ const TagListStyle = css`
         display: block;
         pointer-events: none;
         content: "";
-        box-shadow: inset -1em 0 0.5em -0.5em ${vars.color.bgsub};
+        box-shadow: inset -1em 0 0.5em -0.5em ${vars.color.bg3};
     }
 `;
