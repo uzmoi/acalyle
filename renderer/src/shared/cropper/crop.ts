@@ -33,15 +33,18 @@ const context = canvas.getContext("2d")!;
 export const cropImage = async (
     src: string,
     translate: { x: number; y: number },
+    bgColor: string,
 ): Promise<Blob> => {
-    context.resetTransform();
-    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = bgColor;
+    context.fillRect(0, 0, canvas.width, canvas.height);
 
     context.translate(translate.x, translate.y);
 
     const imageEl = toImageElement(src);
     await imageEl.decode();
     context.drawImage(imageEl, 0, 0);
+
+    context.resetTransform();
 
     return canvasToBlob(canvas);
 };

@@ -23,7 +23,8 @@ export const Cropper: React.FC<{
     state: Vec2;
     onChange?: (state: Vec2) => void;
     className?: string;
-}> = ({ src, state, onChange, className }) => {
+    bgColor?: string;
+}> = ({ src, state, onChange, className, bgColor = "#888888" }) => {
     const divEl = useRef<HTMLDivElement>(null);
     const [grab, setGrab] = useState<Vec2 | null>(null);
     const startGrab = useGrab<Vec2>((e, startPosition) => {
@@ -53,6 +54,8 @@ export const Cropper: React.FC<{
             ref={divEl}
             onMouseDown={handleMouseDown}
             className={cx(CropperStyle, className)}
+            // template literalはフォーマットで.toLowerCase()されない為
+            style={{ backgroundColor: `${bgColor}` }}
         >
             <div className={ImageStyle} style={{ transform }}>
                 <img src={src} alt="" />
@@ -63,7 +66,6 @@ export const Cropper: React.FC<{
 
 const CropperStyle = css`
     overflow: hidden;
-    background-color: #888;
 `;
 
 const ImageStyle = css`
