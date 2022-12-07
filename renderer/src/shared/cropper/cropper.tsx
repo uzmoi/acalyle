@@ -9,12 +9,12 @@ interface Vec2 {
 
 const offsetPos = (
     e: MouseEvent,
-    startTranslate: Vec2,
+    startPosition: Vec2,
     el: HTMLElement,
 ): Vec2 => {
     return {
-        x: (startTranslate.x + e.clientX) / el.clientWidth,
-        y: (startTranslate.y + e.clientY) / el.clientHeight,
+        x: (startPosition.x + e.clientX) / el.clientWidth,
+        y: (startPosition.y + e.clientY) / el.clientHeight,
     };
 };
 
@@ -25,27 +25,27 @@ export const Cropper: React.FC<{
     className?: string;
 }> = ({ src, state, onChange, className }) => {
     const divEl = useRef<HTMLDivElement>(null);
-    const [grabState, setGrabState] = useState<Vec2 | null>(null);
-    const startGrab = useGrab<Vec2>((e, startTranslate) => {
+    const [grab, setGrab] = useState<Vec2 | null>(null);
+    const startGrab = useGrab<Vec2>((e, startPosition) => {
         if (divEl.current != null) {
-            setGrabState(offsetPos(e, startTranslate, divEl.current));
+            setGrab(offsetPos(e, startPosition, divEl.current));
         }
     }, []);
     const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
-        const startTranslate = {
+        const startPosition = {
             x: state.x * e.currentTarget.clientWidth - e.clientX,
             y: state.y * e.currentTarget.clientHeight - e.clientY,
         };
-        startGrab(startTranslate, (e, startTranslate) => {
-            setGrabState(null);
+        startGrab(startPosition, (e, startPosition) => {
+            setGrab(null);
             if (divEl.current != null) {
-                onChange?.(offsetPos(e, startTranslate, divEl.current));
+                onChange?.(offsetPos(e, startPosition, divEl.current));
             }
         });
     };
 
-    const translate = grabState ?? state;
+    const translate = grab ?? state;
     const transform = `translate(${translate.x * 100}%,${translate.y * 100}%)`;
 
     return (
