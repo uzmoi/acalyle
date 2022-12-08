@@ -42,6 +42,18 @@ const changeScale = (
     };
 };
 
+// FIXME: aspectが1じゃないときに短い方向のlower limitが弱い
+const clampPosition = (
+    state: Vec2 & { scale: number },
+): Vec2 & { scale: number } => {
+    const limit = 0.5 + state.scale / 2;
+    return {
+        x: clamp(state.x, -limit, limit),
+        y: clamp(state.y, -limit, limit),
+        scale: state.scale,
+    };
+};
+
 export const Cropper: React.FC<{
     src?: string;
     state: Vec2 & { scale: number };
@@ -52,11 +64,19 @@ export const Cropper: React.FC<{
     const imageEl = useRef<HTMLImageElement>(null);
     const divEl = useRef<HTMLDivElement>(null);
     const [grab, setGrab] = useState<Vec2 | null>(null);
-    const startGrab = useGrab<Vec2>((e, startPosition) => {
-        if (divEl.current != null) {
-            setGrab(offsetPos(e, startPosition, divEl.current));
-        }
-    }, []);
+    const startGrab = useGrab<Vec2>(
+        (e, startPosition) => {
+            if (divEl.current != null) {
+                setGrab(
+                    clampPosition({
+                        ...offsetPos(e, startPosition, divEl.current),
+                        scale: state.scale,
+                    }),
+                );
+            }
+        },
+        [state.scale],
+    );
     const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
         const startPosition = {
@@ -66,10 +86,12 @@ export const Cropper: React.FC<{
         startGrab(startPosition, (e, startPosition) => {
             setGrab(null);
             if (divEl.current != null) {
-                onChange?.({
-                    ...offsetPos(e, startPosition, divEl.current),
-                    scale: state.scale,
-                });
+                onChange?.(
+                    clampPosition({
+                        ...offsetPos(e, startPosition, divEl.current),
+                        scale: state.scale,
+                    }),
+                );
             }
         });
     };
@@ -82,8 +104,10 @@ export const Cropper: React.FC<{
                 e => {
                     e.preventDefault();
                     onChange?.(
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        changeScale(e, divEl.current!, state),
+                        clampPosition(
+                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                            changeScale(e, divEl.current!, state),
+                        ),
                     );
                 },
                 { signal: abortController.signal, passive: false },
