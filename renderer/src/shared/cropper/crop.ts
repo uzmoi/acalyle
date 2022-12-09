@@ -32,13 +32,13 @@ const context = canvas.getContext("2d")!;
 
 export const cropImage = async (
     src: string,
-    translate: { x: number; y: number },
+    crop: { x: number; y: number; scale: number },
     bgColor: string,
 ): Promise<Blob> => {
     context.fillStyle = bgColor;
     context.fillRect(0, 0, canvas.width, canvas.height);
 
-    context.translate(translate.x, translate.y);
+    context.scale(crop.scale, crop.scale);
 
     const imageEl = toImageElement(src);
     await imageEl.decode();
@@ -51,7 +51,11 @@ export const cropImage = async (
     if (imageEl.width < imageEl.height) {
         width = imageEl.width * (height / imageEl.height);
     }
-    context.drawImage(imageEl, 0, 0, width, height);
+    // このaは何なのかわからん
+    const a = 0.5 - 1 / (2 * crop.scale);
+    const dx = (crop.x / crop.scale - a) * 512;
+    const dy = (crop.y / crop.scale - a) * 512;
+    context.drawImage(imageEl, dx, dy, width, height);
 
     context.resetTransform();
 
