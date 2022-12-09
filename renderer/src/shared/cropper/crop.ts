@@ -43,14 +43,17 @@ export const cropImage = async (
     const imageEl = toImageElement(src);
     await imageEl.decode();
 
+    const aspect = imageEl.width / imageEl.height;
     let width = 512;
     let height = 512;
-    if (imageEl.width > imageEl.height) {
-        height = imageEl.height * (width / imageEl.width);
+
+    // object-fit: contain;
+    if (aspect > 1) {
+        height = width / aspect;
+    } else if (aspect < 1) {
+        width = height * aspect;
     }
-    if (imageEl.width < imageEl.height) {
-        width = imageEl.width * (height / imageEl.height);
-    }
+
     // このaは何なのかわからん
     const a = 0.5 - 1 / (2 * crop.scale);
     const dx = (crop.x / crop.scale - a) * 512;
