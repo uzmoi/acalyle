@@ -42,7 +42,16 @@ export const cropImage = async (
 
     const imageEl = toImageElement(src);
     await imageEl.decode();
-    context.drawImage(imageEl, 0, 0);
+
+    let width = 512;
+    let height = 512;
+    if (imageEl.width > imageEl.height) {
+        height = imageEl.height * (width / imageEl.width);
+    }
+    if (imageEl.width < imageEl.height) {
+        width = imageEl.width * (height / imageEl.height);
+    }
+    context.drawImage(imageEl, 0, 0, width, height);
 
     context.resetTransform();
 

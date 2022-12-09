@@ -131,7 +131,7 @@ export const Cropper: React.FC<{
             style={{ backgroundColor: `${bgColor}` }}
         >
             <div className={ImageContainerStyle} style={{ transform }}>
-                <img ref={imageEl} src={src} alt="" />
+                <img ref={imageEl} className={ImageStyle} src={src} alt="" />
             </div>
         </div>
     );
@@ -144,4 +144,9 @@ const ContainerStyle = css`
 const ImageContainerStyle = css`
     width: 100%;
     height: 100%;
+`;
+
+const ImageStyle = css`
+    max-width: 100%;
+    max-height: 100%;
 `;
