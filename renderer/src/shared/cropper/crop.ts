@@ -35,13 +35,13 @@ export const cropImage = async (
     crop: { x: number; y: number; scale: number },
     bgColor: string,
 ): Promise<Blob> => {
+    const imageEl = toImageElement(src);
+    await imageEl.decode();
+
     context.fillStyle = bgColor;
     context.fillRect(0, 0, canvas.width, canvas.height);
 
     context.scale(crop.scale, crop.scale);
-
-    const imageEl = toImageElement(src);
-    await imageEl.decode();
 
     const aspect = imageEl.width / imageEl.height;
     let width = 512;
