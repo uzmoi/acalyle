@@ -62,14 +62,14 @@ export const Cropper: React.FC<{
     bgColor?: string;
 }> = ({ src, state, onChange, className, bgColor = "#888888" }) => {
     const imageEl = useRef<HTMLImageElement>(null);
-    const divEl = useRef<HTMLDivElement>(null);
+    const containerEl = useRef<HTMLDivElement>(null);
     const [grab, setGrab] = useState<Vec2 | null>(null);
     const startGrab = useGrab<Vec2>(
         (e, startPosition) => {
-            if (divEl.current != null) {
+            if (containerEl.current != null) {
                 setGrab(
                     clampPosition({
-                        ...offsetPos(e, startPosition, divEl.current),
+                        ...offsetPos(e, startPosition, containerEl.current),
                         scale: state.scale,
                     }),
                 );
@@ -85,10 +85,10 @@ export const Cropper: React.FC<{
         };
         startGrab(startPosition, (e, startPosition) => {
             setGrab(null);
-            if (divEl.current != null) {
+            if (containerEl.current != null) {
                 onChange?.(
                     clampPosition({
-                        ...offsetPos(e, startPosition, divEl.current),
+                        ...offsetPos(e, startPosition, containerEl.current),
                         scale: state.scale,
                     }),
                 );
@@ -97,16 +97,16 @@ export const Cropper: React.FC<{
     };
 
     useEffect(() => {
-        if (divEl.current) {
+        if (containerEl.current) {
             const abortController = new AbortController();
-            divEl.current.addEventListener(
+            containerEl.current.addEventListener(
                 "wheel",
                 e => {
                     e.preventDefault();
                     onChange?.(
                         clampPosition(
                             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                            changeScale(e, divEl.current!, state),
+                            changeScale(e, containerEl.current!, state),
                         ),
                     );
                 },
@@ -124,24 +124,24 @@ export const Cropper: React.FC<{
 
     return (
         <div
-            ref={divEl}
+            ref={containerEl}
             onMouseDown={handleMouseDown}
-            className={cx(CropperStyle, className)}
+            className={cx(ContainerStyle, className)}
             // template literalはフォーマットで.toLowerCase()されない為
             style={{ backgroundColor: `${bgColor}` }}
         >
-            <div className={ImageStyle} style={{ transform }}>
+            <div className={ImageContainerStyle} style={{ transform }}>
                 <img ref={imageEl} src={src} alt="" />
             </div>
         </div>
     );
 };
 
-const CropperStyle = css`
+const ContainerStyle = css`
     overflow: hidden;
 `;
 
-const ImageStyle = css`
+const ImageContainerStyle = css`
     width: 100%;
     height: 100%;
 `;
