@@ -28,7 +28,12 @@ export const BookThumbnailForm: React.FC<{
 
     const handleSubmit = () => {
         if (fileUrl == null) return;
-        void cropImage(fileUrl, cropState, bgColor).then(blob => {
+        void cropImage(
+            fileUrl,
+            { width: 512, height: 512 },
+            cropState,
+            bgColor,
+        ).then(blob => {
             commitChangeThumbnail({
                 variables: { id: bookId, thumbnail: null },
                 uploadables: { "variables.thumbnail": blob },
