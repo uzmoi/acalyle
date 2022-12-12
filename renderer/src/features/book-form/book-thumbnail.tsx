@@ -1,17 +1,29 @@
 import { css } from "@linaria/core";
 import { useMemo, useState } from "react";
-import { graphql, useMutation } from "react-relay";
+import { graphql, useLazyLoadQuery, useMutation } from "react-relay";
 import { Button, FileInput, Form, TextInput } from "~/shared/control";
 import { Cropper, cropImage } from "~/shared/cropper";
 import { bookThumbnailChangeMutation } from "./__generated__/bookThumbnailChangeMutation.graphql";
+import { bookThumbnailQuery } from "./__generated__/bookThumbnailQuery.graphql";
 
 export const BookThumbnailForm: React.FC<{
     bookId: string;
 }> = ({ bookId }) => {
+    const { book } = useLazyLoadQuery<bookThumbnailQuery>(
+        graphql`
+            query bookThumbnailQuery($bookId: ID!) {
+                book(id: $bookId) {
+                    thumbnail
+                }
+            }
+        `,
+        { bookId },
+    );
+
     const [file, setFile] = useState<File | null>(null);
     const fileUrl = useMemo(
-        () => (file ? URL.createObjectURL(file) : undefined),
-        [file],
+        () => (file ? URL.createObjectURL(file) : book?.thumbnail),
+        [file, book?.thumbnail],
     );
 
     // prettier-ignore
