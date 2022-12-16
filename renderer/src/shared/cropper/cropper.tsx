@@ -19,27 +19,25 @@ const offsetPos = (
     };
 };
 
-const changeScale = (
-    e: WheelEvent,
-    el: HTMLElement,
-    state: Vec2 & { scale: number },
-) => {
-    const newScale = clamp(state.scale - e.deltaY / 1000, 0.1, 10);
-    const cropContainerRect = el.getBoundingClientRect();
-    const offset = {
-        x: e.clientX - cropContainerRect.left,
-        y: e.clientY - cropContainerRect.top,
-    };
-    const scaleRate = newScale / state.scale;
-    const scalePoint = {
-        x: 0.5 - offset.x / el.clientWidth,
-        y: 0.5 - offset.y / el.clientHeight,
-    };
+const getScalePoint = (e: MouseEvent, el: HTMLElement) => {
+    const containerRect = el.getBoundingClientRect();
     return {
+        x: 0.5 - (e.clientX - containerRect.left) / el.clientWidth,
+        y: 0.5 - (e.clientY - containerRect.top) / el.clientHeight,
+    };
+};
+
+export const changeScale = (
+    state: Vec2 & { scale: number },
+    scalePoint: Vec2,
+    newScale: number,
+) => {
+    const scaleRate = newScale / state.scale;
+    return clampPosition({
         x: (state.x + scalePoint.x) * scaleRate - scalePoint.x,
         y: (state.y + scalePoint.y) * scaleRate - scalePoint.y,
         scale: newScale,
-    };
+    });
 };
 
 // FIXME: aspectが1じゃないときに短い方向のlower limitが弱い
@@ -103,12 +101,14 @@ export const Cropper: React.FC<{
                 "wheel",
                 e => {
                     e.preventDefault();
-                    onChange?.(
-                        clampPosition(
-                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                            changeScale(e, containerEl.current!, state),
-                        ),
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    const scalePoint = getScalePoint(e, containerEl.current!);
+                    const newScale = clamp(
+                        (state.scale * 1000 - e.deltaY) / 1000,
+                        0.1,
+                        10,
                     );
+                    onChange?.(changeScale(state, scalePoint, newScale));
                 },
                 { signal: abortController.signal, passive: false },
             );
