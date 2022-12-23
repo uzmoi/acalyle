@@ -3,7 +3,7 @@ import { ControlPartOutlineStyle, ControlPartResetStyle } from "./base";
 
 // prettier-ignore
 type OmitPropNames = (
-    // overrided
+    // overridden
     | "autoComplete"
     | "autoCapitalize"
     | "autoCorrect"
