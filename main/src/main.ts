@@ -47,7 +47,7 @@ const handleIpc = <T extends string>(
     }
 };
 
-void app.whenReady().then(() => {
+void app.whenReady().then(async () => {
     if (process.env.NODE_ENV === "development") {
         void (async () => {
             const RELAY_DEVELOPER_TOOLS = "ncedobpgnmkhcmnnkcimnobpfepidadl";
@@ -67,29 +67,9 @@ void app.whenReady().then(() => {
     }
     void createWindow();
     if (process.env.NODE_ENV === "development") {
-        type Dispose = () => void;
-        type HmrAction = (...x: never[]) => Dispose | void;
-        const hmr = async (paths: string[], hmrAction: HmrAction) => {
-            let dispose: Dispose | void;
-            const chokidar = await import("chokidar");
-            const watcher = chokidar.watch(
-                paths.map(path => require.resolve(path)),
-                { cwd: __dirname },
-            );
-            watcher.on("all", (_, updatedFilePath) => {
-                const resolvedPath = require.resolve(
-                    path.join(__dirname, updatedFilePath),
-                );
-                console.log("hmr", path.relative(process.cwd(), resolvedPath));
-                delete require.cache[resolvedPath];
-                dispose?.();
-                // @ts-expect-error: never
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-                dispose = hmrAction(...paths.map(require));
-            });
-        };
+        const { hmr } = await import("./hmr-node");
         // prettier-ignore
-        void hmr(["./ipc"], ({ ipc, ipcChannels }: typeof import("./ipc")) => {
+        hmr(__dirname, ["./ipc"], ({ ipc, ipcChannels }: typeof import("./ipc")) => {
             handleIpc(ipc, ipcChannels);
             return () => {
                 for(const channel of Object.values(ipcChannels)) {
