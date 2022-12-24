@@ -1,15 +1,6 @@
-import { useSyncExternalStore } from "react";
-
-const darkMediaQuery = matchMedia("(prefers-color-scheme: dark)");
+import { useRecoilValue } from "recoil";
+import { prefersColorScheme } from "./prefers-color-scheme";
 
 export const useColorScheme = () => {
-    return useSyncExternalStore(
-        onStoreChange => {
-            darkMediaQuery.addEventListener("change", onStoreChange);
-            return () => {
-                darkMediaQuery.removeEventListener("change", onStoreChange);
-            };
-        },
-        () => (darkMediaQuery.matches ? "dark" : "light"),
-    );
+    return useRecoilValue(prefersColorScheme);
 };
