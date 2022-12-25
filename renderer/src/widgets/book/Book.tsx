@@ -29,7 +29,9 @@ export const Book: React.FC<{
                         connections: $connections
                         edgeTypeName: "Memo"
                     ) {
-                    ...MemoOverviewFragment
+                    id
+                    contents
+                    tags
                 }
             }
         }
