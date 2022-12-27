@@ -1,6 +1,7 @@
 import { css } from "@linaria/core";
 import { useState } from "react";
 import { graphql, useFragment, useMutation } from "react-relay";
+import { List } from "~/shared/base";
 import { Button, TextInput } from "~/shared/control";
 import { Link } from "~/shared/router/react";
 import { MemoList } from "./MemoList";
@@ -52,25 +53,25 @@ export const Book: React.FC<{
         <div>
             <div className={BookHeaderStyle}>
                 <h2 className={BookTitleStyle}>{data.title}</h2>
-                <ul className={ButtonListStyle}>
-                    <li>
+                <List className={ButtonListStyle}>
+                    <List.Item>
                         <TextInput
                             value={searchString}
                             onValueChange={setSearchString}
                         />
-                    </li>
-                    <li>
+                    </List.Item>
+                    <List.Item>
                         <Button onClick={addMemo}>add memo</Button>
-                    </li>
-                    <li>
+                    </List.Item>
+                    <List.Item>
                         <Link
                             pattern="books/:bookId/settings"
                             params={{ bookId: id }}
                         >
                             settings
                         </Link>
-                    </li>
-                </ul>
+                    </List.Item>
+                </List>
             </div>
             <MemoList fragmentRef={data} search={searchString} />
         </div>

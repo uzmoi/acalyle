@@ -26,10 +26,5 @@ css`
         body, h1, h2, h3, h4, h5, h6, p, ul, ol, dl, dd {
             margin: 0;
         }
-        ul,
-        ol {
-            padding-left: 0;
-            list-style: none;
-        }
     }
 `;

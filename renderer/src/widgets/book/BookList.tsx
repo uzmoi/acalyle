@@ -1,6 +1,7 @@
 import { css } from "@linaria/core";
 import { graphql, usePaginationFragment } from "react-relay";
 import { BookOverview } from "~/entities/book";
+import { List } from "~/shared/base";
 import { Button } from "~/shared/control";
 import { Link } from "~/shared/router/react";
 import { BookListFragment$key } from "./__generated__/BookListFragment.graphql";
@@ -33,9 +34,9 @@ export const BookList: React.FC<{
 
     return (
         <div>
-            <ul className={BookListStyle}>
+            <List className={BookListStyle}>
                 {data.books.edges.map(({ node }) => (
-                    <li key={node.id}>
+                    <List.Item key={node.id}>
                         <Link
                             pattern="books/:bookId"
                             params={{ bookId: node.id }}
@@ -45,9 +46,9 @@ export const BookList: React.FC<{
                                 title={node.title}
                             />
                         </Link>
-                    </li>
+                    </List.Item>
                 ))}
-            </ul>
+            </List>
             <Button
                 onClick={() => loadNext(16)}
                 disabled={!hasNext || isLoadingNext}

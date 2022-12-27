@@ -1,6 +1,7 @@
 import { css } from "@linaria/core";
 import { TagList } from "~/entities/tag";
 import { vars } from "~/entities/theme";
+import { List } from "~/shared/base";
 import { Link } from "~/shared/router/react";
 
 export const MemoList: React.FC<{
@@ -12,9 +13,13 @@ export const MemoList: React.FC<{
     }[];
 }> = ({ bookId, memos }) => {
     return (
-        <ul className={MemoListStyle}>
+        <List className={MemoListStyle}>
             {memos.map(memo => (
-                <li key={memo.id} id={memo.id} className={MemoListItemStyle}>
+                <List.Item
+                    key={memo.id}
+                    id={memo.id}
+                    className={MemoListItemStyle}
+                >
                     <Link
                         pattern="books/:bookId/:memoId"
                         params={{ bookId, memoId: memo.id }}
@@ -25,9 +30,9 @@ export const MemoList: React.FC<{
                     <div className={TagListStyle}>
                         <TagList tags={memo.tags} bookId={bookId} />
                     </div>
-                </li>
+                </List.Item>
             ))}
-        </ul>
+        </List>
     );
 };
 
