@@ -21,7 +21,7 @@ export const Tag: React.FC<{
             <Link to={link("books/:bookId", { bookId })}>
                 {tag.toBookTag()}
             </Link>
-            {options != null && `(${options})`}
+            {options && `(${options})`}
         </span>
     );
 };

@@ -24,6 +24,13 @@ export class MemoTag {
                     : parseOptions(tagString.slice(i).replace(/^\(|\)$/g, "")),
         };
     }
+    static from(
+        type: TagType,
+        tagName: readonly string[],
+        options: readonly (readonly [string, string])[],
+    ) {
+        return new MemoTag(type, tagName, new Map(options));
+    }
     static fromString(this: void, tagString: string): MemoTag | null {
         const { head, name, options } = MemoTag.parse(tagString);
         const tagName = name.split("/").filter(Boolean);
@@ -32,12 +39,17 @@ export class MemoTag {
             return null;
         }
         const type = head != null ? tagTypeTable[head] : "normal";
-        return new MemoTag(type, tagName, options);
+        const optionsMap =
+            options &&
+            new Map(
+                options.map(option => option.split("=") as [string, string]),
+            );
+        return new MemoTag(type, tagName, optionsMap);
     }
     private constructor(
         readonly type: TagType,
         readonly name: readonly string[],
-        private readonly options: readonly string[] | null,
+        readonly options: ReadonlyMap<string, string> | null,
     ) {}
     getHeadChar(): "#" | "@" {
         return tagHeadTable[this.type];
@@ -46,20 +58,21 @@ export class MemoTag {
         return this.name.join("/");
     }
     getOption(name: string): string | undefined {
-        return this.options
-            ?.find(option => option.trim().startsWith(`${name}=`))
-            ?.slice(name.length + 1);
+        return this.options?.get(name);
     }
-    getOptions(): string | undefined {
-        return this.options?.join();
+    getOptions(): string {
+        return Array.from(this.options ?? [])
+            .map(([key, value]) => key + "=" + value)
+            .join(",");
     }
     toBookTag(): string {
         return this.getHeadChar() + this.getName();
     }
     toString(): string {
         let tagString = this.toBookTag();
-        if (this.options != null) {
-            tagString += "(" + this.options.join() + ")";
+        const options = this.getOptions();
+        if (options !== "") {
+            tagString += "(" + options + ")";
         }
         return tagString;
     }
