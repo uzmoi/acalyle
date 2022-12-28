@@ -3,6 +3,7 @@ import { graphql, useLazyLoadQuery } from "react-relay";
 import { ControlPartOutlineStyle } from "~/shared/control/base";
 import { Link } from "~/shared/router/react";
 import { BookList } from "~/widgets/book/BookList";
+import { link } from "../link";
 import { booksQuery } from "./__generated__/booksQuery.graphql";
 
 export const BookListPage: React.FC = () => {
@@ -16,7 +17,10 @@ export const BookListPage: React.FC = () => {
     return (
         <div>
             <div className={HeaderStyle}>
-                <Link pattern="books/new" className={ControlPartOutlineStyle}>
+                <Link
+                    to={link("books/new")}
+                    className={ControlPartOutlineStyle}
+                >
                     New
                 </Link>
             </div>

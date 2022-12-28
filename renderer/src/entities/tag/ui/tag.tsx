@@ -1,5 +1,6 @@
 import { css } from "@linaria/core";
 import { vars } from "~/entities/theme";
+import { link } from "~/pages/link";
 import { Link } from "~/shared/router/react";
 import { MemoTag } from "../lib/memo-tag";
 
@@ -17,7 +18,7 @@ export const Tag: React.FC<{
 
     return (
         <span className={TagStyle} data-tag-type={tag.type}>
-            <Link pattern="books/:bookId" params={{ bookId }}>
+            <Link to={link("books/:bookId", { bookId })}>
                 {tag.toBookTag()}
             </Link>
             {options != null && `(${options})`}

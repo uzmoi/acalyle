@@ -1,6 +1,7 @@
 import { css } from "@linaria/core";
 import { graphql, usePaginationFragment } from "react-relay";
 import { BookOverview } from "~/entities/book";
+import { link } from "~/pages/link";
 import { List } from "~/shared/base";
 import { Button } from "~/shared/control";
 import { Link } from "~/shared/router/react";
@@ -37,10 +38,7 @@ export const BookList: React.FC<{
             <List className={BookListStyle}>
                 {data.books.edges.map(({ node }) => (
                     <List.Item key={node.id}>
-                        <Link
-                            pattern="books/:bookId"
-                            params={{ bookId: node.id }}
-                        >
+                        <Link to={link("books/:bookId", { bookId: node.id })}>
                             <BookOverview
                                 thumbnail={node.thumbnail}
                                 title={node.title}

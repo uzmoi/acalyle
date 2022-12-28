@@ -1,6 +1,7 @@
 import { css } from "@linaria/core";
 import { TagList } from "~/entities/tag";
 import { vars } from "~/entities/theme";
+import { link } from "~/pages/link";
 import { List } from "~/shared/base";
 import { Link } from "~/shared/router/react";
 
@@ -21,8 +22,10 @@ export const MemoList: React.FC<{
                     className={MemoListItemStyle}
                 >
                     <Link
-                        pattern="books/:bookId/:memoId"
-                        params={{ bookId, memoId: memo.id }}
+                        to={link("books/:bookId/:memoId", {
+                            bookId,
+                            memoId: memo.id,
+                        })}
                         className={MemoContentsLinkStyle}
                     >
                         {memo.contents}

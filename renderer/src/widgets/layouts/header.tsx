@@ -1,11 +1,12 @@
 import { css } from "@linaria/core";
 import { vars } from "~/entities/theme";
+import { link } from "~/pages/link";
 import { Link } from "~/shared/router/react";
 
 export const Header: React.FC = () => {
     return (
         <header className={HeaderStyle}>
-            <Link pattern="books">
+            <Link to={link("books")}>
                 <p className={TitleStyle}>Acalyle</p>
             </Link>
         </header>

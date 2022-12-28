@@ -43,24 +43,22 @@ export const useNavigate = (): Navigate<WithSearchParams<AcaRoutePath>> => {
 
 export const useLocation = () => useRecoilValue(LocationState);
 
-export const Link = <T extends WithSearchParams<AcaRoutePath>>(
-    props: { pattern: T } & (T extends `${string}/:${string}` | `:${string}`
-        ? { params: MatchParams<MatchParamKeyOf<T>> }
-        : { params?: undefined }) &
-        Omit<React.ComponentPropsWithoutRef<"a">, "href">,
-): React.ReactElement => {
-    const { pattern, params, className, ...rest } = props;
-    const navigate = useNavigate();
+export const Link: React.FC<
+    {
+        to: string;
+    } & Omit<React.ComponentPropsWithoutRef<"a">, "href">
+> = ({ to, className, ...rest }) => {
+    const setLocation = useSetRecoilState(LocationState);
 
     return (
         <a
             {...rest}
             className={cx(LinkStyle, className)}
-            href={"#" + link()(pattern, params as never)}
+            href={to}
             onClick={e => {
                 if (e.defaultPrevented) return;
                 e.preventDefault();
-                navigate(pattern, params as never);
+                setLocation(to);
             }}
         />
     );

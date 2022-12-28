@@ -2,6 +2,7 @@ import { css } from "@linaria/core";
 import { graphql, useLazyLoadQuery } from "react-relay";
 import { Link } from "~/shared/router/react";
 import { Memo } from "~/widgets/book/Memo";
+import { link } from "../link";
 import { memoQuery } from "./__generated__/memoQuery.graphql";
 
 export const MemoPage: React.FC<{
@@ -25,7 +26,7 @@ export const MemoPage: React.FC<{
 
     return (
         <div className={MemoPageStyle}>
-            <Link pattern="books/:bookId" params={{ bookId }}>
+            <Link to={link("books/:bookId", { bookId })}>
                 return to book
             </Link>
             <Memo bookId={bookId} fragmentRef={book.memo} />
