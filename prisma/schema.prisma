@@ -38,12 +38,22 @@ model Tag {
 }
 
 model MemoTag {
-    Tag     Tag     @relation(fields: [bookId, tagName], references: [bookId, name])
+    Tag     Tag             @relation(fields: [bookId, tagName], references: [bookId, name])
     bookId  String
     tagName String
-    args    String?
-    Memo    Memo    @relation(fields: [memoId], references: [id])
+    options MemoTagOption[]
+    Memo    Memo            @relation(fields: [memoId], references: [id])
     memoId  String
 
     @@id([memoId, tagName])
+}
+
+model MemoTagOption {
+    key     String
+    value   String
+    MemoTag MemoTag @relation(fields: [memoId, tagName], references: [memoId, tagName])
+    memoId  String
+    tagName String
+
+    @@id([memoId, tagName, key])
 }

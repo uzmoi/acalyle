@@ -4,11 +4,6 @@ import { nonNullable } from "emnorst";
 import { list, mutationField, nonNull, objectType } from "nexus";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { MemoTag } from "renderer/src/entities/tag/lib/memo-tag";
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { parseTag } from "renderer/src/entities/tag/lib/parse";
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { stringifyTag } from "renderer/src/entities/tag/lib/tag";
-import { parseSearchableString, toSearchableString } from "./util";
 
 export const types = [
     objectType({
@@ -23,14 +18,14 @@ export const types = [
                 async resolve(memo, __, { prisma }) {
                     const memoTags = await prisma.memoTag.findMany({
                         where: { memoId: memo.id },
-                        select: { Tag: true, args: true },
+                        select: { Tag: true, options: true },
                     });
-                    return memoTags.map(({ Tag, args }) => {
-                        return stringifyTag({
-                            type: Tag.type as "normal" | "control",
-                            name: Tag.name,
-                            args: args ? parseSearchableString(args) : null,
-                        });
+                    return memoTags.map(({ Tag, options }) => {
+                        return MemoTag.from(
+                            Tag.type as "normal" | "control",
+                            [Tag.name],
+                            options.map(option => [option.key, option.value]),
+                        ).toString();
                     });
                 },
             });
@@ -100,20 +95,29 @@ export const types = [
             const memoTagCreate:
                 | Prisma.MemoTagCreateWithoutMemoInput[]
                 | undefined = args.tags
-                ?.map(parseTag)
+                ?.map(MemoTag.fromString)
                 .filter(nonNullable)
                 .map(tag => ({
                     Tag: {
                         connectOrCreate: {
-                            where: { bookId_name: { bookId, name: tag.name } },
+                            where: {
+                                bookId_name: {
+                                    bookId,
+                                    name: tag.getName(),
+                                },
+                            },
                             create: {
                                 type: tag.type,
-                                name: tag.name,
+                                name: tag.getName(),
                                 bookId,
                             },
                         },
                     },
-                    args: tag.args ? toSearchableString(tag.args) : null,
+                    options: {
+                        create: Array.from(tag.options ?? []).map(
+                            ([key, value]) => ({ key, value }),
+                        ),
+                    },
                 }));
             const memo = await prisma.memo.update({
                 where: { id: args.memoId },
@@ -135,18 +139,21 @@ export const types = [
             const memoTagUpdate:
                 | Prisma.MemoTagUpdateWithWhereUniqueWithoutMemoInput[]
                 | undefined = args.tags
-                ?.map(parseTag)
+                ?.map(MemoTag.fromString)
                 .filter(nonNullable)
                 .map(tag => ({
                     where: {
                         memoId_tagName: {
                             memoId: args.memoId,
-                            tagName: tag.name,
+                            tagName: tag.getName(),
                         },
                     },
                     data: {
-                        args: {
-                            set: tag.args ? toSearchableString(tag.args) : null,
+                        options: {
+                            deleteMany: {},
+                            create: Array.from(tag.options ?? []).map(
+                                ([key, value]) => ({ key, value }),
+                            ),
                         },
                     },
                 }));

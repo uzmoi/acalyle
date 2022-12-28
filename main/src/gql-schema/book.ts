@@ -1,5 +1,4 @@
 import { randomUUID } from "crypto";
-import { assert } from "emnorst";
 import { mkdir } from "fs/promises";
 import { pack, unpack } from "msgpackr";
 import {
@@ -13,8 +12,6 @@ import {
 import path = require("path");
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { MemoTag } from "renderer/src/entities/tag/lib/memo-tag";
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { stringifyTag } from "renderer/src/entities/tag/lib/tag";
 import { z } from "zod";
 import {
     getDefaultThumbnail,
@@ -141,12 +138,11 @@ export const types = [
                         where: { bookId: book.id },
                     });
                     return tags.map(tag => {
-                        assert.as<"normal" | "control">(tag.type);
-                        return stringifyTag({
-                            type: tag.type,
-                            name: tag.name,
-                            args: null,
-                        });
+                        return MemoTag.from(
+                            tag.type as "normal" | "control",
+                            [tag.name],
+                            [],
+                        ).toString();
                     });
                 },
             });
