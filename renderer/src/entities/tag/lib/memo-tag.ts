@@ -10,6 +10,9 @@ const parseOptions = (options: string) => {
     return options === "" ? [] : options.split(",");
 };
 
+// eslint-disable-next-line no-control-regex
+const ASCII_CONTROL_CHAR_REGEX = /[\0-\x1f\x7f]+/g;
+
 export class MemoTag {
     static parse(this: void, tagString: string): MemoTagParseResult {
         const head = tagString[0];
@@ -33,7 +36,10 @@ export class MemoTag {
     }
     static fromString(this: void, tagString: string): MemoTag | null {
         const { head, name, options } = MemoTag.parse(tagString);
-        const tagName = name.split("/").filter(Boolean);
+        const tagName = name
+            .replace(ASCII_CONTROL_CHAR_REGEX, "")
+            .split("/")
+            .filter(Boolean);
         if (name.length === 0) {
             // name empty
             return null;
