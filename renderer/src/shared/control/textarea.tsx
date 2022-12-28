@@ -9,6 +9,7 @@ export const TextArea: React.FC<
     {
         variant?: TextAreaVariant;
         value?: string;
+        defaultValue?: string;
         onValueChange?: (value: string) => void;
         textareaId?: string;
         placeholder?: string;
@@ -19,6 +20,7 @@ export const TextArea: React.FC<
 > = ({
     variant = "outline",
     value,
+    defaultValue,
     onValueChange,
     textareaId,
     placeholder,
@@ -44,6 +46,7 @@ export const TextArea: React.FC<
                 // form={form}
                 // name={name}
                 value={value}
+                defaultValue={defaultValue}
                 onChange={handleChange}
                 className={cx(ControlPartResetStyle, TextAreaStyle)}
                 autoFocus={autoFocus}

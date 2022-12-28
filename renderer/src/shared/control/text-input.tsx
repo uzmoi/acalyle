@@ -49,6 +49,7 @@ export const TextInput: React.FC<
         type?: TextInputType;
         variant?: TextInputVariant;
         value?: string;
+        defaultValue?: string;
         onValueChange?: (value: string) => void;
     } & Omit<React.ComponentPropsWithoutRef<"input">, OmitPropNames>
 > = ({

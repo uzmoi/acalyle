@@ -3,6 +3,9 @@ import { ControlPartResetStyle } from "./base";
 
 // prettier-ignore
 type OmitPropNames = (
+    // uncontrolled
+    | "value"
+    | "defaultValue"
     // overridden
     | "type"
     // type="text"
