@@ -114,7 +114,8 @@ export const types = [
                         },
                     },
                     options: {
-                        create: Array.from(tag.options ?? []).map(
+                        create: Array.from(
+                            tag.options ?? [],
                             ([key, value]) => ({ key, value }),
                         ),
                     },
@@ -151,7 +152,8 @@ export const types = [
                     data: {
                         options: {
                             deleteMany: {},
-                            create: Array.from(tag.options ?? []).map(
+                            create: Array.from(
+                                tag.options ?? [],
                                 ([key, value]) => ({ key, value }),
                             ),
                         },

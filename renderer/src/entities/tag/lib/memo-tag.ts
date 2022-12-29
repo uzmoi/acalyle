@@ -67,9 +67,10 @@ export class MemoTag {
         return this.options?.get(name);
     }
     getOptions(): string {
-        return Array.from(this.options ?? [])
-            .map(([key, value]) => key + "=" + value)
-            .join(",");
+        return Array.from(
+            this.options ?? [],
+            ([key, value]) => key + "=" + value,
+        ).join(",");
     }
     toBookTag(): string {
         return this.getHeadChar() + this.getName();
