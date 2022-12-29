@@ -1,5 +1,5 @@
-import { css, cx } from "@linaria/core";
-import { Suspense, useEffect } from "react";
+import { css } from "@linaria/core";
+import { Suspense, useEffect, useLayoutEffect, useRef } from "react";
 import { useThemeStyle, vars } from "~/entities/theme";
 import { routes } from "~/pages/routes";
 import { match } from "~/shared/router";
@@ -16,10 +16,15 @@ export const App: React.FC = () => {
         }
     }, [navigate]);
 
+    const rootEl = useRef<HTMLDivElement>(null);
+    useLayoutEffect(() => {
+        rootEl.current?.scrollTo(0, 0);
+    }, [location]);
+
     const themeStyle = useThemeStyle();
 
     return (
-        <div className={cx(RootStyle)} style={themeStyle}>
+        <div ref={rootEl} className={RootStyle} style={themeStyle}>
             <Header />
             <Suspense fallback="loading">
                 {match(routes, location as never)}
