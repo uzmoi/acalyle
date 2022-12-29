@@ -128,7 +128,7 @@ export const types = [
                 },
                 totalCount(book, __, { prisma }) {
                     return prisma.memo.count({
-                        where: { id: book.id },
+                        where: { bookId: book.id },
                     });
                 },
             });
