@@ -1,7 +1,13 @@
 import { Prisma } from "@prisma/client";
 import { randomUUID } from "crypto";
 import { nonNullable } from "emnorst";
-import { list, mutationField, nonNull, objectType } from "nexus";
+import {
+    inputObjectType,
+    list,
+    mutationField,
+    nonNull,
+    objectType,
+} from "nexus";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { MemoTag } from "renderer/src/entities/tag/lib/memo-tag";
 
@@ -191,6 +197,89 @@ export const types = [
                 },
             });
             return { node: memo };
+        },
+    }),
+    inputObjectType({
+        name: "MemoInput",
+        definition(t) {
+            t.nonNull.id("id");
+            t.nonNull.string("contents");
+            t.nonNull.list.nonNull.string("tags");
+            t.nonNull.dateTime("createdAt");
+            t.nonNull.dateTime("updatedAt");
+        },
+    }),
+    mutationField("importMemos", {
+        type: "String",
+        args: {
+            bookId: nonNull("ID"),
+            memos: nonNull(list(nonNull("MemoInput"))),
+        },
+        async resolve(_, args, { prisma }) {
+            const memoValues = args.memos.map(memo => [
+                args.bookId,
+                memo.id,
+                memo.contents,
+                memo.createdAt,
+                memo.updatedAt,
+            ]);
+            const memoTags = args.memos.flatMap(memo =>
+                memo.tags
+                    .map(MemoTag.fromString)
+                    .filter(nonNullable)
+                    .map(tag => [memo.id, tag] as const),
+            );
+            const tagValues = memoTags.map(([, tag]) => [
+                args.bookId,
+                tag.type,
+                tag.getName(),
+            ]);
+            const memoTagValues = memoTags.map(([memoId, tag]) => [
+                args.bookId,
+                memoId,
+                tag.getName(),
+            ]);
+            const memoTagOptionValues = memoTags.flatMap(([memoId, tag]) => {
+                return Array.from(tag.options ?? [], ([key, value]) => [
+                    memoId,
+                    tag.getName(),
+                    key,
+                    value,
+                ]);
+            });
+
+            const joinJoin = (values: unknown[][]) =>
+                Prisma.join(
+                    values.map(values => Prisma.join(values, ",", "(", ")")),
+                );
+
+            await prisma.$transaction(
+                [
+                    prisma.$executeRaw`
+                        INSERT INTO Memo(bookId, id, contents, createdAt, updatedAt)
+                        VALUES ${joinJoin(memoValues)};
+                    `,
+                    tagValues.length === 0
+                        ? null
+                        : prisma.$executeRaw`
+                            INSERT OR IGNORE INTO Tag(bookId, type, name)
+                            VALUES ${joinJoin(tagValues)};
+                        `,
+                    memoTagValues.length === 0
+                        ? null
+                        : prisma.$executeRaw`
+                            INSERT INTO MemoTag(bookId, memoId, tagName)
+                            VALUES ${joinJoin(memoTagValues)};
+                        `,
+                    memoTagOptionValues.length === 0
+                        ? null
+                        : prisma.$executeRaw`
+                            INSERT INTO MemoTagOption(memoId, tagName, key, value)
+                            VALUES ${joinJoin(memoTagOptionValues)};
+                        `,
+                ].filter(nonNullable),
+            );
+            return "ok";
         },
     }),
 ];
