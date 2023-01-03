@@ -1,7 +1,7 @@
-import { JsonValue } from "emnorst";
 import { ExecutionResult, graphql } from "graphql";
 import { graphQLSchema } from "./gql-schema";
 import { createContext } from "./gql-schema/context";
+import { BodyData, mapBuffers } from "./gql-schema/util";
 
 export const ipcChannels: Record<keyof typeof ipc, string> = {
     cwd: "cwd",
@@ -15,22 +15,11 @@ export const ipc = {
     graphql(
         this: { app: Electron.App },
         body: string,
-        bufs: Record<string, ArrayBuffer> = {},
+        buffers: Record<string, ArrayBuffer> = {},
     ): Promise<ExecutionResult> {
-        const bodyData = JSON.parse(body) as {
-            query: string;
-            variables: Record<string, JsonValue>;
-        };
-        for (const key of Object.keys(bufs)) {
-            const path = key.split(".");
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            const lastKey = path.pop()!;
-            const obj = path.reduce<Record<string, JsonValue | DataView>>(
-                (obj, key) => obj[key] as Record<string, JsonValue>,
-                bodyData,
-            );
-            obj[lastKey] = new DataView(bufs[key]);
-        }
+        const bodyData = JSON.parse(body) as BodyData;
+        mapBuffers(bodyData, buffers);
+
         return graphql({
             contextValue: createContext(this.app),
             schema: graphQLSchema,

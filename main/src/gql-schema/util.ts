@@ -1,4 +1,4 @@
-import { ValueOf } from "emnorst";
+import { JsonValue, ValueOf } from "emnorst";
 
 export const createEscapeTag =
     <T>(escape: (value: T) => string) =>
@@ -10,6 +10,27 @@ export const createEscapeTag =
         }
         return result;
     };
+
+export type BodyData = {
+    query: string;
+    variables: Record<string, JsonValue>;
+};
+
+export const mapBuffers = (
+    bodyData: BodyData,
+    buffers: Record<string, ArrayBuffer>,
+) => {
+    for (const key of Object.keys(buffers)) {
+        const path = key.split(".");
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const lastKey = path.pop()!;
+        const obj = path.reduce<Record<string, JsonValue | DataView>>(
+            (obj, key) => obj[key] as Record<string, JsonValue>,
+            bodyData,
+        );
+        obj[lastKey] = new DataView(buffers[key]);
+    }
+};
 
 export type ResolveUnion<T extends Record<string, () => unknown>> = {
     [P in keyof T]: Awaited<ReturnType<T[P]>> & { __typename: P };
