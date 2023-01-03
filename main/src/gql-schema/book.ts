@@ -83,7 +83,8 @@ export const types = [
             });
             t.connectionField("memos", {
                 type: "Memo",
-                cursorFromNode: node => node.id,
+                // FIXME ここがnullableな必要ある？
+                cursorFromNode: node => node?.id ?? "",
                 additionalArgs: {
                     search: "String",
                 },
@@ -160,7 +161,8 @@ export const types = [
     queryField(t => {
         t.connectionField("books", {
             type: "Book",
-            cursorFromNode: node => node.id,
+            // FIXME ここがnullableな必要ある？
+            cursorFromNode: node => node?.id ?? "",
             nodes(_, args, { prisma }) {
                 const p = pagination(args);
                 return prisma.book.findMany({

@@ -20,6 +20,7 @@ export const graphQLSchema = makeSchema({
             extendConnection: {
                 totalCount: { type: nonNull("Int") },
             },
+            nonNullDefaults: { output: false },
         }),
     ],
     nonNullDefaults: { output: true },

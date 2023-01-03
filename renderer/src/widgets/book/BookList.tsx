@@ -1,4 +1,6 @@
 import { css } from "@linaria/core";
+import { nonNullable } from "emnorst";
+import { useMemo } from "react";
 import { graphql, usePaginationFragment } from "react-relay";
 import { BookOverview } from "~/entities/book";
 import { link } from "~/pages/link";
@@ -33,15 +35,24 @@ export const BookList: React.FC<{
         }
     `, queryRef);
 
+    const books = useMemo(
+        () =>
+            data.books.edges
+                ?.filter(nonNullable)
+                .map(edge => edge.node)
+                .filter(nonNullable) ?? [],
+        [data.books.edges],
+    );
+
     return (
         <div>
             <List className={BookListStyle}>
-                {data.books.edges.map(({ node }) => (
-                    <List.Item key={node.id}>
-                        <Link to={link("books/:bookId", { bookId: node.id })}>
+                {books.map(book => (
+                    <List.Item key={book.id}>
+                        <Link to={link("books/:bookId", { bookId: book.id })}>
                             <BookOverview
-                                thumbnail={node.thumbnail}
-                                title={node.title}
+                                thumbnail={book.thumbnail}
+                                title={book.title}
                             />
                         </Link>
                     </List.Item>

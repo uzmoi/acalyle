@@ -1,3 +1,4 @@
+import { nonNullable } from "emnorst";
 import { useEffect, useMemo, useState } from "react";
 import { graphql, usePaginationFragment } from "react-relay";
 import { MemoColumns } from "~/entities/memo/ui/memo-columns";
@@ -42,7 +43,11 @@ export const MemoList: React.FC<{
     );
 
     const memos = useMemo(
-        () => data.memos.edges.map(edge => edge.node),
+        () =>
+            data.memos.edges
+                ?.filter(nonNullable)
+                .map(edge => edge.node)
+                .filter(nonNullable) ?? [],
         [data.memos.edges],
     );
 
