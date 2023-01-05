@@ -19,6 +19,8 @@ export const App: React.FC = () => {
     const rootEl = useRef<HTMLDivElement>(null);
     useLayoutEffect(() => {
         rootEl.current?.scrollTo(0, 0);
+        document.body.focus();
+        document.title = `${location} | Acalyle`;
     }, [location]);
 
     const themeStyle = useThemeStyle();
