@@ -38,7 +38,7 @@ export const App: React.FC = () => {
 const RootStyle = css`
     width: 100vw;
     height: 100vh;
-    overflow-y: auto;
+    overflow: hidden auto;
     font-family: ${vars.font.sans};
     color: ${vars.color.text};
     background-color: ${vars.color.bg1};
