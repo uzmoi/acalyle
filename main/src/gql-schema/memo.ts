@@ -70,6 +70,18 @@ export const types = [
             return { node: memo };
         },
     }),
+    mutationField("removeMemo", {
+        type: nonNull(list(nonNull("ID"))),
+        args: { ids: nonNull(list(nonNull("ID"))) },
+        async resolve(_, args, { prisma }) {
+            await prisma.memo.deleteMany({
+                where: {
+                    OR: args.ids.map(id => ({ id })),
+                },
+            });
+            return args.ids;
+        },
+    }),
     mutationField("updateMemoContents", {
         type: "MemoWrapper",
         args: {
