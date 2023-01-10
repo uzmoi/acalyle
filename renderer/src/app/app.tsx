@@ -10,11 +10,12 @@ export const App: React.FC = () => {
     const location = useLocation();
 
     const navigate = useNavigate();
+    const isEmptyLocation = location === "";
     useEffect(() => {
-        if (window.location.hash === "") {
+        if (isEmptyLocation) {
             navigate("books");
         }
-    }, [navigate]);
+    }, [isEmptyLocation, navigate]);
 
     const rootEl = useRef<HTMLDivElement>(null);
     useLayoutEffect(() => {

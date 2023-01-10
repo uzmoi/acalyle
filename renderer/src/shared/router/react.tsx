@@ -15,20 +15,26 @@ interface Navigate<T extends string> {
     ): void;
 }
 
-const hashLocationEffect: AtomEffect<string> = ({ setSelf, onSet }) => {
-    const change = () => {
-        setSelf(window.location.hash.slice(1));
+const sessionStorageEffect =
+    (key: string, defaultValue = ""): AtomEffect<string> =>
+    ({ setSelf, onSet }) => {
+        setSelf(sessionStorage.getItem(key) ?? defaultValue);
+        onSet(value => {
+            sessionStorage.setItem(key, value);
+        });
     };
-    change();
-    window.addEventListener("hashchange", change);
-    onSet(hash => {
-        location.hash = hash;
-    });
-};
+
+const consoleEffect =
+    (string = "%o"): AtomEffect<string> =>
+    ({ onSet }) => {
+        onSet(value => {
+            console.log(string, value);
+        });
+    };
 
 const LocationState = atom<string>({
     key: "Location",
-    effects: [hashLocationEffect],
+    effects: [sessionStorageEffect("location"), consoleEffect("location: %s")],
 });
 
 export const useNavigate = (): Navigate<WithSearchParams<AcaRoutePath>> => {
