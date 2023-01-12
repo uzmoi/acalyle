@@ -50,15 +50,16 @@ export const types = [
     // for relay directive
     objectType({
         name: "MemoWrapper",
+        sourceType: { module: "@prisma/client", export: "Memo" },
         definition(t) {
-            t.field("node", { type: "Memo" });
+            t.field("node", { type: "Memo", resolve: node => node });
         },
     }),
     mutationField("createMemo", {
         type: "MemoWrapper",
         args: { bookId: nonNull("ID") },
-        async resolve(_, args, { prisma }) {
-            const memo = await prisma.memo.create({
+        resolve(_, args, { prisma }) {
+            return prisma.memo.create({
                 data: {
                     id: randomUUID(),
                     createdAt: new Date(),
@@ -67,7 +68,6 @@ export const types = [
                     bookId: args.bookId,
                 },
             });
-            return { node: memo };
         },
     }),
     mutationField("removeMemo", {
@@ -88,15 +88,14 @@ export const types = [
             memoId: nonNull("ID"),
             contents: nonNull("String"),
         },
-        async resolve(_, args, { prisma }) {
-            const memo = await prisma.memo.update({
+        resolve(_, args, { prisma }) {
+            return prisma.memo.update({
                 where: { id: args.memoId },
                 data: {
                     contents: args.contents ?? undefined,
                     updatedAt: new Date(),
                 },
             });
-            return { node: memo };
         },
     }),
     mutationField("addMemoTags", {
@@ -138,14 +137,13 @@ export const types = [
                         ),
                     },
                 }));
-            const memo = await prisma.memo.update({
+            return prisma.memo.update({
                 where: { id: args.memoId },
                 data: {
                     tags: { create: memoTagCreate },
                     updatedAt: new Date(),
                 },
             });
-            return { node: memo };
         },
     }),
     mutationField("updateMemoTagsArgs", {
@@ -154,7 +152,7 @@ export const types = [
             memoId: nonNull("ID"),
             tags: nonNull(list(nonNull("String"))),
         },
-        async resolve(_, args, { prisma }) {
+        resolve(_, args, { prisma }) {
             const memoTagUpdate:
                 | Prisma.MemoTagUpdateWithWhereUniqueWithoutMemoInput[]
                 | undefined = args.tags
@@ -177,14 +175,13 @@ export const types = [
                         },
                     },
                 }));
-            const memo = await prisma.memo.update({
+            return prisma.memo.update({
                 where: { id: args.memoId },
                 data: {
                     tags: { update: memoTagUpdate },
                     updatedAt: new Date(),
                 },
             });
-            return { node: memo };
         },
     }),
     mutationField("removeMemoTags", {
@@ -193,7 +190,7 @@ export const types = [
             memoId: nonNull("ID"),
             tags: nonNull(list(nonNull("String"))),
         },
-        async resolve(_, args, { prisma }) {
+        resolve(_, args, { prisma }) {
             const memoTagDelete: Prisma.MemoTagScalarWhereInput = {
                 memoId: args.memoId,
                 OR: args.tags
@@ -201,14 +198,13 @@ export const types = [
                     .filter(nonNullable)
                     .map(tag => ({ tagName: tag.getName() })),
             };
-            const memo = await prisma.memo.update({
+            return prisma.memo.update({
                 where: { id: args.memoId },
                 data: {
                     tags: { deleteMany: memoTagDelete },
                     updatedAt: new Date(),
                 },
             });
-            return { node: memo };
         },
     }),
     inputObjectType({
