@@ -9,14 +9,14 @@ export const MemoInfo: React.FC<{
             {createdAt !== updatedAt && (
                 <p className={MemoInfoItemStyle}>
                     updated at{" "}
-                    <time dateTime={updatedAt}>
+                    <time dateTime={updatedAt} title={updatedAt}>
                         {new Date(updatedAt).toLocaleDateString()}
                     </time>
                 </p>
             )}
             <p className={MemoInfoItemStyle}>
                 created at{" "}
-                <time dateTime={createdAt}>
+                <time dateTime={createdAt} title={createdAt}>
                     {new Date(createdAt).toLocaleDateString()}
                 </time>
             </p>
