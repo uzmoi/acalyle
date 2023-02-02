@@ -1,8 +1,8 @@
-import { nonNullable } from "emnorst";
 import { useEffect, useMemo, useState } from "react";
 import { graphql, usePaginationFragment } from "react-relay";
 import { MemoColumns } from "~/entities/memo/ui/memo-columns";
 import { MemoList as MemoList_ } from "~/entities/memo/ui/memo-list";
+import { getNodes } from "~/shared/base/connection";
 import { Select } from "~/shared/control";
 import { MemoListFragment$key } from "./__generated__/MemoListFragment.graphql";
 import { MemoListPaginationQuery } from "./__generated__/MemoListPaginationQuery.graphql";
@@ -42,14 +42,7 @@ export const MemoList: React.FC<{
         "columns",
     );
 
-    const memos = useMemo(
-        () =>
-            data.memos.edges
-                ?.filter(nonNullable)
-                .map(edge => edge.node)
-                .filter(nonNullable) ?? [],
-        [data.memos.edges],
-    );
+    const memos = useMemo(() => getNodes(data.memos.edges), [data.memos.edges]);
 
     return (
         <div>

@@ -1,9 +1,9 @@
 import { css } from "@linaria/core";
-import { nonNullable } from "emnorst";
 import { useMemo } from "react";
 import { graphql, usePaginationFragment } from "react-relay";
 import { BookOverview } from "~/entities/book";
 import { List } from "~/shared/base";
+import { getNodes } from "~/shared/base/connection";
 import { Button } from "~/shared/control";
 import { BookListFragment$key } from "./__generated__/BookListFragment.graphql";
 import { BookListPaginationQuery } from "./__generated__/BookListPaginationQuery.graphql";
@@ -33,14 +33,7 @@ export const BookList: React.FC<{
         }
     `, queryRef);
 
-    const books = useMemo(
-        () =>
-            data.books.edges
-                ?.filter(nonNullable)
-                .map(edge => edge.node)
-                .filter(nonNullable) ?? [],
-        [data.books.edges],
-    );
+    const books = useMemo(() => getNodes(data.books.edges), [data.books.edges]);
 
     return (
         <div>
