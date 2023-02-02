@@ -1,11 +1,11 @@
 import { css } from "@linaria/core";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { graphql, usePaginationFragment } from "react-relay";
 import { BookOverview } from "~/entities/book";
 import { link } from "~/pages/link";
 import { List } from "~/shared/base";
 import { getNodes } from "~/shared/base/connection";
-import { Button } from "~/shared/control";
+import { Intersection } from "~/shared/base/intersection";
 import { ControlPartOutlineStyle } from "~/shared/control/base";
 import { Link } from "~/shared/router/react";
 import { BookListFragment$key } from "./__generated__/BookListFragment.graphql";
@@ -35,6 +35,16 @@ export const BookList: React.FC<{
             }
         }
     `, queryRef);
+
+    const shouldLoadNext = hasNext && !isLoadingNext;
+    const onIntersection = useCallback(
+        (entry: IntersectionObserverEntry) => {
+            if (entry.isIntersecting && shouldLoadNext) {
+                loadNext(16);
+            }
+        },
+        [shouldLoadNext, loadNext],
+    );
 
     const books = useMemo(() => getNodes(data.books.edges), [data.books.edges]);
 
@@ -68,12 +78,19 @@ export const BookList: React.FC<{
                     </List.Item>
                 ))}
             </List>
-            <Button
-                onClick={() => loadNext(16)}
-                disabled={!hasNext || isLoadingNext}
-            >
-                load more books
-            </Button>
+            <Intersection
+                onIntersection={onIntersection}
+                rootMargin="25% 0px"
+            />
+            {isLoadingNext && (
+                <div
+                    className={css`
+                        margin-top: 1em;
+                    `}
+                >
+                    Loading...
+                </div>
+            )}
         </div>
     );
 };
