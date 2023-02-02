@@ -2,9 +2,12 @@ import { css } from "@linaria/core";
 import { useMemo } from "react";
 import { graphql, usePaginationFragment } from "react-relay";
 import { BookOverview } from "~/entities/book";
+import { link } from "~/pages/link";
 import { List } from "~/shared/base";
 import { getNodes } from "~/shared/base/connection";
 import { Button } from "~/shared/control";
+import { ControlPartOutlineStyle } from "~/shared/control/base";
+import { Link } from "~/shared/router/react";
 import { BookListFragment$key } from "./__generated__/BookListFragment.graphql";
 import { BookListPaginationQuery } from "./__generated__/BookListPaginationQuery.graphql";
 
@@ -37,9 +40,26 @@ export const BookList: React.FC<{
 
     return (
         <div>
-            <List className={BookListStyle}>
+            <div
+                className={css`
+                    padding-bottom: 0.5em;
+                `}
+            >
+                <Link
+                    to={link("books/new")}
+                    className={ControlPartOutlineStyle}
+                >
+                    New
+                </Link>
+            </div>
+            <List>
                 {books.map(book => (
-                    <List.Item key={book.id}>
+                    <List.Item
+                        key={book.id}
+                        className={css`
+                            margin-top: 1em;
+                        `}
+                    >
                         <BookOverview
                             thumbnail={book.thumbnail}
                             title={book.title}
@@ -57,14 +77,3 @@ export const BookList: React.FC<{
         </div>
     );
 };
-
-const BookListStyle = css`
-    > li {
-        margin: 1em;
-        a {
-            display: inline-block;
-            width: 100%;
-            cursor: pointer;
-        }
-    }
-`;
