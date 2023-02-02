@@ -1,8 +1,8 @@
 import { css } from "@linaria/core";
 import { TagList } from "~/entities/tag";
 import { vars } from "~/entities/theme";
+import { Link } from "~/features/location";
 import { link } from "~/pages/link";
-import { Link } from "~/shared/router/react";
 import { contentsHeight } from "../lib/contents";
 
 export const MemoOverview: React.FC<{

@@ -1,6 +1,6 @@
 import { css } from "@linaria/core";
 import { graphql, useLazyLoadQuery } from "react-relay";
-import { Link } from "~/shared/router/react";
+import { Link } from "~/features/location";
 import { Memo } from "~/widgets/book/Memo";
 import { link } from "../link";
 import { memoQuery } from "./__generated__/memoQuery.graphql";

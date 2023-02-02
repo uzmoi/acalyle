@@ -2,12 +2,12 @@ import { css } from "@linaria/core";
 import { useCallback, useMemo } from "react";
 import { graphql, usePaginationFragment } from "react-relay";
 import { BookOverview } from "~/entities/book";
+import { Link } from "~/features/location";
 import { link } from "~/pages/link";
 import { List, Spinner } from "~/shared/base";
 import { getNodes } from "~/shared/base/connection";
 import { Intersection } from "~/shared/base/intersection";
 import { ControlPartOutlineStyle } from "~/shared/control/base";
-import { Link } from "~/shared/router/react";
 import { BookListFragment$key } from "./__generated__/BookListFragment.graphql";
 import { BookListPaginationQuery } from "./__generated__/BookListPaginationQuery.graphql";
 

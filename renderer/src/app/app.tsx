@@ -1,9 +1,9 @@
 import { css } from "@linaria/core";
 import { Suspense, useEffect, useLayoutEffect, useRef } from "react";
 import { useThemeStyle, vars } from "~/entities/theme";
+import { useLocation, useNavigate } from "~/features/location";
 import { routes } from "~/pages/routes";
 import { match } from "~/shared/router";
-import { useLocation, useNavigate } from "~/shared/router/react";
 import { Header } from "~/widgets/layouts/header";
 
 export const App: React.FC = () => {

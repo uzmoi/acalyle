@@ -1,7 +1,8 @@
 import { css } from "@linaria/core";
 import { graphql, useMutation } from "react-relay";
+import { useNavigate } from "~/features/location";
+import { link } from "~/pages/link";
 import { Button, Form } from "~/shared/control";
-import { useNavigate } from "~/shared/router/react";
 import { deleteMutation } from "./__generated__/deleteMutation.graphql";
 
 export const BookDeleteForm: React.FC<{
@@ -19,7 +20,7 @@ export const BookDeleteForm: React.FC<{
         commitDelete({
             variables: { id: bookId },
             onCompleted() {
-                navigate("books");
+                navigate(link("books"));
             },
         });
     };

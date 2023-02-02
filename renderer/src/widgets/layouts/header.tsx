@@ -1,7 +1,7 @@
 import { css } from "@linaria/core";
 import { vars } from "~/entities/theme";
+import { Link } from "~/features/location";
 import { link } from "~/pages/link";
-import { Link } from "~/shared/router/react";
 
 export const Header: React.FC = () => {
     return (

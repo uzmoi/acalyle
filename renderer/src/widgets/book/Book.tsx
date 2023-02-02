@@ -1,10 +1,10 @@
 import { css } from "@linaria/core";
 import { useState } from "react";
 import { graphql, useFragment, useMutation } from "react-relay";
+import { Link } from "~/features/location";
 import { link } from "~/pages/link";
 import { List } from "~/shared/base";
 import { Button, TextInput } from "~/shared/control";
-import { Link } from "~/shared/router/react";
 import { MemoList } from "./MemoList";
 import { BookMemoCreateMutation } from "./__generated__/BookMemoCreateMutation.graphql";
 import { BookMemosFragment$key } from "./__generated__/BookMemosFragment.graphql";

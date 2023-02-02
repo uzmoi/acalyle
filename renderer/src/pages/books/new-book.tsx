@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { graphql, useMutation } from "react-relay";
 import { BookTitleFormBlock } from "~/features/book-form";
+import { useNavigate } from "~/features/location";
 import { Button, Form } from "~/shared/control";
-import { useNavigate } from "~/shared/router/react";
+import { link } from "../link";
 import { newBookCreateMutation } from "./__generated__/newBookCreateMutation.graphql";
 
 export const NewBookPage: React.FC = () => {
@@ -21,7 +22,7 @@ export const NewBookPage: React.FC = () => {
         commitNewBook({
             variables: { title },
             onCompleted({ createBook }) {
-                navigate("books/:bookId", { bookId: createBook.id });
+                navigate(link("books/:bookId", { bookId: createBook.id }));
             },
         });
     };

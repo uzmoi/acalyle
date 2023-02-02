@@ -1,9 +1,9 @@
 import { css } from "@linaria/core";
 import { TagList } from "~/entities/tag";
 import { vars } from "~/entities/theme";
+import { Link } from "~/features/location";
 import { link } from "~/pages/link";
 import { List } from "~/shared/base";
-import { Link } from "~/shared/router/react";
 
 export const MemoList: React.FC<{
     bookId: string;
