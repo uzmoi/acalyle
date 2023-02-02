@@ -3,10 +3,8 @@ import { nonNullable } from "emnorst";
 import { useMemo } from "react";
 import { graphql, usePaginationFragment } from "react-relay";
 import { BookOverview } from "~/entities/book";
-import { link } from "~/pages/link";
 import { List } from "~/shared/base";
 import { Button } from "~/shared/control";
-import { Link } from "~/shared/router/react";
 import { BookListFragment$key } from "./__generated__/BookListFragment.graphql";
 import { BookListPaginationQuery } from "./__generated__/BookListPaginationQuery.graphql";
 
@@ -49,12 +47,11 @@ export const BookList: React.FC<{
             <List className={BookListStyle}>
                 {books.map(book => (
                     <List.Item key={book.id}>
-                        <Link to={link("books/:bookId", { bookId: book.id })}>
-                            <BookOverview
-                                thumbnail={book.thumbnail}
-                                title={book.title}
-                            />
-                        </Link>
+                        <BookOverview
+                            thumbnail={book.thumbnail}
+                            title={book.title}
+                            bookId={book.id}
+                        />
                     </List.Item>
                 ))}
             </List>

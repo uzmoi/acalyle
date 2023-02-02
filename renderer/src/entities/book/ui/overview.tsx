@@ -1,15 +1,20 @@
 import { css } from "@linaria/core";
 import { vars } from "~/entities/theme";
+import { link } from "~/pages/link";
+import { Link } from "~/shared/router/react";
 import { BookThumbnail } from "./thumbnail";
 
 export const BookOverview: React.FC<{
+    bookId: string;
     thumbnail: string;
     title: string;
-}> = ({ thumbnail, title }) => {
+}> = ({ bookId, thumbnail, title }) => {
     return (
         <div className={BookOverviewStyle}>
             <BookThumbnail src={thumbnail} />
-            <p className={BookOverviewTitleStyle}>{title}</p>
+            <p className={BookOverviewTitleStyle}>
+                <Link to={link("books/:bookId", { bookId })}>{title}</Link>
+            </p>
         </div>
     );
 };
