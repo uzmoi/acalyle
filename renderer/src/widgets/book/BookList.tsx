@@ -3,7 +3,7 @@ import { useCallback, useMemo } from "react";
 import { graphql, usePaginationFragment } from "react-relay";
 import { BookOverview } from "~/entities/book";
 import { link } from "~/pages/link";
-import { List } from "~/shared/base";
+import { List, Spinner } from "~/shared/base";
 import { getNodes } from "~/shared/base/connection";
 import { Intersection } from "~/shared/base/intersection";
 import { ControlPartOutlineStyle } from "~/shared/control/base";
@@ -85,10 +85,22 @@ export const BookList: React.FC<{
             {isLoadingNext && (
                 <div
                     className={css`
+                        display: inline-block;
                         margin-top: 1em;
+                        margin-left: 50%;
+                        transform: translateX(-50%);
                     `}
                 >
-                    Loading...
+                    <span
+                        className={css`
+                            height: 1em;
+                            margin-right: 4em;
+                            vertical-align: top;
+                        `}
+                    >
+                        Loading...
+                    </span>
+                    <Spinner size={1.5} />
                 </div>
             )}
         </div>
