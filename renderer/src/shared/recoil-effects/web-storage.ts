@@ -1,19 +1,18 @@
 import { AtomEffect } from "recoil";
 
-export const localStorageEffect =
-    (key: string, defaultValue = ""): AtomEffect<string> =>
-    ({ setSelf, onSet }) => {
-        setSelf(localStorage.getItem(key) ?? defaultValue);
+const webStorageEffect =
+    (storage: Storage) =>
+    (): AtomEffect<string> =>
+    ({ node, setSelf, onSet }) => {
+        const storageKey = `recoil:${node.key}`;
+        const initValue = storage.getItem(storageKey);
+        if (initValue != null) {
+            setSelf(initValue);
+        }
         onSet(value => {
-            localStorage.setItem(key, value);
+            storage.setItem(storageKey, value);
         });
     };
 
-export const sessionStorageEffect =
-    (key: string, defaultValue = ""): AtomEffect<string> =>
-    ({ setSelf, onSet }) => {
-        setSelf(sessionStorage.getItem(key) ?? defaultValue);
-        onSet(value => {
-            sessionStorage.setItem(key, value);
-        });
-    };
+export const localStorageEffect = webStorageEffect(localStorage);
+export const sessionStorageEffect = webStorageEffect(sessionStorage);

@@ -1,12 +1,10 @@
 import { atom, useRecoilCallback, useRecoilValue } from "recoil";
 import { consoleEffect, sessionStorageEffect } from "~/shared/recoil-effects";
 
-const Location = atom<string>({
+const Location = atom({
     key: "Location",
-    effects: [
-        sessionStorageEffect("location", "books"),
-        consoleEffect("location: %s"),
-    ],
+    default: "books",
+    effects: [sessionStorageEffect(), consoleEffect("location: %s")],
 });
 
 export const useLocation = () => useRecoilValue(Location);
