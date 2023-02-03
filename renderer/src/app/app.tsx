@@ -1,21 +1,13 @@
 import { css } from "@linaria/core";
-import { Suspense, useEffect, useLayoutEffect, useRef } from "react";
+import { Suspense, useLayoutEffect, useRef } from "react";
 import { useThemeStyle, vars } from "~/entities/theme";
-import { useLocation, useNavigate } from "~/features/location";
+import { useLocation } from "~/features/location";
 import { routes } from "~/pages/routes";
 import { match } from "~/shared/router";
 import { Header } from "~/widgets/layouts/header";
 
 export const App: React.FC = () => {
     const location = useLocation();
-
-    const navigate = useNavigate();
-    const isEmptyLocation = location === "";
-    useEffect(() => {
-        if (isEmptyLocation) {
-            navigate("books");
-        }
-    }, [isEmptyLocation, navigate]);
 
     const rootEl = useRef<HTMLDivElement>(null);
     useLayoutEffect(() => {
