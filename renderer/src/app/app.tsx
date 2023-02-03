@@ -1,25 +1,35 @@
 import { css } from "@linaria/core";
-import { Suspense, useLayoutEffect, useRef } from "react";
+import { Suspense, useCallback, useLayoutEffect, useRef } from "react";
+import { useSetRecoilState } from "recoil";
 import { useThemeStyle, vars } from "~/entities/theme";
 import { useLocation } from "~/features/location";
 import { routes } from "~/pages/routes";
 import { match } from "~/shared/router";
 import { Header } from "~/widgets/layouts/header";
+import { RootEl } from "./root-el";
 
 export const App: React.FC = () => {
-    const location = useLocation();
+    const { location, scroll } = useLocation();
+    const setRootEl = useSetRecoilState(RootEl);
 
-    const rootEl = useRef<HTMLDivElement>(null);
+    const rootEl = useRef<HTMLDivElement | null>(null);
+    const rootRef = useCallback<React.RefCallback<HTMLDivElement>>(
+        el => {
+            rootEl.current = el;
+            setRootEl(el);
+        },
+        [setRootEl],
+    );
     useLayoutEffect(() => {
-        rootEl.current?.scrollTo(0, 0);
+        rootEl.current?.scrollTo(0, scroll);
         document.body.focus();
         document.title = `${location} | Acalyle`;
-    }, [location]);
+    }, [location, scroll, setRootEl]);
 
     const themeStyle = useThemeStyle();
 
     return (
-        <div ref={rootEl} className={RootStyle} style={themeStyle}>
+        <div ref={rootRef} className={RootStyle} style={themeStyle}>
             <Header />
             <Suspense fallback="loading">
                 {match(routes, location as never)}
