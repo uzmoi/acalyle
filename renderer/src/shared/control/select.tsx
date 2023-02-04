@@ -1,4 +1,5 @@
 import { css, cx } from "@linaria/core";
+import { vars } from "~/entities/theme";
 import { ControlPartOutlineStyle, ControlPartResetStyle } from "./base";
 
 export type SelectVariant = keyof typeof variantStyles;
@@ -78,5 +79,5 @@ if (import.meta.env.DEV) {
 }
 
 const OptionStyle = css`
-    /* - */
+    background-color: ${vars.color.bg3};
 `;
