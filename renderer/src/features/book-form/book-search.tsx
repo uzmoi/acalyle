@@ -6,30 +6,49 @@ type BookSortOrder = "Created" | "Title";
 type SortOrder = "asc" | "desc";
 
 export const BookSearchBar: React.FC<{
-    refetch: (vars: { orderBy: BookSortOrder; order: SortOrder }) => void;
+    refetch: (vars: {
+        query: string;
+        orderBy: BookSortOrder;
+        order: SortOrder;
+    }) => void;
     className?: string;
 }> = ({ refetch, className }) => {
     const [, startTransition] = useTransition();
+    const [query, setQuery] = useState("");
     const [bookSortOrder, setBookSortOrder] =
         useState<BookSortOrder>("Created");
     const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
+    const changeQuery = useCallback(
+        (value: string) => {
+            setQuery(value);
+            // TODO throttle
+            startTransition(() => {
+                refetch({
+                    query: value,
+                    orderBy: bookSortOrder,
+                    order: sortOrder,
+                });
+            });
+        },
+        [bookSortOrder, refetch, sortOrder],
+    );
     const changeBookSortOrder = useCallback(
         (value: BookSortOrder) => {
             startTransition(() => {
-                refetch({ orderBy: value, order: sortOrder });
+                refetch({ query, orderBy: value, order: sortOrder });
                 setBookSortOrder(value);
             });
         },
-        [refetch, sortOrder],
+        [query, refetch, sortOrder],
     );
     const changeSortOrder = useCallback(
         (value: SortOrder) => {
             startTransition(() => {
-                refetch({ orderBy: bookSortOrder, order: value });
+                refetch({ query, orderBy: bookSortOrder, order: value });
                 setSortOrder(value);
             });
         },
-        [bookSortOrder, refetch],
+        [bookSortOrder, query, refetch],
     );
 
     return (
@@ -41,6 +60,16 @@ export const BookSearchBar: React.FC<{
                 className,
             )}
         >
+            <TextInput
+                type="search"
+                className={css`
+                    flex: 1 1 0;
+                    width: 1em;
+                `}
+                placeholder="Find a book"
+                value={query}
+                onValueChange={changeQuery}
+            />
             <Select
                 defaultValue="Created"
                 onValueChange={changeBookSortOrder}

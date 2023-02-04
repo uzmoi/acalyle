@@ -28,6 +28,7 @@ export const BookList: React.FC<{
             books(
                 first: $count
                 after: $cursor
+                query: $query
                 orderBy: $orderBy
                 order: $order
             ) @connection(key: "BookListFragment_books") {

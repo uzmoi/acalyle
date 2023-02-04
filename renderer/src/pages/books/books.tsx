@@ -9,6 +9,7 @@ export const BookListPage: React.FC = () => {
             query booksQuery(
                 $count: Int!
                 $cursor: String
+                $query: String
                 $orderBy: BookSortOrder
                 $order: SortOrder
             ) {

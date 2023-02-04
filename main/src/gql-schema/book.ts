@@ -172,6 +172,7 @@ export const types = [
         t.connectionField("books", {
             type: "Book",
             additionalArgs: {
+                query: arg({ type: "String" }),
                 order: arg({ type: "SortOrder" }),
                 orderBy: arg({ type: "BookSortOrder" }),
             },
@@ -189,6 +190,11 @@ export const types = [
                     skip: p.cursor != null ? 1 : 0,
                     take: p.take,
                     orderBy: { [orderBy]: order },
+                    where: {
+                        title: {
+                            contains: args.query ?? undefined,
+                        },
+                    },
                 });
             },
             totalCount(_, __, { prisma }) {
