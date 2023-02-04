@@ -1,7 +1,8 @@
-import { css } from "@linaria/core";
+import { css, cx } from "@linaria/core";
 import { useCallback, useMemo } from "react";
 import { graphql, usePaginationFragment } from "react-relay";
 import { BookOverview } from "~/entities/book";
+import { BookSearchBar } from "~/features/book-form";
 import { Link } from "~/features/location";
 import { link } from "~/pages/link";
 import { List, Spinner } from "~/shared/base";
@@ -20,11 +21,16 @@ export const BookList: React.FC<{
         hasNext,
         isLoadingNext,
         loadNext,
+        refetch,
     } = usePaginationFragment<BookListPaginationQuery, BookListFragment$key>(graphql`
         fragment BookListFragment on Query
         @refetchable(queryName: "BookListPaginationQuery") {
-            books(first: $count, after: $cursor)
-            @connection(key: "BookListFragment_books") {
+            books(
+                first: $count
+                after: $cursor
+                orderBy: $orderBy
+                order: $order
+            ) @connection(key: "BookListFragment_books") {
                 edges {
                     node {
                         id
@@ -52,12 +58,24 @@ export const BookList: React.FC<{
         <div>
             <div
                 className={css`
+                    display: flex;
                     padding-bottom: 0.5em;
                 `}
             >
+                <BookSearchBar
+                    refetch={refetch}
+                    className={css`
+                        flex: 1 0;
+                    `}
+                />
                 <Link
                     to={link("books/new")}
-                    className={ControlPartOutlineStyle}
+                    className={cx(
+                        ControlPartOutlineStyle,
+                        css`
+                            margin-left: 1em;
+                        `,
+                    )}
                 >
                     New
                 </Link>

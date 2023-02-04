@@ -2,6 +2,8 @@ import { randomUUID } from "crypto";
 import { mkdir } from "fs/promises";
 import { pack, unpack } from "msgpackr";
 import {
+    arg,
+    enumType,
     list,
     mutationField,
     nonNull,
@@ -158,18 +160,35 @@ export const types = [
             });
         },
     }),
+    enumType({
+        name: "SortOrder",
+        members: ["asc", "desc"],
+    }),
+    enumType({
+        name: "BookSortOrder",
+        members: ["Created", "Title"],
+    }),
     queryField(t => {
         t.connectionField("books", {
             type: "Book",
+            additionalArgs: {
+                order: arg({ type: "SortOrder" }),
+                orderBy: arg({ type: "BookSortOrder" }),
+            },
             // FIXME ここがnullableな必要ある？
             cursorFromNode: node => node?.id ?? "",
             nodes(_, args, { prisma }) {
                 const p = pagination(args);
+                const order: "asc" | "desc" = args.order ?? "desc";
+                const orderBy = {
+                    Title: "title",
+                    Created: "createdAt",
+                }[args.orderBy ?? "Created"];
                 return prisma.book.findMany({
                     cursor: p.cursor != null ? { id: p.cursor } : undefined,
                     skip: p.cursor != null ? 1 : 0,
                     take: p.take,
-                    orderBy: { createdAt: "desc" },
+                    orderBy: { [orderBy]: order },
                 });
             },
             totalCount(_, __, { prisma }) {

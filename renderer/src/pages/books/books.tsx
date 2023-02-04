@@ -6,7 +6,12 @@ import { booksQuery } from "./__generated__/booksQuery.graphql";
 export const BookListPage: React.FC = () => {
     const queryRef = useLazyLoadQuery<booksQuery>(
         graphql`
-            query booksQuery($count: Int!, $cursor: String) {
+            query booksQuery(
+                $count: Int!
+                $cursor: String
+                $orderBy: BookSortOrder
+                $order: SortOrder
+            ) {
                 ...BookListFragment
             }
         `,
