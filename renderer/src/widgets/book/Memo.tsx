@@ -1,7 +1,8 @@
 import { css } from "@linaria/core";
 import { graphql, useFragment } from "react-relay";
-import { MemoContents, MemoInfo } from "~/entities/memo";
+import { MemoInfo } from "~/entities/memo";
 import { TagList } from "~/entities/tag";
+import { Markdown } from "~/features/markdown";
 import { MemoFragment$key } from "./__generated__/MemoFragment.graphql";
 
 export const Memo: React.FC<{
@@ -27,7 +28,7 @@ export const Memo: React.FC<{
                 padding: 1em;
             `}
         >
-            <MemoContents contents={contents} />
+            <Markdown contents={contents} />
             <div
                 className={css`
                     font-size: 0.8em;
