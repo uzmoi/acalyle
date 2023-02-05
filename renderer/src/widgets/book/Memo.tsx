@@ -6,36 +6,36 @@ import { MemoFragment$key } from "./__generated__/MemoFragment.graphql";
 
 export const Memo: React.FC<{
     bookId: string;
-    fragmentRef: MemoFragment$key;
-}> = ({ bookId, fragmentRef }) => {
-    // prettier-ignore
-    const memo = useFragment<MemoFragment$key>(graphql`
-        fragment MemoFragment on Memo {
-            contents
-            tags
-            createdAt
-            updatedAt
-        }
-    `, fragmentRef);
+    memo: MemoFragment$key;
+}> = ({ bookId, memo }) => {
+    const { contents, tags, createdAt, updatedAt } =
+        useFragment<MemoFragment$key>(
+            graphql`
+                fragment MemoFragment on Memo {
+                    contents
+                    tags
+                    createdAt
+                    updatedAt
+                }
+            `,
+            memo,
+        );
 
     return (
-        <div className={MemoStyle}>
-            <MemoContents contents={memo.contents} />
-            <div className={MemoFooterStyle}>
-                <MemoInfo
-                    createdAt={memo.createdAt}
-                    updatedAt={memo.updatedAt}
-                />
-                <TagList tags={memo.tags} bookId={bookId} />
+        <div
+            className={css`
+                padding: 1em;
+            `}
+        >
+            <MemoContents contents={contents} />
+            <div
+                className={css`
+                    font-size: 0.8em;
+                `}
+            >
+                <MemoInfo createdAt={createdAt} updatedAt={updatedAt} />
+                <TagList tags={tags} bookId={bookId} />
             </div>
         </div>
     );
 };
-
-const MemoStyle = css`
-    padding: 1em;
-`;
-
-const MemoFooterStyle = css`
-    font-size: 0.8em;
-`;

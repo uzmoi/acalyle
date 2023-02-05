@@ -20,8 +20,8 @@ export const MemoPage: React.FC<{
         }
     `, { bookId, memoId });
 
-    if (book == null) {
-        return <div className={MemoPageStyle}>book not found.</div>;
+    if (book?.memo == null) {
+        return <div className={MemoPageStyle}>not found.</div>;
     }
 
     return (
@@ -29,7 +29,7 @@ export const MemoPage: React.FC<{
             <Link to={link("books/:bookId", { bookId })}>
                 return to book
             </Link>
-            <Memo bookId={bookId} fragmentRef={book.memo} />
+            <Memo bookId={bookId} memo={book.memo} />
         </div>
     );
 };
