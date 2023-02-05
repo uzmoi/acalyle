@@ -1,19 +1,30 @@
 import { css } from "@linaria/core";
+import { graphql, useFragment } from "react-relay";
 import { vars } from "~/entities/theme";
 import { Link } from "~/features/location";
 import { link } from "~/pages/link";
+import { overview$key } from "./__generated__/overview.graphql";
 import { BookThumbnail } from "./thumbnail";
 
 export const BookOverview: React.FC<{
-    bookId: string;
-    thumbnail: string;
-    title: string;
-}> = ({ bookId, thumbnail, title }) => {
+    book: overview$key;
+}> = ({ book }) => {
+    const { id, title, thumbnail } = useFragment<overview$key>(
+        graphql`
+            fragment overview on Book {
+                id
+                title
+                thumbnail
+            }
+        `,
+        book,
+    );
+
     return (
         <div className={BookOverviewStyle}>
             <BookThumbnail src={thumbnail} />
             <p className={BookOverviewTitleStyle}>
-                <Link to={link("books/:bookId", { bookId })}>{title}</Link>
+                <Link to={link("books/:bookId", { bookId: id })}>{title}</Link>
             </p>
         </div>
     );

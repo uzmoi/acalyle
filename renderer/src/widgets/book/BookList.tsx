@@ -36,8 +36,7 @@ export const BookList: React.FC<{
                 edges {
                     node {
                         id
-                        title
-                        thumbnail
+                        ...overview
                     }
                 }
             }
@@ -90,11 +89,7 @@ export const BookList: React.FC<{
                             margin-top: 1em;
                         `}
                     >
-                        <BookOverview
-                            thumbnail={book.thumbnail}
-                            title={book.title}
-                            bookId={book.id}
-                        />
+                        <BookOverview book={book} />
                     </List.Item>
                 ))}
             </List>
