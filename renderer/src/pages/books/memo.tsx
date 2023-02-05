@@ -21,19 +21,26 @@ export const MemoPage: React.FC<{
     `, { bookId, memoId });
 
     if (book?.memo == null) {
-        return <div className={MemoPageStyle}>not found.</div>;
+        return <div>not found.</div>;
     }
 
     return (
-        <div className={MemoPageStyle}>
-            <Link to={link("books/:bookId", { bookId })}>
-                return to book
-            </Link>
+        <main
+            className={css`
+                padding-inline: 2em;
+                padding-bottom: 2em;
+            `}
+        >
+            <div
+                className={css`
+                    padding-block: 1em;
+                `}
+            >
+                <Link to={link("books/:bookId", { bookId })}>
+                    return to book
+                </Link>
+            </div>
             <Memo bookId={bookId} memo={book.memo} />
-        </div>
+        </main>
     );
 };
-
-const MemoPageStyle = css`
-    /* - */
-`;

@@ -1,6 +1,6 @@
-import { css, cx } from "@linaria/core";
+import { css } from "@linaria/core";
 import { useCallback, useState, useTransition } from "react";
-import { ControlGroup, Select, TextInput } from "~/shared/control";
+import { ControlGroup, Form, Select, TextInput } from "~/shared/control";
 
 type BookSortOrder = "Created" | "Title";
 type SortOrder = "asc" | "desc";
@@ -52,41 +52,42 @@ export const BookSearchBar: React.FC<{
     );
 
     return (
-        <ControlGroup
-            className={cx(
-                css`
-                    display: flex;
-                `,
-                className,
-            )}
-        >
-            <TextInput
-                type="search"
+        <Form className={className}>
+            <ControlGroup
                 className={css`
-                    flex: 1 1 0;
-                    width: 1em;
+                    display: flex;
                 `}
-                placeholder="Find a book"
-                value={query}
-                onValueChange={changeQuery}
-            />
-            <Select
-                defaultValue="Created"
-                onValueChange={changeBookSortOrder}
-                aria-label="book sort order"
             >
-                <Select.Option>Created</Select.Option>
-                <Select.Option>Title</Select.Option>
-                <Select.Option value="LastUpdated">Last updated</Select.Option>
-            </Select>
-            <Select
-                defaultValue="desc"
-                onValueChange={changeSortOrder}
-                aria-label="sort order"
-            >
-                <Select.Option value="asc">昇順</Select.Option>
-                <Select.Option value="desc">降順</Select.Option>
-            </Select>
-        </ControlGroup>
+                <TextInput
+                    type="search"
+                    className={css`
+                        flex: 1 1 0;
+                        width: 1em;
+                    `}
+                    placeholder="Find a book"
+                    value={query}
+                    onValueChange={changeQuery}
+                />
+                <Select
+                    defaultValue="Created"
+                    onValueChange={changeBookSortOrder}
+                    aria-label="book sort order"
+                >
+                    <Select.Option>Created</Select.Option>
+                    <Select.Option>Title</Select.Option>
+                    <Select.Option value="LastUpdated">
+                        Last updated
+                    </Select.Option>
+                </Select>
+                <Select
+                    defaultValue="desc"
+                    onValueChange={changeSortOrder}
+                    aria-label="sort order"
+                >
+                    <Select.Option value="asc">昇順</Select.Option>
+                    <Select.Option value="desc">降順</Select.Option>
+                </Select>
+            </ControlGroup>
+        </Form>
     );
 };

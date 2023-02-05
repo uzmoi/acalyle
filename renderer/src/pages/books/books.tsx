@@ -20,12 +20,12 @@ export const BookListPage: React.FC = () => {
     );
 
     return (
-        <div
+        <main
             className={css`
                 padding: 2em;
             `}
         >
             <BookList queryRef={queryRef} />
-        </div>
+        </main>
     );
 };
