@@ -1,6 +1,3 @@
-import { atom } from "recoil";
+import { createRef } from "react";
 
-export const RootEl = atom<HTMLDivElement | null>({
-    key: "RootEl",
-    default: null,
-});
+export const rootEl = createRef<HTMLDivElement>();

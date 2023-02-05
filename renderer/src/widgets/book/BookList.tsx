@@ -1,6 +1,7 @@
 import { css, cx } from "@linaria/core";
 import { useCallback, useMemo } from "react";
 import { graphql, usePaginationFragment } from "react-relay";
+import { rootEl } from "~/app/root-el";
 import { BookOverview } from "~/entities/book";
 import { BookSearchBar } from "~/features/book-form";
 import { Link } from "~/features/location";
@@ -99,6 +100,7 @@ export const BookList: React.FC<{
             </List>
             <Intersection
                 onIntersection={onIntersection}
+                root={rootEl.current}
                 rootMargin="25% 0px"
             />
             {isLoadingNext && (

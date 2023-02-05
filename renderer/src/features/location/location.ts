@@ -4,7 +4,7 @@ import {
     useRecoilTransaction_UNSTABLE,
     useRecoilValue,
 } from "recoil";
-import { RootEl } from "~/app/root-el";
+import { rootEl } from "~/app/root-el";
 import { consoleEffect, sessionStorageEffect } from "~/shared/recoil-effects";
 
 const Location = atom({
@@ -39,8 +39,7 @@ export const useNavigate = () => {
         ({ get, set }) =>
             (to: string) => {
                 // save LocationState
-                const rootEl = get(RootEl);
-                const scroll = rootEl?.scrollTop ?? 0;
+                const scroll = rootEl.current?.scrollTop ?? 0;
                 const location = get(Location);
                 set(LocationState(location), { scroll });
 
