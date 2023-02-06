@@ -1,16 +1,26 @@
 import { css } from "@linaria/core";
 import { useCallback, useState, useTransition } from "react";
-import { ControlGroup, Form, Select, TextInput } from "~/shared/control";
+import { RefetchOptions } from "react-relay";
+import {
+    Button,
+    ControlGroup,
+    Form,
+    Select,
+    TextInput,
+} from "~/shared/control";
 
 type BookSortOrder = "Created" | "Title";
 type SortOrder = "asc" | "desc";
 
 export const BookSearchBar: React.FC<{
-    refetch: (vars: {
-        query: string;
-        orderBy: BookSortOrder;
-        order: SortOrder;
-    }) => void;
+    refetch: (
+        vars: {
+            query: string;
+            orderBy: BookSortOrder;
+            order: SortOrder;
+        },
+        options?: RefetchOptions,
+    ) => void;
     className?: string;
 }> = ({ refetch, className }) => {
     const [, startTransition] = useTransition();
@@ -50,6 +60,14 @@ export const BookSearchBar: React.FC<{
         },
         [bookSortOrder, query, refetch],
     );
+    const reload = useCallback(() => {
+        startTransition(() => {
+            refetch(
+                { query, orderBy: bookSortOrder, order: sortOrder },
+                { fetchPolicy: "network-only" },
+            );
+        });
+    }, [bookSortOrder, query, refetch, sortOrder]);
 
     return (
         <Form className={className}>
@@ -87,6 +105,7 @@ export const BookSearchBar: React.FC<{
                     <Select.Option value="asc">昇順</Select.Option>
                     <Select.Option value="desc">降順</Select.Option>
                 </Select>
+                <Button onClick={reload}>reload</Button>
             </ControlGroup>
         </Form>
     );
