@@ -23,7 +23,7 @@ model Memo {
     tags      MemoTag[]
     createdAt DateTime
     updatedAt DateTime
-    Book      Book      @relation(fields: [bookId], references: [id])
+    Book      Book      @relation(fields: [bookId], references: [id], onDelete: Cascade)
     bookId    String
 }
 
@@ -31,18 +31,18 @@ model Tag {
     type     String
     name     String
     memoTags MemoTag[]
-    Book     Book      @relation(fields: [bookId], references: [id])
+    Book     Book      @relation(fields: [bookId], references: [id], onDelete: Cascade)
     bookId   String
 
     @@id([bookId, name])
 }
 
 model MemoTag {
-    Tag     Tag             @relation(fields: [bookId, tagName], references: [bookId, name])
+    Tag     Tag             @relation(fields: [bookId, tagName], references: [bookId, name], onUpdate: Cascade)
     bookId  String
     tagName String
     options MemoTagOption[]
-    Memo    Memo            @relation(fields: [memoId], references: [id])
+    Memo    Memo            @relation(fields: [memoId], references: [id], onDelete: Cascade)
     memoId  String
 
     @@id([memoId, tagName])
@@ -51,7 +51,7 @@ model MemoTag {
 model MemoTagOption {
     key     String
     value   String
-    MemoTag MemoTag @relation(fields: [memoId, tagName], references: [memoId, tagName])
+    MemoTag MemoTag @relation(fields: [memoId, tagName], references: [memoId, tagName], onUpdate: Cascade, onDelete: Cascade)
     memoId  String
     tagName String
 
