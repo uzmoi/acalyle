@@ -1,14 +1,14 @@
 import type { Normalize } from "emnorst";
-import { type MatchParams, type Part, parsePattern } from "./pattern";
+import { type MatchParams, type PatternPart, parsePattern } from "./pattern";
 import { Route } from "./route";
 import type { Routing } from "./types";
 import type { RemoveTail } from "./util";
 
 const matchPart = <T extends string>(
-    part: Part,
+    part: PatternPart,
     path: readonly string[],
     matchParams: MatchParams<T>,
-) => {
+): { path: readonly string[]; matchParams: MatchParams<T> } | undefined => {
     if (typeof part === "string") {
         if (part === "" || path[0] === part) {
             return {

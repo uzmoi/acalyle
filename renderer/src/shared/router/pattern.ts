@@ -3,9 +3,9 @@ import type { RemoveTail } from "./util";
 
 export type Mark = "+" | "*" | "?";
 
-export type Part = string | { key: string; mark: Mark | "" };
+export type PatternPart = string | { key: string; mark: Mark | "" };
 
-const parsePatternPart = (part: string): Part => {
+const parsePatternPart = (part: string): PatternPart => {
     const match = /^:(\w*)([+*?]?)/.exec(part);
     return match == null
         ? part
@@ -13,7 +13,7 @@ const parsePatternPart = (part: string): Part => {
 };
 
 export interface Pattern {
-    parts: Part[];
+    parts: PatternPart[];
     params: string[];
 }
 
@@ -54,7 +54,7 @@ if (import.meta.vitest) {
     const { it, describe, expect } = import.meta.vitest;
     describe("parsePattern", () => {
         it("temp", () => {
-            const parsePattern = (pattern: string): Part[] =>
+            const parsePattern = (pattern: string): PatternPart[] =>
                 pattern.split("/").filter(Boolean).map(parsePatternPart);
             expect(parsePattern("")).toEqual([]);
         });
