@@ -1,5 +1,4 @@
 import { Meta, SplitString, isArray, updateAt } from "emnorst";
-import type { Routing } from "./types";
 import type { RemoveTail } from "./util";
 
 export type Mark = "+" | "*" | "?";
@@ -147,70 +146,64 @@ export type NormalizePath<T extends string> =
 export type Link<T extends string = string> = Meta<string, `link:${T}`>;
 
 // prettier-ignore
-export interface LinkBuilder<in T extends string> {
-    <U extends WithSearchParams<T>>(patternString: U, params: MatchParams<MatchParamKeyOf<U>>): Link<U>;
-    <U extends WithSearchParams<T>>(
-        patternString: U,
-        ...args: U extends `${string}/:${string}` | `:${string}`
-            ? [params: MatchParams<MatchParamKeyOf<U>>] : []
-    ): Link<U>;
-}
+export type LinkBuilderArgs<T extends string> = (
+    T extends `${string}/:${string}` | `:${string}`
+        ? [pattern: T, params: MatchParams<MatchParamKeyOf<T>>]
+        : [pattern: T]
+);
 
-export const link = <T extends Routing<string, string>>(): LinkBuilder<
-    NormalizePath<T["path"]>
-> => {
-    return <U extends string>(
-        patternString: U,
-        args?: MatchParams<MatchParamKeyOf<U>>,
-    ) => {
-        const { parts, params } = parsePattern(patternString);
-        const getArg = (key: string) => {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            return args![key as keyof typeof args] as
-                | string[]
-                | string
-                | undefined;
-        };
-        const path = parts
-            .flatMap(part => {
-                if (typeof part === "string") {
-                    return part;
-                }
-                const arg = getArg(part.key);
-                return part.mark === "?" && arg === undefined ? [] : arg;
-            })
-            .join("/");
-        const searchParams = params
-            .flatMap(param => {
-                const arg = getArg(param);
-                if (isArray(arg)) {
-                    return `${param}=${arg.join()}`;
-                }
-                if (typeof arg === "string") {
-                    return `${param}=${arg}`;
-                }
-                return [];
-            })
-            .join("&");
-        return (path +
-            (searchParams === "" ? "" : `?${searchParams}`)) as Link<never>;
+export type LinkBuilder = <T extends string>(
+    ...args: LinkBuilderArgs<T>
+) => Link<NormalizePath<T>>;
+
+export const link: LinkBuilder = (patternString, args?) => {
+    const { parts, params } = parsePattern(patternString);
+    const getArg = (key: string) => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return args![key as keyof typeof args] as string[] | string | undefined;
     };
+
+    const path = parts
+        .flatMap(part => {
+            if (typeof part === "string") {
+                return part;
+            }
+            const arg = getArg(part.key);
+            return part.mark === "?" && arg === undefined ? [] : arg;
+        })
+        .join("/");
+
+    const searchParams = params
+        .flatMap(param => {
+            const arg = getArg(param);
+            if (isArray(arg)) {
+                return `${param}=${arg.join()}`;
+            }
+            if (typeof arg === "string") {
+                return `${param}=${arg}`;
+            }
+            return [];
+        })
+        .join("&");
+
+    return (path +
+        (searchParams === "" ? "" : `?${searchParams}`)) as Link<never>;
 };
 
 if (import.meta.vitest) {
     const { it, describe, expect } = import.meta.vitest;
     describe("link", () => {
         it("変換なし", () => {
-            expect(link()("")).toBe("");
-            expect(link()("hoge")).toBe("hoge");
-            expect(link()("hoge/fuga")).toBe("hoge/fuga");
+            expect(link("")).toBe("");
+            expect(link("hoge")).toBe("hoge");
+            expect(link("hoge/fuga")).toBe("hoge/fuga");
         });
         it("normalize path", () => {
-            expect(link()("/hoge///fuga/")).toBe("hoge/fuga");
+            expect(link("/hoge///fuga/")).toBe("hoge/fuga");
         });
         it("params埋め込み", () => {
             expect(
-                link()("normal/:/:option?/:many*", {
+                link("normal/:/:option?/:many*", {
                     "": "any",
                     option: undefined,
                     many: ["foo", "bar"],
