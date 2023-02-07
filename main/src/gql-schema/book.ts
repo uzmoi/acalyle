@@ -101,8 +101,8 @@ export const types = [
                         name: memoTag.getName(),
                     });
                     return prisma.memo.findMany({
-                        cursor: p.cursor != null ? { id: p.cursor } : undefined,
-                        skip: p.cursor != null ? 1 : 0,
+                        cursor: p.cursor == null ? undefined : { id: p.cursor },
+                        skip: p.cursor == null ? 0 : 1,
                         take: p.take,
                         orderBy: { createdAt: "desc" },
                         where: {
@@ -186,8 +186,8 @@ export const types = [
                     Created: "createdAt",
                 }[args.orderBy ?? "Created"];
                 return prisma.book.findMany({
-                    cursor: p.cursor != null ? { id: p.cursor } : undefined,
-                    skip: p.cursor != null ? 1 : 0,
+                    cursor: p.cursor == null ? undefined : { id: p.cursor },
+                    skip: p.cursor == null ? 0 : 1,
                     take: p.take,
                     orderBy: { [orderBy]: order },
                     where: {
