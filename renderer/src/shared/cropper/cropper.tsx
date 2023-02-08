@@ -129,28 +129,42 @@ export const Cropper: React.FC<{
         <div
             ref={containerEl}
             onMouseDown={handleMouseDown}
-            className={cx(ContainerStyle, className)}
+            className={cx(
+                css`
+                    overflow: hidden;
+                    cursor: move;
+                    user-select: none;
+                    &[data-disabled="true"] {
+                        cursor: not-allowed;
+                        transition: filter 200ms;
+                        &:hover {
+                            filter: grayscale(0.75);
+                        }
+                    }
+                `,
+                className,
+            )}
             // template literalはフォーマットで.toLowerCase()されない為
             style={{ backgroundColor: `${bgColor}` }}
             data-disabled={disabled}
         >
-            <div className={ImageContainerStyle} style={{ transform }}>
-                <img ref={imageEl} className={ImageStyle} src={src} alt="" />
+            <div
+                className={css`
+                    width: 100%;
+                    height: 100%;
+                `}
+                style={{ transform }}
+            >
+                <img
+                    ref={imageEl}
+                    className={css`
+                        max-width: 100%;
+                        max-height: 100%;
+                    `}
+                    src={src}
+                    alt=""
+                />
             </div>
         </div>
     );
 };
-
-const ContainerStyle = css`
-    overflow: hidden;
-`;
-
-const ImageContainerStyle = css`
-    width: 100%;
-    height: 100%;
-`;
-
-const ImageStyle = css`
-    max-width: 100%;
-    max-height: 100%;
-`;
