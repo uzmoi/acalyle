@@ -56,9 +56,10 @@ export const Cropper: React.FC<{
     src?: string;
     state: Vec2 & { scale: number };
     onChange?: (state: Vec2 & { scale: number }) => void;
+    disabled?: boolean;
     className?: string;
     bgColor?: string;
-}> = ({ src, state, onChange, className, bgColor = "#888888" }) => {
+}> = ({ src, state, onChange, disabled, className, bgColor = "#888888" }) => {
     const imageEl = useRef<HTMLImageElement>(null);
     const containerEl = useRef<HTMLDivElement>(null);
     const [grab, setGrab] = useState<Vec2 | null>(null);
@@ -77,6 +78,7 @@ export const Cropper: React.FC<{
     );
     const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
+        if (disabled) return;
         const startPosition = {
             x: state.x * e.currentTarget.clientWidth - e.clientX,
             y: state.y * e.currentTarget.clientHeight - e.clientY,
@@ -101,6 +103,7 @@ export const Cropper: React.FC<{
                 "wheel",
                 e => {
                     e.preventDefault();
+                    if (disabled) return;
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     const scalePoint = getScalePoint(e, containerEl.current!);
                     const newScale = clamp(
@@ -114,7 +117,7 @@ export const Cropper: React.FC<{
             );
             return () => abortController.abort();
         }
-    }, [onChange, state]);
+    }, [disabled, onChange, state]);
 
     const translate = grab ?? state;
     const transform = [
@@ -129,6 +132,7 @@ export const Cropper: React.FC<{
             className={cx(ContainerStyle, className)}
             // template literalはフォーマットで.toLowerCase()されない為
             style={{ backgroundColor: `${bgColor}` }}
+            data-disabled={disabled}
         >
             <div className={ImageContainerStyle} style={{ transform }}>
                 <img ref={imageEl} className={ImageStyle} src={src} alt="" />

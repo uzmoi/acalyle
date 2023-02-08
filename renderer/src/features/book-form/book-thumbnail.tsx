@@ -151,6 +151,7 @@ export const BookThumbnailForm: React.FC<{
                 src={fileUrl}
                 state={cropState}
                 onChange={setCropState}
+                disabled={file == null}
                 className={CropperStyle}
                 bgColor={bgColor}
             />
