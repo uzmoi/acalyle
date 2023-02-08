@@ -8,13 +8,14 @@ generator client {
 }
 
 model Book {
-    id        String   @id
-    thumbnail String
-    title     String
-    createdAt DateTime
-    memos     Memo[]
-    tags      Tag[]
-    settings  Bytes
+    id          String   @id
+    thumbnail   String
+    title       String
+    description String
+    createdAt   DateTime
+    memos       Memo[]
+    tags        Tag[]
+    settings    Bytes
 }
 
 model Memo {

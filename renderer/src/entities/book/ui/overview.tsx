@@ -9,11 +9,12 @@ import { BookThumbnail } from "./thumbnail";
 export const BookOverview: React.FC<{
     book: overview$key;
 }> = ({ book }) => {
-    const { id, title, thumbnail } = useFragment<overview$key>(
+    const { id, title, description, thumbnail } = useFragment<overview$key>(
         graphql`
             fragment overview on Book {
                 id
                 title
+                description
                 thumbnail
             }
         `,
@@ -21,23 +22,48 @@ export const BookOverview: React.FC<{
     );
 
     return (
-        <div className={BookOverviewStyle}>
+        <div
+            className={css`
+                display: flex;
+                height: 6em;
+                background-color: ${vars.color.bg3};
+                > :first-child /* BookThumbnail */ {
+                    flex: 0 0 auto;
+                }
+            `}
+        >
             <BookThumbnail src={thumbnail} />
-            <p className={BookOverviewTitleStyle}>
-                <Link to={link("books/:bookId", { bookId: id })}>{title}</Link>
-            </p>
+            <div
+                className={css`
+                    flex: 1 1 0;
+                    padding-block: 0.75em;
+                    padding-inline: 1em;
+                    overflow: hidden;
+                    white-space: nowrap;
+                `}
+            >
+                <p
+                    className={css`
+                        margin-bottom: 0.25em;
+                        font-size: 2em;
+                        line-height: 1;
+                    `}
+                >
+                    <Link to={link("books/:bookId", { bookId: id })}>
+                        {title}
+                    </Link>
+                </p>
+                <p
+                    className={css`
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    `}
+                >
+                    {description}
+                </p>
+            </div>
         </div>
     );
 };
 
-const BookOverviewStyle = css`
-    display: flex;
-    height: 6em;
-    background-color: ${vars.color.bg3};
-`;
 
-const BookOverviewTitleStyle = css`
-    padding-block: 0.2em;
-    padding-inline: 1em;
-    font-size: 2em;
-`;

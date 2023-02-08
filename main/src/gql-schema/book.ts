@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { randomUUID } from "crypto";
 import { mkdir } from "fs/promises";
 import { pack, unpack } from "msgpackr";
@@ -48,6 +49,7 @@ export const types = [
         definition(t) {
             t.implements("Node");
             t.string("title");
+            t.string("description");
             t.string("thumbnail", {
                 resolve(book, _, { bookDataPath }) {
                     return resolveBookThumbnail(
@@ -185,16 +187,19 @@ export const types = [
                     Title: "title",
                     Created: "createdAt",
                 }[args.orderBy ?? "Created"];
+                const filter: Prisma.StringFilter | undefined = args.query
+                    ? { contains: args.query }
+                    : undefined;
                 return prisma.book.findMany({
                     cursor: p.cursor == null ? undefined : { id: p.cursor },
                     skip: p.cursor == null ? 0 : 1,
                     take: p.take,
                     orderBy: { [orderBy]: order },
-                    where: {
-                        title: {
-                            contains: args.query ?? undefined,
-                        },
-                    },
+                    where:
+                        filter &&
+                        ({
+                            OR: [{ title: filter }, { description: filter }],
+                        } satisfies Prisma.BookWhereInput),
                 });
             },
             totalCount(_, __, { prisma }) {
@@ -206,6 +211,7 @@ export const types = [
         type: "Book",
         args: {
             title: nonNull("String"),
+            description: "String",
         },
         async resolve(_, args, { prisma, bookDataPath }) {
             const validBookTitle = await BookTitle.parseAsync(args.title);
@@ -215,10 +221,11 @@ export const types = [
                 data: {
                     id: bookId,
                     title: validBookTitle,
+                    description: args.description ?? "",
                     thumbnail: getDefaultThumbnail(),
                     createdAt: new Date(),
                     settings: pack(BookSettingDefault),
-                },
+                } satisfies Prisma.BookCreateInput,
             });
         },
     }),
