@@ -1,0 +1,7 @@
+{
+    "extends": "../../config/tsconfig.web.json",
+    "include": ["src"],
+    "compilerOptions": {
+        "composite": true,
+    },
+}

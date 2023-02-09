@@ -15,6 +15,7 @@ module.exports = {
                     "tsconfig.main.json",
                     "tsconfig.preload.json",
                     "tsconfig.renderer.json",
+                    "packages/router/tsconfig.json",
                 ],
             },
         },
@@ -54,6 +55,10 @@ module.exports = {
         {
             files: ["renderer/src/**", "renderer/types.d.ts"],
             parserOptions: { project: "tsconfig.renderer.json" },
+        },
+        {
+            files: ["packages/router/src/**"],
+            parserOptions: { project: "packages/router/tsconfig.json" },
         },
     ],
     rules: {

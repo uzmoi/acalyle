@@ -12,6 +12,7 @@
     "coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@acalyle/router": "*",
     "@linaria/core": "^3.0.0-beta.19",
     "emnorst": "^1.0.0-next.0",
     "normalize-url": "^8.0.0",
