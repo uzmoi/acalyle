@@ -1,8 +1,9 @@
-import { css } from "@linaria/core";
+import { css, cx } from "@linaria/core";
 
 export const BookThumbnail: React.FC<{
     src: string;
-}> = ({ src }) => {
+    className?: string;
+}> = ({ src, className }) => {
     const prefix = "color:";
     if (src.startsWith(prefix)) {
         const color = src.slice(prefix.length);
@@ -15,11 +16,13 @@ export const BookThumbnail: React.FC<{
     }
 
     return (
-        <div className={ThumbnailStyle}>
+        <div className={cx(ThumbnailStyle, className)}>
             <img
                 src={src}
                 alt="book thumbnail"
-                className={ThumbnailImageStyle}
+                className={css`
+                    width: 100%;
+                `}
             />
         </div>
     );
@@ -28,8 +31,4 @@ export const BookThumbnail: React.FC<{
 const ThumbnailStyle = css`
     width: 6em;
     height: 6em;
-`;
-
-const ThumbnailImageStyle = css`
-    width: 100%;
 `;

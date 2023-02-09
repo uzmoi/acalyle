@@ -27,12 +27,14 @@ export const BookOverview: React.FC<{
                 display: flex;
                 height: 6em;
                 background-color: ${vars.color.bg3};
-                > :first-child /* BookThumbnail */ {
-                    flex: 0 0 auto;
-                }
             `}
         >
-            <BookThumbnail src={thumbnail} />
+            <BookThumbnail
+                src={thumbnail}
+                className={css`
+                    flex: 0 0 auto;
+                `}
+            />
             <div
                 className={css`
                     flex: 1 1 0;
