@@ -1,2 +1,2 @@
-export { List } from "./list";
+export * from "./list";
 export { Spinner } from "./spinner";
