@@ -3,8 +3,7 @@
   "name": "main",
   "version": "0.0.0",
   "description": "",
-  "main": "index.js",
-  "type": "module",
+  "main": "dist/main.js",
   "scripts": {
     "build": "node build.js",
     "dev": "node build.js -- --dev",

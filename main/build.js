@@ -1,9 +1,10 @@
 // @ts-check
+/* eslint-disable import/unambiguous, @typescript-eslint/no-var-requires */
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { build } from "esbuild";
-import { mkdir, open, readdir, rm } from "fs/promises";
-import * as path from "path";
+const { build } = require("esbuild");
+const { mkdir, open, readdir, rm } = require("fs/promises");
+const path = require("path");
 
 const DEV = process.argv.includes("--dev");
 const ENV = DEV ? "development" : "production";
@@ -23,21 +24,26 @@ const emptyDir = async dirPath => {
     );
 };
 
-await emptyDir("dist");
+(async () => {
+    await emptyDir("dist");
 
-await mkdir("../data", { recursive: true });
-await (await open("../data/schema.graphql", "a")).close();
+    await mkdir("../data", { recursive: true });
+    await (await open("../data/schema.graphql", "a")).close();
 
-await build({
-    platform: "node",
-    bundle: true,
-    minify: !DEV,
-    sourcemap: DEV,
-    watch: DEV,
-    define: {
-        "process.env.NODE_ENV": `"${ENV}"`,
-    },
-    entryPoints: ["main/src/main.ts", DEV ? "main/src/ipc.ts" : ""].filter(Boolean),
-    outdir: "dist",
-    external: ["electron", "sharp", DEV ? "./ipc" : ""].filter(Boolean),
+    await build({
+        platform: "node",
+        bundle: true,
+        minify: !DEV,
+        sourcemap: DEV,
+        watch: DEV,
+        define: {
+            "process.env.NODE_ENV": `"${ENV}"`,
+        },
+        entryPoints: ["main/src/main.ts", DEV ? "main/src/ipc.ts" : ""].filter(Boolean),
+        outdir: "dist",
+        external: ["electron", "sharp", DEV ? "./ipc" : ""].filter(Boolean),
+    });
+})().catch(err => {
+    console.error(err);
+    process.exit(1);
 });
