@@ -4,24 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!-- if [ $mode == production ] -->
-        <meta
-            http-equiv="Content-Security-Policy"
-            content="default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com"
-        >
-    <!-- fi -->
-    <!-- if [ $mode == development ] -->
-        <meta
-            http-equiv="Content-Security-Policy"
-            content="default-src 'self'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com"
-        >
-    <!-- fi -->
+    <x-let name="google_fonts_url" value="https://fonts.googleapis.com" />
+    <x-if cond="$mode == production">
+        <x-let name="style_src" value="style-src 'self' $google_fonts_url" />
+    </x-if>
+    <x-if cond="$mode == development">
+        <x-let name="style_src" value="style-src 'unsafe-inline' $google_fonts_url" />
+    </x-if>
+    <x-let name="csp" value="default-src 'self'; $style_src; font-src https://fonts.gstatic.com" />
+    <meta http-equiv="Content-Security-Policy" content="$csp">
     <title>Loading | Acalyle</title>
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
     <link rel="shortcut icon" href="icon.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="$google_fonts_url">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&family=Roboto+Mono&display=swap">
+    <link rel="stylesheet" href="$google_fonts_url/css2?family=Noto+Sans+JP&family=Roboto+Mono&display=swap">
 </head>
 <body>
     <div id="app"></div>
