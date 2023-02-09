@@ -9,3 +9,5 @@ __generated__/
 
 _*
 *.local
+
+.turbo

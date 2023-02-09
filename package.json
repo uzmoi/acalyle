@@ -2,14 +2,17 @@
   "private": true,
   "name": "acalyle",
   "version": "0.1.0",
-  "description": "",
-  "author": "rizzzse",
-  "license": "ISC",
-  "main": "app/main.js",
+  "workspaces": [
+    "renderer",
+    "main",
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "build": "esbuild scripts/build.ts --format=cjs | node",
-    "dev": "esbuild scripts/build.ts --format=cjs | node - --dev",
-    "lint": "eslint -c .eslintrc.js .",
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "format": "prettier -w \"**/*.{ts,tsx,md}\"",
     "test": "npm test -w renderer",
     "coverage": "npm run coverage -w renderer"
   },
@@ -24,10 +27,7 @@
     "prettier": "^2.8.0",
     "prisma": "^4.4.0",
     "relay-compiler": "^14.1.0",
+    "turbo": "latest",
     "typescript": "^4.9.3"
-  },
-  "workspaces": [
-    "renderer",
-    "main"
-  ]
+  }
 }
