@@ -10,4 +10,5 @@ __generated__/
 _*
 *.local
 
+dist
 .turbo

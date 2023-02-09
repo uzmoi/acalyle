@@ -5,6 +5,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "relay-compiler && vite build",
+    "dev": "relay-compiler --watch & vite",
+    "check": "tsc",
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },
