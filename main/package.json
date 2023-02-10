@@ -1,6 +1,7 @@
 {
   "private": true,
   "name": "main",
+  "productName": "Acalyle",
   "version": "0.0.0",
   "description": "",
   "main": "dist/main.js",
