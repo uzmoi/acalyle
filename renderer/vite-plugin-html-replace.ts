@@ -181,8 +181,8 @@ export const htmlReplace = (define: Record<string, string> = {}): Plugin => {
     return {
         name: "html-replace",
         transformIndexHtml: {
-            enforce: "pre",
-            transform: html => {
+            order: "pre",
+            handler: html => {
                 const elem = parseHtml(html);
                 return generateHtml(new Map(Object.entries(define)))(elem);
             },
