@@ -17,7 +17,8 @@ import path = require("path");
 import { MemoTag } from "renderer/src/entities/tag/lib/memo-tag";
 import { z } from "zod";
 import {
-    getDefaultThumbnail,
+    getBookThumbnailPath,
+    getThumbnailRef,
     resolveBookThumbnail,
     types as thumbnailTypes,
 } from "./book-thumbnail";
@@ -212,17 +213,23 @@ export const types = [
         args: {
             title: nonNull("String"),
             description: "String",
+            thumbnail: "Upload",
         },
         async resolve(_, args, { prisma, bookDataPath }) {
             const validBookTitle = await BookTitle.parseAsync(args.title);
             const bookId = randomUUID();
             await mkdir(path.join(bookDataPath, bookId), { recursive: true });
+            const thumbnailPath = getBookThumbnailPath(bookDataPath, bookId);
+            const thumbnailRef = await getThumbnailRef(
+                thumbnailPath,
+                args.thumbnail,
+            );
             return prisma.book.create({
                 data: {
                     id: bookId,
                     title: validBookTitle,
                     description: args.description ?? "",
-                    thumbnail: getDefaultThumbnail(),
+                    thumbnail: thumbnailRef,
                     createdAt: new Date(),
                     settings: pack(BookSettingDefault),
                 } satisfies Prisma.BookCreateInput,

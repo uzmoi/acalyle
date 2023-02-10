@@ -2,12 +2,9 @@ import { mutationField, nonNull } from "nexus";
 import path = require("path");
 import sharp = require("sharp");
 
-export const getDefaultThumbnail = () =>
-    `color:hsl(${Math.random() * 360}deg,80%,40%)`;
-
 const bookThumbnailFileName = "thumbnail.png";
 
-const getBookThumbnailPath = (bookDataPath: string, bookId: string) =>
+export const getBookThumbnailPath = (bookDataPath: string, bookId: string) =>
     path.join(bookDataPath, bookId, bookThumbnailFileName);
 
 export const resolveBookThumbnail = (
@@ -25,6 +22,28 @@ export const resolveBookThumbnail = (
     }
 };
 
+const writeThumbnail = (thumbnailPath: string, thumbnail: ArrayBufferView) =>
+    sharp(new Int8Array(thumbnail.buffer))
+        .resize(512, 512, {})
+        .png()
+        .flatten({ background: "#888" })
+        .toFile(thumbnailPath);
+
+const getDefaultThumbnail = () =>
+    `color:hsl(${Math.random() * 360}deg,80%,40%)`;
+
+export const getThumbnailRef = async (
+    thumbnailPath: string,
+    thumbnail: ArrayBufferView | null | undefined,
+) => {
+    if (thumbnail != null) {
+        await writeThumbnail(thumbnailPath, thumbnail);
+        return "#image";
+    } else {
+        return getDefaultThumbnail();
+    }
+};
+
 export const types = [
     mutationField("updateBookThumbnail", {
         type: "Book",
@@ -33,24 +52,14 @@ export const types = [
             thumbnail: "Upload",
         },
         async resolve(_, args, { prisma, bookDataPath }) {
-            let thumbnail: string;
-            if (args.thumbnail != null) {
-                const thumbnailPath = getBookThumbnailPath(
-                    bookDataPath,
-                    args.id,
-                );
-                await sharp(new Int8Array(args.thumbnail.buffer))
-                    .resize(512, 512, {})
-                    .png()
-                    .flatten({ background: "#888" })
-                    .toFile(thumbnailPath);
-                thumbnail = "#image";
-            } else {
-                thumbnail = getDefaultThumbnail();
-            }
+            const thumbnailPath = getBookThumbnailPath(bookDataPath, args.id);
+            const thumbnailRef = await getThumbnailRef(
+                thumbnailPath,
+                args.thumbnail,
+            );
             return prisma.book.update({
                 where: { id: args.id },
-                data: { thumbnail },
+                data: { thumbnail: thumbnailRef },
             });
         },
     }),
