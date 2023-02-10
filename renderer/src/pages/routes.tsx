@@ -1,4 +1,4 @@
-import { Page, Router, Routes } from "~/shared/router";
+import { Page, Router, Routes } from "@acalyle/router";
 import { SettingsPage } from "./app/settings";
 import { booksRoute } from "./books/routes";
 

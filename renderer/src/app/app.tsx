@@ -1,9 +1,9 @@
+import { match } from "@acalyle/router";
 import { css } from "@linaria/core";
 import { Suspense, useLayoutEffect } from "react";
 import { useThemeStyle, vars } from "~/entities/theme";
 import { useLocation } from "~/features/location";
 import { routes } from "~/pages/routes";
-import { match } from "~/shared/router";
 import { Header } from "~/widgets/layouts/header";
 import { rootEl } from "./root-el";
 
