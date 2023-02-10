@@ -60,6 +60,13 @@ export const BookThumbnailForm: React.FC<{
 
     return (
         <Form onSubmit={handleSubmit}>
+            <h3
+                className={css`
+                    margin-bottom: 0.6em;
+                `}
+            >
+                Thumbnail
+            </h3>
             <BookThumbnailFormBlock
                 file={file}
                 fileUrl={fileUrl}
@@ -117,13 +124,6 @@ export const BookThumbnailFormBlock: React.FC<{
     return (
         <div className={FormBlockStyle}>
             <div className={InfoStyle}>
-                <h3
-                    className={css`
-                        margin-bottom: 0.6em;
-                    `}
-                >
-                    Thumbnail
-                </h3>
                 <div>
                     <label
                         className={cx(
