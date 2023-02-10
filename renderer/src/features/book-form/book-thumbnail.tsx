@@ -58,6 +58,54 @@ export const BookThumbnailForm: React.FC<{
         });
     };
 
+    return (
+        <Form onSubmit={handleSubmit}>
+            <BookThumbnailFormBlock
+                file={file}
+                fileUrl={fileUrl}
+                setFile={setFile}
+                cropState={cropState}
+                setCropState={setCropState}
+                bgColor={bgColor}
+                setBgColor={setBgColor}
+            >
+                <Button
+                    type="submit"
+                    className={SubmitButtonStyle}
+                    disabled={file == null || isInFlight}
+                >
+                    Submit
+                </Button>
+            </BookThumbnailFormBlock>
+        </Form>
+    );
+};
+
+type CropState = {
+    x: number;
+    y: number;
+    scale: number;
+};
+
+export const BookThumbnailFormBlock: React.FC<{
+    file: File | null;
+    fileUrl: string | undefined;
+    setFile: React.Dispatch<React.SetStateAction<File | null>>;
+    bgColor: string;
+    setBgColor: React.Dispatch<React.SetStateAction<string>>;
+    cropState: CropState;
+    setCropState: React.Dispatch<React.SetStateAction<CropState>>;
+    children?: React.ReactNode;
+}> = ({
+    file,
+    fileUrl,
+    setFile,
+    cropState,
+    setCropState,
+    bgColor,
+    setBgColor,
+    children,
+}) => {
     const handleFileChange = (newFile: File | null) => {
         if (newFile != null) {
             setFile(newFile);
@@ -67,7 +115,7 @@ export const BookThumbnailForm: React.FC<{
     const id = useId();
 
     return (
-        <Form className={FormStyle} onSubmit={handleSubmit}>
+        <div className={FormBlockStyle}>
             <div className={InfoStyle}>
                 <h3
                     className={css`
@@ -137,15 +185,7 @@ export const BookThumbnailForm: React.FC<{
                         }}
                     />
                 </div>
-                <div>
-                    <Button
-                        type="submit"
-                        className={SubmitButtonStyle}
-                        disabled={file == null || isInFlight}
-                    >
-                        Submit
-                    </Button>
-                </div>
+                <div>{children}</div>
             </div>
             <Cropper
                 src={fileUrl}
@@ -155,11 +195,11 @@ export const BookThumbnailForm: React.FC<{
                 className={CropperStyle}
                 bgColor={bgColor}
             />
-        </Form>
+        </div>
     );
 };
 
-const FormStyle = css`
+const FormBlockStyle = css`
     display: flex;
 `;
 
