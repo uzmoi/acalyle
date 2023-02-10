@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@acalyle/router": "*",
-    "@linaria/core": "^3.0.0-beta.19",
+    "@linaria/core": "^4.2.6",
     "emnorst": "^1.0.0-next.0",
     "normalize-url": "^8.0.0",
     "polished": "^4.2.2",
@@ -26,8 +26,8 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.18.6",
-    "@linaria/rollup": "^3.0.0-beta.19",
-    "@linaria/shaker": "^3.0.0-beta.19",
+    "@linaria/shaker": "^4.2.8",
+    "@linaria/vite": "^4.2.7",
     "@stylelint/postcss-css-in-js": "^0.38.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",

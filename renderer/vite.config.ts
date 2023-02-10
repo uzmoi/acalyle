@@ -1,5 +1,5 @@
 import type {} from "vitest";
-import linaria from "@linaria/rollup";
+import linaria from "@linaria/vite";
 import react from "@vitejs/plugin-react";
 import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig } from "vite";
