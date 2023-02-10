@@ -4,15 +4,14 @@ import { BookTitleFormBlock } from "~/features/book-form";
 import { useNavigate } from "~/features/location";
 import { Button, Form, TextInput } from "~/shared/control";
 import { link } from "../link";
-import { newBookCreateMutation } from "./__generated__/newBookCreateMutation.graphql";
+import { newBookMutation } from "./__generated__/newBookMutation.graphql";
 
 export const NewBookPage: React.FC = () => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
 
-    // prettier-ignore
-    const [commitNewBook, isInFlight] = useMutation<newBookCreateMutation>(graphql`
-        mutation newBookCreateMutation($title: String!, $description: String!) {
+    const [commit, isInFlight] = useMutation<newBookMutation>(graphql`
+        mutation newBookMutation($title: String!, $description: String!) {
             createBook(title: $title, description: $description) {
                 id
             }
@@ -21,7 +20,7 @@ export const NewBookPage: React.FC = () => {
 
     const navigate = useNavigate();
     const onSubmit = () => {
-        commitNewBook({
+        commit({
             variables: { title, description },
             onCompleted({ createBook }) {
                 navigate(link("books/:bookId", { bookId: createBook.id }));
