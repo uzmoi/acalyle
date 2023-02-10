@@ -18,15 +18,12 @@
   },
   "devDependencies": {
     "electron": "^19.0.9",
-    "electron-devtools-installer": "^3.2.0",
     "esbuild": "^0.15.16",
     "eslint": "^8.25.0",
     "eslint-plugin-oreore-config": "github:rizzzse/eslint-plugin-oreore-config#build",
     "eslint-plugin-react": "^7.31.10",
     "eslint-plugin-react-hooks": "^4.6.0",
     "prettier": "^2.8.0",
-    "prisma": "^4.4.0",
-    "relay-compiler": "^14.1.0",
     "turbo": "latest",
     "typescript": "^4.9.3"
   }
