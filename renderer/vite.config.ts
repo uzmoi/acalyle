@@ -44,10 +44,8 @@ export default defineConfig(env => ({
             plugins: [visualizer({ gzipSize: true, brotliSize: true })],
             output: {
                 manualChunks: {
-                    recoil: ["recoil"],
                     relay: ["react-relay", "relay-runtime"],
                     "react-markdown": ["react-markdown"],
-                    "react-syntax-highlighter": ["react-syntax-highlighter"],
                 },
             },
         },
