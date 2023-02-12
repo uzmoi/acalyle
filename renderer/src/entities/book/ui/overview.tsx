@@ -38,7 +38,7 @@ export const BookOverview: React.FC<{
             <div
                 className={css`
                     flex: 1 1 0;
-                    padding-block: 0.75em;
+                    padding-block: 0.5em;
                     padding-inline: 1em;
                     overflow: hidden;
                     white-space: nowrap;
@@ -47,8 +47,9 @@ export const BookOverview: React.FC<{
                 <p
                     className={css`
                         margin-bottom: 0.25em;
+                        overflow: hidden;
                         font-size: 2em;
-                        line-height: 1;
+                        text-overflow: ellipsis;
                     `}
                 >
                     <Link to={link("books/:bookId", { bookId: id })}>
