@@ -1,9 +1,11 @@
 import { css } from "@linaria/core";
+import { useState } from "react";
 import { graphql, useFragment } from "react-relay";
 import { MemoInfo } from "~/entities/memo";
 import { TagList } from "~/entities/tag";
 import { vars } from "~/entities/theme";
 import { Markdown } from "~/features/markdown";
+import { MemoContentsEditor } from "~/features/memo-editor";
 import { Button } from "~/shared/control";
 import { MemoFragment$key } from "./__generated__/MemoFragment.graphql";
 
@@ -11,10 +13,11 @@ export const Memo: React.FC<{
     bookId: string;
     memo: MemoFragment$key;
 }> = ({ bookId, memo }) => {
-    const { contents, tags, createdAt, updatedAt } =
+    const { id, contents, tags, createdAt, updatedAt } =
         useFragment<MemoFragment$key>(
             graphql`
                 fragment MemoFragment on Memo {
+                    id
                     contents
                     tags
                     createdAt
@@ -24,6 +27,8 @@ export const Memo: React.FC<{
             memo,
         );
 
+    const [isInEdit, setIsInEdit] = useState(false);
+
     return (
         <article
             className={css`
@@ -31,16 +36,26 @@ export const Memo: React.FC<{
                 background-color: ${vars.color.bg3};
             `}
         >
-            <Markdown contents={contents} />
+            {isInEdit || <Markdown contents={contents} />}
+            {isInEdit && (
+                <MemoContentsEditor
+                    memoId={id}
+                    defaultContents={contents}
+                    onEditEnd={() => {
+                        setIsInEdit(false);
+                    }}
+                />
+            )}
             <footer
                 className={css`
                     display: flex;
-                    font-size: 0.8em;
+                    margin-top: 0.75em;
                 `}
             >
                 <div
                     className={css`
                         flex: 1;
+                        font-size: 0.8em;
                     `}
                 >
                     <MemoInfo createdAt={createdAt} updatedAt={updatedAt} />
@@ -48,8 +63,9 @@ export const Memo: React.FC<{
                 </div>
                 <div>
                     <Button
+                        disabled={isInEdit}
                         onClick={() => {
-                            // TODO
+                            setIsInEdit(true);
                         }}
                     >
                         Edit
