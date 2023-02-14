@@ -36,20 +36,10 @@ export const Memo: React.FC<{
                 background-color: ${vars.color.bg3};
             `}
         >
-            {isInEdit || <Markdown contents={contents} />}
-            {isInEdit && (
-                <MemoContentsEditor
-                    memoId={id}
-                    defaultContents={contents}
-                    onEditEnd={() => {
-                        setIsInEdit(false);
-                    }}
-                />
-            )}
-            <footer
+            <header
                 className={css`
                     display: flex;
-                    margin-top: 0.75em;
+                    margin-bottom: 0.75em;
                 `}
             >
                 <div
@@ -71,7 +61,17 @@ export const Memo: React.FC<{
                         Edit
                     </Button>
                 </div>
-            </footer>
+            </header>
+            {isInEdit || <Markdown contents={contents} />}
+            {isInEdit && (
+                <MemoContentsEditor
+                    memoId={id}
+                    defaultContents={contents}
+                    onEditEnd={() => {
+                        setIsInEdit(false);
+                    }}
+                />
+            )}
         </article>
     );
 };
