@@ -1,12 +1,12 @@
 import { css } from "@linaria/core";
 import { useState } from "react";
-import { graphql, useFragment, useMutation } from "react-relay";
+import { graphql, useFragment } from "react-relay";
+import { AddMemoButton } from "~/features/add-memo";
 import { Link } from "~/features/location";
 import { link } from "~/pages/link";
 import { List } from "~/shared/base";
-import { Button, TextInput } from "~/shared/control";
+import { TextInput } from "~/shared/control";
 import { MemoList } from "./MemoList";
-import { BookMemoCreateMutation } from "./__generated__/BookMemoCreateMutation.graphql";
 import { BookMemosFragment$key } from "./__generated__/BookMemosFragment.graphql";
 
 export const Book: React.FC<{
@@ -17,36 +17,9 @@ export const Book: React.FC<{
     const data = useFragment<BookMemosFragment$key>(graphql`
         fragment BookMemosFragment on Book {
             title
-            memos(first: $count, after: $cursor) {
-                __id
-            }
             ...MemoListFragment
         }
     `, book);
-    const [commitAddMemo] = useMutation<BookMemoCreateMutation>(graphql`
-        mutation BookMemoCreateMutation($bookId: ID!, $connections: [ID!]!) {
-            createMemo(bookId: $bookId) {
-                node
-                    @appendNode(
-                        connections: $connections
-                        edgeTypeName: "Memo"
-                    ) {
-                    id
-                    contents
-                    tags
-                }
-            }
-        }
-    `);
-
-    const addMemo = () => {
-        commitAddMemo({
-            variables: {
-                bookId: id,
-                connections: [data.memos.__id],
-            },
-        });
-    };
 
     const [searchString, setSearchString] = useState("");
 
@@ -62,7 +35,7 @@ export const Book: React.FC<{
                         />
                     </List.Item>
                     <List.Item>
-                        <Button onClick={addMemo}>add memo</Button>
+                        <AddMemoButton bookId={id} />
                     </List.Item>
                     <List.Item>
                         <Link
