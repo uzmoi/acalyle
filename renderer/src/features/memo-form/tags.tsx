@@ -20,20 +20,14 @@ export const MemoTagsForm: React.FC<{
             $addTags: [String!]!
         ) {
             removeMemoTags(memoId: $memoId, tags: $removeTags) {
-                node {
-                    updatedAt
-                }
+                updatedAt
             }
             updateMemoTagsArgs(memoId: $memoId, tags: $updateTags) {
-                node {
-                    updatedAt
-                }
+                updatedAt
             }
             addMemoTags(memoId: $memoId, tags: $addTags) {
-                node {
-                    tags
-                    updatedAt
-                }
+                tags
+                updatedAt
             }
         }
     `);

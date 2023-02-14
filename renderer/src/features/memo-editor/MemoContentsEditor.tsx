@@ -16,10 +16,8 @@ export const MemoContentsEditor: React.FC<{
                 $contents: String!
             ) {
                 updateMemoContents(memoId: $memoId, contents: $contents) {
-                    node {
-                        id
-                        contents
-                    }
+                    id
+                    contents
                 }
             }
         `);

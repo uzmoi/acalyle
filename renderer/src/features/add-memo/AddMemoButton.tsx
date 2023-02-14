@@ -11,11 +11,9 @@ export const AddMemoButton: React.FC<{
     const [commit, isInFlight] = useMutation<AddMemoButtonMutation>(graphql`
         mutation AddMemoButtonMutation($bookId: ID!) {
             createMemo(bookId: $bookId) {
-                node {
-                    id
-                    contents
-                    tags
-                }
+                id
+                contents
+                tags
             }
         }
     `);

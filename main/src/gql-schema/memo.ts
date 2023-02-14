@@ -47,16 +47,8 @@ export const types = [
             });
         },
     }),
-    // for relay directive
-    objectType({
-        name: "MemoWrapper",
-        sourceType: { module: "@prisma/client", export: "Memo" },
-        definition(t) {
-            t.field("node", { type: "Memo", resolve: node => node });
-        },
-    }),
     mutationField("createMemo", {
-        type: "MemoWrapper",
+        type: "Memo",
         args: { bookId: nonNull("ID") },
         resolve(_, args, { prisma }) {
             return prisma.memo.create({
@@ -83,7 +75,7 @@ export const types = [
         },
     }),
     mutationField("updateMemoContents", {
-        type: "MemoWrapper",
+        type: "Memo",
         args: {
             memoId: nonNull("ID"),
             contents: nonNull("String"),
@@ -99,7 +91,7 @@ export const types = [
         },
     }),
     mutationField("addMemoTags", {
-        type: "MemoWrapper",
+        type: "Memo",
         args: {
             memoId: nonNull("ID"),
             tags: nonNull(list(nonNull("String"))),
@@ -147,7 +139,7 @@ export const types = [
         },
     }),
     mutationField("updateMemoTagsArgs", {
-        type: "MemoWrapper",
+        type: "Memo",
         args: {
             memoId: nonNull("ID"),
             tags: nonNull(list(nonNull("String"))),
@@ -185,7 +177,7 @@ export const types = [
         },
     }),
     mutationField("removeMemoTags", {
-        type: "MemoWrapper",
+        type: "Memo",
         args: {
             memoId: nonNull("ID"),
             tags: nonNull(list(nonNull("String"))),

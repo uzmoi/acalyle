@@ -14,10 +14,8 @@ export const MemoContentsForm: React.FC<{
     const [commit, isInFlight] = useMutation<memoContentsUpdateMutation>(graphql`
         mutation memoContentsUpdateMutation($memoId: ID!, $contents: String!) {
             updateMemoContents(memoId: $memoId, contents: $contents) {
-                node {
-                    contents
-                    updatedAt
-                }
+                contents
+                updatedAt
             }
         }
     `);
