@@ -24,50 +24,48 @@ export const BookSearchBar: React.FC<{
     className?: string;
 }> = ({ refetch, className }) => {
     const [, startTransition] = useTransition();
-    const [query, setQuery] = useState("");
-    const [bookSortOrder, setBookSortOrder] =
-        useState<BookSortOrder>("Created");
-    const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
+    const [vars, setVars] = useState<{
+        query: string;
+        orderBy: BookSortOrder;
+        order: SortOrder;
+    }>({ query: "", orderBy: "Created", order: "desc" });
+
     const changeQuery = useCallback(
         (value: string) => {
-            setQuery(value);
+            const newVars = { ...vars, query: value };
+            setVars(newVars);
             // TODO throttle
             startTransition(() => {
-                refetch({
-                    query: value,
-                    orderBy: bookSortOrder,
-                    order: sortOrder,
-                });
+                refetch(newVars);
             });
         },
-        [bookSortOrder, refetch, sortOrder],
+        [vars, refetch],
     );
     const changeBookSortOrder = useCallback(
         (value: BookSortOrder) => {
             startTransition(() => {
-                refetch({ query, orderBy: value, order: sortOrder });
-                setBookSortOrder(value);
+                const newVars = { ...vars, orderBy: value };
+                refetch(newVars);
+                setVars(newVars);
             });
         },
-        [query, refetch, sortOrder],
+        [vars, refetch],
     );
     const changeSortOrder = useCallback(
         (value: SortOrder) => {
             startTransition(() => {
-                refetch({ query, orderBy: bookSortOrder, order: value });
-                setSortOrder(value);
+                const newVars = { ...vars, order: value };
+                refetch(newVars);
+                setVars(newVars);
             });
         },
-        [bookSortOrder, query, refetch],
+        [vars, refetch],
     );
     const reload = useCallback(() => {
         startTransition(() => {
-            refetch(
-                { query, orderBy: bookSortOrder, order: sortOrder },
-                { fetchPolicy: "network-only" },
-            );
+            refetch(vars, { fetchPolicy: "network-only" });
         });
-    }, [bookSortOrder, query, refetch, sortOrder]);
+    }, [vars, refetch]);
 
     return (
         <Form onSubmit={reload} className={className}>
@@ -83,7 +81,7 @@ export const BookSearchBar: React.FC<{
                         width: 1em;
                     `}
                     placeholder="Find a book"
-                    value={query}
+                    value={vars.query}
                     onValueChange={changeQuery}
                 />
                 <Select
