@@ -1,4 +1,3 @@
-import { css } from "@linaria/core";
 import { useCallback } from "react";
 import { graphql, useMutation } from "react-relay";
 import { useNavigate } from "~/features/location";
@@ -27,14 +26,10 @@ export const BookDeleteForm: React.FC<{
     }, [bookId, commit, navigate]);
 
     return (
-        <Form className={BookDeleteFormStyle}>
+        <Form>
             <Button type="submit" onClick={deleteBook} disabled={isInFlight}>
-                delete book
+                Delete this book
             </Button>
         </Form>
     );
 };
-
-const BookDeleteFormStyle = css`
-    font-size: 0.9em;
-`;
