@@ -1,5 +1,5 @@
 import { css } from "@linaria/core";
-import { useCallback, useState, useTransition } from "react";
+import { useCallback, useState } from "react";
 import { RefetchOptions } from "react-relay";
 import {
     Button,
@@ -23,7 +23,6 @@ export const BookSearchBar: React.FC<{
     ) => void;
     className?: string;
 }> = ({ refetch, className }) => {
-    const [, startTransition] = useTransition();
     const [vars, setVars] = useState<{
         query: string;
         orderBy: BookSortOrder;
@@ -33,38 +32,30 @@ export const BookSearchBar: React.FC<{
     const changeQuery = useCallback(
         (value: string) => {
             const newVars = { ...vars, query: value };
-            setVars(newVars);
             // TODO throttle
-            startTransition(() => {
-                refetch(newVars);
-            });
+            refetch(newVars);
+            setVars(newVars);
         },
         [vars, refetch],
     );
     const changeBookSortOrder = useCallback(
         (value: BookSortOrder) => {
-            startTransition(() => {
-                const newVars = { ...vars, orderBy: value };
-                refetch(newVars);
-                setVars(newVars);
-            });
+            const newVars = { ...vars, orderBy: value };
+            refetch(newVars);
+            setVars(newVars);
         },
         [vars, refetch],
     );
     const changeSortOrder = useCallback(
         (value: SortOrder) => {
-            startTransition(() => {
-                const newVars = { ...vars, order: value };
-                refetch(newVars);
-                setVars(newVars);
-            });
+            const newVars = { ...vars, order: value };
+            refetch(newVars);
+            setVars(newVars);
         },
         [vars, refetch],
     );
     const reload = useCallback(() => {
-        startTransition(() => {
-            refetch(vars, { fetchPolicy: "network-only" });
-        });
+        refetch(vars, { fetchPolicy: "network-only" });
     }, [vars, refetch]);
 
     return (

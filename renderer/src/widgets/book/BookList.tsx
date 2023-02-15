@@ -1,6 +1,7 @@
 import { css, cx } from "@linaria/core";
-import { useCallback, useMemo } from "react";
+import { startTransition, useCallback, useMemo } from "react";
 import { graphql, usePaginationFragment } from "react-relay";
+import type { RefetchFnDynamic } from "react-relay/relay-hooks/useRefetchableFragmentNode";
 import { rootEl } from "~/app/root-el";
 import { BookOverview } from "~/entities/book";
 import { BookSearchBar } from "~/features/book-form";
@@ -55,6 +56,20 @@ export const BookList: React.FC<{
 
     const books = useMemo(() => getNodes(data.books.edges), [data.books.edges]);
 
+    type RefetchTransition = (
+        ...args: Parameters<
+            RefetchFnDynamic<BookListPaginationQuery, BookListFragment$key>
+        >
+    ) => void;
+    const refetchTransition = useCallback<RefetchTransition>(
+        (vars, options) => {
+            startTransition(() => {
+                refetch(vars, options);
+            });
+        },
+        [refetch],
+    );
+
     return (
         <div>
             <div
@@ -64,7 +79,7 @@ export const BookList: React.FC<{
                 `}
             >
                 <BookSearchBar
-                    refetch={refetch}
+                    refetch={refetchTransition}
                     className={css`
                         flex: 1 0;
                     `}
