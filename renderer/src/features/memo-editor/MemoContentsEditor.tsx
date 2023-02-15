@@ -18,6 +18,7 @@ export const MemoContentsEditor: React.FC<{
                 updateMemoContents(memoId: $memoId, contents: $contents) {
                     id
                     contents
+                    updatedAt
                 }
             }
         `);
