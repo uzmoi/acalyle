@@ -70,7 +70,7 @@ export const BookSearchBar: React.FC<{
     }, [bookSortOrder, query, refetch, sortOrder]);
 
     return (
-        <Form className={className}>
+        <Form onSubmit={reload} className={className}>
             <ControlGroup
                 className={css`
                     display: flex;
@@ -105,7 +105,7 @@ export const BookSearchBar: React.FC<{
                     <Select.Option value="asc">昇順</Select.Option>
                     <Select.Option value="desc">降順</Select.Option>
                 </Select>
-                <Button onClick={reload}>reload</Button>
+                <Button type="submit">reload</Button>
             </ControlGroup>
         </Form>
     );

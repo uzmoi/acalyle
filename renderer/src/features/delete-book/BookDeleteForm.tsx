@@ -31,7 +31,7 @@ export const BookDeleteForm: React.FC<{
     const [pass, setPass] = useState("");
 
     return (
-        <Form>
+        <Form onSubmit={deleteBook}>
             <p>
                 Please type &quot;
                 <code
@@ -53,7 +53,6 @@ export const BookDeleteForm: React.FC<{
                 <TextInput onValueChange={setPass} />
                 <Button
                     type="submit"
-                    onClick={deleteBook}
                     disabled={pass !== confirmText || isInFlight}
                     className={css`
                         margin-left: 1em;
