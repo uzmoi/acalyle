@@ -27,7 +27,7 @@ export const AddMemoButton: React.FC<{
                 navigate(
                     link("books/:bookId/:memoId", {
                         bookId,
-                        memoId: createMemo.node.id,
+                        memoId: createMemo.id,
                     }),
                 );
             },
