@@ -24,7 +24,7 @@ export const BookSettingsPage: React.FC<{
         <div className={BookSettingsPageStyle}>
             <BookTitleForm bookId={id} currentTitle={book.title} />
             <BookThumbnailForm bookId={id} />
-            <BookDeleteForm bookId={id} />
+            <BookDeleteForm bookId={id} confirmText={`delete-${book.title}`} />
         </div>
     );
 };
