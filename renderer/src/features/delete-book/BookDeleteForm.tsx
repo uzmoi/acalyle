@@ -11,7 +11,7 @@ export const BookDeleteForm: React.FC<{
 }> = ({ bookId }) => {
     const [commit, isInFlight] = useMutation<BookDeleteFormMutation>(graphql`
         mutation BookDeleteFormMutation($id: ID!) {
-            deleteBook(id: $id)
+            deleteBook(id: $id) @deleteRecord
         }
     `);
 
