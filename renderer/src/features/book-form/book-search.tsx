@@ -77,7 +77,10 @@ export const BookSearchBar: React.FC<{
                 />
                 <Select
                     defaultValue="Created"
-                    onValueChange={changeBookSortOrder}
+                    onValueChange={
+                        // FIXME
+                        changeBookSortOrder as (value: string) => void
+                    }
                     aria-label="book sort order"
                 >
                     <Select.Option>Created</Select.Option>
@@ -88,7 +91,8 @@ export const BookSearchBar: React.FC<{
                 </Select>
                 <Select
                     defaultValue="desc"
-                    onValueChange={changeSortOrder}
+                    // FIXME
+                    onValueChange={changeSortOrder as (value: string) => void}
                     aria-label="sort order"
                 >
                     <Select.Option value="asc">昇順</Select.Option>
