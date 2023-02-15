@@ -169,7 +169,7 @@ export const types = [
     }),
     enumType({
         name: "BookSortOrder",
-        members: ["Created", "Title"],
+        members: ["Created", "Title", "LastUpdated"],
     }),
     queryField(t => {
         t.connectionField("books", {
@@ -187,6 +187,7 @@ export const types = [
                 const orderBy = {
                     Title: "title",
                     Created: "createdAt",
+                    LastUpdated: "updatedAt",
                 }[args.orderBy ?? "Created"];
                 const filter: Prisma.StringFilter | undefined = args.query
                     ? { contains: args.query }

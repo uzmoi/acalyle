@@ -13,6 +13,7 @@ model Book {
     title       String
     description String
     createdAt   DateTime
+    updatedAt   DateTime
     memos       Memo[]
     tags        Tag[]
     settings    Bytes

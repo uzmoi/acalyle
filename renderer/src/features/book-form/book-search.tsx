@@ -9,7 +9,7 @@ import {
     TextInput,
 } from "~/shared/control";
 
-type BookSortOrder = "Created" | "Title";
+type BookSortOrder = "Created" | "Title" | "LastUpdated";
 type SortOrder = "asc" | "desc";
 
 export const BookSearchBar: React.FC<{
