@@ -1,10 +1,7 @@
 import { css } from "@linaria/core";
 import { graphql, useLazyLoadQuery } from "react-relay";
-import {
-    BookDeleteForm,
-    BookThumbnailForm,
-    BookTitleForm,
-} from "~/features/book-form";
+import { BookThumbnailForm, BookTitleForm } from "~/features/book-form";
+import { BookDeleteForm } from "~/features/delete-book";
 import { bookSettingsDataQuery } from "./__generated__/bookSettingsDataQuery.graphql";
 
 export const BookSettingsPage: React.FC<{

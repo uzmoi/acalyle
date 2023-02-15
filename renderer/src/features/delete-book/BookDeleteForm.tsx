@@ -1,29 +1,30 @@
 import { css } from "@linaria/core";
+import { useCallback } from "react";
 import { graphql, useMutation } from "react-relay";
 import { useNavigate } from "~/features/location";
 import { link } from "~/pages/link";
 import { Button, Form } from "~/shared/control";
-import { deleteMutation } from "./__generated__/deleteMutation.graphql";
+import { BookDeleteFormMutation } from "./__generated__/BookDeleteFormMutation.graphql";
 
 export const BookDeleteForm: React.FC<{
     bookId: string;
 }> = ({ bookId }) => {
-    const [commitDelete, isInFlight] = useMutation<deleteMutation>(graphql`
-        mutation deleteMutation($id: ID!) {
+    const [commit, isInFlight] = useMutation<BookDeleteFormMutation>(graphql`
+        mutation BookDeleteFormMutation($id: ID!) {
             deleteBook(id: $id)
         }
     `);
 
     const navigate = useNavigate();
 
-    const deleteBook = () => {
-        commitDelete({
+    const deleteBook = useCallback(() => {
+        commit({
             variables: { id: bookId },
             onCompleted() {
                 navigate(link("books"));
             },
         });
-    };
+    }, [bookId, commit, navigate]);
 
     return (
         <Form className={BookDeleteFormStyle}>
