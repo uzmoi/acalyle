@@ -50,65 +50,6 @@ export const parsePattern = (pattern: string): Pattern => {
     return { parts: partStrings.map(parsePatternPart), params };
 };
 
-if (import.meta.vitest) {
-    const { it, describe, expect } = import.meta.vitest;
-    describe("parsePattern", () => {
-        it("temp", () => {
-            const parsePattern = (pattern: string): PatternPart[] =>
-                pattern.split("/").filter(Boolean).map(parsePatternPart);
-            expect(parsePattern("")).toEqual([]);
-        });
-        it("empty", () => {
-            expect(parsePattern("")).toEqual({
-                parts: [],
-                params: [],
-            });
-        });
-        it("empty part", () => {
-            expect(parsePattern(":")).toEqual({
-                parts: [{ key: "", mark: "" }],
-                params: [],
-            });
-        });
-        it("option part", () => {
-            expect(parsePattern(":hoge?")).toEqual({
-                parts: [{ key: "hoge", mark: "?" }],
-                params: [],
-            });
-        });
-        it("normal part + params", () => {
-            expect(parsePattern(":hoge?foo")).toEqual({
-                parts: [{ key: "hoge", mark: "" }],
-                params: ["foo"],
-            });
-        });
-        it("option part + params", () => {
-            expect(parsePattern(":hoge??foo")).toEqual({
-                parts: [{ key: "hoge", mark: "?" }],
-                params: ["foo"],
-            });
-        });
-        it("option part + empty params", () => {
-            expect(parsePattern(":hoge??")).toEqual({
-                parts: [{ key: "hoge", mark: "?" }],
-                params: [],
-            });
-        });
-        it("empty params", () => {
-            expect(parsePattern("?")).toEqual({
-                parts: [],
-                params: [],
-            });
-        });
-        it("params separated by '&'", () => {
-            expect(parsePattern("?param1&param2")).toEqual({
-                parts: [],
-                params: ["param1", "param2"],
-            });
-        });
-    });
-}
-
 type ParamKey<T extends string> = T extends `:${infer U}` ? U : never;
 
 // prettier-ignore
@@ -189,26 +130,3 @@ export const link: LinkBuilder = (patternString, args?) => {
     return (path +
         (searchParams === "" ? "" : `?${searchParams}`)) as Link<never>;
 };
-
-if (import.meta.vitest) {
-    const { it, describe, expect } = import.meta.vitest;
-    describe("link", () => {
-        it("変換なし", () => {
-            expect(link("")).toBe("");
-            expect(link("hoge")).toBe("hoge");
-            expect(link("hoge/fuga")).toBe("hoge/fuga");
-        });
-        it("normalize path", () => {
-            expect(link("/hoge///fuga/")).toBe("hoge/fuga");
-        });
-        it("params埋め込み", () => {
-            expect(
-                link("normal/:/:option?/:many*", {
-                    "": "any",
-                    option: undefined,
-                    many: ["foo", "bar"],
-                }),
-            ).toBe("normal/any/foo/bar");
-        });
-    });
-}

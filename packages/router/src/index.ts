@@ -1,6 +1,6 @@
 export * from "./pattern";
 export * from "./route";
-export * from "./routes";
+export { child, page, routes } from "./routes";
 export * from "./types";
 
 // eslint-disable-next-line import/no-self-import
