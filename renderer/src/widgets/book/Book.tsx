@@ -28,9 +28,28 @@ export const Book: React.FC<{
 
     return (
         <div>
-            <div className={BookHeaderStyle}>
-                <h2 className={BookTitleStyle}>{data.title}</h2>
-                <List className={ButtonListStyle}>
+            <div
+                className={css`
+                    display: flex;
+                    padding-bottom: 1em;
+                `}
+            >
+                <h2
+                    className={css`
+                        flex-grow: 1;
+                    `}
+                >
+                    {data.title}
+                </h2>
+                <List
+                    className={css`
+                        display: flex;
+                        flex-shrink: 0;
+                        > li ~ li {
+                            margin-left: 0.8em;
+                        }
+                    `}
+                >
                     <List.Item>
                         <TextInput
                             value={searchString}
@@ -54,22 +73,3 @@ export const Book: React.FC<{
         </div>
     );
 };
-
-const BookHeaderStyle = css`
-    display: flex;
-    padding: 1em;
-    padding-right: 2em;
-    padding-left: 2em;
-`;
-
-const BookTitleStyle = css`
-    flex-grow: 1;
-`;
-
-const ButtonListStyle = css`
-    display: flex;
-    flex-shrink: 0;
-    > li ~ li {
-        margin-left: 0.8em;
-    }
-`;
