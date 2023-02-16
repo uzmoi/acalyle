@@ -1,6 +1,7 @@
 import { css } from "@linaria/core";
 import { useState } from "react";
 import { graphql, useFragment } from "react-relay";
+import { TagList } from "~/entities/tag";
 import { AddMemoButton } from "~/features/add-memo";
 import { Link } from "~/features/location";
 import { link } from "~/pages/link";
@@ -16,7 +17,9 @@ export const Book: React.FC<{
     // prettier-ignore
     const data = useFragment<BookMemosFragment$key>(graphql`
         fragment BookMemosFragment on Book {
+            id
             title
+            tags
             ...MemoListFragment
         }
     `, book);
@@ -46,6 +49,7 @@ export const Book: React.FC<{
                     </List.Item>
                 </List>
             </div>
+            <TagList bookId={data.id} tags={data.tags} />
             <MemoList fragmentRef={data} search={searchString} />
         </div>
     );
