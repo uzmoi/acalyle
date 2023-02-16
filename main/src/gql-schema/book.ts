@@ -99,10 +99,6 @@ export const types = [
                     if (args.search != null) {
                         filters = parseSearchQuery(args.search);
                     }
-                    const tagWhere = (memoTag: MemoTag) => ({
-                        type: memoTag.type,
-                        name: memoTag.getName(),
-                    });
                     return prisma.memo.findMany({
                         cursor: p.cursor == null ? undefined : { id: p.cursor },
                         skip: p.cursor == null ? 0 : 1,
@@ -120,16 +116,20 @@ export const types = [
                                 })),
                             ].map(contents => ({ contents })),
                             tags: filters?.tags.to((include, exclude) => ({
-                                // prettier-ignore
                                 some: include && {
-                                    Tag: { AND: include.map(tagWhere) },
+                                    AND: include.map(tag => ({
+                                        tagName: tag.toBookTag(),
+                                    })),
                                 },
-                                // prettier-ignore
                                 none: exclude && {
-                                    Tag: { OR: exclude.map(tagWhere) },
+                                    OR: exclude.map(tag => ({
+                                        tagName: tag.toBookTag(),
+                                    })),
                                 },
-                            })),
-                        },
+                            })) satisfies
+                                | Prisma.MemoTagListRelationFilter
+                                | undefined,
+                        } satisfies Prisma.MemoWhereInput,
                     });
                 },
                 totalCount(book, __, { prisma }) {
@@ -140,16 +140,12 @@ export const types = [
             });
             t.list.string("tags", {
                 async resolve(book, __, { prisma }) {
-                    const tags = await prisma.tag.findMany({
-                        where: { bookId: book.id },
+                    const tags = await prisma.memoTag.findMany({
+                        where: { Memo: { bookId: book.id } },
+                        distinct: "tagName",
+                        select: { tagName: true },
                     });
-                    return tags.map(tag => {
-                        return MemoTag.from(
-                            tag.type as "normal" | "control",
-                            [tag.name],
-                            [],
-                        ).toString();
-                    });
+                    return tags.map(({ tagName }) => tagName);
                 },
             });
         },

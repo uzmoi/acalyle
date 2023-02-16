@@ -15,7 +15,6 @@ model Book {
     createdAt   DateTime
     updatedAt   DateTime
     memos       Memo[]
-    tags        Tag[]
     settings    Bytes
 }
 
@@ -29,19 +28,7 @@ model Memo {
     bookId    String
 }
 
-model Tag {
-    type     String
-    name     String
-    memoTags MemoTag[]
-    Book     Book      @relation(fields: [bookId], references: [id], onDelete: Cascade)
-    bookId   String
-
-    @@id([bookId, name])
-}
-
 model MemoTag {
-    Tag     Tag             @relation(fields: [bookId, tagName], references: [bookId, name], onUpdate: Cascade)
-    bookId  String
     tagName String
     options MemoTagOption[]
     Memo    Memo            @relation(fields: [memoId], references: [id], onDelete: Cascade)
