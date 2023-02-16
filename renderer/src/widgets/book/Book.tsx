@@ -1,9 +1,9 @@
 import { css } from "@linaria/core";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { graphql, useFragment } from "react-relay";
 import { TagList } from "~/entities/tag";
 import { AddMemoButton } from "~/features/add-memo";
-import { Link } from "~/features/location";
+import { Link, useNavigate } from "~/features/location";
 import { link } from "~/pages/link";
 import { List } from "~/shared/base";
 import { TextInput } from "~/shared/control";
@@ -25,6 +25,14 @@ export const Book: React.FC<{
     `, book);
 
     const [searchString, setSearchString] = useState("");
+
+    const navigate = useNavigate();
+    const onMemoAdded = useCallback(
+        (memoId: string) => {
+            navigate(link("books/:bookId/:memoId", { bookId: id, memoId }));
+        },
+        [id, navigate],
+    );
 
     return (
         <div>
@@ -57,7 +65,7 @@ export const Book: React.FC<{
                         />
                     </List.Item>
                     <List.Item>
-                        <AddMemoButton bookId={id} />
+                        <AddMemoButton bookId={id} onMemoAdded={onMemoAdded} />
                     </List.Item>
                     <List.Item>
                         <Link
