@@ -1,10 +1,12 @@
 import { Tab } from "@headlessui/react";
-import { cx } from "@linaria/core";
-import { useEffect, useMemo } from "react";
+import { css, cx } from "@linaria/core";
+import { useCallback, useEffect, useMemo } from "react";
 import { graphql, usePaginationFragment } from "react-relay";
+import { rootEl } from "~/app/root-el";
 import { MemoColumns } from "~/entities/memo/ui/memo-columns";
 import { MemoList as MemoList_ } from "~/entities/memo/ui/memo-list";
 import { getNodes } from "~/shared/base/connection";
+import { Intersection } from "~/shared/base/intersection";
 import {
     ControlPartOutlineStyle,
     ControlPartResetStyle,
@@ -20,6 +22,9 @@ export const MemoList: React.FC<{
     // prettier-ignore
     const {
         data,
+        hasNext,
+        isLoadingNext,
+        loadNext,
         refetch,
     } = usePaginationFragment<MemoListPaginationQuery, MemoListFragment$key>(graphql`
         fragment MemoListFragment on Book
@@ -44,6 +49,16 @@ export const MemoList: React.FC<{
         refetch({ search }).dispose();
     }, [refetch, search]);
 
+    const shouldLoadNext = hasNext && !isLoadingNext;
+    const onIntersection = useCallback(
+        (entry: IntersectionObserverEntry) => {
+            if (entry.isIntersecting && shouldLoadNext) {
+                loadNext(32);
+            }
+        },
+        [shouldLoadNext, loadNext],
+    );
+
     const memos = useMemo(() => getNodes(data.memos.edges), [data.memos.edges]);
 
     return (
@@ -62,6 +77,14 @@ export const MemoList: React.FC<{
                     </Tab.Panel>
                 </Tab.Panels>
             </Tab.Group>
+            <Intersection
+                onIntersection={onIntersection}
+                root={rootEl.current}
+                rootMargin="25% 0px"
+                className={css`
+                    height: 1px;
+                `}
+            />
         </div>
     );
 };
