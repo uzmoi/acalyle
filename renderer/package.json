@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@acalyle/router": "*",
+    "@headlessui/react": "^1.7.11",
     "@linaria/core": "^4.2.6",
     "emnorst": "^1.0.0-next.2",
     "normalize-url": "^8.0.0",

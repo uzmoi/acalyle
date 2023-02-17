@@ -1,9 +1,15 @@
-import { useEffect, useMemo, useState } from "react";
+import { Tab } from "@headlessui/react";
+import { cx } from "@linaria/core";
+import { useEffect, useMemo } from "react";
 import { graphql, usePaginationFragment } from "react-relay";
 import { MemoColumns } from "~/entities/memo/ui/memo-columns";
 import { MemoList as MemoList_ } from "~/entities/memo/ui/memo-list";
 import { getNodes } from "~/shared/base/connection";
-import { Select } from "~/shared/control";
+import {
+    ControlPartOutlineStyle,
+    ControlPartResetStyle,
+} from "~/shared/control/base";
+import { ControlGroupStyle } from "~/shared/control/group";
 import { MemoListFragment$key } from "./__generated__/MemoListFragment.graphql";
 import { MemoListPaginationQuery } from "./__generated__/MemoListPaginationQuery.graphql";
 
@@ -38,25 +44,26 @@ export const MemoList: React.FC<{
         refetch({ search }).dispose();
     }, [refetch, search]);
 
-    const [layoutStyle, setLayoutStyle] = useState<"columns" | "list">(
-        "columns",
-    );
-
     const memos = useMemo(() => getNodes(data.memos.edges), [data.memos.edges]);
 
     return (
         <div>
-            {/* @ts-expect-error FIXME onValueChangeがunionじゃない */}
-            <Select value={layoutStyle} onValueChange={setLayoutStyle}>
-                <Select.Option>columns</Select.Option>
-                <Select.Option>list</Select.Option>
-            </Select>
-            {
-                {
-                    columns: <MemoColumns bookId={data.id} memos={memos} />,
-                    list: <MemoList_ bookId={data.id} memos={memos} />,
-                }[layoutStyle]
-            }
+            <Tab.Group>
+                <Tab.List className={ControlGroupStyle}>
+                    <Tab className={ControlPartStyle}>columns</Tab>
+                    <Tab className={ControlPartStyle}>list</Tab>
+                </Tab.List>
+                <Tab.Panels>
+                    <Tab.Panel>
+                        <MemoColumns bookId={data.id} memos={memos} />
+                    </Tab.Panel>
+                    <Tab.Panel>
+                        <MemoList_ bookId={data.id} memos={memos} />
+                    </Tab.Panel>
+                </Tab.Panels>
+            </Tab.Group>
         </div>
     );
 };
+
+const ControlPartStyle = cx(ControlPartResetStyle, ControlPartOutlineStyle);
