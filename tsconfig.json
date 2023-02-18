@@ -6,5 +6,6 @@
         { "path": "./tsconfig.preload.json" },
         { "path": "./tsconfig.renderer.json" },
         { "path": "./packages/router/tsconfig.json" },
+        { "path": "./packages/core/tsconfig.json" },
     ],
 }
