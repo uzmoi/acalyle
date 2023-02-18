@@ -30,19 +30,9 @@ model Memo {
 
 model MemoTag {
     tagName String
-    options MemoTagOption[]
-    Memo    Memo            @relation(fields: [memoId], references: [id], onDelete: Cascade)
+    option  String?
+    Memo    Memo    @relation(fields: [memoId], references: [id], onDelete: Cascade)
     memoId  String
 
     @@id([memoId, tagName])
-}
-
-model MemoTagOption {
-    key     String
-    value   String
-    MemoTag MemoTag @relation(fields: [memoId, tagName], references: [memoId, tagName], onUpdate: Cascade, onDelete: Cascade)
-    memoId  String
-    tagName String
-
-    @@id([memoId, tagName, key])
 }

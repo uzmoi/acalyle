@@ -26,10 +26,10 @@ export const types = [
                         where: { memoId: memo.id },
                         select: {
                             tagName: true,
-                            options: { select: { key: true, value: true } },
+                            option: true,
                         },
                     });
-                    return memoTags.flatMap(({ tagName, options }) => {
+                    return memoTags.flatMap(({ tagName, option }) => {
                         const memoTag = MemoTag.fromString(tagName);
                         if (memoTag == null) {
                             return [];
@@ -37,7 +37,15 @@ export const types = [
                         return MemoTag.from(
                             memoTag.type,
                             memoTag.name,
-                            options.map(option => [option.key, option.value]),
+                            option
+                                ?.split(",")
+                                .map(
+                                    option =>
+                                        option.split("=", 2) as [
+                                            string,
+                                            string,
+                                        ],
+                                ) ?? [],
                         ).toString();
                     });
                 },
@@ -116,12 +124,7 @@ export const types = [
                 .map(tag => ({
                     bookId,
                     tagName: tag.toBookTag(),
-                    options: {
-                        create: Array.from(
-                            tag.options ?? [],
-                            ([key, value]) => ({ key, value }),
-                        ),
-                    },
+                    option: tag.getOptions(),
                 }));
             return prisma.memo.update({
                 where: { id: args.memoId },
@@ -151,15 +154,7 @@ export const types = [
                             tagName: tag.getName(),
                         },
                     },
-                    data: {
-                        options: {
-                            deleteMany: {},
-                            create: Array.from(
-                                tag.options ?? [],
-                                ([key, value]) => ({ key, value }),
-                            ),
-                        },
-                    },
+                    data: { option: tag.getOptions() },
                 }));
             return prisma.memo.update({
                 where: { id: args.memoId },
@@ -217,24 +212,12 @@ export const types = [
                 memo.createdAt,
                 memo.updatedAt,
             ]);
-            const memoTags = args.memos.flatMap(memo =>
+            const memoTagValues = args.memos.flatMap(memo =>
                 memo.tags
                     .map(MemoTag.fromString)
                     .filter(nonNullable)
-                    .map(tag => [memo.id, tag] as const),
+                    .map(tag => [memo.id, tag.toBookTag(), tag.getOptions()]),
             );
-            const memoTagValues = memoTags.map(([memoId, tag]) => [
-                memoId,
-                tag.toBookTag(),
-            ]);
-            const memoTagOptionValues = memoTags.flatMap(([memoId, tag]) => {
-                return Array.from(tag.options ?? [], ([key, value]) => [
-                    memoId,
-                    tag.toBookTag(),
-                    key,
-                    value,
-                ]);
-            });
 
             const joinJoin = (values: unknown[][]) =>
                 Prisma.join(
@@ -250,14 +233,8 @@ export const types = [
                     memoTagValues.length === 0
                         ? null
                         : prisma.$executeRaw`
-                            INSERT INTO MemoTag(memoId, tagName)
+                            INSERT INTO MemoTag(memoId, tagName, option)
                             VALUES ${joinJoin(memoTagValues)};
-                        `,
-                    memoTagOptionValues.length === 0
-                        ? null
-                        : prisma.$executeRaw`
-                            INSERT INTO MemoTagOption(memoId, tagName, key, value)
-                            VALUES ${joinJoin(memoTagOptionValues)};
                         `,
                 ].filter(nonNullable),
             );
