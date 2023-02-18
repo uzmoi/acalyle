@@ -19,20 +19,20 @@ model Book {
 }
 
 model Memo {
-    id        String    @id
+    id        String   @id
     contents  String
-    tags      MemoTag[]
+    tags      Tag[]
     createdAt DateTime
     updatedAt DateTime
-    Book      Book      @relation(fields: [bookId], references: [id], onDelete: Cascade)
+    Book      Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
     bookId    String
 }
 
-model MemoTag {
-    tagName String
-    option  String?
-    Memo    Memo    @relation(fields: [memoId], references: [id], onDelete: Cascade)
-    memoId  String
+model Tag {
+    symbol String
+    prop   String?
+    Memo   Memo    @relation(fields: [memoId], references: [id], onDelete: Cascade)
+    memoId String
 
-    @@id([memoId, tagName])
+    @@id([memoId, symbol])
 }

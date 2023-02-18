@@ -116,16 +116,16 @@ export const types = [
                             tags: filters?.tags.to((include, exclude) => ({
                                 some: include && {
                                     AND: include.map(tag => ({
-                                        tagName: tag.symbol,
+                                        symbol: tag.symbol,
                                     })),
                                 },
                                 none: exclude && {
                                     OR: exclude.map(tag => ({
-                                        tagName: tag.symbol,
+                                        symbol: tag.symbol,
                                     })),
                                 },
                             })) satisfies
-                                | Prisma.MemoTagListRelationFilter
+                                | Prisma.TagListRelationFilter
                                 | undefined,
                         } satisfies Prisma.MemoWhereInput,
                     });
@@ -138,12 +138,12 @@ export const types = [
             });
             t.list.string("tags", {
                 async resolve(book, __, { prisma }) {
-                    const tags = await prisma.memoTag.findMany({
+                    const tags = await prisma.tag.findMany({
                         where: { Memo: { bookId: book.id } },
-                        distinct: "tagName",
-                        select: { tagName: true },
+                        distinct: "symbol",
+                        select: { symbol: true },
                     });
-                    return tags.map(({ tagName }) => tagName);
+                    return tags.map(tag => tag.symbol);
                 },
             });
         },

@@ -21,15 +21,12 @@ export const types = [
             t.string("contents");
             t.list.string("tags", {
                 async resolve(memo, __, { prisma }) {
-                    const memoTags = await prisma.memoTag.findMany({
+                    const tags = await prisma.tag.findMany({
                         where: { memoId: memo.id },
-                        select: {
-                            tagName: true,
-                            option: true,
-                        },
+                        select: { symbol: true, prop: true },
                     });
-                    return memoTags.map(({ tagName, option }) =>
-                        new AcalyleMemoTag(tagName, option).toString(),
+                    return tags.map(({ symbol, prop }) =>
+                        new AcalyleMemoTag(symbol, prop).toString(),
                     );
                 },
             });
@@ -99,20 +96,19 @@ export const types = [
                 where: { id: args.memoId },
                 select: { bookId: true },
             });
-            const memoTagCreate:
-                | Prisma.MemoTagCreateWithoutMemoInput[]
-                | undefined = args.tags
-                ?.map(AcalyleMemoTag.fromString)
-                .filter(nonNullable)
-                .map(tag => ({
-                    bookId,
-                    tagName: tag.symbol,
-                    option: tag.prop,
-                }));
+            const tagCreate: Prisma.TagCreateWithoutMemoInput[] | undefined =
+                args.tags
+                    ?.map(AcalyleMemoTag.fromString)
+                    .filter(nonNullable)
+                    .map(tag => ({
+                        bookId,
+                        symbol: tag.symbol,
+                        prop: tag.prop,
+                    }));
             return prisma.memo.update({
                 where: { id: args.memoId },
                 data: {
-                    tags: { create: memoTagCreate },
+                    tags: { create: tagCreate },
                     updatedAt: new Date(),
                 },
             });
@@ -125,24 +121,24 @@ export const types = [
             tags: nonNull(list(nonNull("String"))),
         },
         resolve(_, args, { prisma }) {
-            const memoTagUpdate:
-                | Prisma.MemoTagUpdateWithWhereUniqueWithoutMemoInput[]
+            const tagUpdate:
+                | Prisma.TagUpdateWithWhereUniqueWithoutMemoInput[]
                 | undefined = args.tags
                 ?.map(AcalyleMemoTag.fromString)
                 .filter(nonNullable)
                 .map(tag => ({
                     where: {
-                        memoId_tagName: {
+                        memoId_symbol: {
                             memoId: args.memoId,
-                            tagName: tag.symbol,
+                            symbol: tag.symbol,
                         },
                     },
-                    data: { option: tag.prop },
+                    data: { prop: tag.prop },
                 }));
             return prisma.memo.update({
                 where: { id: args.memoId },
                 data: {
-                    tags: { update: memoTagUpdate },
+                    tags: { update: tagUpdate },
                     updatedAt: new Date(),
                 },
             });
@@ -155,17 +151,17 @@ export const types = [
             tags: nonNull(list(nonNull("String"))),
         },
         resolve(_, args, { prisma }) {
-            const memoTagDelete: Prisma.MemoTagScalarWhereInput = {
+            const tagDelete: Prisma.TagScalarWhereInput = {
                 memoId: args.memoId,
                 OR: args.tags
                     .map(AcalyleMemoTag.fromString)
                     .filter(nonNullable)
-                    .map(tag => ({ tagName: tag.symbol })),
+                    .map(tag => ({ symbol: tag.symbol })),
             };
             return prisma.memo.update({
                 where: { id: args.memoId },
                 data: {
-                    tags: { deleteMany: memoTagDelete },
+                    tags: { deleteMany: tagDelete },
                     updatedAt: new Date(),
                 },
             });
@@ -215,7 +211,7 @@ export const types = [
             );
             if (tags.length !== 0) {
                 transaction.push(prisma.$executeRaw`
-                    INSERT INTO MemoTag("memoId", "tagName", "option")
+                    INSERT INTO Tag("memoId", "symbol", "prop")
                     VALUES ${joinJoin(tags)};
                 `);
             }
