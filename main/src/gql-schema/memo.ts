@@ -205,6 +205,13 @@ export const types = [
             memos: nonNull(list(nonNull("MemoInput"))),
         },
         async resolve(_, args, { prisma }) {
+            const joinJoin = (values: readonly unknown[][]) =>
+                Prisma.join(
+                    values.map(values => Prisma.join(values, ",", "(", ")")),
+                );
+
+            const transaction: Prisma.PrismaPromise<unknown>[] = [];
+
             const memoValues = args.memos.map(memo => [
                 args.bookId,
                 memo.id,
@@ -212,32 +219,25 @@ export const types = [
                 memo.createdAt,
                 memo.updatedAt,
             ]);
-            const memoTagValues = args.memos.flatMap(memo =>
+            transaction.push(prisma.$executeRaw`
+                INSERT INTO Memo("bookId", "id", "contents", "createdAt", "updatedAt")
+                VALUES ${joinJoin(memoValues)};
+            `);
+
+            const tags = args.memos.flatMap(memo =>
                 memo.tags
                     .map(MemoTag.fromString)
                     .filter(nonNullable)
                     .map(tag => [memo.id, tag.toBookTag(), tag.getOptions()]),
             );
+            if (tags.length !== 0) {
+                transaction.push(prisma.$executeRaw`
+                    INSERT INTO MemoTag("memoId", "tagName", "option")
+                    VALUES ${joinJoin(tags)};
+                `);
+            }
 
-            const joinJoin = (values: unknown[][]) =>
-                Prisma.join(
-                    values.map(values => Prisma.join(values, ",", "(", ")")),
-                );
-
-            await prisma.$transaction(
-                [
-                    prisma.$executeRaw`
-                        INSERT INTO Memo(bookId, id, contents, createdAt, updatedAt)
-                        VALUES ${joinJoin(memoValues)};
-                    `,
-                    memoTagValues.length === 0
-                        ? null
-                        : prisma.$executeRaw`
-                            INSERT INTO MemoTag(memoId, tagName, option)
-                            VALUES ${joinJoin(memoTagValues)};
-                        `,
-                ].filter(nonNullable),
-            );
+            await prisma.$transaction(transaction);
             return "ok";
         },
     }),
