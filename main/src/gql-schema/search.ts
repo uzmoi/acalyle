@@ -1,5 +1,4 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { MemoTag } from "renderer/src/entities/tag/lib/memo-tag";
+import { AcalyleMemoTag } from "@acalyle/core";
 
 class Filter<T> {
     include: T[] = [];
@@ -12,7 +11,7 @@ class Filter<T> {
 
 export interface MemoFilters {
     contents: Filter<string>;
-    tags: Filter<MemoTag>;
+    tags: Filter<AcalyleMemoTag>;
 }
 
 export const parseSearchQuery = (query: string): MemoFilters => {
@@ -27,8 +26,9 @@ export const parseSearchQuery = (query: string): MemoFilters => {
             isExclude = "exclude";
             searchPart = searchPart.slice(1);
         }
-        const tag = MemoTag.fromString(searchPart);
-        if (tag != null && !searchPart.startsWith(tag.name[0])) {
+        const tag = AcalyleMemoTag.fromString(searchPart);
+        // "#"が省略されたタグを弾いてcontentsとする
+        if (tag != null && searchPart.startsWith(tag.symbol)) {
             filters.tags[isExclude].push(tag);
         } else {
             filters.contents[isExclude].push(searchPart);

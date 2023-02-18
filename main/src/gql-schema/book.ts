@@ -13,8 +13,6 @@ import {
     queryField,
 } from "nexus";
 import path = require("path");
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { MemoTag } from "renderer/src/entities/tag/lib/memo-tag";
 import { z } from "zod";
 import {
     getBookThumbnailPath,
@@ -118,12 +116,12 @@ export const types = [
                             tags: filters?.tags.to((include, exclude) => ({
                                 some: include && {
                                     AND: include.map(tag => ({
-                                        tagName: tag.toBookTag(),
+                                        tagName: tag.symbol,
                                     })),
                                 },
                                 none: exclude && {
                                     OR: exclude.map(tag => ({
-                                        tagName: tag.toBookTag(),
+                                        tagName: tag.symbol,
                                     })),
                                 },
                             })) satisfies

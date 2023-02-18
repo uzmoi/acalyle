@@ -12,6 +12,7 @@
     "test": "echo \"Error: no test specified\""
   },
   "dependencies": {
+    "@acalyle/core": "*",
     "@prisma/client": "^4.4.0",
     "emnorst": "^1.0.0-next.2",
     "graphql": "^15.3.0",

@@ -1,3 +1,4 @@
+import { AcalyleMemoTag } from "@acalyle/core";
 import { Prisma } from "@prisma/client";
 import { randomUUID } from "crypto";
 import { nonNullable } from "emnorst";
@@ -8,8 +9,6 @@ import {
     nonNull,
     objectType,
 } from "nexus";
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { MemoTag } from "renderer/src/entities/tag/lib/memo-tag";
 
 export const types = [
     objectType({
@@ -29,25 +28,9 @@ export const types = [
                             option: true,
                         },
                     });
-                    return memoTags.flatMap(({ tagName, option }) => {
-                        const memoTag = MemoTag.fromString(tagName);
-                        if (memoTag == null) {
-                            return [];
-                        }
-                        return MemoTag.from(
-                            memoTag.type,
-                            memoTag.name,
-                            option
-                                ?.split(",")
-                                .map(
-                                    option =>
-                                        option.split("=", 2) as [
-                                            string,
-                                            string,
-                                        ],
-                                ) ?? [],
-                        ).toString();
-                    });
+                    return memoTags.map(({ tagName, option }) =>
+                        new AcalyleMemoTag(tagName, option).toString(),
+                    );
                 },
             });
             t.field("book", {
@@ -119,12 +102,12 @@ export const types = [
             const memoTagCreate:
                 | Prisma.MemoTagCreateWithoutMemoInput[]
                 | undefined = args.tags
-                ?.map(MemoTag.fromString)
+                ?.map(AcalyleMemoTag.fromString)
                 .filter(nonNullable)
                 .map(tag => ({
                     bookId,
-                    tagName: tag.toBookTag(),
-                    option: tag.getOptions(),
+                    tagName: tag.symbol,
+                    option: tag.prop,
                 }));
             return prisma.memo.update({
                 where: { id: args.memoId },
@@ -145,16 +128,16 @@ export const types = [
             const memoTagUpdate:
                 | Prisma.MemoTagUpdateWithWhereUniqueWithoutMemoInput[]
                 | undefined = args.tags
-                ?.map(MemoTag.fromString)
+                ?.map(AcalyleMemoTag.fromString)
                 .filter(nonNullable)
                 .map(tag => ({
                     where: {
                         memoId_tagName: {
                             memoId: args.memoId,
-                            tagName: tag.getName(),
+                            tagName: tag.symbol,
                         },
                     },
-                    data: { option: tag.getOptions() },
+                    data: { option: tag.prop },
                 }));
             return prisma.memo.update({
                 where: { id: args.memoId },
@@ -175,9 +158,9 @@ export const types = [
             const memoTagDelete: Prisma.MemoTagScalarWhereInput = {
                 memoId: args.memoId,
                 OR: args.tags
-                    .map(MemoTag.fromString)
+                    .map(AcalyleMemoTag.fromString)
                     .filter(nonNullable)
-                    .map(tag => ({ tagName: tag.toBookTag() })),
+                    .map(tag => ({ tagName: tag.symbol })),
             };
             return prisma.memo.update({
                 where: { id: args.memoId },
@@ -226,9 +209,9 @@ export const types = [
 
             const tags = args.memos.flatMap(memo =>
                 memo.tags
-                    .map(MemoTag.fromString)
+                    .map(AcalyleMemoTag.fromString)
                     .filter(nonNullable)
-                    .map(tag => [memo.id, tag.toBookTag(), tag.getOptions()]),
+                    .map(tag => [memo.id, tag.symbol, tag.prop]),
             );
             if (tags.length !== 0) {
                 transaction.push(prisma.$executeRaw`
