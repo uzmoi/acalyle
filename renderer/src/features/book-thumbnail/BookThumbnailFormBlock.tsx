@@ -1,5 +1,5 @@
 import { css, cx } from "@linaria/core";
-import { useId } from "react";
+import { useCallback, useId } from "react";
 import { vars } from "~/entities/theme";
 import { FileInput, TextInput } from "~/shared/control";
 import {
@@ -8,36 +8,28 @@ import {
 } from "~/shared/control/base";
 import { Cropper, changeScale } from "~/shared/cropper";
 
-type CropState = {
+export type BookThumbnailState = {
+    file: File | null;
     x: number;
     y: number;
     scale: number;
+    bgColor: string;
 };
 
 export const BookThumbnailFormBlock: React.FC<{
-    file: File | null;
-    fileUrl: string | undefined;
-    setFile: React.Dispatch<React.SetStateAction<File | null>>;
-    bgColor: string;
-    setBgColor: React.Dispatch<React.SetStateAction<string>>;
-    cropState: CropState;
-    setCropState: React.Dispatch<React.SetStateAction<CropState>>;
+    cropState: BookThumbnailState;
+    setCropState: React.Dispatch<React.SetStateAction<BookThumbnailState>>;
+    fallbackThumbnail?: string;
     children?: React.ReactNode;
-}> = ({
-    file,
-    fileUrl,
-    setFile,
-    cropState,
-    setCropState,
-    bgColor,
-    setBgColor,
-    children,
-}) => {
-    const handleFileChange = (newFile: File | null) => {
-        if (newFile != null) {
-            setFile(newFile);
-        }
-    };
+}> = ({ cropState, setCropState, fallbackThumbnail, children }) => {
+    const handleFileChange = useCallback(
+        (newFile: File | null) => {
+            if (newFile != null) {
+                setCropState(cropState => ({ ...cropState, file: newFile }));
+            }
+        },
+        [setCropState],
+    );
 
     const id = useId();
 
@@ -64,7 +56,7 @@ export const BookThumbnailFormBlock: React.FC<{
                             font-size: 0.8em;
                         `}
                     >
-                        {file?.name}
+                        {cropState.file?.name}
                     </p>
                 </div>
                 <dl>
@@ -79,9 +71,16 @@ export const BookThumbnailFormBlock: React.FC<{
                     <dt>
                         <TextInput
                             id={`${id}-bg-color`}
-                            value={bgColor}
-                            onValueChange={setBgColor}
-                            aria-invalid={!CSS.supports("color", bgColor)}
+                            value={cropState.bgColor}
+                            onValueChange={bgColor =>
+                                setCropState(cropState => ({
+                                    ...cropState,
+                                    bgColor,
+                                }))
+                            }
+                            aria-invalid={
+                                !CSS.supports("color", cropState.bgColor)
+                            }
                         />
                     </dt>
                 </dl>
@@ -95,25 +94,36 @@ export const BookThumbnailFormBlock: React.FC<{
                         onChange={e => {
                             const newScale =
                                 e.currentTarget.valueAsNumber / 100;
-                            setCropState(cropState =>
-                                changeScale(
+                            setCropState(cropState => ({
+                                ...cropState,
+                                ...changeScale(
                                     cropState,
                                     { x: 0, y: 0 },
                                     newScale,
                                 ),
-                            );
+                            }));
                         }}
                     />
                 </div>
                 <div>{children}</div>
             </div>
             <Cropper
-                src={fileUrl}
+                src={
+                    cropState.file
+                        ? URL.createObjectURL(cropState.file)
+                        : fallbackThumbnail
+                }
                 state={cropState}
-                onChange={setCropState}
-                disabled={file == null}
+                onChange={cropState =>
+                    setCropState(({ file, bgColor }) => ({
+                        ...cropState,
+                        file,
+                        bgColor,
+                    }))
+                }
+                disabled={cropState.file == null}
                 className={CropperStyle}
-                bgColor={bgColor}
+                bgColor={cropState.bgColor}
             />
         </div>
     );

@@ -1,7 +1,10 @@
 import { css } from "@linaria/core";
-import { useId, useMemo, useState } from "react";
+import { useId, useState } from "react";
 import { graphql, useMutation } from "react-relay";
-import { BookThumbnailFormBlock } from "~/features/book-thumbnail";
+import {
+    BookThumbnailFormBlock,
+    BookThumbnailState,
+} from "~/features/book-thumbnail";
 import { useNavigate } from "~/features/location";
 import { Button, Form, TextInput } from "~/shared/control";
 import { cropImage } from "~/shared/cropper";
@@ -12,13 +15,13 @@ export const NewBookPage: React.FC = () => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
 
-    const [file, setFile] = useState<File | null>(null);
-    const fileUrl = useMemo(
-        () => (file ? URL.createObjectURL(file) : undefined),
-        [file],
-    );
-    const [bgColor, setBgColor] = useState<string>("#888888");
-    const [cropState, setCropState] = useState({ x: 0, y: 0, scale: 1 });
+    const [cropState, setCropState] = useState<BookThumbnailState>({
+        file: null,
+        x: 0,
+        y: 0,
+        scale: 1,
+        bgColor: "#888888",
+    });
 
     const [commit, isInFlight] = useMutation<newBookMutation>(graphql`
         mutation newBookMutation(
@@ -39,13 +42,15 @@ export const NewBookPage: React.FC = () => {
     const navigate = useNavigate();
     const onSubmit = () => {
         void (async () => {
+            const fileUrl =
+                cropState.file && URL.createObjectURL(cropState.file);
             const blob =
                 (fileUrl &&
                     (await cropImage(
                         fileUrl,
                         { width: 512, height: 512 },
                         cropState,
-                        bgColor,
+                        cropState.bgColor,
                     ))) ||
                 undefined;
             commit({
@@ -119,13 +124,8 @@ export const NewBookPage: React.FC = () => {
                     </dt>
                     <dd>
                         <BookThumbnailFormBlock
-                            file={file}
-                            fileUrl={fileUrl}
-                            setFile={setFile}
                             cropState={cropState}
                             setCropState={setCropState}
-                            bgColor={bgColor}
-                            setBgColor={setBgColor}
                         />
                     </dd>
                 </dl>

@@ -1,9 +1,12 @@
 import { css } from "@linaria/core";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { graphql, useLazyLoadQuery, useMutation } from "react-relay";
 import { Button, Form } from "~/shared/control";
 import { cropImage } from "~/shared/cropper";
-import { BookThumbnailFormBlock } from "./BookThumbnailFormBlock";
+import {
+    BookThumbnailFormBlock,
+    BookThumbnailState,
+} from "./BookThumbnailFormBlock";
 import { BookThumbnailFormMutation } from "./__generated__/BookThumbnailFormMutation.graphql";
 import { BookThumbnailFormQuery } from "./__generated__/BookThumbnailFormQuery.graphql";
 
@@ -21,11 +24,6 @@ export const BookThumbnailForm: React.FC<{
         { bookId },
     );
 
-    const [file, setFile] = useState<File | null>(null);
-    const fileUrl = useMemo(
-        () => (file ? URL.createObjectURL(file) : book?.thumbnail),
-        [file, book?.thumbnail],
-    );
 
     // prettier-ignore
     const [commitChangeThumbnail, isInFlight] = useMutation<BookThumbnailFormMutation>(graphql`
@@ -36,16 +34,22 @@ export const BookThumbnailForm: React.FC<{
         }
     `);
 
-    const [bgColor, setBgColor] = useState<string>("#888888");
-    const [cropState, setCropState] = useState({ x: 0, y: 0, scale: 1 });
+    const [cropState, setCropState] = useState<BookThumbnailState>({
+        file: null,
+        x: 0,
+        y: 0,
+        scale: 1,
+        bgColor: "#888888",
+    });
 
     const handleSubmit = () => {
+        const fileUrl = cropState.file && URL.createObjectURL(cropState.file);
         if (fileUrl == null) return;
         void cropImage(
             fileUrl,
             { width: 512, height: 512 },
             cropState,
-            bgColor,
+            cropState.bgColor,
         ).then(blob => {
             commitChangeThumbnail({
                 variables: { id: bookId, thumbnail: null },
@@ -65,13 +69,9 @@ export const BookThumbnailForm: React.FC<{
                 Thumbnail
             </h3>
             <BookThumbnailFormBlock
-                file={file}
-                fileUrl={fileUrl}
-                setFile={setFile}
                 cropState={cropState}
                 setCropState={setCropState}
-                bgColor={bgColor}
-                setBgColor={setBgColor}
+                fallbackThumbnail={book?.thumbnail}
             >
                 <Button
                     type="submit"
@@ -80,7 +80,7 @@ export const BookThumbnailForm: React.FC<{
                         right: 0;
                         bottom: 0;
                     `}
-                    disabled={file == null || isInFlight}
+                    disabled={cropState.file == null || isInFlight}
                 >
                     Submit
                 </Button>
