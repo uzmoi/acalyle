@@ -1,7 +1,8 @@
 import { css } from "@linaria/core";
 import { useCallback } from "react";
 import { graphql, useLazyLoadQuery } from "react-relay";
-import { BookThumbnailForm, BookTitleForm } from "~/features/book-form";
+import { BookTitleForm } from "~/features/book-form";
+import { BookThumbnailForm } from "~/features/book-thumbnail";
 import { BookDeleteForm } from "~/features/delete-book";
 import { useNavigate } from "~/features/location";
 import { link } from "../link";

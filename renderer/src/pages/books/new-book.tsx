@@ -1,7 +1,7 @@
 import { css } from "@linaria/core";
 import { useId, useMemo, useState } from "react";
 import { graphql, useMutation } from "react-relay";
-import { BookThumbnailFormBlock } from "~/features/book-form/book-thumbnail";
+import { BookThumbnailFormBlock } from "~/features/book-thumbnail";
 import { useNavigate } from "~/features/location";
 import { Button, Form, TextInput } from "~/shared/control";
 import { cropImage } from "~/shared/cropper";
