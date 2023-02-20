@@ -25,7 +25,13 @@ export const BookThumbnailFormBlock: React.FC<{
     const handleFileChange = useCallback(
         (newFile: File | null) => {
             if (newFile != null) {
-                setCropState(cropState => ({ ...cropState, file: newFile }));
+                setCropState({
+                    file: newFile,
+                    x: 0,
+                    y: 0,
+                    scale: 1,
+                    bgColor: "#888888",
+                });
             }
         },
         [setCropState],
