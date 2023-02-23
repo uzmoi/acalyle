@@ -3,6 +3,7 @@ import { useCallback, useState } from "react";
 import { graphql, useFragment } from "react-relay";
 import { TagList } from "~/entities/tag";
 import { AddMemoButton } from "~/features/add-memo";
+import { MemoImportButton } from "~/features/import-memo";
 import { Link, useNavigate } from "~/features/location";
 import { link } from "~/pages/link";
 import { List } from "~/shared/base";
@@ -66,6 +67,9 @@ export const Book: React.FC<{
                     </List.Item>
                     <List.Item>
                         <AddMemoButton bookId={id} onMemoAdded={onMemoAdded} />
+                    </List.Item>
+                    <List.Item>
+                        <MemoImportButton bookId={id} />
                     </List.Item>
                     <List.Item>
                         <Link
