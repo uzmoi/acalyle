@@ -3,7 +3,6 @@ import { TagList } from "~/entities/tag";
 import { vars } from "~/entities/theme";
 import { Link } from "~/features/location";
 import { link } from "~/pages/link";
-import { contentsHeight } from "../lib/contents";
 
 export const MemoOverview: React.FC<{
     bookId: string;
@@ -13,14 +12,8 @@ export const MemoOverview: React.FC<{
         tags: readonly string[];
     };
 }> = ({ bookId, memo }) => {
-    const tile = contentsHeight(memo.contents);
-
     return (
-        <article
-            id={memo.id}
-            className={MemoOverviewStyle}
-            style={{ "--height": tile }}
-        >
+        <article id={memo.id} className={MemoOverviewStyle}>
             <Link
                 to={link("books/:bookId/:memoId", { bookId, memoId: memo.id })}
                 className={MemoOverviewContentsLinkStyle}
@@ -37,9 +30,7 @@ export const MemoOverview: React.FC<{
 export const MemoOverviewStyle = css`
     display: flex;
     flex-flow: column nowrap;
-    height: calc(var(--height) * 8em);
     padding: 0.4em;
-    overflow: hidden;
     white-space: pre;
     background-color: ${vars.color.bg3};
 `;

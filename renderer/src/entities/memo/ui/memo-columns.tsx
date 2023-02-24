@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { columnSplit } from "~/shared/columns";
 import { useResize } from "~/shared/ui/hooks/use-resize";
 import { contentsHeight } from "../lib/contents";
-import { MemoOverview, MemoOverviewStyle } from "./overview";
+import { MemoOverview } from "./overview";
 
 const columnWidth = 256;
 
@@ -37,12 +37,19 @@ export const MemoColumns: React.FC<{
         <div ref={columnsEl} className={ColumnListStyle}>
             {columns.map((column, i) => (
                 <div key={i} className={ColumnStyle}>
-                    {column.map(({ node }) => (
-                        <MemoOverview
+                    {column.map(({ node, height }) => (
+                        <div
                             key={node.id}
-                            bookId={bookId}
-                            memo={node}
-                        />
+                            style={{ "--height": height }}
+                            // height * (heightUnit + margin) - margin
+                            className={css`
+                                height: calc(var(--height) * 9em - 1em);
+                                margin-block: 1em;
+                                overflow: hidden;
+                            `}
+                        >
+                            <MemoOverview bookId={bookId} memo={node} />
+                        </div>
                     ))}
                 </div>
             ))}
@@ -57,7 +64,7 @@ const ColumnListStyle = css`
 const ColumnStyle = css`
     flex: 1 0 0;
     min-width: 0;
-    .${MemoOverviewStyle} {
-        margin: 1em;
+    & + & {
+        margin-left: 1em;
     }
 `;
