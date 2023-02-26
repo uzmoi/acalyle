@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { randomUUID } from "crypto";
+import { nonNullable } from "emnorst";
 import { mkdir } from "fs/promises";
 import { pack, unpack } from "msgpackr";
 import {
@@ -144,6 +145,22 @@ export const types = [
                         select: { symbol: true },
                     });
                     return tags.map(tag => tag.symbol);
+                },
+            });
+            t.list.string("tagProps", {
+                args: {
+                    name: nonNull("String"),
+                },
+                async resolve(book, args, { prisma }) {
+                    const tags = await prisma.tag.findMany({
+                        where: {
+                            Memo: { bookId: book.id },
+                            symbol: `@${args.name}`,
+                        },
+                        distinct: "prop",
+                        select: { prop: true },
+                    });
+                    return tags.map(tag => tag.prop).filter(nonNullable);
                 },
             });
         },
