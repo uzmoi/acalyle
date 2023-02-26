@@ -22,6 +22,7 @@ export const Book: React.FC<{
             title
             tags
             ...MemoListFragment
+            ...AddTemplateMemoButtonList
         }
     `, book);
 
@@ -66,7 +67,11 @@ export const Book: React.FC<{
                         />
                     </List.Item>
                     <List.Item>
-                        <AddMemoButton bookId={id} onMemoAdded={onMemoAdded} />
+                        <AddMemoButton
+                            bookId={id}
+                            onMemoAdded={onMemoAdded}
+                            data={data}
+                        />
                     </List.Item>
                     <List.Item>
                         <MemoImportButton bookId={id} />

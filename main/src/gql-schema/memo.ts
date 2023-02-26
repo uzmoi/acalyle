@@ -44,14 +44,38 @@ export const types = [
     }),
     mutationField("createMemo", {
         type: "Memo",
-        args: { bookId: nonNull("ID") },
-        resolve(_, args, { prisma }) {
+        args: {
+            bookId: nonNull("ID"),
+            template: "String",
+        },
+        async resolve(_, args, { prisma }) {
+            type Template = {
+                contents: string;
+                tags: { symbol: string; prop: string | null }[];
+            };
+            let template: Template | undefined;
+            if (args.template != null) {
+                template = await prisma.memo.findFirstOrThrow({
+                    where: {
+                        tags: {
+                            some: { symbol: "@template", prop: args.template },
+                        },
+                    },
+                    select: {
+                        contents: true,
+                        tags: {
+                            select: { symbol: true, prop: true },
+                        },
+                    },
+                });
+            }
             return prisma.memo.create({
                 data: {
                     id: randomUUID(),
                     createdAt: new Date(),
                     updatedAt: new Date(),
-                    contents: "",
+                    contents: template?.contents ?? "",
+                    tags: { create: template?.tags },
                     bookId: args.bookId,
                 },
             });
