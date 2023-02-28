@@ -39,28 +39,28 @@ export const upsertMemoTags = mutationField("upsertMemoTags", {
 });
 
 export const removeMemoTags = mutationField("removeMemoTags", {
-    type: "Memo",
+    type: list("Memo"),
     args: {
-        memoId: nonNull("ID"),
-        tags: nonNull(list(nonNull("String"))),
+        memoIds: nonNull(list(nonNull("ID"))),
+        symbols: nonNull(list(nonNull("String"))),
     },
     resolve(_, args, { prisma }) {
-        const tagDelete: Prisma.TagScalarWhereInput = {
-            memoId: args.memoId,
-            symbol: {
-                in: args.tags
-                    .map(AcalyleMemoTag.fromString)
-                    .filter(nonNullable)
-                    .map(tag => tag.symbol),
-            },
-        };
-        return prisma.memo.update({
-            where: { id: args.memoId },
-            data: {
-                tags: { deleteMany: tagDelete },
-                updatedAt: new Date(),
-            },
+        const deleteTags = (memoId: string): Prisma.TagScalarWhereInput => ({
+            memoId,
+            symbol: { in: args.symbols },
         });
+
+        return prisma.$transaction(
+            args.memoIds.map(id =>
+                prisma.memo.update({
+                    where: { id },
+                    data: {
+                        tags: { deleteMany: deleteTags(id) },
+                        updatedAt: new Date(),
+                    },
+                }),
+            ),
+        );
     },
 });
 
