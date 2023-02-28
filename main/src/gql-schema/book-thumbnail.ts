@@ -52,6 +52,7 @@ export const types = [
             thumbnail: "Upload",
         },
         async resolve(_, args, { prisma, bookDataPath }) {
+            const updatedAt = new Date();
             const thumbnailPath = getBookThumbnailPath(bookDataPath, args.id);
             const thumbnailRef = await getThumbnailRef(
                 thumbnailPath,
@@ -59,7 +60,7 @@ export const types = [
             );
             return prisma.book.update({
                 where: { id: args.id },
-                data: { thumbnail: thumbnailRef },
+                data: { thumbnail: thumbnailRef, updatedAt },
             });
         },
     }),

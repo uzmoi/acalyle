@@ -1,5 +1,5 @@
 import { AcalyleMemoTag } from "@acalyle/core";
-import { Prisma } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { randomUUID } from "crypto";
 import { nonNullable } from "emnorst";
 import {
@@ -9,6 +9,13 @@ import {
     nonNull,
     objectType,
 } from "nexus";
+
+const updateBook = (prisma: PrismaClient, bookId: string, updatedAt: Date) =>
+    prisma.book.update({
+        where: { id: bookId },
+        data: { updatedAt },
+        select: null,
+    });
 
 export const types = [
     objectType({
@@ -49,6 +56,8 @@ export const types = [
             template: "String",
         },
         async resolve(_, args, { prisma }) {
+            const createdAt = new Date();
+
             type Template = {
                 contents: string;
                 tags: { symbol: string; prop: string | null }[];
@@ -69,31 +78,45 @@ export const types = [
                     },
                 });
             }
-            return prisma.memo.create({
-                data: {
-                    id: randomUUID(),
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                    contents: template?.contents ?? "",
-                    tags: {
-                        create: template?.tags.filter(
-                            tag => tag.symbol !== "@template",
-                        ),
+
+            const [memo] = await prisma.$transaction([
+                prisma.memo.create({
+                    data: {
+                        id: randomUUID(),
+                        createdAt,
+                        updatedAt: createdAt,
+                        contents: template?.contents ?? "",
+                        tags: {
+                            create: template?.tags.filter(
+                                tag => tag.symbol !== "@template",
+                            ),
+                        },
+                        bookId: args.bookId,
                     },
-                    bookId: args.bookId,
-                },
-            });
+                }),
+                updateBook(prisma, args.bookId, createdAt),
+            ]);
+            return memo;
         },
     }),
     mutationField("removeMemo", {
         type: nonNull(list(nonNull("ID"))),
         args: { ids: nonNull(list(nonNull("ID"))) },
         async resolve(_, args, { prisma }) {
-            await prisma.memo.deleteMany({
-                where: {
-                    id: { in: args.ids },
-                },
-            });
+            const memoWhereInput: Prisma.MemoWhereInput = {
+                id: { in: args.ids },
+            };
+            await prisma.$transaction([
+                prisma.memo.deleteMany({
+                    where: memoWhereInput,
+                }),
+                prisma.book.updateMany({
+                    where: {
+                        memos: { some: memoWhereInput },
+                    },
+                    data: { updatedAt: new Date() },
+                }),
+            ]);
             return args.ids;
         },
     }),
@@ -104,11 +127,13 @@ export const types = [
             contents: nonNull("String"),
         },
         resolve(_, args, { prisma }) {
+            const updatedAt = new Date();
             return prisma.memo.update({
                 where: { id: args.memoId },
                 data: {
                     contents: args.contents ?? undefined,
-                    updatedAt: new Date(),
+                    updatedAt,
+                    Book: { update: { updatedAt } },
                 },
             });
         },
@@ -135,7 +160,9 @@ export const types = [
                     values.map(values => Prisma.join(values, ",", "(", ")")),
                 );
 
-            const transaction: Prisma.PrismaPromise<unknown>[] = [];
+            const transaction: Prisma.PrismaPromise<unknown>[] = [
+                updateBook(prisma, args.bookId, new Date()),
+            ];
 
             const memoValues = args.memos.map(memo => [
                 args.bookId,

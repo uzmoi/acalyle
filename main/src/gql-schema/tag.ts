@@ -11,6 +11,7 @@ export const upsertMemoTags = mutationField("upsertMemoTags", {
         tags: nonNull(list(nonNull("String"))),
     },
     resolve(_, args, { prisma }) {
+        const updatedAt = new Date();
         const tags = args.tags
             .map(AcalyleMemoTag.fromString)
             .filter(nonNullable);
@@ -30,7 +31,8 @@ export const upsertMemoTags = mutationField("upsertMemoTags", {
                     where: { id },
                     data: {
                         tags: { upsert: upsertTags(id) },
-                        updatedAt: new Date(),
+                        updatedAt,
+                        Book: { update: { updatedAt } },
                     },
                 }),
             ),
@@ -45,6 +47,7 @@ export const removeMemoTags = mutationField("removeMemoTags", {
         symbols: nonNull(list(nonNull("String"))),
     },
     resolve(_, args, { prisma }) {
+        const updatedAt = new Date();
         const deleteTags = (memoId: string): Prisma.TagScalarWhereInput => ({
             memoId,
             symbol: { in: args.symbols },
@@ -56,7 +59,8 @@ export const removeMemoTags = mutationField("removeMemoTags", {
                     where: { id },
                     data: {
                         tags: { deleteMany: deleteTags(id) },
-                        updatedAt: new Date(),
+                        updatedAt,
+                        Book: { update: { updatedAt } },
                     },
                 }),
             ),
@@ -72,9 +76,15 @@ export const renameTag = mutationField("renameTag", {
         newSymbol: nonNull("String"),
     },
     async resolve(_, args, { prisma }) {
+        const updatedAt = new Date();
         // "\x02" == Start of text
         const STX = "\x02";
         await prisma.$transaction([
+            prisma.book.update({
+                where: { id: args.bookId },
+                data: { updatedAt },
+                select: null,
+            }),
             prisma.$executeRaw`
                 UPDATE Tag
                 SET symbol = ${args.newSymbol}

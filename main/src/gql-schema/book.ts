@@ -225,6 +225,7 @@ export const types = [
             thumbnail: "Upload",
         },
         async resolve(_, args, { prisma, bookDataPath }) {
+            const createdAt = new Date();
             const validBookTitle = await BookTitle.parseAsync(args.title);
             const bookId = randomUUID();
             await mkdir(path.join(bookDataPath, bookId), { recursive: true });
@@ -239,7 +240,8 @@ export const types = [
                     title: validBookTitle,
                     description: args.description ?? "",
                     thumbnail: thumbnailRef,
-                    createdAt: new Date(),
+                    createdAt,
+                    updatedAt: createdAt,
                     settings: pack(BookSettingDefault),
                 } satisfies Prisma.BookCreateInput,
             });
@@ -255,7 +257,10 @@ export const types = [
             const title = BookTitle.safeParse(args.title);
             return prisma.book.update({
                 where: { id: args.id },
-                data: { title: title.success ? title.data : undefined },
+                data: {
+                    title: title.success ? title.data : undefined,
+                    updatedAt: new Date(),
+                },
             });
         },
     }),
