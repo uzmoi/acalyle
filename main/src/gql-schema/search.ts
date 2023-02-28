@@ -21,17 +21,17 @@ export const parseSearchQuery = (query: string): MemoFilters => {
     };
 
     for (let searchPart of query.split(/\s+/)) {
-        let isExclude: keyof Filter<unknown> = "include";
+        let key: keyof Filter<unknown> = "include";
         if (searchPart.startsWith("-")) {
-            isExclude = "exclude";
+            key = "exclude";
             searchPart = searchPart.slice(1);
         }
         const tag = AcalyleMemoTag.fromString(searchPart);
         // "#"が省略されたタグを弾いてcontentsとする
         if (tag != null && searchPart.startsWith(tag.symbol)) {
-            filters.tags[isExclude].push(tag);
+            filters.tags[key].push(tag);
         } else {
-            filters.contents[isExclude].push(searchPart);
+            filters.contents[key].push(searchPart);
         }
     }
 
