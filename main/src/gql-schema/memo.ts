@@ -75,7 +75,11 @@ export const types = [
                     createdAt: new Date(),
                     updatedAt: new Date(),
                     contents: template?.contents ?? "",
-                    tags: { create: template?.tags },
+                    tags: {
+                        create: template?.tags.filter(
+                            tag => tag.symbol !== "@template",
+                        ),
+                    },
                     bookId: args.bookId,
                 },
             });
