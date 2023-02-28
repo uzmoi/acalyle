@@ -68,8 +68,8 @@ export const renameTag = mutationField("renameTag", {
     type: nonNull("String"),
     args: {
         bookId: nonNull("ID"),
-        old: nonNull("String"),
-        new: nonNull("String"),
+        oldSymbol: nonNull("String"),
+        newSymbol: nonNull("String"),
     },
     async resolve(_, args, { prisma }) {
         // "\x02" == Start of text
@@ -77,23 +77,23 @@ export const renameTag = mutationField("renameTag", {
         await prisma.$transaction([
             prisma.$executeRaw`
                 UPDATE Tag
-                SET symbol = ${args.new}
+                SET symbol = ${args.newSymbol}
                 FROM Memo
                 WHERE Tag.memoId = Memo.id
                 AND Memo.bookId = ${args.bookId}
-                AND Tag.symbol = ${args.old}
+                AND Tag.symbol = ${args.oldSymbol}
             ;`,
             prisma.$executeRaw`
                 UPDATE Tag
                 SET symbol = REPLACE(
                     ${STX} || Tag.symbol,
-                    ${STX + args.old + "/"},
-                    ${args.new + "/"}
+                    ${STX + args.oldSymbol + "/"},
+                    ${args.newSymbol + "/"}
                 )
                 FROM Memo
                 WHERE Tag.memoId = Memo.id
                 AND Memo.bookId = ${args.bookId}
-                AND Tag.symbol GLOB ${sqlGlob`${args.old}/*`}
+                AND Tag.symbol GLOB ${sqlGlob`${args.oldSymbol}/*`}
             ;`,
         ]);
         return "";
