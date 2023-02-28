@@ -4,64 +4,37 @@ import { nonNullable } from "emnorst";
 import { list, mutationField, nonNull } from "nexus";
 import { createEscapeTag } from "./util";
 
-export const addMemoTags = mutationField("addMemoTags", {
-    type: "Memo",
+export const upsertMemoTags = mutationField("upsertMemoTags", {
+    type: list("Memo"),
     args: {
-        memoId: nonNull("ID"),
-        tags: nonNull(list(nonNull("String"))),
-    },
-    async resolve(_, args, { prisma }) {
-        const { bookId } = await prisma.memo.findUniqueOrThrow({
-            where: { id: args.memoId },
-            select: { bookId: true },
-        });
-        const tagCreate: Prisma.TagCreateWithoutMemoInput[] | undefined =
-            args.tags
-                ?.map(AcalyleMemoTag.fromString)
-                .filter(nonNullable)
-                .map(tag => ({
-                    bookId,
-                    symbol: tag.symbol,
-                    prop: tag.prop,
-                }));
-        return prisma.memo.update({
-            where: { id: args.memoId },
-            data: {
-                tags: { create: tagCreate },
-                updatedAt: new Date(),
-            },
-        });
-    },
-});
-
-export const updateMemoTagsArgs = mutationField("updateMemoTagsArgs", {
-    type: "Memo",
-    args: {
-        memoId: nonNull("ID"),
+        memoIds: nonNull(list(nonNull("ID"))),
         tags: nonNull(list(nonNull("String"))),
     },
     resolve(_, args, { prisma }) {
-        const tagUpdate:
-            | Prisma.TagUpdateWithWhereUniqueWithoutMemoInput[]
-            | undefined = args.tags
-            ?.map(AcalyleMemoTag.fromString)
-            .filter(nonNullable)
-            .map(tag => ({
+        const tags = args.tags
+            .map(AcalyleMemoTag.fromString)
+            .filter(nonNullable);
+
+        const upsertTags = (memoId: string) =>
+            tags.map<Prisma.TagUpsertWithWhereUniqueWithoutMemoInput>(tag => ({
                 where: {
-                    memoId_symbol: {
-                        memoId: args.memoId,
-                        symbol: tag.symbol,
-                    },
+                    memoId_symbol: { memoId, symbol: tag.symbol },
                 },
-                data: { prop: tag.prop },
+                create: { symbol: tag.symbol, prop: tag.prop },
+                update: { prop: tag.prop },
             }));
-        return prisma.memo.update({
-            where: { id: args.memoId },
-            data: {
-                tags: { update: tagUpdate },
-                updatedAt: new Date(),
-            },
-        });
+
+        return prisma.$transaction(
+            args.memoIds.map(id =>
+                prisma.memo.update({
+                    where: { id },
+                    data: {
+                        tags: { upsert: upsertTags(id) },
+                        updatedAt: new Date(),
+                    },
+                }),
+            ),
+        );
     },
 });
 
