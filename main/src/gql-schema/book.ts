@@ -6,7 +6,6 @@ import { pack, unpack } from "msgpackr";
 import {
     arg,
     enumType,
-    list,
     mutationField,
     nonNull,
     nullable,
@@ -38,9 +37,7 @@ export const types = [
     objectType({
         name: "BookSetting",
         definition(t) {
-            t.field("extensions", {
-                type: list("String"),
-            });
+            t.list.string("extensions");
         },
     }),
     objectType({
