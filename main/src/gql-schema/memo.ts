@@ -87,7 +87,7 @@ export const types = [
         async resolve(_, args, { prisma }) {
             await prisma.memo.deleteMany({
                 where: {
-                    OR: args.ids.map(id => ({ id })),
+                    id: { in: args.ids },
                 },
             });
             return args.ids;
@@ -177,10 +177,12 @@ export const types = [
         resolve(_, args, { prisma }) {
             const tagDelete: Prisma.TagScalarWhereInput = {
                 memoId: args.memoId,
-                OR: args.tags
-                    .map(AcalyleMemoTag.fromString)
-                    .filter(nonNullable)
-                    .map(tag => ({ symbol: tag.symbol })),
+                symbol: {
+                    in: args.tags
+                        .map(AcalyleMemoTag.fromString)
+                        .filter(nonNullable)
+                        .map(tag => tag.symbol),
+                },
             };
             return prisma.memo.update({
                 where: { id: args.memoId },
