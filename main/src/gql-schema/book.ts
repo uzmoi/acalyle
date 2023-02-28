@@ -21,7 +21,7 @@ import {
     types as thumbnailTypes,
 } from "./book-thumbnail";
 import { MemoFilters, parseSearchQuery } from "./search";
-import { createEscapeTag, pagination } from "./util";
+import { pagination } from "./util";
 
 const BookTitle = z.string().min(1).max(16);
 const BookSetting = z.object({
@@ -270,39 +270,4 @@ export const types = [
             return args.id;
         },
     }),
-    mutationField("renameTag", {
-        type: nonNull("String"),
-        args: {
-            bookId: nonNull("ID"),
-            old: nonNull("String"),
-            new: nonNull("String"),
-        },
-        async resolve(_, args, { prisma }) {
-            // "\x02" == Start of text
-            const STX = "\x02";
-            await prisma.$transaction([
-                prisma.$executeRaw`
-                    UPDATE Tag
-                    SET name = ${args.new}
-                    WHERE Tag.bookId = ${args.bookId} AND Tag.name = ${args.old}
-                ;`,
-                prisma.$executeRaw`
-                    UPDATE Tag
-                    SET name = REPLACE(
-                        ${STX} || Tag.name,
-                        ${STX + args.old + "/"},
-                        ${args.new + "/"},
-                    )
-                    WHERE Tag.bookId = ${args.bookId}
-                    AND Tag.name GLOB ${sqlGlob`${args.old}/*`}
-                ;`,
-            ]);
-            return "";
-        },
-    }),
 ];
-
-// const sqlPattern = createEscapeTag<string>(string => string.replace(/[%_]/g, "\\$&"));
-const sqlGlob = createEscapeTag<string>(string =>
-    string.replace(/[[\]*?]/g, "[$&]"),
-);

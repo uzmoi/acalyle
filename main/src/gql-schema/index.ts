@@ -4,6 +4,7 @@ import { types as bookTypes } from "./book";
 import { types as memoTypes } from "./memo";
 import { Node, nodeQuery } from "./node";
 import { DateTimeScalar, UploadScalar } from "./scalar";
+import * as tagTypes from "./tag";
 
 export const graphQLSchema = makeSchema({
     types: [
@@ -14,6 +15,7 @@ export const graphQLSchema = makeSchema({
         UploadScalar,
         bookTypes,
         memoTypes,
+        tagTypes,
     ],
     plugins: [
         connectionPlugin({
