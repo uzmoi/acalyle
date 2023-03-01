@@ -276,7 +276,7 @@ export const deleteBook = mutationField("deleteBook", {
     async resolve(_, args, { prisma }) {
         await prisma.book.delete({
             where: { id: args.id },
-            select: {},
+            select: null,
         });
         return args.id;
     },
