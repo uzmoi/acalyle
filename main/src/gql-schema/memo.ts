@@ -1,4 +1,4 @@
-import { AcalyleMemoTag } from "@acalyle/core";
+import { AcalyleMemoTag, TagSymbol } from "@acalyle/core";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { randomUUID } from "crypto";
 import { nonNullable } from "emnorst";
@@ -32,8 +32,11 @@ export const types = [
                         where: { memoId: memo.id },
                         select: { symbol: true, prop: true },
                     });
-                    return tags.map(({ symbol, prop }) =>
-                        new AcalyleMemoTag(symbol, prop).toString(),
+                    return tags.map(tag =>
+                        new AcalyleMemoTag(
+                            tag.symbol as TagSymbol,
+                            tag.prop,
+                        ).toString(),
                     );
                 },
             });
