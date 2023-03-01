@@ -1,7 +1,7 @@
 import { connectionPlugin, makeSchema, nonNull, queryField } from "nexus";
 import path = require("path");
-import { types as bookTypes } from "./book";
-import { types as memoTypes } from "./memo";
+import * as bookTypes from "./book";
+import * as memoTypes from "./memo";
 import { Node, nodeQuery } from "./node";
 import { DateTimeScalar, UploadScalar } from "./scalar";
 import * as tagTypes from "./tag";
