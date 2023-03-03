@@ -1,58 +1,41 @@
-import { css, cx } from "@linaria/core";
-import { useCallback } from "react";
-import { graphql, useMutation } from "react-relay";
-import { FileInput } from "~/shared/control";
-import {
-    ControlPartOutlineStyle,
-    ControlPartResetStyle,
-} from "~/shared/control/base";
-import { MemoImportButtonMutation } from "./__generated__/MemoImportButtonMutation.graphql";
-import { fileToMemoInput } from "./from-file";
+import { css } from "@linaria/core";
+import { useState } from "react";
+import { Modal } from "~/shared/base";
+import { Button } from "~/shared/control";
+import { MemoImportForm } from "./MemoImportForm";
 
 export const MemoImportButton: React.FC<{
     bookId: string;
 }> = ({ bookId }) => {
-    const [commit, isInFlight] = useMutation<MemoImportButtonMutation>(graphql`
-        mutation MemoImportButtonMutation($bookId: ID!, $memos: [MemoInput!]!) {
-            importMemos(bookId: $bookId, memos: $memos)
-        }
-    `);
-
-    const onFileChange = useCallback(
-        (files: FileList) => {
-            void Promise.all([...files].map(fileToMemoInput)).then(memos => {
-                commit({
-                    variables: { bookId, memos: memos.flat() },
-                });
-            });
-        },
-        [bookId, commit],
-    );
+    const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <label
-            className={cx(
-                ControlPartResetStyle,
-                ControlPartOutlineStyle,
-                css`
-                    display: inline-block;
-                    font-weight: bold;
-                `,
-            )}
+        <div
+            className={css`
+                display: inline-block;
+                font-weight: bold;
+            `}
         >
-            Import memos
-            <FileInput
-                multiple
-                onFileChange={onFileChange}
-                readOnly={isInFlight}
-                className={HiddenStyle}
-            />
-        </label>
+            <Button onClick={() => setIsOpen(true)}>Import memos</Button>
+            <Modal
+                open={isOpen}
+                onClose={() => setIsOpen(false)}
+                className={css`
+                    padding: 4em;
+                `}
+            >
+                <div
+                    className={css`
+                        padding: 1em;
+                        background-color: black;
+                    `}
+                >
+                    <MemoImportForm
+                        bookId={bookId}
+                        onCancel={() => setIsOpen(false)}
+                    />
+                </div>
+            </Modal>
+        </div>
     );
 };
-
-const HiddenStyle = css`
-    width: 1px;
-    height: 1px;
-    visibility: hidden;
-`;
