@@ -20,7 +20,7 @@ import {
     resolveBookThumbnail,
     types as thumbnailTypes,
 } from "./book-thumbnail";
-import { MemoFilters, parseSearchQuery } from "./search";
+import { memos } from "./memo";
 import { pagination } from "./util";
 
 export { thumbnailTypes };
@@ -92,39 +92,11 @@ export const Book = objectType({
             },
             nodes(book, args, { prisma }) {
                 const p = pagination(args);
-                let filters: MemoFilters | undefined;
-                if (args.search != null) {
-                    filters = parseSearchQuery(args.search);
-                }
                 return prisma.memo.findMany({
                     cursor: p.cursor == null ? undefined : { id: p.cursor },
                     skip: p.cursor == null ? 0 : 1,
                     take: p.take,
-                    orderBy: { createdAt: "desc" },
-                    where: {
-                        bookId: book.id,
-                        // prettier-ignore
-                        AND: filters && [
-                            ...filters.contents.include.map(searchString => ({
-                                contains: searchString,
-                            })),
-                            ...filters.contents.exclude.map(searchString => ({
-                                not: { contains: searchString },
-                            })),
-                        ].map(contents => ({ contents })),
-                        tags: filters?.tags.to((include, exclude) => ({
-                            some: include && {
-                                AND: include.map(tag => ({
-                                    symbol: tag.symbol,
-                                })),
-                            },
-                            none: exclude && {
-                                OR: exclude.map(tag => ({
-                                    symbol: tag.symbol,
-                                })),
-                            },
-                        })) satisfies Prisma.TagListRelationFilter | undefined,
-                    } satisfies Prisma.MemoWhereInput,
+                    ...memos(book.id, args.search ?? null),
                 });
             },
             totalCount(book, __, { prisma }) {

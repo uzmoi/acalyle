@@ -52,6 +52,82 @@ export const Memo = objectType({
     },
 });
 
+class Filter<T> {
+    include: T[] = [];
+    exclude: T[] = [];
+    to<U>(f: (include: T[] | undefined, exclude: T[] | undefined) => U): U {
+        const nonEmpty = (a: T[]) => (a.length === 0 ? undefined : a);
+        return f(nonEmpty(this.include), nonEmpty(this.exclude));
+    }
+}
+
+interface MemoFilters {
+    contents: Filter<string>;
+    tags: Filter<AcalyleMemoTag>;
+}
+
+const parseSearchQuery = (query: string): MemoFilters => {
+    const filters: MemoFilters = {
+        contents: new Filter(),
+        tags: new Filter(),
+    };
+
+    for (let searchPart of query.split(/\s+/)) {
+        let key: keyof Filter<unknown> = "include";
+        if (searchPart.startsWith("-")) {
+            key = "exclude";
+            searchPart = searchPart.slice(1);
+        }
+        const tag = AcalyleMemoTag.fromString(searchPart);
+        // "#"が省略されたタグを弾いてcontentsとする
+        if (tag != null && searchPart.startsWith(tag.symbol)) {
+            filters.tags[key].push(tag);
+        } else {
+            filters.contents[key].push(searchPart);
+        }
+    }
+
+    return filters;
+};
+
+export const memos = (
+    bookId: string,
+    query: string | null,
+): Required<Pick<Prisma.MemoFindManyArgs, "orderBy" | "where">> => {
+    let filters: MemoFilters | undefined;
+    if (query != null) {
+        filters = parseSearchQuery(query);
+    }
+    return {
+        orderBy: { createdAt: "desc" },
+        where: {
+            bookId,
+            AND:
+                filters &&
+                [
+                    ...filters.contents.include.map(searchString => ({
+                        contains: searchString,
+                    })),
+                    ...filters.contents.exclude.map(searchString => ({
+                        not: { contains: searchString },
+                    })),
+                ].map(contents => ({ contents })),
+            tags: filters?.tags.to((include, exclude) => ({
+                some: include && {
+                    AND: include.map(tag => ({
+                        symbol: tag.symbol,
+                    })),
+                },
+                none: exclude && {
+                    OR: exclude.map(tag => ({
+                        symbol: tag.symbol,
+                    })),
+                },
+            })) satisfies Prisma.TagListRelationFilter | undefined,
+        },
+    };
+};
+
 export const createMemo = mutationField("createMemo", {
     type: "Memo",
     args: {
