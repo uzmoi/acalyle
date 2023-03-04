@@ -1,9 +1,8 @@
-import type {} from "vitest";
 import linaria from "@linaria/vite";
 import react from "@vitejs/plugin-react";
 import { visualizer } from "rollup-plugin-visualizer";
-import { defineConfig } from "vite";
 import relay from "vite-plugin-relay";
+import { defineConfig } from "vitest/config";
 import { htmlReplace } from "./vite-plugin-html-replace";
 
 // https://vitejs.dev/config/
@@ -35,7 +34,7 @@ export default defineConfig(env => ({
     ],
     build: {
         minify: "terser",
-        polyfillModulePreload: false,
+        modulePreload: { polyfill: false },
         outDir: "../app",
         assetsDir: "",
         emptyOutDir: false,
