@@ -4,7 +4,7 @@ import type { CodeProps } from "react-markdown/lib/ast-to-react";
 import SyntaxHighlighter from "react-syntax-highlighter/dist/esm/prism-light";
 import coldarkCold from "react-syntax-highlighter/dist/esm/styles/prism/coldark-cold";
 import coldarkDark from "react-syntax-highlighter/dist/esm/styles/prism/coldark-dark";
-import { useColorScheme } from "~/shared/theme";
+import { useColorScheme } from "~/entities/theme";
 
 export const MarkdownCode: React.FC<CodeProps> = ({
     node: _,

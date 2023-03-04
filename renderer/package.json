@@ -14,6 +14,7 @@
   "dependencies": {
     "@acalyle/core": "*",
     "@acalyle/router": "*",
+    "@acalyle/ui": "*",
     "@headlessui/react": "^1.7.11",
     "@linaria/core": "^4.2.6",
     "emnorst": "^1.0.0-next.2",

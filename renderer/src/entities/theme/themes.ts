@@ -1,4 +1,4 @@
-import { themeNames } from "~/shared/theme";
+import { themeNames } from "@acalyle/ui";
 
 export const vars = themeNames("acalyle", {
     color: [

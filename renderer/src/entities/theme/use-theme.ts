@@ -1,5 +1,5 @@
-import { useColorScheme } from "~/shared/theme";
 import { darkThemeStyle, lightThemeStyle } from "./themes";
+import { useColorScheme } from "./use-color-scheme";
 
 export const useThemeStyle = (): Record<`--${string}`, string> => {
     const colorScheme = useColorScheme();
