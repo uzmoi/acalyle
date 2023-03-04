@@ -1,6 +1,7 @@
+import { AcalyleMemoTag } from "@acalyle/core";
+import { nonNullable } from "emnorst";
 import { useCallback, useState } from "react";
 import { graphql, useMutation } from "react-relay";
-import { MemoTag } from "~/entities/tag";
 import { List } from "~/shared/base";
 import { Button, Form, TextInput } from "~/shared/control";
 import type { tagsUpdateMutation } from "./__generated__/tagsUpdateMutation.graphql";
@@ -15,41 +16,32 @@ export const MemoTagsForm: React.FC<{
     const [commit, isInFlight] = useMutation<tagsUpdateMutation>(graphql`
         mutation tagsUpdateMutation(
             $memoId: ID!
-            $removeTags: [String!]!
-            $updateTags: [String!]!
-            $addTags: [String!]!
+            $removeSymbols: [String!]!
+            $upsertTags: [String!]!
         ) {
-            removeMemoTags(memoId: $memoId, tags: $removeTags) {
-                updatedAt
+            removeMemoTags(memoIds: [$memoId], symbols: $removeSymbols) {
+                id
             }
-            updateMemoTagsArgs(memoId: $memoId, tags: $updateTags) {
-                updatedAt
-            }
-            addMemoTags(memoId: $memoId, tags: $addTags) {
+            upsertMemoTags(memoIds: [$memoId], tags: $upsertTags) {
+                id
                 tags
                 updatedAt
             }
         }
     `);
     const handleSubmit = () => {
-        const getTagName = (tag: string) => MemoTag.fromString(tag)?.name;
-        const memoTagNames = memoTags.map(getTagName);
-        const tagNames = tags.map(getTagName);
+        const getTagSymbol = (tag: string) =>
+            AcalyleMemoTag.fromString(tag)?.symbol;
+        const memoTagSymbols = memoTags.map(getTagSymbol).filter(nonNullable);
+        const symbols = new Set(tags.map(getTagSymbol).filter(nonNullable));
+
         commit({
             variables: {
                 memoId,
-                // tags & memo.tags
-                updateTags: tags.filter(tag =>
-                    memoTagNames.includes(getTagName(tag)),
+                removeSymbols: memoTagSymbols.filter(
+                    symbol => !symbols.has(symbol),
                 ),
-                // tags - memo.tags
-                addTags: tags.filter(
-                    tag => !memoTagNames.includes(getTagName(tag)),
-                ),
-                // memo.tags - tags
-                removeTags: memoTags.filter(
-                    tag => !tagNames.includes(getTagName(tag)),
-                ),
+                upsertTags: tags,
             },
             onCompleted: onClose,
         });
