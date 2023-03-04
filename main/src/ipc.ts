@@ -1,7 +1,7 @@
-import { ExecutionResult, graphql } from "graphql";
+import { type ExecutionResult, graphql } from "graphql";
 import { graphQLSchema } from "./gql-schema";
 import { createContext } from "./gql-schema/context";
-import { BodyData, mapBuffers } from "./gql-schema/util";
+import { type BodyData, mapBuffers } from "./gql-schema/util";
 
 export const ipcChannels: Record<keyof typeof ipc, string> = {
     cwd: "cwd",
@@ -30,7 +30,7 @@ export const ipc = {
 };
 
 export type IPC = {
-    [P in keyof typeof ipc]: typeof ipc[P] extends (
+    [P in keyof typeof ipc]: (typeof ipc)[P] extends (
         ...args: infer A
     ) => infer R | PromiseLike<infer R>
         ? (...args: A) => Promise<R>

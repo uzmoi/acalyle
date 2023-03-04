@@ -3,7 +3,7 @@ import { graphql, useLazyLoadQuery } from "react-relay";
 import { Link } from "~/features/location";
 import { Memo } from "~/widgets/book/Memo";
 import { link } from "../link";
-import { memoQuery } from "./__generated__/memoQuery.graphql";
+import type { memoQuery } from "./__generated__/memoQuery.graphql";
 
 export const MemoPage: React.FC<{
     bookId: string;

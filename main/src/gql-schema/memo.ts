@@ -1,4 +1,4 @@
-import { AcalyleMemoTag, TagSymbol } from "@acalyle/core";
+import { AcalyleMemoTag, type TagSymbol } from "@acalyle/core";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { randomUUID } from "crypto";
 import { nonNullable } from "emnorst";

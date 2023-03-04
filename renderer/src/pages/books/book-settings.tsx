@@ -6,7 +6,7 @@ import { BookThumbnailForm } from "~/features/book-thumbnail";
 import { BookDeleteForm } from "~/features/delete-book";
 import { useNavigate } from "~/features/location";
 import { link } from "../link";
-import { bookSettingsDataQuery } from "./__generated__/bookSettingsDataQuery.graphql";
+import type { bookSettingsDataQuery } from "./__generated__/bookSettingsDataQuery.graphql";
 
 export const BookSettingsPage: React.FC<{
     id: string;

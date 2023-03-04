@@ -11,8 +11,8 @@ import { List, Spinner } from "~/shared/base";
 import { getNodes } from "~/shared/base/connection";
 import { Intersection } from "~/shared/base/intersection";
 import { ControlPartOutlineStyle } from "~/shared/control/base";
-import { BookListFragment$key } from "./__generated__/BookListFragment.graphql";
-import { BookListPaginationQuery } from "./__generated__/BookListPaginationQuery.graphql";
+import type { BookListFragment$key } from "./__generated__/BookListFragment.graphql";
+import type { BookListPaginationQuery } from "./__generated__/BookListPaginationQuery.graphql";
 
 export const BookList: React.FC<{
     queryRef: BookListFragment$key;

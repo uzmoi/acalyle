@@ -1,6 +1,6 @@
 import {
     BrowserWindow,
-    LoadExtensionOptions,
+    type LoadExtensionOptions,
     app,
     ipcMain,
     nativeTheme,

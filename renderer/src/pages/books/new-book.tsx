@@ -3,13 +3,13 @@ import { useId, useState } from "react";
 import { graphql, useMutation } from "react-relay";
 import {
     BookThumbnailFormBlock,
-    BookThumbnailState,
+    type BookThumbnailState,
 } from "~/features/book-thumbnail";
 import { useNavigate } from "~/features/location";
 import { Button, Form, TextInput } from "~/shared/control";
 import { cropImage } from "~/shared/cropper";
 import { link } from "../link";
-import { newBookMutation } from "./__generated__/newBookMutation.graphql";
+import type { newBookMutation } from "./__generated__/newBookMutation.graphql";
 
 export const NewBookPage: React.FC = () => {
     const [title, setTitle] = useState("");

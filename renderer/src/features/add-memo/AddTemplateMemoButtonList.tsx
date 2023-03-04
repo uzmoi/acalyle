@@ -2,7 +2,7 @@ import { assert } from "emnorst";
 import { useCallback } from "react";
 import { graphql, useFragment } from "react-relay";
 import { Button } from "~/shared/control";
-import { AddTemplateMemoButtonList$key } from "./__generated__/AddTemplateMemoButtonList.graphql";
+import type { AddTemplateMemoButtonList$key } from "./__generated__/AddTemplateMemoButtonList.graphql";
 
 export type { AddTemplateMemoButtonList$key };
 

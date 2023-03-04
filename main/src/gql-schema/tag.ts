@@ -1,5 +1,5 @@
 import { AcalyleMemoTag } from "@acalyle/core";
-import { Prisma } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import { nonNullable } from "emnorst";
 import { list, mutationField, nonNull } from "nexus";
 import { createEscapeTag } from "./util";

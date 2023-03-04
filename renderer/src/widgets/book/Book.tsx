@@ -9,7 +9,7 @@ import { link } from "~/pages/link";
 import { List } from "~/shared/base";
 import { TextInput } from "~/shared/control";
 import { MemoList } from "./MemoList";
-import { BookMemosFragment$key } from "./__generated__/BookMemosFragment.graphql";
+import type { BookMemosFragment$key } from "./__generated__/BookMemosFragment.graphql";
 
 export const Book: React.FC<{
     id: string;

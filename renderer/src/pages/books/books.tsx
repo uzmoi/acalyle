@@ -1,7 +1,7 @@
 import { css } from "@linaria/core";
 import { graphql, useLazyLoadQuery } from "react-relay";
 import { BookList } from "~/widgets/book/BookList";
-import { booksQuery } from "./__generated__/booksQuery.graphql";
+import type { booksQuery } from "./__generated__/booksQuery.graphql";
 
 export const BookListPage: React.FC = () => {
     const queryRef = useLazyLoadQuery<booksQuery>(

@@ -1,4 +1,4 @@
-import { Normalize, ValueOf, isArray } from "emnorst";
+import { type Normalize, type ValueOf, isArray } from "emnorst";
 
 // TODO: to emnorst
 type PartiallyPartial<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;

@@ -1,4 +1,4 @@
-import ReactMarkdown, { Components } from "react-markdown";
+import ReactMarkdown, { type Components } from "react-markdown";
 import { MarkdownCode } from "./code";
 import { MarkdownLink } from "./link";
 

@@ -3,7 +3,7 @@ import { useCallback, useState } from "react";
 import { graphql, useMutation } from "react-relay";
 import { vars } from "~/entities/theme";
 import { Button, ControlGroup, Form, TextInput } from "~/shared/control";
-import { BookDeleteFormMutation } from "./__generated__/BookDeleteFormMutation.graphql";
+import type { BookDeleteFormMutation } from "./__generated__/BookDeleteFormMutation.graphql";
 
 export const BookDeleteForm: React.FC<{
     bookId: string;

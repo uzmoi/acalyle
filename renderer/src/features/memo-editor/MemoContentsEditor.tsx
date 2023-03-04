@@ -2,7 +2,7 @@ import { css } from "@linaria/core";
 import { useCallback, useState } from "react";
 import { graphql, useMutation } from "react-relay";
 import { Button, ControlGroup, Form, TextArea } from "~/shared/control";
-import { MemoContentsEditorMutation } from "./__generated__/MemoContentsEditorMutation.graphql";
+import type { MemoContentsEditorMutation } from "./__generated__/MemoContentsEditorMutation.graphql";
 
 export const MemoContentsEditor: React.FC<{
     memoId: string;

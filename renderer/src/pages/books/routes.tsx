@@ -1,4 +1,4 @@
-import { GetRoute, page, routes } from "@acalyle/router";
+import { type GetRoute, page, routes } from "@acalyle/router";
 import type { RootRoutes } from "../routes";
 import { BookPage } from "./book";
 import { BookSettingsPage } from "./book-settings";

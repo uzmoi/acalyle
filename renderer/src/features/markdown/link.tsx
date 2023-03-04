@@ -1,6 +1,6 @@
 import { css, cx } from "@linaria/core";
 import normalizeUrl from "normalize-url";
-import { ReactMarkdownProps } from "react-markdown/lib/ast-to-react";
+import type { ReactMarkdownProps } from "react-markdown/lib/ast-to-react";
 
 export const MarkdownLink: React.FC<
     React.ComponentPropsWithoutRef<"a"> & ReactMarkdownProps

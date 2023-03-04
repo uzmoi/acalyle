@@ -5,9 +5,9 @@ import { graphql, useMutation } from "react-relay";
 import { Button, ControlGroup } from "~/shared/control";
 import {
     AddTemplateMemoButtonList,
-    AddTemplateMemoButtonList$key,
+    type AddTemplateMemoButtonList$key,
 } from "./AddTemplateMemoButtonList";
-import { AddMemoButtonMutation } from "./__generated__/AddMemoButtonMutation.graphql";
+import type { AddMemoButtonMutation } from "./__generated__/AddMemoButtonMutation.graphql";
 
 export const AddMemoButton: React.FC<{
     bookId: string;

@@ -1,4 +1,4 @@
-import { MemoInput } from "./memo-input";
+import type { MemoInput } from "./memo-input";
 
 export const fileToMemoInput = async (
     file: File,

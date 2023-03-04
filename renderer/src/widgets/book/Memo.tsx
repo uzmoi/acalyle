@@ -7,7 +7,7 @@ import { vars } from "~/entities/theme";
 import { Markdown } from "~/features/markdown";
 import { MemoContentsEditor } from "~/features/memo-editor";
 import { Button } from "~/shared/control";
-import { MemoFragment$key } from "./__generated__/MemoFragment.graphql";
+import type { MemoFragment$key } from "./__generated__/MemoFragment.graphql";
 
 export const Memo: React.FC<{
     bookId: string;

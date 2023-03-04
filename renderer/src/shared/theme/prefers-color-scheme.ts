@@ -1,4 +1,4 @@
-import { AtomEffect, atom } from "recoil";
+import { type AtomEffect, atom } from "recoil";
 
 export const prefersColorSchemeEffect: AtomEffect<"dark" | "light"> = ({
     setSelf,

@@ -1,4 +1,4 @@
-import { AtomEffect } from "recoil";
+import type { AtomEffect } from "recoil";
 
 type Codec<T> = {
     encode: (value: T) => string;

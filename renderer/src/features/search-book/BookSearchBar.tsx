@@ -1,6 +1,6 @@
 import { css } from "@linaria/core";
 import { useCallback, useState } from "react";
-import { RefetchOptions } from "react-relay";
+import type { RefetchOptions } from "react-relay";
 import {
     Button,
     ControlGroup,

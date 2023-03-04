@@ -1,13 +1,12 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import {
     Environment,
-    GraphQLResponse,
+    type GraphQLResponse,
     Network,
     RecordSource,
     Store,
 } from "relay-runtime";
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { LogFunction } from "relay-runtime/lib/store/RelayStoreTypes";
+import type { LogFunction } from "relay-runtime/lib/store/RelayStoreTypes";
 import { acalyle } from "./ipc";
 
 // prettier-ignore

@@ -12,8 +12,8 @@ import {
     ControlPartResetStyle,
 } from "~/shared/control/base";
 import { ControlGroupStyle } from "~/shared/control/group";
-import { MemoListFragment$key } from "./__generated__/MemoListFragment.graphql";
-import { MemoListPaginationQuery } from "./__generated__/MemoListPaginationQuery.graphql";
+import type { MemoListFragment$key } from "./__generated__/MemoListFragment.graphql";
+import type { MemoListPaginationQuery } from "./__generated__/MemoListPaginationQuery.graphql";
 
 export const MemoList: React.FC<{
     fragmentRef: MemoListFragment$key;

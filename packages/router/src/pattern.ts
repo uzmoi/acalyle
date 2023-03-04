@@ -1,4 +1,4 @@
-import { Meta, SplitString, isArray, updateAt } from "emnorst";
+import { type Meta, type SplitString, isArray, updateAt } from "emnorst";
 import type { RemoveTail } from "./util";
 
 export type Mark = "+" | "*" | "?";

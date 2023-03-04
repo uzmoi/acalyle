@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import { randomUUID } from "crypto";
 import { nonNullable } from "emnorst";
 import { mkdir } from "fs/promises";

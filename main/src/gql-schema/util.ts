@@ -1,4 +1,4 @@
-import { JsonValue, ValueOf } from "emnorst";
+import type { JsonValue, ValueOf } from "emnorst";
 
 export const createEscapeTag =
     <T>(escape: (value: T) => string) =>

@@ -1,4 +1,4 @@
-import { AtomEffect } from "recoil";
+import type { AtomEffect } from "recoil";
 
 export const consoleEffect =
     (string = "%o"): AtomEffect<string> =>

@@ -5,10 +5,10 @@ import { Button, Form } from "~/shared/control";
 import { cropImage } from "~/shared/cropper";
 import {
     BookThumbnailFormBlock,
-    BookThumbnailState,
+    type BookThumbnailState,
 } from "./BookThumbnailFormBlock";
-import { BookThumbnailFormMutation } from "./__generated__/BookThumbnailFormMutation.graphql";
-import { BookThumbnailFormQuery } from "./__generated__/BookThumbnailFormQuery.graphql";
+import type { BookThumbnailFormMutation } from "./__generated__/BookThumbnailFormMutation.graphql";
+import type { BookThumbnailFormQuery } from "./__generated__/BookThumbnailFormQuery.graphql";
 
 export const BookThumbnailForm: React.FC<{
     bookId: string;
@@ -23,7 +23,6 @@ export const BookThumbnailForm: React.FC<{
         `,
         { bookId },
     );
-
 
     // prettier-ignore
     const [commitChangeThumbnail, isInFlight] = useMutation<BookThumbnailFormMutation>(graphql`

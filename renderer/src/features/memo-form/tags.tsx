@@ -3,7 +3,7 @@ import { graphql, useMutation } from "react-relay";
 import { MemoTag } from "~/entities/tag";
 import { List } from "~/shared/base";
 import { Button, Form, TextInput } from "~/shared/control";
-import { tagsUpdateMutation } from "./__generated__/tagsUpdateMutation.graphql";
+import type { tagsUpdateMutation } from "./__generated__/tagsUpdateMutation.graphql";
 
 export const MemoTagsForm: React.FC<{
     memoId: string;

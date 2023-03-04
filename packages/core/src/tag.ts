@@ -1,4 +1,4 @@
-import { ValueOf, has } from "emnorst";
+import { type ValueOf, has } from "emnorst";
 
 export type TagHead = keyof typeof tagTypes;
 export type TagType = ValueOf<typeof tagTypes>;

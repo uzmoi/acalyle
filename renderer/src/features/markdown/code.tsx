@@ -1,6 +1,6 @@
 /// <reference types="react-syntax-highlighter" />
 
-import { CodeProps } from "react-markdown/lib/ast-to-react";
+import type { CodeProps } from "react-markdown/lib/ast-to-react";
 import SyntaxHighlighter from "react-syntax-highlighter/dist/esm/prism-light";
 import coldarkCold from "react-syntax-highlighter/dist/esm/styles/prism/coldark-cold";
 import coldarkDark from "react-syntax-highlighter/dist/esm/styles/prism/coldark-dark";

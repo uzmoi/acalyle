@@ -3,7 +3,7 @@ import { graphql, useFragment } from "react-relay";
 import { vars } from "~/entities/theme";
 import { Link } from "~/features/location";
 import { link } from "~/pages/link";
-import { overview$key } from "./__generated__/overview.graphql";
+import type { overview$key } from "./__generated__/overview.graphql";
 import { BookThumbnail } from "./thumbnail";
 
 export const BookOverview: React.FC<{

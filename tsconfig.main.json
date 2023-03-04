@@ -4,5 +4,6 @@
     "compilerOptions": {
         "types": ["electron"],
         "composite": true,
+        "preserveValueImports": false,
     },
 }
