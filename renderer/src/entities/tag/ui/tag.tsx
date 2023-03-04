@@ -1,24 +1,16 @@
-import { AcalyleMemoTag } from "@acalyle/core";
+import type { AcalyleMemoTag } from "@acalyle/core";
 import { css } from "@linaria/core";
 import { vars } from "~/entities/theme";
 import { Link } from "~/features/location";
 import { link } from "~/pages/link";
 
 export const Tag: React.FC<{
-    tag: string;
+    tag: AcalyleMemoTag;
     bookId: string;
-}> = ({ tag: tagString, bookId }) => {
-    const tag = AcalyleMemoTag.fromString(tagString);
-
-    if (tag === null) {
-        return null;
-    }
-
+}> = ({ tag, bookId }) => {
     return (
-        <span className={TagStyle}>
-            <Link to={link("books/:bookId", { bookId })}>
-                {tag.symbol}
-            </Link>
+        <span className={TagStyle} data-tag-type={tag.type()}>
+            <Link to={link("books/:bookId", { bookId })}>{tag.symbol}</Link>
             {tag.prop && `:${tag.prop}`}
         </span>
     );
