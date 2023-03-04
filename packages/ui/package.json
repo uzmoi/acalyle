@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "name": "@acalyle/ui",
+  "type": "module",
+  "sideEffects": false,
+  "main": "src/index.ts",
+  "scripts": {
+    "check": "tsc",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "@acalyle/config": "*",
+    "vite": "^4.1.2",
+    "vitest": "^0.28.5"
+  }
+}
