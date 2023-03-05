@@ -1,40 +1,19 @@
 import { Button, ControlGroup } from "@acalyle/ui";
 import { Menu } from "@headlessui/react";
 import { css } from "@linaria/core";
-import { useCallback } from "react";
-import { graphql, useMutation } from "react-relay";
 import {
     AddTemplateMemoButtonList,
     type AddTemplateMemoButtonList$key,
 } from "./AddTemplateMemoButtonList";
-import type { AddMemoButtonMutation } from "./__generated__/AddMemoButtonMutation.graphql";
+import { useAddMemo } from "./use-add-memo";
 
 export const AddMemoButton: React.FC<{
     bookId: string;
     onMemoAdded?: (memoId: string) => void;
     data: AddTemplateMemoButtonList$key;
 }> = ({ bookId, onMemoAdded, data }) => {
-    const [commit, isInFlight] = useMutation<AddMemoButtonMutation>(graphql`
-        mutation AddMemoButtonMutation($bookId: ID!, $templateName: String) {
-            createMemo(bookId: $bookId, template: $templateName) {
-                id
-                contents
-                tags
-            }
-        }
-    `);
+    const [addMemo, isInFlight] = useAddMemo(bookId, onMemoAdded);
 
-    const addMemo = useCallback(
-        (templateName?: string) => {
-            commit({
-                variables: { bookId, templateName },
-                onCompleted({ createMemo }) {
-                    onMemoAdded?.(createMemo.id);
-                },
-            });
-        },
-        [bookId, commit, onMemoAdded],
-    );
 
     return (
         <Menu>
