@@ -1,4 +1,5 @@
 import { Button } from "@acalyle/ui";
+import { css } from "@linaria/core";
 import { assert } from "emnorst";
 import { useCallback } from "react";
 import { graphql, useFragment } from "react-relay";
@@ -30,15 +31,33 @@ export const AddTemplateMemoButtonList: React.FC<{
 
     return (
         <div>
-            {templateNames.length === 0 ? (
-                <p>No memo template.</p>
-            ) : (
-                <p>Create memo from template.</p>
-            )}
+            <p
+                className={css`
+                    padding: 0.5em;
+                    font-size: 0.75em;
+                    cursor: default;
+                `}
+            >
+                {templateNames.length === 0
+                    ? "No memo template."
+                    : "Create memo from template."}
+            </p>
             {templateNames.map(templateName => (
                 <Button
                     key={templateName}
                     variant="unstyled"
+                    className={css`
+                        display: block;
+                        width: 100%;
+                        padding: 0.25em 1em;
+                        font-size: 0.9em;
+                        font-weight: normal;
+                        text-align: start;
+                        border-top: 1px solid #666;
+                        &:not(:disabled):is(:hover, :focus) {
+                            background-color: #fff2;
+                        }
+                    `}
                     onClick={addMemo}
                     data-template-name={templateName}
                 >

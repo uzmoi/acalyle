@@ -39,13 +39,30 @@ export const AddMemoButton: React.FC<{
                         setIsOpenTemplatePopup(isOpen => !isOpen);
                     }}
                 >
-                    ▼
+                    <span
+                        // HACK アイコンライブラリ入れよう
+                        className={css`
+                            font-size: 0.5em;
+                            line-height: 0;
+                        `}
+                    >
+                        ▼
+                    </span>
                 </Button>
             </ControlGroup>
             <Modal
                 open={isOpenTemplatePopup}
                 onClose={() => setIsOpenTemplatePopup(false)}
                 variant="popup"
+                className={css`
+                    top: calc(100% + 0.5em);
+                    right: 0;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    background-color: #222;
+                    border-radius: 0.25em;
+                    box-shadow: 0 0 2em #111;
+                `}
             >
                 <AddTemplateMemoButtonList data={data} onMemoAdd={addMemo} />
             </Modal>
