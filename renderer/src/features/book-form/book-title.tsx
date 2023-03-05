@@ -1,7 +1,7 @@
+import { Button, Form, TextInput } from "@acalyle/ui";
 import { css } from "@linaria/core";
 import { useId, useState } from "react";
 import { graphql, useMutation } from "react-relay";
-import { Button, Form, TextInput } from "~/shared/control";
 import type { bookTitleMutation } from "./__generated__/bookTitleMutation.graphql";
 
 export const BookTitleForm: React.FC<{

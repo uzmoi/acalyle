@@ -1,7 +1,7 @@
+import { Button, ControlGroup, FileInput, Form } from "@acalyle/ui";
 import { css } from "@linaria/core";
 import { useCallback, useState } from "react";
 import { graphql, useMutation } from "react-relay";
-import { Button, ControlGroup, FileInput, Form } from "~/shared/control";
 import type { MemoImportFormMutation } from "./__generated__/MemoImportFormMutation.graphql";
 import { fileToMemoInput } from "./from-file";
 

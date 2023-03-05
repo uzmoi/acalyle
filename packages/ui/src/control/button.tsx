@@ -1,4 +1,5 @@
 import { css, cx } from "@linaria/core";
+import { vars } from "../theme";
 import { ControlPartOutlineStyle, ControlPartResetStyle } from "./base";
 
 export type ButtonVariant = keyof typeof variantStyles;

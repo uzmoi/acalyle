@@ -1,8 +1,8 @@
+import { Button, ControlGroup } from "@acalyle/ui";
 import { Menu } from "@headlessui/react";
 import { css } from "@linaria/core";
 import { useCallback } from "react";
 import { graphql, useMutation } from "react-relay";
-import { Button, ControlGroup } from "~/shared/control";
 import {
     AddTemplateMemoButtonList,
     type AddTemplateMemoButtonList$key,

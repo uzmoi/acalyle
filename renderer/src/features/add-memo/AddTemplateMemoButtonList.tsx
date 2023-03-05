@@ -1,7 +1,7 @@
+import { Button } from "@acalyle/ui";
 import { assert } from "emnorst";
 import { useCallback } from "react";
 import { graphql, useFragment } from "react-relay";
-import { Button } from "~/shared/control";
 import type { AddTemplateMemoButtonList$key } from "./__generated__/AddTemplateMemoButtonList.graphql";
 
 export type { AddTemplateMemoButtonList$key };

@@ -1,7 +1,7 @@
+import { Button, ControlGroup, Form, TextArea } from "@acalyle/ui";
 import { css } from "@linaria/core";
 import { useCallback, useState } from "react";
 import { graphql, useMutation } from "react-relay";
-import { Button, ControlGroup, Form, TextArea } from "~/shared/control";
 import type { MemoContentsEditorMutation } from "./__generated__/MemoContentsEditorMutation.graphql";
 
 export const MemoContentsEditor: React.FC<{

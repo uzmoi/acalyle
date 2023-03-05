@@ -1,11 +1,12 @@
-import { vars } from "@acalyle/ui";
-import { css, cx } from "@linaria/core";
-import { useCallback, useId } from "react";
-import { FileInput, TextInput } from "~/shared/control";
 import {
     ControlPartOutlineStyle,
     ControlPartResetStyle,
-} from "~/shared/control/base";
+    FileInput,
+    TextInput,
+    vars,
+} from "@acalyle/ui";
+import { css, cx } from "@linaria/core";
+import { useCallback, useId } from "react";
 import { Cropper, changeScale } from "~/shared/cropper";
 
 export type BookThumbnailState = {

@@ -1,7 +1,7 @@
+import { Button, Form } from "@acalyle/ui";
 import { css } from "@linaria/core";
 import { useState } from "react";
 import { graphql, useLazyLoadQuery, useMutation } from "react-relay";
-import { Button, Form } from "~/shared/control";
 import { cropImage } from "~/shared/cropper";
 import {
     BookThumbnailFormBlock,

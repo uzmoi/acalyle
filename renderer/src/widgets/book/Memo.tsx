@@ -1,4 +1,4 @@
-import { vars } from "@acalyle/ui";
+import { Button, vars } from "@acalyle/ui";
 import { css } from "@linaria/core";
 import { useState } from "react";
 import { graphql, useFragment } from "react-relay";
@@ -6,7 +6,6 @@ import { MemoInfo } from "~/entities/memo";
 import { TagList } from "~/entities/tag";
 import { Markdown } from "~/features/markdown";
 import { MemoContentsEditor } from "~/features/memo-editor";
-import { Button } from "~/shared/control";
 import type { MemoFragment$key } from "./__generated__/MemoFragment.graphql";
 
 export const Memo: React.FC<{

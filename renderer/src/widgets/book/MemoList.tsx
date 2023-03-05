@@ -1,3 +1,8 @@
+import {
+    ControlGroupStyle,
+    ControlPartOutlineStyle,
+    ControlPartResetStyle,
+} from "@acalyle/ui";
 import { Tab } from "@headlessui/react";
 import { css, cx } from "@linaria/core";
 import { useCallback, useEffect, useMemo } from "react";
@@ -7,11 +12,6 @@ import { MemoColumns } from "~/entities/memo/ui/memo-columns";
 import { MemoList as MemoList_ } from "~/entities/memo/ui/memo-list";
 import { getNodes } from "~/shared/base/connection";
 import { Intersection } from "~/shared/base/intersection";
-import {
-    ControlPartOutlineStyle,
-    ControlPartResetStyle,
-} from "~/shared/control/base";
-import { ControlGroupStyle } from "~/shared/control/group";
 import type { MemoListFragment$key } from "./__generated__/MemoListFragment.graphql";
 import type { MemoListPaginationQuery } from "./__generated__/MemoListPaginationQuery.graphql";
 

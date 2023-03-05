@@ -1,3 +1,4 @@
+import { TextInput } from "@acalyle/ui";
 import { css } from "@linaria/core";
 import { useCallback, useState } from "react";
 import { graphql, useFragment } from "react-relay";
@@ -7,7 +8,6 @@ import { MemoImportButton } from "~/features/import-memo";
 import { Link, useNavigate } from "~/features/location";
 import { link } from "~/pages/link";
 import { List } from "~/shared/base";
-import { TextInput } from "~/shared/control";
 import { MemoList } from "./MemoList";
 import type { BookMemosFragment$key } from "./__generated__/BookMemosFragment.graphql";
 

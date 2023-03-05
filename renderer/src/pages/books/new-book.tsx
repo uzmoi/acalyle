@@ -1,3 +1,4 @@
+import { Button, Form, TextInput } from "@acalyle/ui";
 import { css } from "@linaria/core";
 import { useId, useState } from "react";
 import { graphql, useMutation } from "react-relay";
@@ -6,7 +7,6 @@ import {
     type BookThumbnailState,
 } from "~/features/book-thumbnail";
 import { useNavigate } from "~/features/location";
-import { Button, Form, TextInput } from "~/shared/control";
 import { cropImage } from "~/shared/cropper";
 import { link } from "../link";
 import type { newBookMutation } from "./__generated__/newBookMutation.graphql";
