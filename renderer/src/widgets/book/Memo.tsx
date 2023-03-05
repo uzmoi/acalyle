@@ -1,9 +1,9 @@
+import { vars } from "@acalyle/ui";
 import { css } from "@linaria/core";
 import { useState } from "react";
 import { graphql, useFragment } from "react-relay";
 import { MemoInfo } from "~/entities/memo";
 import { TagList } from "~/entities/tag";
-import { vars } from "~/entities/theme";
 import { Markdown } from "~/features/markdown";
 import { MemoContentsEditor } from "~/features/memo-editor";
 import { Button } from "~/shared/control";

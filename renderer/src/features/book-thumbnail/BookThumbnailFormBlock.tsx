@@ -1,6 +1,6 @@
+import { vars } from "@acalyle/ui";
 import { css, cx } from "@linaria/core";
 import { useCallback, useId } from "react";
-import { vars } from "~/entities/theme";
 import { FileInput, TextInput } from "~/shared/control";
 import {
     ControlPartOutlineStyle,

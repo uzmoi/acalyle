@@ -1,6 +1,6 @@
+import { vars } from "@acalyle/ui";
 import { css } from "@linaria/core";
 import { graphql, useFragment } from "react-relay";
-import { vars } from "~/entities/theme";
 import { Link } from "~/features/location";
 import { link } from "~/pages/link";
 import type { overview$key } from "./__generated__/overview.graphql";

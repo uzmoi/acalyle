@@ -1,5 +1,5 @@
+import { vars } from "@acalyle/ui";
 import { css } from "@linaria/core";
-import { vars } from "~/entities/theme";
 import { Link } from "~/features/location";
 import { link } from "~/pages/link";
 

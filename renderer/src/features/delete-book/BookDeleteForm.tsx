@@ -1,7 +1,7 @@
+import { vars } from "@acalyle/ui";
 import { css } from "@linaria/core";
 import { useCallback, useState } from "react";
 import { graphql, useMutation } from "react-relay";
-import { vars } from "~/entities/theme";
 import { Button, ControlGroup, Form, TextInput } from "~/shared/control";
 import type { BookDeleteFormMutation } from "./__generated__/BookDeleteFormMutation.graphql";
 

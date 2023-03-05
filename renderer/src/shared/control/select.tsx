@@ -1,5 +1,5 @@
+import { vars } from "@acalyle/ui";
 import { css, cx } from "@linaria/core";
-import { vars } from "~/entities/theme";
 import { ControlPartOutlineStyle, ControlPartResetStyle } from "./base";
 
 export type SelectVariant = keyof typeof variantStyles;
