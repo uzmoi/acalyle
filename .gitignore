@@ -1,11 +1,14 @@
 node_modules/
 __generated__/
+coverage/
 
 /app
 /data/schema.graphql
 
 /prisma/*
 !/prisma/schema.prisma
+
+*.tsbuildinfo
 
 _*
 *.local
