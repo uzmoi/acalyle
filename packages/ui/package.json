@@ -17,6 +17,6 @@
     "@acalyle/tsconfig": "*",
     "@types/react": "^18.0.28",
     "vite": "^4.1.2",
-    "vitest": "^0.28.5"
+    "vitest": "^0.29.2"
   }
 }
