@@ -1,9 +1,8 @@
 import { AcalyleMemoTag } from "@acalyle/core";
-import { Button, Form, TextInput } from "@acalyle/ui";
+import { Button, Form, List, TextInput } from "@acalyle/ui";
 import { nonNullable } from "emnorst";
 import { useCallback, useState } from "react";
 import { graphql, useMutation } from "react-relay";
-import { List } from "~/shared/base";
 import type { tagsUpdateMutation } from "./__generated__/tagsUpdateMutation.graphql";
 
 export const MemoTagsForm: React.FC<{

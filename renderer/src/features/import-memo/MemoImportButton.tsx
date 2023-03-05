@@ -1,7 +1,6 @@
-import { Button } from "@acalyle/ui";
+import { Button, Modal } from "@acalyle/ui";
 import { css } from "@linaria/core";
 import { useState } from "react";
-import { Modal } from "~/shared/base";
 import { MemoImportForm } from "./MemoImportForm";
 
 export const MemoImportButton: React.FC<{

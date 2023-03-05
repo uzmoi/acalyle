@@ -1,7 +1,7 @@
 import { AcalyleMemoTag } from "@acalyle/core";
+import { List } from "@acalyle/ui";
 import { css } from "@linaria/core";
 import { nonNullable } from "emnorst";
-import { List } from "~/shared/base";
 import { Tag } from "./tag";
 
 export const TagList: React.FC<{

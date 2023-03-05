@@ -1,4 +1,9 @@
-import { ControlPartOutlineStyle } from "@acalyle/ui";
+import {
+    ControlPartOutlineStyle,
+    Intersection,
+    List,
+    Spinner,
+} from "@acalyle/ui";
 import { css, cx } from "@linaria/core";
 import { startTransition, useCallback, useMemo } from "react";
 import { graphql, usePaginationFragment } from "react-relay";
@@ -8,9 +13,7 @@ import { BookOverview } from "~/entities/book";
 import { Link } from "~/features/location";
 import { BookSearchBar } from "~/features/search-book";
 import { link } from "~/pages/link";
-import { List, Spinner } from "~/shared/base";
 import { getNodes } from "~/shared/base/connection";
-import { Intersection } from "~/shared/base/intersection";
 import type { BookListFragment$key } from "./__generated__/BookListFragment.graphql";
 import type { BookListPaginationQuery } from "./__generated__/BookListPaginationQuery.graphql";
 

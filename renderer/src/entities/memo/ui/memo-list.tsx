@@ -1,9 +1,8 @@
-import { vars } from "@acalyle/ui";
+import { List, vars } from "@acalyle/ui";
 import { css } from "@linaria/core";
 import { TagList } from "~/entities/tag";
 import { Link } from "~/features/location";
 import { link } from "~/pages/link";
-import { List } from "~/shared/base";
 
 export const MemoList: React.FC<{
     bookId: string;
