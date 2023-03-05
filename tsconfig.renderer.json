@@ -1,5 +1,5 @@
 {
-    "extends": "@acalyle/config/tsconfig.web.json",
+    "extends": "@acalyle/tsconfig/tsconfig.web.json",
     "include": ["renderer/src", "renderer/types.d.ts"],
     "compilerOptions": {
         "jsx": "react-jsx",

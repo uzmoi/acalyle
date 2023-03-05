@@ -1,5 +1,5 @@
 {
-    "extends": "@acalyle/config/tsconfig.web.json",
+    "extends": "@acalyle/tsconfig/tsconfig.web.json",
     "include": ["src"],
     "compilerOptions": {
         "composite": true,

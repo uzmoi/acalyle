@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@acalyle/config",
+  "name": "@acalyle/tsconfig",
   "files": [
     "tsconfig.base.json",
     "tsconfig.node.json",

@@ -12,7 +12,7 @@
     "emnorst": "^1.0.0-next.2"
   },
   "devDependencies": {
-    "@acalyle/config": "*",
+    "@acalyle/tsconfig": "*",
     "vite": "^4.1.2",
     "vitest": "^0.28.5"
   }
