@@ -8,7 +8,15 @@ export const Modal: React.FC<{
     children?: React.ReactNode;
     onClose?: () => void;
     transitionDuration?: number;
-}> = ({ open, className, children, onClose, transitionDuration = 200 }) => {
+    variant?: "modal" | "popup";
+}> = ({
+    open,
+    className,
+    children,
+    onClose,
+    transitionDuration = 200,
+    variant = "modal",
+}) => {
     const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
@@ -36,16 +44,22 @@ export const Modal: React.FC<{
         <div
             data-open={open}
             data-status={status}
+            data-variant={variant}
             style={{ transitionDuration: `${transitionDuration}ms` }}
             className={cx(
                 css`
-                    position: fixed;
-                    top: 0;
-                    right: 0;
-                    bottom: 0;
-                    left: 0;
                     z-index: 9999;
-                    background-color: #0008;
+                    &[data-variant="modal"] {
+                        position: fixed;
+                        top: 0;
+                        right: 0;
+                        bottom: 0;
+                        left: 0;
+                        background-color: #0008;
+                    }
+                    &[data-variant="popup"] {
+                        position: absolute;
+                    }
                     transition-property: opacity;
                     &[data-open="true"] {
                         opacity: 1;
