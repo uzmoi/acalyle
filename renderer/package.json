@@ -43,7 +43,6 @@
     "@types/react-syntax-highlighter": "^15.5.6",
     "@vitejs/plugin-react": "^3.1.0",
     "@vitest/coverage-c8": "^0.29.2",
-    "babel-plugin-module-resolver": "^4.1.0",
     "happy-dom": "^7.5.14",
     "relay-compiler": "^14.1.0",
     "rollup-plugin-visualizer": "^5.8.3",
