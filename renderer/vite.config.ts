@@ -1,4 +1,5 @@
 import linaria from "@linaria/vite";
+import { macaronVitePlugin } from "@macaron-css/vite";
 import react from "@vitejs/plugin-react";
 import { visualizer } from "rollup-plugin-visualizer";
 import htmlMinifier from "vite-plugin-html-minifier";
@@ -25,6 +26,7 @@ export default defineConfig(env => ({
                 presets: ["@babel/preset-typescript"],
             },
         }),
+        macaronVitePlugin(),
         relay,
         htmlReplace({
             mode: env.mode,
