@@ -1,5 +1,5 @@
 import { Button, ControlGroup, Form, TextInput, vars } from "@acalyle/ui";
-import { css } from "@linaria/core";
+import { style } from "@macaron-css/core";
 import { useCallback, useState } from "react";
 import { graphql, useMutation } from "react-relay";
 import type { BookDeleteFormMutation } from "./__generated__/BookDeleteFormMutation.graphql";
@@ -31,28 +31,22 @@ export const BookDeleteForm: React.FC<{
             <p>
                 Please type &quot;
                 <code
-                    className={css`
-                        padding-inline: 0.25em;
-                        font-family: ${vars.font.mono};
-                        background-color: ${vars.color.bg4};
-                    `}
+                    className={style({
+                        paddingInline: "0.25em",
+                        fontFamily: vars.font.mono,
+                        backgroundColor: vars.color.bg4,
+                    })}
                 >
                     {confirmText}
                 </code>
                 &quot; to confirm.
             </p>
-            <ControlGroup
-                className={css`
-                    margin-top: 0.5em;
-                `}
-            >
+            <ControlGroup className={style({ marginTop: "0.5em" })}>
                 <TextInput onValueChange={setPass} />
                 <Button
                     type="submit"
                     disabled={pass !== confirmText || isInFlight}
-                    className={css`
-                        margin-left: 1em;
-                    `}
+                    className={style({ marginLeft: "1em" })}
                 >
                     Delete this book
                 </Button>

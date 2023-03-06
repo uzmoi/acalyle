@@ -1,4 +1,4 @@
-import { css } from "@linaria/core";
+import { globalStyle } from "@macaron-css/core";
 import { StrictMode } from "react";
 import { RelayEnvironmentProvider } from "react-relay";
 import { RecoilRoot } from "recoil";
@@ -15,16 +15,10 @@ export const root = (
     </StrictMode>
 );
 
-css`
-    ${":global()"} {
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-        }
-        /* prettier-ignore */
-        body, h1, h2, h3, h4, h5, h6, p, ul, ol, dl, dd {
-            margin: 0;
-        }
-    }
-`;
+globalStyle("*, *::before, *::after", {
+    boxSizing: "border-box",
+});
+
+globalStyle("body, h1, h2, h3, h4, h5, h6, p, ul, ol, dl, dd", {
+    margin: 0,
+});

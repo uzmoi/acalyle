@@ -1,5 +1,5 @@
 import { Button, ControlGroup, FileInput, Form } from "@acalyle/ui";
-import { css } from "@linaria/core";
+import { style } from "@macaron-css/core";
 import { useCallback, useState } from "react";
 import { graphql, useMutation } from "react-relay";
 import type { MemoImportFormMutation } from "./__generated__/MemoImportFormMutation.graphql";
@@ -30,11 +30,7 @@ export const MemoImportForm: React.FC<{
     return (
         <Form onSubmit={onSubmit}>
             <p>Import memos</p>
-            <div
-                className={css`
-                    padding-block: 1em;
-                `}
-            >
+            <div className={style({ paddingBlock: "1em" })}>
                 <FileInput
                     multiple
                     onFileChange={setFiles}

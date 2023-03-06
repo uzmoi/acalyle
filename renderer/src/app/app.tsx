@@ -1,6 +1,6 @@
 import { match } from "@acalyle/router";
 import { vars } from "@acalyle/ui";
-import { css } from "@linaria/core";
+import { style } from "@macaron-css/core";
 import { Suspense, useLayoutEffect } from "react";
 import { useThemeStyle } from "~/entities/theme";
 import { useLocation } from "~/features/location";
@@ -29,14 +29,14 @@ export const App: React.FC = () => {
     );
 };
 
-const RootStyle = css`
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden auto;
-    font-family: ${vars.font.sans};
-    color: ${vars.color.text};
-    background-color: ${vars.color.bg1};
-    ::selection {
-        background-color: ${vars.color.selection};
-    }
-`;
+const RootStyle = style({
+    width: "100vw",
+    height: "100vh",
+    overflow: "hidden auto",
+    fontFamily: vars.font.sans,
+    color: vars.color.text,
+    backgroundColor: vars.color.bg1,
+    "::selection": {
+        backgroundColor: vars.color.selection,
+    },
+});

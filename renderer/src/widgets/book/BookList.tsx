@@ -4,7 +4,8 @@ import {
     List,
     Spinner,
 } from "@acalyle/ui";
-import { css, cx } from "@linaria/core";
+import { cx } from "@linaria/core";
+import { style } from "@macaron-css/core";
 import { startTransition, useCallback, useMemo } from "react";
 import { graphql, usePaginationFragment } from "react-relay";
 import type { RefetchFnDynamic } from "react-relay/relay-hooks/useRefetchableFragmentNode";
@@ -75,25 +76,16 @@ export const BookList: React.FC<{
 
     return (
         <div>
-            <div
-                className={css`
-                    display: flex;
-                    padding-bottom: 0.5em;
-                `}
-            >
+            <div className={style({ display: "flex", paddingBottom: "0.5em" })}>
                 <BookSearchBar
                     refetch={refetchTransition}
-                    className={css`
-                        flex: 1 0;
-                    `}
+                    className={style({ flex: "1 0" })}
                 />
                 <Link
                     to={link("books/new")}
                     className={cx(
                         ControlPartOutlineStyle,
-                        css`
-                            margin-left: 1em;
-                        `,
+                        style({ marginLeft: "1em" }),
                     )}
                 >
                     New
@@ -103,9 +95,7 @@ export const BookList: React.FC<{
                 {books.map(book => (
                     <List.Item
                         key={book.id}
-                        className={css`
-                            margin-top: 1em;
-                        `}
+                        className={style({ marginTop: "1em" })}
                     >
                         <BookOverview book={book} />
                     </List.Item>
@@ -118,19 +108,19 @@ export const BookList: React.FC<{
             />
             {isLoadingNext && (
                 <div
-                    className={css`
-                        display: inline-block;
-                        margin-top: 1em;
-                        margin-left: 50%;
-                        transform: translateX(-50%);
-                    `}
+                    className={style({
+                        display: "inline-block",
+                        marginTop: "1em",
+                        marginLeft: "50%",
+                        transform: "translateX(-50%)",
+                    })}
                 >
                     <span
-                        className={css`
-                            height: 1em;
-                            margin-right: 4em;
-                            vertical-align: top;
-                        `}
+                        className={style({
+                            height: "1em",
+                            marginRight: "4em",
+                            verticalAlign: "top",
+                        })}
                     >
                         Loading...
                     </span>

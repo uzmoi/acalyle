@@ -1,5 +1,5 @@
 import { Button, ControlGroup, Form, Select, TextInput } from "@acalyle/ui";
-import { css } from "@linaria/core";
+import { style } from "@macaron-css/core";
 import { useCallback, useState } from "react";
 import { BiRefresh, BiSortAZ, BiSortZA } from "react-icons/bi";
 import type { RefetchOptions } from "react-relay";
@@ -54,17 +54,10 @@ export const BookSearchBar: React.FC<{
 
     return (
         <Form onSubmit={reload} className={className}>
-            <ControlGroup
-                className={css`
-                    display: flex;
-                `}
-            >
+            <ControlGroup className={style({ display: "flex" })}>
                 <TextInput
                     type="search"
-                    className={css`
-                        flex: 1 1 0;
-                        width: 1em;
-                    `}
+                    className={style({ flex: "1 1 0", width: "1em" })}
                     placeholder="Find a book"
                     value={vars.query}
                     onValueChange={changeQuery}

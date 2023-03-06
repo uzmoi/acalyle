@@ -1,5 +1,5 @@
 import { Button, Modal } from "@acalyle/ui";
-import { css } from "@linaria/core";
+import { style } from "@macaron-css/core";
 import { useState } from "react";
 import { MemoImportForm } from "./MemoImportForm";
 
@@ -9,25 +9,18 @@ export const MemoImportButton: React.FC<{
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div
-            className={css`
-                display: inline-block;
-                font-weight: bold;
-            `}
-        >
+        <div className={style({ display: "inline-block", fontWeight: "bold" })}>
             <Button onClick={() => setIsOpen(true)}>Import memos</Button>
             <Modal
                 open={isOpen}
                 onClose={() => setIsOpen(false)}
-                className={css`
-                    padding: 4em;
-                `}
+                className={style({ padding: "4em" })}
             >
                 <div
-                    className={css`
-                        padding: 1em;
-                        background-color: black;
-                    `}
+                    className={style({
+                        padding: "1em",
+                        backgroundColor: "black",
+                    })}
                 >
                     <MemoImportForm
                         bookId={bookId}

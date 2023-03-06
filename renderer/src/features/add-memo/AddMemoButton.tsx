@@ -1,5 +1,5 @@
 import { Button, ControlGroup, Modal } from "@acalyle/ui";
-import { css } from "@linaria/core";
+import { style } from "@macaron-css/core";
 import { useEffect, useState } from "react";
 import { BiCaretDown } from "react-icons/bi";
 import { WindowEvent } from "~/shared/global-event/window-event";
@@ -25,11 +25,7 @@ export const AddMemoButton: React.FC<{
     }, []);
 
     return (
-        <div
-            className={css`
-                position: relative;
-            `}
-        >
+        <div className={style({ position: "relative" })}>
             <ControlGroup>
                 <Button onClick={() => addMemo()} disabled={isInFlight}>
                     Add memo
@@ -47,15 +43,15 @@ export const AddMemoButton: React.FC<{
                 open={isOpenTemplatePopup}
                 onClose={() => setIsOpenTemplatePopup(false)}
                 variant="popup"
-                className={css`
-                    top: calc(100% + 0.5em);
-                    right: 0;
-                    overflow: hidden;
-                    white-space: nowrap;
-                    background-color: #222;
-                    border-radius: 0.25em;
-                    box-shadow: 0 0 2em #111;
-                `}
+                className={style({
+                    top: "calc(100% + 0.5em)",
+                    right: 0,
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    backgroundColor: "#222",
+                    borderRadius: "0.25em",
+                    boxShadow: "0 0 2em #111",
+                })}
             >
                 <AddTemplateMemoButtonList data={data} onMemoAdd={addMemo} />
             </Modal>

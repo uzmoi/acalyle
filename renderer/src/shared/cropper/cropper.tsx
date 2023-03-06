@@ -1,4 +1,5 @@
 import { css, cx } from "@linaria/core";
+import { style } from "@macaron-css/core";
 import { clamp } from "emnorst";
 import { useEffect, useRef, useState } from "react";
 import { useGrab } from "../global-event";
@@ -149,18 +150,12 @@ export const Cropper: React.FC<{
             data-disabled={disabled}
         >
             <div
-                className={css`
-                    width: 100%;
-                    height: 100%;
-                `}
+                className={style({ width: "100%", height: "100%" })}
                 style={{ transform }}
             >
                 <img
                     ref={imageEl}
-                    className={css`
-                        max-width: 100%;
-                        max-height: 100%;
-                    `}
+                    className={style({ maxWidth: "100%", maxHeight: "100%" })}
                     src={src}
                     alt=""
                 />

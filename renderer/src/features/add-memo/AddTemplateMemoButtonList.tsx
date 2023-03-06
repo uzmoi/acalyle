@@ -1,5 +1,5 @@
 import { Button } from "@acalyle/ui";
-import { css } from "@linaria/core";
+import { style } from "@macaron-css/core";
 import { assert } from "emnorst";
 import { useCallback } from "react";
 import { graphql, useFragment } from "react-relay";
@@ -32,11 +32,11 @@ export const AddTemplateMemoButtonList: React.FC<{
     return (
         <div>
             <p
-                className={css`
-                    padding: 0.5em;
-                    font-size: 0.75em;
-                    cursor: default;
-                `}
+                className={style({
+                    padding: "0.5em",
+                    fontSize: "0.75em",
+                    cursor: "default",
+                })}
             >
                 {templateNames.length === 0
                     ? "No memo template."
@@ -46,18 +46,20 @@ export const AddTemplateMemoButtonList: React.FC<{
                 <Button
                     key={templateName}
                     variant="unstyled"
-                    className={css`
-                        display: block;
-                        width: 100%;
-                        padding: 0.25em 1em;
-                        font-size: 0.9em;
-                        font-weight: normal;
-                        text-align: start;
-                        border-top: 1px solid #666;
-                        &:not(:disabled):is(:hover, :focus) {
-                            background-color: #fff2;
-                        }
-                    `}
+                    className={style({
+                        display: "block",
+                        width: "100%",
+                        padding: "0.25em 1em",
+                        fontSize: "0.9em",
+                        fontWeight: "normal",
+                        textAlign: "start",
+                        borderTop: "1px solid #666",
+                        selectors: {
+                            "&:not(:disabled):is(:hover, :focus)": {
+                                backgroundColor: "#fff2",
+                            },
+                        },
+                    })}
                     onClick={addMemo}
                     data-template-name={templateName}
                 >
