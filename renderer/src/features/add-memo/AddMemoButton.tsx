@@ -1,6 +1,7 @@
 import { Button, ControlGroup, Modal } from "@acalyle/ui";
 import { css } from "@linaria/core";
 import { useEffect, useState } from "react";
+import { BiCaretDown } from "react-icons/bi";
 import { WindowEvent } from "~/shared/global-event/window-event";
 import {
     AddTemplateMemoButtonList,
@@ -39,15 +40,7 @@ export const AddMemoButton: React.FC<{
                         setIsOpenTemplatePopup(isOpen => !isOpen);
                     }}
                 >
-                    <span
-                        // HACK アイコンライブラリ入れよう
-                        className={css`
-                            font-size: 0.5em;
-                            line-height: 0;
-                        `}
-                    >
-                        ▼
-                    </span>
+                    <BiCaretDown />
                 </Button>
             </ControlGroup>
             <Modal

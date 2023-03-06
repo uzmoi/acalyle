@@ -1,6 +1,7 @@
 import { Button, ControlGroup, Form, Select, TextInput } from "@acalyle/ui";
 import { css } from "@linaria/core";
 import { useCallback, useState } from "react";
+import { BiRefresh, BiSortAZ, BiSortZA } from "react-icons/bi";
 import type { RefetchOptions } from "react-relay";
 
 type BookSortOrder = "Created" | "Title" | "LastUpdated";
@@ -40,14 +41,13 @@ export const BookSearchBar: React.FC<{
         },
         [vars, refetch],
     );
-    const changeSortOrder = useCallback(
-        (value: SortOrder) => {
-            const newVars = { ...vars, order: value };
-            refetch(newVars);
-            setVars(newVars);
-        },
-        [vars, refetch],
-    );
+    const toggleSortOrder = useCallback(() => {
+        const order =
+            vars.order === "asc" ? ("desc" as const) : ("asc" as const);
+        const newVars = { ...vars, order };
+        refetch(newVars);
+        setVars(newVars);
+    }, [vars, refetch]);
     const reload = useCallback(() => {
         refetch(vars, { fetchPolicy: "network-only" });
     }, [vars, refetch]);
@@ -83,16 +83,17 @@ export const BookSearchBar: React.FC<{
                         Last updated
                     </Select.Option>
                 </Select>
-                <Select
-                    defaultValue="desc"
-                    // FIXME
-                    onValueChange={changeSortOrder as (value: string) => void}
+                <Button
+                    variant="icon"
+                    onClick={toggleSortOrder}
                     aria-label="sort order"
                 >
-                    <Select.Option value="asc">昇順</Select.Option>
-                    <Select.Option value="desc">降順</Select.Option>
-                </Select>
-                <Button type="submit">reload</Button>
+                    {vars.order === "asc" && <BiSortAZ />}
+                    {vars.order === "desc" && <BiSortZA />}
+                </Button>
+                <Button type="submit" variant="icon">
+                    <BiRefresh />
+                </Button>
             </ControlGroup>
         </Form>
     );

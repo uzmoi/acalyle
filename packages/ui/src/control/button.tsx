@@ -31,4 +31,15 @@ const ButtonStyle = css`
 const variantStyles = {
     outline: ControlPartOutlineStyle,
     unstyled: "",
+    icon: cx(
+        ControlPartOutlineStyle,
+        css`
+            padding: 0.25em;
+            font-size: 1.25em;
+            line-height: 1;
+            svg {
+                vertical-align: top;
+            }
+        `,
+    ),
 } satisfies Record<string, string>;
