@@ -1,6 +1,7 @@
 import linaria from "@linaria/vite";
 import react from "@vitejs/plugin-react";
 import { visualizer } from "rollup-plugin-visualizer";
+import htmlMinifier from "vite-plugin-html-minifier";
 import relay from "vite-plugin-relay";
 import { defineConfig } from "vitest/config";
 import { htmlReplace } from "./vite-plugin-html-replace";
@@ -31,6 +32,7 @@ export default defineConfig(env => ({
         htmlReplace({
             mode: env.mode,
         }),
+        htmlMinifier(),
     ],
     build: {
         minify: "terser",
