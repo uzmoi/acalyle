@@ -45,7 +45,6 @@ export const MemoColumns: React.FC<{
                             className={css`
                                 height: calc(var(--height) * 9em - 1em);
                                 margin-block: 1em;
-                                overflow: hidden;
                             `}
                         >
                             <MemoOverview bookId={bookId} memo={node} />

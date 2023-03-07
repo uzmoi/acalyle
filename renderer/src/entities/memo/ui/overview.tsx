@@ -30,23 +30,26 @@ export const MemoOverview: React.FC<{
 export const MemoOverviewStyle = css`
     display: flex;
     flex-flow: column nowrap;
-    padding: 0.4em;
-    white-space: pre;
+    height: 100%;
+    padding: 0 1em;
     background-color: ${vars.color.bg3};
 `;
 
 const MemoOverviewContentsLinkStyle = css`
     display: block;
-    flex: 1;
+    flex: 1 1 0;
     overflow: hidden;
     color: currentcolor;
 `;
 
 const TagListStyle = css`
     position: relative;
-    flex: 0 0 1;
-    overflow: hidden;
+    flex: 0 0 auto;
+    padding-block: 0.25em;
     font-size: 0.75em;
+    ul {
+        display: inline-block;
+    }
     &::before {
         position: absolute;
         top: 0;
