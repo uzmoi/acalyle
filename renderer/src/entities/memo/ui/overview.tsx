@@ -2,6 +2,7 @@ import { vars } from "@acalyle/ui";
 import { css } from "@linaria/core";
 import { TagList } from "~/entities/tag";
 import { Link } from "~/features/location";
+import { AddTagButton } from "~/features/tag-form";
 import { link } from "~/pages/link";
 
 export const MemoOverview: React.FC<{
@@ -22,6 +23,7 @@ export const MemoOverview: React.FC<{
             </Link>
             <div className={TagListStyle}>
                 <TagList tags={memo.tags} bookId={bookId} />
+                <AddTagButton memoId={memo.id} />
             </div>
         </article>
     );
