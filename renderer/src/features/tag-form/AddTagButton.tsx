@@ -5,8 +5,9 @@ import { BiPlus } from "react-icons/bi";
 import { AddTagForm } from "./AddTagForm";
 
 export const AddTagButton: React.FC<{
+    bookId: string;
     memoId: string;
-}> = ({ memoId }) => {
+}> = ({ bookId, memoId }) => {
     const [isOpenAddTagPopup, setIsOpenAddTagPopup] = useState(false);
 
     return (
@@ -40,6 +41,7 @@ export const AddTagButton: React.FC<{
                 })}
             >
                 <AddTagForm
+                    bookId={bookId}
                     memoId={memoId}
                     onCompleted={() => setIsOpenAddTagPopup(false)}
                 />

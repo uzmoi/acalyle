@@ -23,7 +23,7 @@ export const MemoOverview: React.FC<{
             </Link>
             <div className={TagListStyle}>
                 <TagList tags={memo.tags} bookId={bookId} />
-                <AddTagButton memoId={memo.id} />
+                <AddTagButton bookId={bookId} memoId={memo.id} />
             </div>
         </article>
     );
@@ -49,7 +49,7 @@ const TagListStyle = css`
     flex: 0 0 auto;
     padding-block: 0.25em;
     font-size: 0.75em;
-    ul {
+    > ul {
         display: inline-block;
     }
     &::before {
