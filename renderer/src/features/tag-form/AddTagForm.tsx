@@ -21,7 +21,19 @@ export const AddTagForm: React.FC<{
     `);
 
     const [tagString, setTagString] = useState("");
-    const tag = AcalyleMemoTag.fromString(tagString);
+    const [caretIndex, setCaretIndex] = useState(0);
+
+    const onSelect = useCallback(
+        (e: React.SyntheticEvent<HTMLInputElement>) => {
+            const el = e.currentTarget;
+            setCaretIndex(
+                (el.selectionDirection === "backward"
+                    ? el.selectionStart
+                    : el.selectionEnd) || 0,
+            );
+        },
+        [],
+    );
 
     const onSubmit = useCallback(() => {
         commit({
@@ -41,11 +53,12 @@ export const AddTagForm: React.FC<{
                 disabled={isInFlight}
                 value={tagString}
                 onValueChange={setTagString}
+                onSelect={onSelect}
                 className={style({ minWidth: "100%" })}
             />
             <TagComplementList
                 bookId={bookId}
-                symbol={tag?.symbol ?? tagString}
+                input={tagString.slice(0, caretIndex)}
             />
         </Form>
     );

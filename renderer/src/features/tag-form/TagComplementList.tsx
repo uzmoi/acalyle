@@ -6,8 +6,8 @@ import { complementTagSymbol } from "./complement-tag";
 
 export const TagComplementList: React.FC<{
     bookId: string;
-    symbol: string;
-}> = ({ bookId, symbol }) => {
+    input: string;
+}> = ({ bookId, input }) => {
     const book = useLazyLoadQuery<TagComplementListQuery>(
         graphql`
             query TagComplementListQuery($bookId: ID!) {
@@ -21,7 +21,7 @@ export const TagComplementList: React.FC<{
 
     return (
         <List className={style({ padding: "0.5em" })}>
-            {complementTagSymbol(book.book?.tags ?? [], symbol).map(symbol => (
+            {complementTagSymbol(book.book?.tags ?? [], input).map(symbol => (
                 <List.Item key={symbol}>{symbol}</List.Item>
             ))}
         </List>
