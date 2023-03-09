@@ -1,7 +1,7 @@
 import { AcalyleMemoTag } from "@acalyle/core";
 import { Form, TextInput } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { graphql, useMutation } from "react-relay";
 import { TagComplementList } from "./TagComplementList";
 import type { AddTagFormMutation } from "./__generated__/AddTagFormMutation.graphql";
@@ -22,6 +22,36 @@ export const AddTagForm: React.FC<{
 
     const [tagString, setTagString] = useState("");
     const [caretIndex, setCaretIndex] = useState(0);
+    const [selectedIndex, setSelectedIndex] = useState(0);
+    const complementTagRef = useRef<string>();
+
+    const onKeyDown = useCallback(
+        (e: React.KeyboardEvent<HTMLInputElement>) => {
+            switch (e.key) {
+                case "Tab":
+                    e.preventDefault();
+                    if (complementTagRef.current) {
+                        setTagString(complementTagRef.current);
+                        setSelectedIndex(0);
+                    }
+                    break;
+                case "ArrowUp":
+                    e.preventDefault();
+                    setSelectedIndex(index => index - 1);
+                    break;
+                case "ArrowDown":
+                    e.preventDefault();
+                    setSelectedIndex(index => index + 1);
+                    break;
+            }
+        },
+        [],
+    );
+
+    const onValueChang = useCallback((value: string) => {
+        setTagString(value);
+        setSelectedIndex(0);
+    }, []);
 
     const onSelect = useCallback(
         (e: React.SyntheticEvent<HTMLInputElement>) => {
@@ -31,6 +61,7 @@ export const AddTagForm: React.FC<{
                     ? el.selectionStart
                     : el.selectionEnd) || 0,
             );
+            setSelectedIndex(0);
         },
         [],
     );
@@ -52,13 +83,16 @@ export const AddTagForm: React.FC<{
             <TextInput
                 disabled={isInFlight}
                 value={tagString}
-                onValueChange={setTagString}
+                onKeyDown={onKeyDown}
+                onValueChange={onValueChang}
                 onSelect={onSelect}
                 className={style({ minWidth: "100%" })}
             />
             <TagComplementList
+                ref={complementTagRef}
                 bookId={bookId}
                 input={tagString.slice(0, caretIndex)}
+                selectedIndex={selectedIndex}
             />
         </Form>
     );
