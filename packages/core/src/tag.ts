@@ -9,18 +9,37 @@ const tagTypes = {
     "@": "control",
 } as const;
 
+export type AcalyleMemoTagParseResult = {
+    hasHead: boolean;
+    head: TagHead;
+    path: string[];
+    prop: string;
+    tagString: string;
+};
+
 export class AcalyleMemoTag {
-    static fromString(this: void, tagString: string): AcalyleMemoTag | null {
+    static parse(this: void, tagString: string): AcalyleMemoTagParseResult {
         const headChar = tagString.charAt(0);
         const hasHead = has(tagTypes, headChar);
         const head = hasHead ? (headChar as TagHead) : "#";
-        const i = head === "@" ? tagString.indexOf(":") : -1;
-        const name = tagString.slice(+hasHead, i === -1 ? tagString.length : i);
+
+        const hasProp = head === "@";
+        const propStartIndex = hasProp ? tagString.indexOf(":") : -1;
+
+        const pathEndIndex =
+            propStartIndex === -1 ? tagString.length : propStartIndex;
+        const path = tagString.slice(+hasHead, pathEndIndex).split("/");
+        const prop = tagString.slice(pathEndIndex + 1);
+
+        return { hasHead, head, path, prop, tagString };
+    }
+    static fromString(this: void, tagString: string): AcalyleMemoTag | null {
+        const { head, path, prop } = AcalyleMemoTag.parse(tagString);
+        const name = path.filter(Boolean).join("/");
         if (name === "") {
             return null;
         }
-        const prop = tagString.slice(i + 1 || tagString.length) || null;
-        return new AcalyleMemoTag(`${head}${name}`, prop);
+        return new AcalyleMemoTag(`${head}${name}`, prop || null);
     }
     constructor(readonly symbol: TagSymbol, readonly prop: string | null) {}
     toString(this: this): string {
