@@ -1,5 +1,5 @@
 import { AcalyleMemoTag } from "@acalyle/core";
-import { Form, TextInput } from "@acalyle/ui";
+import { Form, TextInput, vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useCallback, useRef, useState } from "react";
 import { graphql, useMutation } from "react-relay";
@@ -90,7 +90,10 @@ export const AddTagForm: React.FC<{
                 onKeyDown={onKeyDown}
                 onValueChange={onValueChang}
                 onSelect={onSelect}
-                className={style({ minWidth: "100%" })}
+                className={style({
+                    fontFamily: vars.font.mono,
+                    minWidth: "100%",
+                })}
             />
             <TagComplementList
                 ref={complementTagRef}
