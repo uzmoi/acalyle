@@ -25,14 +25,18 @@ export const AddTagForm: React.FC<{
     const [selectedIndex, setSelectedIndex] = useState(0);
     const complementTagRef = useRef<string>();
 
+    const onComplement = useCallback((tag: string) => {
+        setTagString(tag);
+        setSelectedIndex(0);
+    }, []);
+
     const onKeyDown = useCallback(
         (e: React.KeyboardEvent<HTMLInputElement>) => {
             switch (e.key) {
                 case "Tab":
                     e.preventDefault();
                     if (complementTagRef.current) {
-                        setTagString(complementTagRef.current);
-                        setSelectedIndex(0);
+                        onComplement(complementTagRef.current);
                     }
                     break;
                 case "ArrowUp":
@@ -45,7 +49,7 @@ export const AddTagForm: React.FC<{
                     break;
             }
         },
-        [],
+        [onComplement],
     );
 
     const onValueChang = useCallback((value: string) => {
@@ -93,6 +97,7 @@ export const AddTagForm: React.FC<{
                 bookId={bookId}
                 input={tagString.slice(0, caretIndex)}
                 selectedIndex={selectedIndex}
+                onComplement={onComplement}
             />
         </Form>
     );
