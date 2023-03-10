@@ -1,31 +1,26 @@
 import { AcalyleMemoTag } from "@acalyle/core";
 import { List } from "@acalyle/ui";
-import { css } from "@linaria/core";
+import { style } from "@macaron-css/core";
 import { nonNullable } from "emnorst";
 import { Tag } from "./tag";
 
 export const TagList: React.FC<{
     tags: readonly string[];
     bookId: string;
-}> = ({ tags, bookId }) => {
+    className?: string;
+}> = ({ tags: tagStrings, bookId, className }) => {
+    const tags = tagStrings.map(AcalyleMemoTag.fromString).filter(nonNullable);
+
     return (
-        <List className={TagListStyle}>
-            {tags
-                .map(AcalyleMemoTag.fromString)
-                .filter(nonNullable)
-                .map(tag => (
-                    <List.Item key={tag.symbol} className={TagListItemStyle}>
-                        <Tag tag={tag} bookId={bookId} />
-                    </List.Item>
-                ))}
+        <List className={className}>
+            {tags.map(tag => (
+                <List.Item
+                    key={tag.symbol}
+                    className={style({ display: "inline-block" })}
+                >
+                    <Tag tag={tag} bookId={bookId} />
+                </List.Item>
+            ))}
         </List>
     );
 };
-
-const TagListStyle = css`
-    /* - */
-`;
-
-const TagListItemStyle = css`
-    display: inline;
-`;
