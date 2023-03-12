@@ -14,7 +14,7 @@ const parseTag = (tag: string): Tag | null => {
     const [, name, propsString] = match;
 
     const attrs = new Map<string, string>();
-    const regex = /([-\w]+)(?:="((?:[^"]|\\")*)")?/g;
+    const regex = /([-\w]+)(?:="((?:\\"|[^"])*)")?/g;
     for (;;) {
         const match = regex.exec(propsString);
         if (match == null) break;
@@ -93,7 +93,7 @@ class Element {
 const parseHtml = (html: string): Element => {
     let elem = Element.root();
     for (const item of html.split(
-        /(<!--[^]*?-->|<(?:[^>]|"(?:[^"]|\\")*")+>)/,
+        /(<!--[^]*?-->|<(?:"(?:\\"|[^"])*"|[^>"])+>)/,
     )) {
         const tag = parseTag(item);
         if (tag != null) {
