@@ -1,4 +1,11 @@
-import { List, TextInput } from "@acalyle/ui";
+import {
+    Button,
+    ControlGroup,
+    ControlPartOutlineStyle,
+    List,
+    TextInput,
+} from "@acalyle/ui";
+import { Tab } from "@headlessui/react";
 import { css } from "@linaria/core";
 import { useCallback, useState } from "react";
 import { graphql, useFragment } from "react-relay";
@@ -40,56 +47,59 @@ export const Book: React.FC<{
         <div>
             <div
                 className={css`
-                    display: flex;
                     padding-bottom: 1em;
                 `}
             >
-                <h2
-                    className={css`
-                        flex-grow: 1;
-                    `}
-                >
-                    {data.title}
-                </h2>
-                <List
-                    className={css`
-                        display: flex;
-                        flex-shrink: 0;
-                        > li ~ li {
-                            margin-left: 0.8em;
-                        }
-                    `}
-                >
-                    <List.Item>
-                        <TextInput
-                            value={searchString}
-                            onValueChange={setSearchString}
-                        />
-                    </List.Item>
-                    <List.Item>
-                        <AddMemoButton
-                            bookId={id}
-                            onMemoAdded={onMemoAdded}
-                            data={data}
-                        />
-                    </List.Item>
-                    <List.Item>
-                        <MemoImportButton bookId={id} />
-                    </List.Item>
-                    <List.Item>
-                        <UploadResourceButton bookId={id} />
-                    </List.Item>
-                    <List.Item>
-                        <Link
-                            to={link("books/:bookId/settings", { bookId: id })}
-                        >
-                            settings
-                        </Link>
-                    </List.Item>
-                </List>
+                <h2>{data.title}</h2>
             </div>
-            <TagList bookId={data.id} tags={data.tags} />
-            <MemoList fragmentRef={data} search={searchString} />
+            <Tab.Group>
+                <Tab.List as={ControlGroup}>
+                    <Tab as={Button}>Memos</Tab>
+                    <Tab as={Button}>Resources</Tab>
+                    <Tab
+                        as={Link}
+                        to={link("books/:bookId/settings", { bookId: id })}
+                        className={ControlPartOutlineStyle}
+                    >
+                        Settings
+                    </Tab>
+                </Tab.List>
+                <Tab.Panels>
+                    <Tab.Panel>
+                        <List
+                            className={css`
+                                display: flex;
+                                > li ~ li {
+                                    margin-left: 0.8em;
+                                }
+                            `}
+                        >
+                            <List.Item>
+                                <TextInput
+                                    value={searchString}
+                                    onValueChange={setSearchString}
+                                />
+                            </List.Item>
+                            <List.Item>
+                                <AddMemoButton
+                                    bookId={id}
+                                    onMemoAdded={onMemoAdded}
+                                    data={data}
+                                />
+                            </List.Item>
+                            <List.Item>
+                                <MemoImportButton bookId={id} />
+                            </List.Item>
+                        </List>
+                        <TagList bookId={data.id} tags={data.tags} />
+                        <MemoList fragmentRef={data} search={searchString} />
+                    </Tab.Panel>
+                    <Tab.Panel>
+                        <UploadResourceButton bookId={id} />
+                    </Tab.Panel>
+                    <Tab.Panel>settings</Tab.Panel>
+                </Tab.Panels>
+            </Tab.Group>
         </div>
     );
 };
