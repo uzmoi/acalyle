@@ -6,6 +6,7 @@ import { TagList } from "~/entities/tag";
 import { AddMemoButton } from "~/features/add-memo";
 import { MemoImportButton } from "~/features/import-memo";
 import { Link, useNavigate } from "~/features/location";
+import { UploadResourceButton } from "~/features/resource";
 import { link } from "~/pages/link";
 import { MemoList } from "./MemoList";
 import type { BookMemosFragment$key } from "./__generated__/BookMemosFragment.graphql";
@@ -74,6 +75,9 @@ export const Book: React.FC<{
                     </List.Item>
                     <List.Item>
                         <MemoImportButton bookId={id} />
+                    </List.Item>
+                    <List.Item>
+                        <UploadResourceButton bookId={id} />
                     </List.Item>
                     <List.Item>
                         <Link

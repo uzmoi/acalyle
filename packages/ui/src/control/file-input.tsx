@@ -49,12 +49,14 @@ type FileInputProps = (
         multiple: true;
         onFileChange?: (fileList: FileList) => void;
     }
-);
+) & {
+    _ref?: React.Ref<HTMLInputElement>;
+};
 
 export const FileInput: React.FC<
     FileInputProps &
         Omit<React.ComponentPropsWithoutRef<"input">, OmitPropNames>
-> = ({ onChange, onFileChange, multiple, className, ...restProps }) => {
+> = ({ onChange, onFileChange, multiple, className, _ref, ...restProps }) => {
     const handleChange =
         (onChange || onFileChange) &&
         ((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,6 +73,7 @@ export const FileInput: React.FC<
 
     return (
         <input
+            ref={_ref}
             {...restProps}
             onChange={handleChange}
             type="file"
