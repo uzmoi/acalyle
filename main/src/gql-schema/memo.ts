@@ -234,6 +234,45 @@ export const MemoInput = inputObjectType({
 const joinJoin = (values: readonly unknown[][]) =>
     Prisma.join(values.map(values => Prisma.join(values, ",", "(", ")")));
 
+const importMemosTransaction = function* (
+    prisma: PrismaClient,
+    bookId: string,
+    memos: {
+        contents: string;
+        createdAt: Date;
+        id: string;
+        tags: string[];
+        updatedAt: Date;
+    }[],
+): Generator<Prisma.PrismaPromise<unknown>, void> {
+    yield updateBook(prisma, bookId, new Date());
+
+    const memoValues = memos.map(memo => [
+        bookId,
+        memo.id,
+        memo.contents,
+        memo.createdAt,
+        memo.updatedAt,
+    ]);
+    yield prisma.$executeRaw`
+        INSERT INTO Memo("bookId", "id", "contents", "createdAt", "updatedAt")
+        VALUES ${joinJoin(memoValues)};
+    `;
+
+    const tags = memos.flatMap(memo =>
+        memo.tags
+            .map(AcalyleMemoTag.fromString)
+            .filter(nonNullable)
+            .map(tag => [memo.id, tag.symbol, tag.prop]),
+    );
+    if (tags.length !== 0) {
+        yield prisma.$executeRaw`
+            INSERT INTO Tag("memoId", "symbol", "prop")
+            VALUES ${joinJoin(tags)};
+        `;
+    }
+};
+
 export const importMemos = mutationField("importMemos", {
     type: "String",
     args: {
@@ -241,36 +280,9 @@ export const importMemos = mutationField("importMemos", {
         memos: nonNull(list(nonNull("MemoInput"))),
     },
     async resolve(_, args, { prisma }) {
-        const transaction: Prisma.PrismaPromise<unknown>[] = [
-            updateBook(prisma, args.bookId, new Date()),
-        ];
-
-        const memoValues = args.memos.map(memo => [
-            args.bookId,
-            memo.id,
-            memo.contents,
-            memo.createdAt,
-            memo.updatedAt,
+        await prisma.$transaction([
+            ...importMemosTransaction(prisma, args.bookId, args.memos),
         ]);
-        transaction.push(prisma.$executeRaw`
-            INSERT INTO Memo("bookId", "id", "contents", "createdAt", "updatedAt")
-            VALUES ${joinJoin(memoValues)};
-        `);
-
-        const tags = args.memos.flatMap(memo =>
-            memo.tags
-                .map(AcalyleMemoTag.fromString)
-                .filter(nonNullable)
-                .map(tag => [memo.id, tag.symbol, tag.prop]),
-        );
-        if (tags.length !== 0) {
-            transaction.push(prisma.$executeRaw`
-                INSERT INTO Tag("memoId", "symbol", "prop")
-                VALUES ${joinJoin(tags)};
-            `);
-        }
-
-        await prisma.$transaction(transaction);
         return "ok";
     },
 });
