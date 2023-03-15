@@ -4,7 +4,8 @@ import type { bookQuery } from "./__generated__/bookQuery.graphql";
 
 export const BookPage: React.FC<{
     bookId: string;
-}> = ({ bookId }) => {
+    tab?: number;
+}> = ({ bookId, tab }) => {
     // prettier-ignore
     const { book } = useLazyLoadQuery<bookQuery>(graphql`
         query bookQuery($id: ID!, $count: Int = 100, $cursor: String) {
@@ -20,5 +21,5 @@ export const BookPage: React.FC<{
         return <div>book not found (id: {bookId})</div>;
     }
 
-    return <Book id={bookId} book={book} />;
+    return <Book id={bookId} book={book} tab={tab} />;
 };

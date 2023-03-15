@@ -1,5 +1,4 @@
 import {
-    Button,
     ControlGroup,
     ControlPartOutlineStyle,
     List,
@@ -14,6 +13,7 @@ import { AddMemoButton } from "~/features/add-memo";
 import { MemoImportButton } from "~/features/import-memo";
 import { Link, useNavigate } from "~/features/location";
 import { UploadResourceButton } from "~/features/resource";
+import { BookSettingsPage } from "~/pages/books/book-settings";
 import { link } from "~/pages/link";
 import { MemoList } from "./MemoList";
 import type { BookMemosFragment$key } from "./__generated__/BookMemosFragment.graphql";
@@ -21,7 +21,8 @@ import type { BookMemosFragment$key } from "./__generated__/BookMemosFragment.gr
 export const Book: React.FC<{
     id: string;
     book: BookMemosFragment$key;
-}> = ({ id, book }) => {
+    tab?: number;
+}> = ({ id, book, tab }) => {
     // prettier-ignore
     const data = useFragment<BookMemosFragment$key>(graphql`
         fragment BookMemosFragment on Book {
@@ -52,10 +53,22 @@ export const Book: React.FC<{
             >
                 <h2>{data.title}</h2>
             </div>
-            <Tab.Group>
+            <Tab.Group selectedIndex={tab}>
                 <Tab.List as={ControlGroup}>
-                    <Tab as={Button}>Memos</Tab>
-                    <Tab as={Button}>Resources</Tab>
+                    <Tab
+                        as={Link}
+                        to={link("books/:bookId", { bookId: id })}
+                        className={ControlPartOutlineStyle}
+                    >
+                        Memos
+                    </Tab>
+                    <Tab
+                        as={Link}
+                        to={link("books/:bookId/resources", { bookId: id })}
+                        className={ControlPartOutlineStyle}
+                    >
+                        Resources
+                    </Tab>
                     <Tab
                         as={Link}
                         to={link("books/:bookId/settings", { bookId: id })}
@@ -97,7 +110,9 @@ export const Book: React.FC<{
                     <Tab.Panel>
                         <UploadResourceButton bookId={id} />
                     </Tab.Panel>
-                    <Tab.Panel>settings</Tab.Panel>
+                    <Tab.Panel>
+                        <BookSettingsPage id={id} />
+                    </Tab.Panel>
                 </Tab.Panels>
             </Tab.Group>
         </div>

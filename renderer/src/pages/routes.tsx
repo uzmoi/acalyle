@@ -9,6 +9,7 @@ export type RootRoutes = Routes<{
         ":bookId": Routes<{
             "": Page;
             ":memoId": Page;
+            resources: Page;
             settings: Page;
         }>;
     }>;
