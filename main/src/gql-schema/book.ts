@@ -21,6 +21,7 @@ import {
     types as thumbnailTypes,
 } from "./book-thumbnail";
 import { memos } from "./memo";
+import { resources } from "./resource";
 import { pagination } from "./util";
 
 export { thumbnailTypes };
@@ -68,6 +69,11 @@ export const Book = objectType({
                 } catch (e) {
                     return BookSettingDefault;
                 }
+            },
+        });
+        t.list.string("resources", {
+            resolve(book, _, { bookDataPath }) {
+                return resources(bookDataPath, book.id);
             },
         });
         t.field("memo", {

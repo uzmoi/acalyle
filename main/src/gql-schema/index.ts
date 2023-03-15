@@ -3,6 +3,7 @@ import path = require("path");
 import * as bookTypes from "./book";
 import * as memoTypes from "./memo";
 import { Node, nodeQuery } from "./node";
+import { uploadResourceMutation } from "./resource";
 import { DateTimeScalar, UploadScalar } from "./scalar";
 import * as tagTypes from "./tag";
 
@@ -16,6 +17,7 @@ export const graphQLSchema = makeSchema({
         bookTypes,
         memoTypes,
         tagTypes,
+        uploadResourceMutation,
     ],
     plugins: [
         connectionPlugin({
