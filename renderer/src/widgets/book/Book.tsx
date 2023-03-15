@@ -45,76 +45,67 @@ export const Book: React.FC<{
     );
 
     return (
-        <div>
-            <div
-                className={css`
-                    padding-bottom: 1em;
-                `}
-            >
-                <h2>{data.title}</h2>
-            </div>
-            <Tab.Group selectedIndex={tab}>
-                <Tab.List as={ControlGroup}>
-                    <Tab
-                        as={Link}
-                        to={link("books/:bookId", { bookId: id })}
-                        className={ControlPartOutlineStyle}
+        <Tab.Group selectedIndex={tab}>
+            <Tab.List as={ControlGroup}>
+                <Tab
+                    as={Link}
+                    to={link("books/:bookId", { bookId: id })}
+                    className={ControlPartOutlineStyle}
+                >
+                    Memos
+                </Tab>
+                <Tab
+                    as={Link}
+                    to={link("books/:bookId/resources", { bookId: id })}
+                    className={ControlPartOutlineStyle}
+                >
+                    Resources
+                </Tab>
+                <Tab
+                    as={Link}
+                    to={link("books/:bookId/settings", { bookId: id })}
+                    className={ControlPartOutlineStyle}
+                >
+                    Settings
+                </Tab>
+            </Tab.List>
+            <Tab.Panels>
+                <Tab.Panel>
+                    <List
+                        className={css`
+                            display: flex;
+                            > li ~ li {
+                                margin-left: 0.8em;
+                            }
+                        `}
                     >
-                        Memos
-                    </Tab>
-                    <Tab
-                        as={Link}
-                        to={link("books/:bookId/resources", { bookId: id })}
-                        className={ControlPartOutlineStyle}
-                    >
-                        Resources
-                    </Tab>
-                    <Tab
-                        as={Link}
-                        to={link("books/:bookId/settings", { bookId: id })}
-                        className={ControlPartOutlineStyle}
-                    >
-                        Settings
-                    </Tab>
-                </Tab.List>
-                <Tab.Panels>
-                    <Tab.Panel>
-                        <List
-                            className={css`
-                                display: flex;
-                                > li ~ li {
-                                    margin-left: 0.8em;
-                                }
-                            `}
-                        >
-                            <List.Item>
-                                <TextInput
-                                    value={searchString}
-                                    onValueChange={setSearchString}
-                                />
-                            </List.Item>
-                            <List.Item>
-                                <AddMemoButton
-                                    bookId={id}
-                                    onMemoAdded={onMemoAdded}
-                                    data={data}
-                                />
-                            </List.Item>
-                            <List.Item>
-                                <MemoImportButton bookId={id} />
-                            </List.Item>
-                        </List>
-                        <TagList bookId={data.id} tags={data.tags} />
-                        <MemoList fragmentRef={data} search={searchString} />
-                    </Tab.Panel>
-                    <Tab.Panel>
-                        <UploadResourceButton bookId={id} />
-                    </Tab.Panel>
-                    <Tab.Panel>
-                        <BookSettingsPage id={id} />
-                    </Tab.Panel>
-                </Tab.Panels>
-            </Tab.Group>
-        </div>
+                        <List.Item>
+                            <TextInput
+                                value={searchString}
+                                onValueChange={setSearchString}
+                            />
+                        </List.Item>
+                        <List.Item>
+                            <AddMemoButton
+                                bookId={id}
+                                onMemoAdded={onMemoAdded}
+                                data={data}
+                            />
+                        </List.Item>
+                        <List.Item>
+                            <MemoImportButton bookId={id} />
+                        </List.Item>
+                    </List>
+                    <TagList bookId={data.id} tags={data.tags} />
+                    <MemoList fragmentRef={data} search={searchString} />
+                </Tab.Panel>
+                <Tab.Panel>
+                    <UploadResourceButton bookId={id} />
+                </Tab.Panel>
+                <Tab.Panel>
+                    <BookSettingsPage id={id} />
+                </Tab.Panel>
+            </Tab.Panels>
+        </Tab.Group>
     );
 };
