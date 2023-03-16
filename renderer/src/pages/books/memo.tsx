@@ -25,12 +25,7 @@ export const MemoPage: React.FC<{
     }
 
     return (
-        <main
-            className={css`
-                padding-inline: 2em;
-                padding-bottom: 2em;
-            `}
-        >
+        <div>
             <div
                 className={css`
                     padding-block: 1em;
@@ -41,6 +36,6 @@ export const MemoPage: React.FC<{
                 </Link>
             </div>
             <Memo bookId={bookId} memo={book.memo} />
-        </main>
+        </div>
     );
 };

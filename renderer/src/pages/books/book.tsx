@@ -1,3 +1,4 @@
+import { type GetRoute, page, routes } from "@acalyle/router";
 import { ControlGroup, ControlPartOutlineStyle } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { graphql, useLazyLoadQuery } from "react-relay";
@@ -5,13 +6,31 @@ import { Link } from "~/features/location";
 import { UploadResourceButton } from "~/features/resource";
 import { Book } from "~/widgets/book/Book";
 import { link } from "../link";
+import type { RootRoutes } from "../routes";
 import type { bookQuery } from "./__generated__/bookQuery.graphql";
 import { BookSettingsPage } from "./book-settings";
+import { MemoPage } from "./memo";
+
+/* eslint-disable react/display-name */
+const bookRoute = routes<
+    GetRoute<RootRoutes, "books/:bookId">,
+    (book: NonNullable<bookQuery["response"]["book"]>) => JSX.Element
+>({
+    "": page(params => book => <Book id={params.bookId} book={book} />),
+    resources: page(params => () => (
+        <UploadResourceButton bookId={params.bookId} />
+    )),
+    settings: page(params => () => <BookSettingsPage id={params.bookId} />),
+    ":memoId": page(params => () => (
+        <MemoPage bookId={params.bookId} memoId={params.memoId} />
+    )),
+});
+/* eslint-enable react/display-name */
 
 export const BookPage: React.FC<{
     bookId: string;
-    tab?: number;
-}> = ({ bookId, tab }) => {
+    path: readonly string[];
+}> = ({ bookId, path }) => {
     // prettier-ignore
     const { book } = useLazyLoadQuery<bookQuery>(graphql`
         query bookQuery($id: ID!, $count: Int = 100, $cursor: String) {
@@ -50,9 +69,7 @@ export const BookPage: React.FC<{
                     Settings
                 </Link>
             </ControlGroup>
-            {tab === 0 && <Book id={bookId} book={book} />}
-            {tab === 1 && <UploadResourceButton bookId={bookId} />}
-            {tab === 2 && <BookSettingsPage id={bookId} />}
+            {bookRoute.get(path, { bookId })?.(book)}
         </main>
     );
 };
