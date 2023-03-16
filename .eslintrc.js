@@ -15,6 +15,7 @@ module.exports = {
                     "tsconfig.main.json",
                     "tsconfig.preload.json",
                     "tsconfig.renderer.json",
+                    "apps/tauri/tsconfig.json",
                     "packages/router/tsconfig.json",
                     "packages/core/tsconfig.json",
                     "packages/ui/tsconfig.json",
@@ -57,6 +58,10 @@ module.exports = {
         {
             files: ["renderer/src/**", "renderer/types.d.ts"],
             parserOptions: { project: "tsconfig.renderer.json" },
+        },
+        {
+            files: ["apps/tauri/src/**"],
+            parserOptions: { project: "apps/tauri/tsconfig.json" },
         },
         {
             files: ["packages/router/src/**"],
