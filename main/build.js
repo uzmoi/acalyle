@@ -39,7 +39,11 @@ const emptyDir = async dirPath => {
         define: {
             "process.env.NODE_ENV": `"${ENV}"`,
         },
-        entryPoints: ["main/src/main.ts", DEV ? "main/src/ipc.ts" : ""].filter(Boolean),
+        entryPoints: [
+            "main/src/main.ts",
+            DEV ? "main/src/ipc.ts" : "",
+            DEV ? "main/src/serve.ts" : "",
+        ].filter(Boolean),
         outdir: "dist",
         external: ["electron", "sharp", DEV ? "./ipc" : ""].filter(Boolean),
     });
