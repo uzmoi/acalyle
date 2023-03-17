@@ -1,4 +1,5 @@
 import { type ExecutionResult, graphql } from "graphql";
+import path = require("path");
 import { graphQLSchema } from "./gql-schema";
 import { createContext } from "./gql-schema/context";
 import { type BodyData, mapBuffers } from "./gql-schema/util";
@@ -20,8 +21,13 @@ export const ipc = {
         const bodyData = JSON.parse(body) as BodyData;
         mapBuffers(bodyData, buffers);
 
+        const bookDataPath = path.join(
+            this.app.getPath("userData"),
+            "bookdata",
+        );
+
         return graphql({
-            contextValue: createContext(this.app),
+            contextValue: createContext(bookDataPath),
             schema: graphQLSchema,
             source: bodyData.query,
             variableValues: bodyData.variables,
