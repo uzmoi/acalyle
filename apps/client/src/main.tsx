@@ -2,9 +2,10 @@ import * as Router from "@acalyle/router";
 import { vars } from "@acalyle/ui";
 import { globalStyle, style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
-import { atom, onMount } from "nanostores";
+import { onMount } from "nanostores";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { Location } from "./store/location";
 import { BookRoute, net } from ".";
 
 net.set({
@@ -26,8 +27,6 @@ net.set({
         throw res.text();
     },
 });
-
-const Location = atom("");
 
 onMount(Location, () => {
     const getLocation = () =>
