@@ -12,5 +12,7 @@ export type BookRoute = Router.Routes<{
 export const BookRoute = Router.routes<BookRoute, JSX.Element>({
     books: Router.page(() => <BookListPage />),
     new: Router.page(() => <NewBookPage />),
-    ":bookId": Router.child(path => <BookPage path={path} />),
+    ":bookId": Router.child((path, params) => (
+        <BookPage bookId={params.bookId} path={path} />
+    )),
 });

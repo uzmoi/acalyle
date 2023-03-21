@@ -1,21 +1,28 @@
 import * as Router from "@acalyle/router";
+import { style } from "@macaron-css/core";
+import { MemoList } from "~/ui/MemoList";
 
 export type BookPageRoute = Router.Routes<{
-    "": Router.Page;
+    "": Router.Page<"bookId">;
     ":memoId": Router.Page;
     resources: Router.Page;
     settings: Router.Page;
 }>;
 
 const BookPageRoute = Router.routes<BookPageRoute, JSX.Element | null>({
-    "": Router.page(() => null),
+    "": Router.page(params => <MemoList bookId={params.bookId} />),
     resources: Router.page(() => null),
     settings: Router.page(() => null),
     ":memoId": Router.page(() => null),
 });
 
 export const BookPage: React.FC<{
+    bookId: string;
     path: readonly string[];
-}> = ({ path }) => {
-    return <div>{BookPageRoute.get(path, {})}</div>;
+}> = ({ bookId, path }) => {
+    return (
+        <main className={style({ padding: "2em" })}>
+            {BookPageRoute.get(path, { bookId })}
+        </main>
+    );
 };

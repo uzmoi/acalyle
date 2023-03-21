@@ -12,6 +12,7 @@
     "codegen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
+    "@acalyle/core": "*",
     "@acalyle/router": "*",
     "@acalyle/ui": "*",
     "@macaron-css/core": "^1.0.0",
