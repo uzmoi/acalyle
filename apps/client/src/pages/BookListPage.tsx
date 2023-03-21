@@ -1,8 +1,11 @@
 import { Intersection, Spinner } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
+import { BiBookAdd } from "react-icons/bi";
 import { bookConnection } from "~/store/book-connection";
 import { BookList } from "~/ui/BookList";
+import { Link } from "~/ui/Link";
+import { link } from "./link";
 
 const onIntersection = (entry: IntersectionObserverEntry) => {
     if (entry.isIntersecting) {
@@ -16,8 +19,13 @@ export const BookListPage: React.FC = () => {
     return (
         <main className={style({ padding: "2em" })}>
             <div className={style({ display: "flex", paddingBottom: "0.5em" })}>
-                {/* BookSearchBar */}
-                {/* New */}
+                <div className={style({ flex: "1 1" })}>
+                    {/* BookSearchBar */}
+                </div>
+                <Link to={link("new")} className={style({ marginLeft: "1em" })}>
+                    <BiBookAdd className={style({ verticalAlign: "middle" })} />
+                    <span className={style({ marginLeft: "0.25em" })}>New</span>
+                </Link>
             </div>
             <BookList />
             <Intersection
