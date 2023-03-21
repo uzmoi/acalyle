@@ -6,6 +6,7 @@
   "main": "dist/index.js",
   "types": "src/index.ts",
   "scripts": {
+    "dev": "vite",
     "build": "vite build",
     "check": "tsc",
     "test": "vitest",
