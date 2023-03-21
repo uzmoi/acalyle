@@ -58,7 +58,7 @@ export const bookConnection = createConnectionAtom<Book>(
             cursor: connectionAtom.get().endCursor,
             query: "",
             orderBy: GqlBookSortOrder.LastUpdated,
-            order: GqlSortOrder.Asc,
+            order: GqlSortOrder.Desc,
         });
         return data.books;
     },
