@@ -1,4 +1,6 @@
 import * as Router from "@acalyle/router";
+import { vars } from "@acalyle/ui";
+import { globalStyle, style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { atom, onMount } from "nanostores";
 import { StrictMode } from "react";
@@ -46,10 +48,43 @@ onMount(Location, () => {
     };
 });
 
+globalStyle("*, *::before, *::after", {
+    boxSizing: "border-box",
+});
+
+globalStyle("body, h1, h2, h3, h4, h5, h6, p, ul, ol, dl, dd", {
+    margin: 0,
+});
+
+globalStyle(":root, body, #app", {
+    height: "100%",
+});
+
 const DevAppRoot: React.FC = () => {
     const location = useStore(Location);
 
-    return <div>{Router.match(BookRoute, location as never)}</div>;
+    return (
+        <div
+            style={vars.createTheme({
+                color: {
+                    text: "#e0e0e0",
+                    bg1: "#191c1f",
+                    bg2: "#1e2125",
+                    bg3: "#22262a",
+                    bg4: "#101214",
+                    selection: "rgba(0 128 256 / 20%)",
+                },
+            })}
+            className={style({
+                minHeight: "100%",
+                fontFamily: vars.font.sans,
+                color: vars.color.text,
+                backgroundColor: vars.color.bg1,
+            })}
+        >
+            {Router.match(BookRoute, location as never)}
+        </div>
+    );
 };
 
 const appEl = document.getElementById("app");
