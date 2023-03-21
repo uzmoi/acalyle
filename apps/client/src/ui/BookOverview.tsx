@@ -1,7 +1,9 @@
 import { vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
+import { link } from "~/pages/link";
 import type { Book } from "~/store/book-connection";
 import { BookThumbnail } from "./BookThumbnail";
+import { Link } from "./Link";
 
 export const BookOverview: React.FC<{
     book: Book;
@@ -35,7 +37,9 @@ export const BookOverview: React.FC<{
                         textOverflow: "ellipsis",
                     })}
                 >
-                    {book.title}
+                    <Link to={link(":bookId", { bookId: book.id })}>
+                        {book.title}
+                    </Link>
                 </p>
                 <p
                     className={style({
