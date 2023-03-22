@@ -2,6 +2,7 @@ import * as Router from "@acalyle/router";
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { bookStore } from "~/store/book";
+import { CreateMemoButton } from "~/ui/CreateMemoButton";
 import { Link } from "~/ui/Link";
 import { Memo } from "~/ui/Memo";
 import { MemoList } from "~/ui/MemoList";
@@ -15,7 +16,15 @@ export type BookPageRoute = Router.Routes<{
 }>;
 
 const BookPageRoute = Router.routes<BookPageRoute, JSX.Element | null>({
-    "": Router.page(params => <MemoList bookId={params.bookId} />),
+    "": Router.page(({ bookId }) => (
+        <div>
+            <div>
+                <CreateMemoButton bookId={bookId} />
+                {/* <MemoImportButton /> */}
+            </div>
+            <MemoList bookId={bookId} />
+        </div>
+    )),
     resources: Router.page(() => null),
     settings: Router.page(() => null),
     ":memoId": Router.page(params => <Memo memoId={params.memoId} />),
