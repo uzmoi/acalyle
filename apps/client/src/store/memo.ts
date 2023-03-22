@@ -7,6 +7,8 @@ import type {
     GqlMemoQueryVariables,
     GqlMemoTemplateQuery,
     GqlMemoTemplateQueryVariables,
+    GqlUpdateMemoContentsMutation,
+    GqlUpdateMemoContentsMutationVariables,
 } from "~/__generated__/graphql";
 import type { Memo } from "./memo-connection";
 import { net } from "./net";
@@ -136,6 +138,37 @@ export const createMemo = async (bookId: string, templateName?: string) => {
     memoStore(memo.id);
 
     memoStore.build = build;
+
+    return memo;
+};
+
+const UpdateMemoContentsMutation = gql`
+    mutation UpdateMemoContents($memoId: ID!, $contents: String!) {
+        updateMemoContents(memoId: $memoId, contents: $contents) {
+            id
+            contents
+            updatedAt
+        }
+    }
+`;
+
+export const updateMemoContents = async (memoId: string, contents: string) => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const { graphql } = net.get()!;
+    const { data } = await graphql<
+        GqlUpdateMemoContentsMutation,
+        GqlUpdateMemoContentsMutationVariables
+    >(UpdateMemoContentsMutation, { memoId, contents });
+
+    const store = memoStore(data.updateMemoContents.id);
+    const memo = store.get();
+    if (memo) {
+        store.set({
+            ...memo,
+            contents: data.updateMemoContents.contents,
+            updatedAt: data.updateMemoContents.updatedAt,
+        });
+    }
 
     return memo;
 };
