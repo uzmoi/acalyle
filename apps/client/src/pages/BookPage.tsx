@@ -27,7 +27,9 @@ const BookPageRoute = Router.routes<BookPageRoute, JSX.Element | null>({
     )),
     resources: Router.page(() => null),
     settings: Router.page(() => null),
-    ":memoId": Router.page(params => <Memo memoId={params.memoId} />),
+    ":memoId": Router.page(({ bookId, memoId }) => (
+        <Memo bookId={bookId} memoId={memoId} />
+    )),
 });
 
 export const BookPage: React.FC<{

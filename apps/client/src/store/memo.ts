@@ -9,6 +9,8 @@ import type {
     GqlMemoTemplateQueryVariables,
     GqlUpdateMemoContentsMutation,
     GqlUpdateMemoContentsMutationVariables,
+    GqlUpsertMemoTagsMutation,
+    GqlUpsertMemoTagsMutationVariables,
 } from "~/__generated__/graphql";
 import type { Memo } from "./memo-connection";
 import { net } from "./net";
@@ -160,4 +162,33 @@ export const updateMemoContents = async (memoId: string, contents: string) => {
     }
 
     return memo;
+};
+
+const UpsertMemoTagsMutation = gql`
+    mutation UpsertMemoTags($memoId: ID!, $tags: [String!]!) {
+        upsertMemoTags(memoIds: [$memoId], tags: $tags) {
+            id
+            tags
+        }
+    }
+`;
+
+export const upsertMemoTags = async (
+    memoId: string,
+    tags: readonly string[],
+) => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const { graphql } = net.get()!;
+    const { data } = await graphql<
+        GqlUpsertMemoTagsMutation,
+        GqlUpsertMemoTagsMutationVariables
+    >(UpsertMemoTagsMutation, { memoId, tags });
+
+    for (const memo of data.upsertMemoTags) {
+        const store = memoStore(memo.id);
+        const currentMemo = store.get();
+        if (currentMemo != null) {
+            store.set({ ...currentMemo, tags: memo.tags });
+        }
+    }
 };

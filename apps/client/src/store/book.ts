@@ -17,6 +17,7 @@ const BookQuery = gql`
             description
             thumbnail
             createdAt
+            tags
         }
     }
 `;
@@ -88,6 +89,6 @@ export const createBook = async (title: string, description: string) => {
         // { "variables.thumbnail": thumbnail },
     );
     const book = data.createBook;
-    bookStore(book.id).set(book);
+    bookStore(book.id).set({ ...book, tags: [] });
     return book;
 };

@@ -29,6 +29,7 @@ const BookListPagination = gql`
                     title
                     description
                     thumbnail
+                    tags
                 }
             }
             pageInfo {
@@ -44,6 +45,7 @@ export type Book = {
     title: string;
     description: string;
     thumbnail: string;
+    tags: readonly string[];
 };
 
 export const bookConnection = createConnectionAtom<Book>(
