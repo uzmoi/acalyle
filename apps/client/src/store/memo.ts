@@ -49,9 +49,11 @@ export const memoStore = (id: string) => {
 memoStore.build = (id: string) => {
     const store = atom<Memo | null>(null);
     onMount(store, () => {
-        void fetchMemo(id).then(memo => {
-            store.set(memo);
-        });
+        if (store.get() == null) {
+            void fetchMemo(id).then(memo => {
+                store.set(memo);
+            });
+        }
         return () => {
             delete memoStore.cache[id];
         };
@@ -125,20 +127,7 @@ export const createMemo = async (bookId: string, templateName?: string) => {
         GqlCreateMemoMutationVariables
     >(CreateMemoMutation, { bookId, templateName });
     const memo = data.createMemo;
-
-    const build = memoStore.build;
-
-    memoStore.build = (id: string) => {
-        const store = atom<Memo | null>(memo);
-        onMount(store, () => () => {
-            delete memoStore.cache[id];
-        });
-        return store;
-    };
-    memoStore(memo.id);
-
-    memoStore.build = build;
-
+    memoStore(memo.id).set(memo);
     return memo;
 };
 

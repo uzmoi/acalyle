@@ -42,9 +42,11 @@ export const bookStore = (id: string) => {
 bookStore.build = (id: string) => {
     const store = atom<Book | null>(null);
     onMount(store, () => {
-        void fetchBook(id).then(book => {
-            store.set(book);
-        });
+        if (store.get() == null) {
+            void fetchBook(id).then(book => {
+                store.set(book);
+            });
+        }
         return () => {
             delete bookStore.cache[id];
         };
@@ -86,19 +88,6 @@ export const createBook = async (title: string, description: string) => {
         // { "variables.thumbnail": thumbnail },
     );
     const book = data.createBook;
-
-    const build = bookStore.build;
-
-    bookStore.build = (id: string) => {
-        const store = atom<Book | null>(book);
-        onMount(store, () => () => {
-            delete bookStore.cache[id];
-        });
-        return store;
-    };
-    bookStore(book.id);
-
-    bookStore.build = build;
-
+    bookStore(book.id).set(book);
     return book;
 };
