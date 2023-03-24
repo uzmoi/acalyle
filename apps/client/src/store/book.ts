@@ -3,6 +3,8 @@ import { type WritableAtom, atom, onMount } from "nanostores";
 import type {
     GqlBookQuery,
     GqlBookQueryVariables,
+    GqlCreateBookMutation,
+    GqlCreateBookMutationVariables,
 } from "~/__generated__/graphql";
 import type { Book } from "./book-connection";
 import { net } from "./net";
@@ -51,3 +53,52 @@ bookStore.build = (id: string) => {
 };
 
 bookStore.cache = {} as Record<string, WritableAtom<Book | null>>;
+
+const CreateBookMutation = gql`
+    mutation CreateBook(
+        $title: String!
+        $description: String!
+        $thumbnail: Upload
+    ) {
+        createBook(
+            title: $title
+            description: $description
+            thumbnail: $thumbnail
+        ) {
+            id
+            title
+            description
+            thumbnail
+            createdAt
+        }
+    }
+`;
+
+export const createBook = async (title: string, description: string) => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const { graphql } = net.get()!;
+    const { data } = await graphql<
+        GqlCreateBookMutation,
+        GqlCreateBookMutationVariables
+    >(
+        CreateBookMutation,
+        { title, description, thumbnail: null },
+        // { "variables.thumbnail": thumbnail },
+    );
+    const book = data.createBook;
+
+    const build = bookStore.build;
+
+    bookStore.build = (id: string) => {
+        const store = atom<Book | null>(book);
+        onMount(store, () => () => {
+            delete bookStore.cache[id];
+        });
+        return store;
+    };
+    bookStore(book.id);
+
+    bookStore.build = build;
+
+    return book;
+};
