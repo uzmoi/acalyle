@@ -3,8 +3,10 @@
   "name": "@acalyle/core",
   "type": "module",
   "sideEffects": false,
-  "main": "src/index.ts",
+  "main": "dist/index.js",
+  "types": "src/index.ts",
   "scripts": {
+    "build": "vite build",
     "check": "tsc",
     "test": "vitest"
   },

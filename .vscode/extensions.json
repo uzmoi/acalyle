@@ -5,5 +5,7 @@
         "styled-components.vscode-styled-components",
         "meta.relay",
         "dbaeumer.vscode-eslint",
+        "tauri-apps.tauri-vscode",
+        "rust-lang.rust-analyzer",
     ]
 }

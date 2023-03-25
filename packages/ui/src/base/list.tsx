@@ -1,6 +1,7 @@
-import { css, cx } from "@linaria/core";
+import { cx } from "@linaria/core";
+import { styleVariants } from "@macaron-css/core";
 
-export type ListVariant = keyof typeof variantStyles;
+export type ListVariant = keyof typeof variants;
 
 export const List: React.FC<
     (
@@ -16,30 +17,24 @@ export const List: React.FC<
     return (
         <Component
             {...restProps}
-            className={cx(variantStyles[variant], className)}
+            className={cx(variants[variant], className)}
         />
     );
 };
 
-const ListResetStyle = css`
-    padding-left: 0;
-    list-style: none;
-`;
-
-const variantStyles = {
-    default: "",
-    unstyled: ListResetStyle,
-} satisfies Record<string, string>;
+const variants = styleVariants({
+    default: [],
+    unstyled: {
+        paddingLeft: 0,
+        listStyle: "none",
+    },
+});
 
 type ListItemComponent = React.FC<React.ComponentPropsWithoutRef<"li">>;
-List.Item = ({ className, ...restProps }) => {
-    return <li {...restProps} className={cx(ListItemStyle, className)} />;
+List.Item = ({ ...restProps }) => {
+    return <li {...restProps} />;
 };
 
 if (import.meta.env.DEV) {
     List.Item.displayName = "List.Item";
 }
-
-const ListItemStyle = css`
-    /* - */
-`;

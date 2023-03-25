@@ -1,9 +1,10 @@
-import { css, cx } from "@linaria/core";
+import { cx } from "@linaria/core";
+import { style, styleVariants } from "@macaron-css/core";
 import { ControlPartOutlineStyle, ControlPartResetStyle } from "./base";
 
 const ZeroWidthSpace = "\u200b";
 
-export type TextAreaVariant = keyof typeof variantStyles;
+export type TextAreaVariant = keyof typeof variants;
 
 export const TextArea: React.FC<
     {
@@ -39,7 +40,18 @@ export const TextArea: React.FC<
     return (
         <div
             {...restProps}
-            className={cx(variantStyles[variant], ContainerStyle, className)}
+            className={cx(
+                variants[variant],
+                style({
+                    position: "relative",
+                    overflowWrap: "break-word",
+                    whiteSpace: "pre-wrap",
+                    vars: {
+                        "--caret-color": "white", // currentcolor
+                    },
+                }),
+                className,
+            )}
         >
             <textarea
                 id={textareaId}
@@ -48,7 +60,29 @@ export const TextArea: React.FC<
                 value={value}
                 defaultValue={defaultValue}
                 onChange={handleChange}
-                className={cx(ControlPartResetStyle, TextAreaStyle)}
+                className={cx(
+                    ControlPartResetStyle,
+                    style({
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        padding: "inherit",
+                        overflow: "hidden",
+                        color: "transparent",
+                        textAlign: "inherit",
+                        textIndent: "inherit",
+                        textTransform: "inherit",
+                        letterSpacing: "inherit",
+                        overflowWrap: "inherit",
+                        whiteSpace: "inherit",
+                        resize: "none",
+                        wordSpacing: "inherit",
+                        caretColor: "var(--caret-color)",
+                        // opacity: 0,
+                    }),
+                )}
                 autoFocus={autoFocus}
                 placeholder={placeholder}
                 disabled={disabled}
@@ -58,7 +92,14 @@ export const TextArea: React.FC<
                 autoCorrect="off"
                 spellCheck="false"
             />
-            <div className={PreStyle} aria-hidden>
+            <div
+                className={style({
+                    minHeight: "1em",
+                    pointerEvents: "none",
+                    userSelect: "none",
+                })}
+                aria-hidden
+            >
                 {value}
                 {ZeroWidthSpace}
             </div>
@@ -66,41 +107,7 @@ export const TextArea: React.FC<
     );
 };
 
-const ContainerStyle = css`
-    position: relative;
-    overflow-wrap: break-word;
-    white-space: pre-wrap;
-    --caret-color: white /* currentcolor */;
-`;
-
-const variantStyles = {
-    outline: ControlPartOutlineStyle,
-    unstyled: "",
-} satisfies Record<string, string>;
-
-const TextAreaStyle = css`
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    padding: inherit;
-    overflow: hidden;
-    color: transparent;
-    text-align: inherit;
-    text-indent: inherit;
-    text-transform: inherit;
-    letter-spacing: inherit;
-    overflow-wrap: inherit;
-    white-space: inherit;
-    resize: none;
-    word-spacing: inherit;
-    caret-color: var(--caret-color);
-    /* opacity: 0; */
-`;
-
-const PreStyle = css`
-    min-height: 1em;
-    pointer-events: none;
-    user-select: none;
-`;
+const variants = styleVariants({
+    outline: [ControlPartOutlineStyle],
+    unstyled: [],
+});

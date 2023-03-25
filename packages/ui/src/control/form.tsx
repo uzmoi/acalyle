@@ -1,8 +1,5 @@
-import { css, cx } from "@linaria/core";
-
 export const Form: React.FC<React.ComponentPropsWithoutRef<"form">> = ({
     onSubmit,
-    className,
     ...restProps
 }) => {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -10,15 +7,5 @@ export const Form: React.FC<React.ComponentPropsWithoutRef<"form">> = ({
         onSubmit?.(e);
     };
 
-    return (
-        <form
-            {...restProps}
-            onSubmit={handleSubmit}
-            className={cx(FormStyle, className)}
-        />
-    );
+    return <form {...restProps} onSubmit={handleSubmit} />;
 };
-
-const FormStyle = css`
-    /* - */
-`;

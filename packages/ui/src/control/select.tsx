@@ -1,8 +1,9 @@
-import { css, cx } from "@linaria/core";
+import { cx } from "@linaria/core";
+import { style, styleVariants } from "@macaron-css/core";
 import { vars } from "../theme";
 import { ControlPartOutlineStyle, ControlPartResetStyle } from "./base";
 
-export type SelectVariant = keyof typeof variantStyles;
+export type SelectVariant = keyof typeof variants;
 
 export const Select: React.FC<
     {
@@ -31,53 +32,42 @@ export const Select: React.FC<
         <select
             {...restProps}
             onChange={handleChange}
-            className={cx(
-                ControlPartResetStyle,
-                variantStyles[variant],
-                SelectStyle,
-                className,
-            )}
+            className={cx(ControlPartResetStyle, variants[variant], className)}
         >
             {children}
         </select>
     );
 };
 
-const SelectStyle = css`
-    /* - */
-`;
-
-const variantStyles = {
-    outline: ControlPartOutlineStyle,
-    unstyled: "",
-} satisfies Record<string, string>;
+const variants = styleVariants({
+    outline: [ControlPartOutlineStyle],
+    unstyled: [],
+});
 
 type SelectOptionGroupComponent = React.FC<
     React.ComponentPropsWithoutRef<"optgroup">
 >;
-Select.Group = ({ className, ...restProps }) => {
-    return (
-        <optgroup {...restProps} className={cx(OptionGroupStyle, className)} />
-    );
+Select.Group = ({ ...restProps }) => {
+    return <optgroup {...restProps} />;
 };
 
 if (import.meta.env.DEV) {
     Select.Group.displayName = "Select.Group";
 }
 
-const OptionGroupStyle = css`
-    /* - */
-`;
-
 type SelectOptionComponent = React.FC<React.ComponentPropsWithoutRef<"option">>;
 Select.Option = ({ className, ...restProps }) => {
-    return <option {...restProps} className={cx(OptionStyle, className)} />;
+    return (
+        <option
+            {...restProps}
+            className={cx(
+                style({ backgroundColor: vars.color.bg3 }),
+                className,
+            )}
+        />
+    );
 };
 
 if (import.meta.env.DEV) {
     Select.Option.displayName = "Select.Option";
 }
-
-const OptionStyle = css`
-    background-color: ${vars.color.bg3};
-`;
