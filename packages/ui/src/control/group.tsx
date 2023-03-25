@@ -1,4 +1,5 @@
-import { css, cx } from "@linaria/core";
+import { cx } from "@linaria/core";
+import { globalStyle, style } from "@macaron-css/core";
 import { ControlPartOutlineStyle, borderRadius } from "./base";
 
 export const ControlGroup: React.FC<{
@@ -8,21 +9,29 @@ export const ControlGroup: React.FC<{
     return <div className={cx(ControlGroupStyle, className)}>{children}</div>;
 };
 
-export const ControlGroupStyle = css`
-    display: inline-block;
-    > .${ControlPartOutlineStyle} {
-        border-radius: 0;
-    }
-    > :first-child {
-        border-radius: ${borderRadius} 0 0 ${borderRadius};
-    }
-    > :last-child {
-        border-radius: 0 ${borderRadius} ${borderRadius} 0;
-    }
-    > :only-child {
-        border-radius: ${borderRadius};
-    }
-    & > .${ControlPartOutlineStyle} + .${ControlPartOutlineStyle} {
-        margin-left: -1px;
-    }
-`;
+export const ControlGroupStyle = style({
+    display: "inline-block",
+});
+
+globalStyle(`.${ControlGroupStyle} > .${ControlPartOutlineStyle}`, {
+    borderRadius: 0,
+});
+
+globalStyle(`.${ControlGroupStyle} > :first-child`, {
+    borderRadius: `${borderRadius} 0 0 ${borderRadius}`,
+});
+
+globalStyle(`.${ControlGroupStyle} > :last-child`, {
+    borderRadius: `0 ${borderRadius} ${borderRadius} 0`,
+});
+
+globalStyle(`.${ControlGroupStyle} > :only-child`, {
+    borderRadius,
+});
+
+globalStyle(
+    `.${ControlGroupStyle} > .${ControlPartOutlineStyle} + .${ControlPartOutlineStyle}`,
+    {
+        marginLeft: "-1px",
+    },
+);

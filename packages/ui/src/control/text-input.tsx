@@ -1,4 +1,5 @@
-import { css, cx } from "@linaria/core";
+import { cx } from "@linaria/core";
+import { styleVariants } from "@macaron-css/core";
 import { ControlPartOutlineStyle, ControlPartResetStyle } from "./base";
 
 // prettier-ignore
@@ -42,7 +43,7 @@ type TextInputType = (
     | "tel"
 );
 
-export type TextInputVariant = keyof typeof variantStyles;
+export type TextInputVariant = keyof typeof variants;
 
 export const TextInput: React.FC<
     {
@@ -74,8 +75,7 @@ export const TextInput: React.FC<
             type={type}
             className={cx(
                 ControlPartResetStyle,
-                InputStyle,
-                variantStyles[variant],
+                variants[variant],
                 className,
             )}
             autoComplete="off"
@@ -86,11 +86,7 @@ export const TextInput: React.FC<
     );
 };
 
-const InputStyle = css`
-    /* - */
-`;
-
-const variantStyles = {
-    outline: ControlPartOutlineStyle,
-    unstyled: "",
-} satisfies Record<string, string>;
+const variants = styleVariants({
+    outline: [ControlPartOutlineStyle],
+    unstyled: [],
+});

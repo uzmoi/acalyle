@@ -1,4 +1,4 @@
-import { css, cx } from "@linaria/core";
+import { cx } from "@linaria/core";
 import { ControlPartResetStyle } from "./base";
 
 // prettier-ignore
@@ -78,11 +78,7 @@ export const FileInput: React.FC<
             onChange={handleChange}
             type="file"
             multiple={multiple}
-            className={cx(ControlPartResetStyle, FileInputStyle, className)}
+            className={cx(ControlPartResetStyle, className)}
         />
     );
 };
-
-const FileInputStyle = css`
-    /* - */
-`;
