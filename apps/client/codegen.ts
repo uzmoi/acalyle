@@ -20,6 +20,7 @@ export default {
                     DateTime: "string",
                 },
                 arrayInputCoercion: false,
+                immutableTypes: true,
             } satisfies TypeScriptPluginConfig &
                 TypeScriptDocumentsPluginConfig,
         },
