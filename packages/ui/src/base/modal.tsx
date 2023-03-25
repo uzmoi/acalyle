@@ -1,4 +1,5 @@
-import { css, cx } from "@linaria/core";
+import { cx } from "@linaria/core";
+import { style } from "@macaron-css/core";
 import { noop, timeout } from "emnorst";
 import { useEffect, useState } from "react";
 
@@ -47,28 +48,30 @@ export const Modal: React.FC<{
             data-variant={variant}
             style={{ transitionDuration: `${transitionDuration}ms` }}
             className={cx(
-                css`
-                    z-index: 9999;
-                    &[data-variant="modal"] {
-                        position: fixed;
-                        top: 0;
-                        right: 0;
-                        bottom: 0;
-                        left: 0;
-                        background-color: #0008;
-                    }
-                    &[data-variant="popup"] {
-                        position: absolute;
-                    }
-                    transition-property: opacity;
-                    &[data-open="true"] {
-                        opacity: 1;
-                    }
-                    &[data-open="false"] {
-                        pointer-events: none;
-                        opacity: 0;
-                    }
-                `,
+                style({
+                    zIndex: 9999,
+                    transitionProperty: "opacity",
+                    selectors: {
+                        '&[data-variant="modal"]': {
+                            position: "fixed",
+                            top: 0,
+                            right: 0,
+                            bottom: 0,
+                            left: 0,
+                            backgroundColor: "#0008",
+                        },
+                        '&[data-variant="popup"]': {
+                            position: "absolute",
+                        },
+                        '&[data-open="true"]': {
+                            opacity: 1,
+                        },
+                        '&[data-open="false"]': {
+                            pointerEvents: "none",
+                            opacity: 0,
+                        },
+                    },
+                }),
                 className,
             )}
             onClick={handleClick}

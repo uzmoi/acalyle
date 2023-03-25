@@ -1,8 +1,9 @@
-import { css, cx } from "@linaria/core";
+import { cx } from "@linaria/core";
+import { style, styleVariants } from "@macaron-css/core";
 import { vars } from "../theme";
 import { ControlPartOutlineStyle, ControlPartResetStyle } from "./base";
 
-export type ButtonVariant = keyof typeof variantStyles;
+export type ButtonVariant = keyof typeof variants;
 
 export const Button: React.FC<
     {
@@ -15,31 +16,26 @@ export const Button: React.FC<
             {...restProps}
             className={cx(
                 ControlPartResetStyle,
-                ButtonStyle,
-                variantStyles[variant],
+                style({
+                    fontWeight: "bold",
+                    cursor: "pointer",
+                }),
+                variants[variant],
                 className,
             )}
         />
     );
 };
 
-const ButtonStyle = css`
-    font-weight: bold;
-    cursor: pointer;
-`;
-
-const variantStyles = {
-    outline: ControlPartOutlineStyle,
-    unstyled: "",
-    icon: cx(
+const variants = styleVariants({
+    outline: [ControlPartOutlineStyle],
+    unstyled: [],
+    icon: [
         ControlPartOutlineStyle,
-        css`
-            padding: 0.25em;
-            font-size: 1.25em;
-            line-height: 1;
-            svg {
-                vertical-align: top;
-            }
-        `,
-    ),
-} satisfies Record<string, string>;
+        {
+            padding: "0.25em",
+            fontSize: "1.25em",
+            lineHeight: 1,
+        },
+    ],
+});
