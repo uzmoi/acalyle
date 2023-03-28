@@ -1,9 +1,11 @@
 import { Button } from "@acalyle/ui";
+import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { useState } from "react";
 import { memoStore } from "~/store/memo";
 import { AddTagButton } from "~/ui/AddTagButton";
 import { MemoContentsEditor } from "~/ui/MemoContentsEditor";
+import { MemoInfo } from "~/ui/MemoInfo";
 import { TagList } from "./TagList";
 
 export const Memo: React.FC<{
@@ -23,14 +25,20 @@ export const Memo: React.FC<{
             <header>
                 <TagList tags={memo.tags} />
                 <AddTagButton bookId={bookId} memoId={memoId} />
-                <Button
-                    disabled={isInEdit}
-                    onClick={() => {
-                        setIsInEdit(true);
-                    }}
-                >
-                    Edit
-                </Button>
+                <div className={style({ display: "flex" })}>
+                    <MemoInfo
+                        memo={memo}
+                        className={style({ flex: "1 0", fontSize: "0.725em" })}
+                    />
+                    <Button
+                        disabled={isInEdit}
+                        onClick={() => {
+                            setIsInEdit(true);
+                        }}
+                    >
+                        Edit
+                    </Button>
+                </div>
             </header>
             {isInEdit ? (
                 <MemoContentsEditor
