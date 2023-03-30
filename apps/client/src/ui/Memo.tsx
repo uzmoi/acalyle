@@ -1,4 +1,3 @@
-import { Button } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { useState } from "react";
@@ -6,6 +5,7 @@ import { memoStore } from "~/store/memo";
 import { AddTagButton } from "~/ui/AddTagButton";
 import { MemoContentsEditor } from "~/ui/MemoContentsEditor";
 import { MemoInfo } from "~/ui/MemoInfo";
+import { MemoMenu } from "~/ui/MemoMenu";
 import { TagList } from "./TagList";
 
 export const Memo: React.FC<{
@@ -30,14 +30,11 @@ export const Memo: React.FC<{
                         memo={memo}
                         className={style({ flex: "1 0", fontSize: "0.725em" })}
                     />
-                    <Button
-                        disabled={isInEdit}
-                        onClick={() => {
+                    <MemoMenu
+                        onEdit={() => {
                             setIsInEdit(true);
                         }}
-                    >
-                        Edit
-                    </Button>
+                    />
                 </div>
             </header>
             {isInEdit ? (
