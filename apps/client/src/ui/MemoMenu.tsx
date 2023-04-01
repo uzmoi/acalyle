@@ -7,6 +7,7 @@ import { BiDotsVertical } from "react-icons/bi";
 export type MenuAction = {
     icon: JSX.Element;
     text: string;
+    color?: string;
     onClick: (() => void) | undefined;
 };
 
@@ -42,11 +43,12 @@ export const MemoMenu: React.FC<{
                 })}
             >
                 <div role="menu">
-                    {actions.map(({ icon, text, onClick }) => (
+                    {actions.map(({ icon, text, color, onClick }) => (
                         <Button
                             key={text}
                             role="menuitem"
                             onClick={onClick}
+                            style={{ color }}
                             variant="unstyled"
                             className={style({
                                 display: "block",

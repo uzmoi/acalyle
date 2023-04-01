@@ -7,6 +7,8 @@ import type {
     GqlMemoQueryVariables,
     GqlMemoTemplateQuery,
     GqlMemoTemplateQueryVariables,
+    GqlRemoveMemoMutation,
+    GqlRemoveMemoMutationVariables,
     GqlUpdateMemoContentsMutation,
     GqlUpdateMemoContentsMutationVariables,
     GqlUpsertMemoTagsMutation,
@@ -131,6 +133,22 @@ export const createMemo = async (bookId: string, templateName?: string) => {
     const memo = data.createMemo;
     memoStore(memo.id).set(memo);
     return memo;
+};
+
+const RemoveMemoMutation = gql`
+    mutation RemoveMemo($memoId: ID!) {
+        removeMemo(ids: [$memoId])
+    }
+`;
+
+export const removeMemo = async (memoId: string) => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const { graphql } = net.get()!;
+    const { data: _ } = await graphql<
+        GqlRemoveMemoMutation,
+        GqlRemoveMemoMutationVariables
+    >(RemoveMemoMutation, { memoId });
+    memoStore(memoId).set(null);
 };
 
 const UpdateMemoContentsMutation = gql`

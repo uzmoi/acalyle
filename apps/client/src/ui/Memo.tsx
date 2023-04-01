@@ -1,8 +1,8 @@
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { useMemo, useState } from "react";
-import { BiClipboard, BiEditAlt } from "react-icons/bi";
-import { memoStore } from "~/store/memo";
+import { BiClipboard, BiEditAlt, BiTrash } from "react-icons/bi";
+import { memoStore, removeMemo } from "~/store/memo";
 import { AddTagButton } from "~/ui/AddTagButton";
 import { MemoContentsEditor } from "~/ui/MemoContentsEditor";
 import { MemoInfo } from "~/ui/MemoInfo";
@@ -31,6 +31,14 @@ export const Memo: React.FC<{
                 text: "Copy memo id",
                 onClick: () => {
                     void navigator.clipboard.writeText(memoId);
+                },
+            },
+            {
+                icon: <BiTrash />,
+                text: "Delete memo",
+                color: "#e44",
+                onClick: () => {
+                    void removeMemo(memoId);
                 },
             },
         ],
