@@ -52,8 +52,6 @@ export const Memo: React.FC<{
     return (
         <article>
             <header>
-                <TagList tags={memo.tags} />
-                <AddTagButton bookId={bookId} memoId={memoId} />
                 <div className={style({ display: "flex" })}>
                     <MemoInfo
                         memo={memo}
@@ -61,18 +59,27 @@ export const Memo: React.FC<{
                     />
                     <MemoMenu actions={actions} />
                 </div>
+                <div className={style({ marginTop: "0.5em" })}>
+                    <TagList
+                        tags={memo.tags}
+                        className={style({ display: "inline-block" })}
+                    />
+                    <AddTagButton bookId={bookId} memoId={memoId} />
+                </div>
             </header>
-            {isInEdit ? (
-                <MemoContentsEditor
-                    memoId={memoId}
-                    defaultContents={memo.contents}
-                    onEditEnd={() => {
-                        setIsInEdit(false);
-                    }}
-                />
-            ) : (
-                <div>{memo.contents}</div>
-            )}
+            <div className={style({ marginTop: "1em" })}>
+                {isInEdit ? (
+                    <MemoContentsEditor
+                        memoId={memoId}
+                        defaultContents={memo.contents}
+                        onEditEnd={() => {
+                            setIsInEdit(false);
+                        }}
+                    />
+                ) : (
+                    <div>{memo.contents}</div>
+                )}
+            </div>
         </article>
     );
 };

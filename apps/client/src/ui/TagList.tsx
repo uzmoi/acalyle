@@ -6,15 +6,19 @@ import { Tag } from "./Tag";
 
 export const TagList: React.FC<{
     tags: readonly string[];
-}> = ({ tags: tagStrings }) => {
+    className?: string;
+}> = ({ tags: tagStrings, className }) => {
     const tags = tagStrings.map(AcalyleMemoTag.fromString).filter(nonNullable);
 
     return (
-        <List>
+        <List className={className}>
             {tags.map(tag => (
                 <List.Item
                     key={tag.symbol}
-                    className={style({ display: "inline-block" })}
+                    className={style({
+                        display: "inline-block",
+                        paddingInline: "0.25em",
+                    })}
                 >
                     <Tag tag={tag} />
                 </List.Item>
