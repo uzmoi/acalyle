@@ -1,7 +1,7 @@
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { useMemo, useState } from "react";
-import { BiEditAlt } from "react-icons/bi";
+import { BiClipboard, BiEditAlt } from "react-icons/bi";
 import { memoStore } from "~/store/memo";
 import { AddTagButton } from "~/ui/AddTagButton";
 import { MemoContentsEditor } from "~/ui/MemoContentsEditor";
@@ -26,8 +26,15 @@ export const Memo: React.FC<{
                     setIsInEdit(true);
                 },
             },
+            {
+                icon: <BiClipboard />,
+                text: "Copy memo id",
+                onClick: () => {
+                    void navigator.clipboard.writeText(memoId);
+                },
+            },
         ],
-        [],
+        [memoId],
     );
 
     if (memo == null) {
