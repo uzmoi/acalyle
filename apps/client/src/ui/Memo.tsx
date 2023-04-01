@@ -1,11 +1,12 @@
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { BiEditAlt } from "react-icons/bi";
 import { memoStore } from "~/store/memo";
 import { AddTagButton } from "~/ui/AddTagButton";
 import { MemoContentsEditor } from "~/ui/MemoContentsEditor";
 import { MemoInfo } from "~/ui/MemoInfo";
-import { MemoMenu } from "~/ui/MemoMenu";
+import { MemoMenu, type MenuAction } from "~/ui/MemoMenu";
 import { TagList } from "./TagList";
 
 export const Memo: React.FC<{
@@ -15,6 +16,19 @@ export const Memo: React.FC<{
     const memo = useStore(memoStore(memoId));
 
     const [isInEdit, setIsInEdit] = useState(false);
+
+    const actions = useMemo<readonly MenuAction[]>(
+        () => [
+            {
+                icon: <BiEditAlt />,
+                text: "Edit contents",
+                onClick: () => {
+                    setIsInEdit(true);
+                },
+            },
+        ],
+        [],
+    );
 
     if (memo == null) {
         return null;
@@ -30,11 +44,7 @@ export const Memo: React.FC<{
                         memo={memo}
                         className={style({ flex: "1 0", fontSize: "0.725em" })}
                     />
-                    <MemoMenu
-                        onEdit={() => {
-                            setIsInEdit(true);
-                        }}
-                    />
+                    <MemoMenu actions={actions} />
                 </div>
             </header>
             {isInEdit ? (

@@ -2,24 +2,18 @@ import { Button, Modal } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { cloneElement, useState } from "react";
 import type { IconBaseProps } from "react-icons";
-import { BiDotsVertical, BiEditAlt } from "react-icons/bi";
+import { BiDotsVertical } from "react-icons/bi";
+
+export type MenuAction = {
+    icon: JSX.Element;
+    text: string;
+    onClick: (() => void) | undefined;
+};
 
 export const MemoMenu: React.FC<{
-    onEdit?: () => void;
-}> = ({ onEdit }) => {
+    actions: readonly MenuAction[];
+}> = ({ actions }) => {
     const [isOpenMenuPopup, setIsOpenMenuPopup] = useState(false);
-
-    const buttons: readonly {
-        icon: JSX.Element;
-        text: string;
-        onClick: (() => void) | undefined;
-    }[] = [
-        {
-            icon: <BiEditAlt />,
-            text: "Edit contents",
-            onClick: onEdit,
-        },
-    ];
 
     return (
         <div className={style({ position: "relative" })}>
@@ -48,7 +42,7 @@ export const MemoMenu: React.FC<{
                 })}
             >
                 <div role="menu">
-                    {buttons.map(({ icon, text, onClick }) => (
+                    {actions.map(({ icon, text, onClick }) => (
                         <Button
                             key={text}
                             role="menuitem"
