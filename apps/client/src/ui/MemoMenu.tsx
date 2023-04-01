@@ -50,6 +50,7 @@ export const MemoMenu: React.FC<{
                             variant="unstyled"
                             className={style({
                                 display: "block",
+                                width: "100%",
                                 padding: "0.25em 1em",
                                 fontSize: "0.9em",
                                 fontWeight: "normal",
