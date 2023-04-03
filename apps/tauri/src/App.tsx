@@ -5,9 +5,14 @@ import * as Router from "@acalyle/router";
 import { vars } from "@acalyle/ui";
 import { globalStyle, style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
+import { appDataDir } from "@tauri-apps/api/path";
+import { convertFileSrc } from "@tauri-apps/api/tauri";
 import { onMount } from "nanostores";
 
+const appDataDirPath = await appDataDir();
+
 net.set({
+    get: path => convertFileSrc(`${appDataDirPath}/${path}`),
     async graphql(docNode, variables, options) {
         const formData = new FormData();
         const operations = JSON.stringify({

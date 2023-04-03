@@ -1,4 +1,5 @@
 import { style } from "@macaron-css/core";
+import { net } from "~/store/net";
 
 export const BookThumbnail: React.FC<{
     src: string;
@@ -18,7 +19,7 @@ export const BookThumbnail: React.FC<{
     return (
         <div className={`${ThumbnailStyle} ${className ?? ""}`}>
             <img
-                src={src}
+                src={net.get()?.get(src)}
                 alt="book thumbnail"
                 className={style({ width: "100%" })}
             />

@@ -9,6 +9,7 @@ import { Location } from "./store/location";
 import { BookRoute, net } from ".";
 
 net.set({
+    get: path => new URL(path, "http://localhost:4323/").href,
     async graphql(docNode, variables, options) {
         const formData = new FormData();
         const operations = JSON.stringify({

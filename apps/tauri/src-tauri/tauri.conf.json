@@ -13,6 +13,13 @@
   "tauri": {
     "allowlist": {
       "all": false,
+      "path": {
+        "all": true
+      },
+      "protocol": {
+        "asset": true,
+        "assetScope": ["$APPDATA/**"]
+      },
       "shell": {
         "all": false,
         "open": true
