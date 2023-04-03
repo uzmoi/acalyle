@@ -7,6 +7,7 @@ const { mkdir, open, readdir, rm } = require("fs/promises");
 const path = require("path");
 
 const DEV = process.argv.includes("--dev");
+const WATCH = process.argv.includes("--watch");
 const ENV = DEV ? "development" : "production";
 
 /** @param {string} dirPath */
@@ -25,7 +26,9 @@ const emptyDir = async dirPath => {
 };
 
 (async () => {
-    await emptyDir("dist");
+    if (!DEV) {
+        await emptyDir("dist");
+    }
 
     await mkdir("../data", { recursive: true });
     await (await open("../data/schema.graphql", "a")).close();
@@ -35,7 +38,7 @@ const emptyDir = async dirPath => {
         bundle: true,
         minify: !DEV,
         sourcemap: DEV,
-        watch: DEV,
+        watch: WATCH,
         define: {
             "process.env.NODE_ENV": `"${ENV}"`,
         },
