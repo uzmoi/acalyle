@@ -1,5 +1,4 @@
 import { gql } from "graphql-tag";
-import { type WritableAtom, atom, onMount } from "nanostores";
 import type {
     GqlCreateMemoMutation,
     GqlCreateMemoMutationVariables,
@@ -14,6 +13,7 @@ import type {
     GqlUpsertMemoTagsMutation,
     GqlUpsertMemoTagsMutationVariables,
 } from "~/__generated__/graphql";
+import { createQueryStore } from "~/lib/query-store";
 import type { Memo } from "./memo-connection";
 import { net } from "./net";
 
@@ -32,40 +32,17 @@ const MemoQuery = gql`
     }
 `;
 
-const fetchMemo = async (memoId: string) => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const { graphql } = net.get()!;
-    const { data } = await graphql<GqlMemoQuery, GqlMemoQueryVariables>(
-        MemoQuery,
-        { memoId },
-    );
-    return data.node?.__typename === "Memo" ? data.node : null;
-};
-
-export const memoStore = (id: string) => {
-    if (!memoStore.cache[id]) {
-        memoStore.cache[id] = memoStore.build(id);
-    }
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return memoStore.cache[id]!;
-};
-
-memoStore.build = (id: string) => {
-    const store = atom<Memo | null>(null);
-    onMount(store, () => {
-        if (store.get() == null) {
-            void fetchMemo(id).then(memo => {
-                store.set(memo);
-            });
-        }
-        return () => {
-            delete memoStore.cache[id];
-        };
-    });
-    return store;
-};
-
-memoStore.cache = {} as Record<string, WritableAtom<Memo | null>>;
+export const memoStore = createQueryStore<Memo | null>(
+    async (memoId: string) => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const { graphql } = net.get()!;
+        const { data } = await graphql<GqlMemoQuery, GqlMemoQueryVariables>(
+            MemoQuery,
+            { memoId },
+        );
+        return data.node?.__typename === "Memo" ? data.node : null;
+    },
+);
 
 const MemoTemplateQuery = gql`
     query MemoTemplate($bookId: ID!) {
@@ -75,7 +52,9 @@ const MemoTemplateQuery = gql`
     }
 `;
 
-const fetchMemoTemplate = async (bookId: string) => {
+export const memoTemplateStore = createQueryStore<
+    readonly string[] | undefined
+>(async (bookId: string) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { graphql } = net.get()!;
     const { data } = await graphql<
@@ -83,33 +62,7 @@ const fetchMemoTemplate = async (bookId: string) => {
         GqlMemoTemplateQueryVariables
     >(MemoTemplateQuery, { bookId });
     return data.book?.tagProps;
-};
-
-export const memoTemplateStore = (id: string) => {
-    if (!memoTemplateStore.cache[id]) {
-        memoTemplateStore.cache[id] = memoTemplateStore.build(id);
-    }
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return memoTemplateStore.cache[id]!;
-};
-
-memoTemplateStore.build = (id: string) => {
-    const store = atom<readonly string[] | undefined>();
-    onMount(store, () => {
-        void fetchMemoTemplate(id).then(templateNames => {
-            store.set(templateNames);
-        });
-        return () => {
-            delete memoTemplateStore.cache[id];
-        };
-    });
-    return store;
-};
-
-memoTemplateStore.cache = {} as Record<
-    string,
-    WritableAtom<readonly string[] | undefined>
->;
+});
 
 const CreateMemoMutation = gql`
     mutation CreateMemo($bookId: ID!, $templateName: String) {
