@@ -19,14 +19,12 @@ export const AddTagButton: React.FC<{
         >
             <Button
                 variant="unstyled"
-                // FIXME このmargin何???
-                className={style({ marginLeft: "0.25em" })}
                 onClick={e => {
                     e.stopPropagation();
                     setIsOpenAddTagPopup(isOpen => !isOpen);
                 }}
             >
-                <BiPlus className={style({ verticalAlign: "bottom" })} />
+                <BiPlus className={style({ verticalAlign: "middle" })} />
             </Button>
             <Modal
                 open={isOpenAddTagPopup}

@@ -1,9 +1,12 @@
-import { Button } from "@acalyle/ui";
+import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
-import { useState } from "react";
-import { memoStore } from "~/store/memo";
+import { useMemo, useState } from "react";
+import { BiClipboard, BiEditAlt, BiTrash } from "react-icons/bi";
+import { memoStore, removeMemo } from "~/store/memo";
 import { AddTagButton } from "~/ui/AddTagButton";
 import { MemoContentsEditor } from "~/ui/MemoContentsEditor";
+import { MemoInfo } from "~/ui/MemoInfo";
+import { MemoMenu, type MenuAction } from "~/ui/MemoMenu";
 import { TagList } from "./TagList";
 
 export const Memo: React.FC<{
@@ -14,6 +17,34 @@ export const Memo: React.FC<{
 
     const [isInEdit, setIsInEdit] = useState(false);
 
+    const actions = useMemo<readonly MenuAction[]>(
+        () => [
+            {
+                icon: <BiEditAlt />,
+                text: "Edit contents",
+                onClick: () => {
+                    setIsInEdit(true);
+                },
+            },
+            {
+                icon: <BiClipboard />,
+                text: "Copy memo id",
+                onClick: () => {
+                    void navigator.clipboard.writeText(memoId);
+                },
+            },
+            {
+                icon: <BiTrash />,
+                text: "Delete memo",
+                color: "#e44",
+                onClick: () => {
+                    void removeMemo(memoId);
+                },
+            },
+        ],
+        [memoId],
+    );
+
     if (memo == null) {
         return null;
     }
@@ -21,28 +52,34 @@ export const Memo: React.FC<{
     return (
         <article>
             <header>
-                <TagList tags={memo.tags} />
-                <AddTagButton bookId={bookId} memoId={memoId} />
-                <Button
-                    disabled={isInEdit}
-                    onClick={() => {
-                        setIsInEdit(true);
-                    }}
-                >
-                    Edit
-                </Button>
+                <div className={style({ display: "flex" })}>
+                    <MemoInfo
+                        memo={memo}
+                        className={style({ flex: "1 0", fontSize: "0.725em" })}
+                    />
+                    <MemoMenu actions={actions} />
+                </div>
+                <div className={style({ marginTop: "0.5em" })}>
+                    <TagList
+                        tags={memo.tags}
+                        className={style({ display: "inline-block" })}
+                    />
+                    <AddTagButton bookId={bookId} memoId={memoId} />
+                </div>
             </header>
-            {isInEdit ? (
-                <MemoContentsEditor
-                    memoId={memoId}
-                    defaultContents={memo.contents}
-                    onEditEnd={() => {
-                        setIsInEdit(false);
-                    }}
-                />
-            ) : (
-                <div>{memo.contents}</div>
-            )}
+            <div className={style({ marginTop: "1em" })}>
+                {isInEdit ? (
+                    <MemoContentsEditor
+                        memoId={memoId}
+                        defaultContents={memo.contents}
+                        onEditEnd={() => {
+                            setIsInEdit(false);
+                        }}
+                    />
+                ) : (
+                    <div>{memo.contents}</div>
+                )}
+            </div>
         </article>
     );
 };
