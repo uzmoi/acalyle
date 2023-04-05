@@ -10,7 +10,6 @@ export const Spinner: React.FC<{
         <div
             className={cx(
                 style({
-                    display: "inline-block",
                     width: "var(--size)",
                     height: "var(--size)",
                     border: "solid calc(var(--size) * 0.125)",

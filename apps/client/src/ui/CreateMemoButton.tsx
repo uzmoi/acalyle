@@ -55,7 +55,6 @@ export const CreateMemoButton: React.FC<{
                     fallback={
                         <Spinner
                             className={style({
-                                display: "block",
                                 position: "relative",
                                 left: "50%",
                                 translate: "-50%",
