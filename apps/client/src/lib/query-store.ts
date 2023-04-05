@@ -1,15 +1,14 @@
-import { atom, onMount } from "nanostores";
+import { onMount } from "nanostores";
 import { memoizeBuilder } from "~/lib/memoize-builder";
+import { createPromiseLoaderAtom } from "~/lib/promise-loader";
 
 export const createQueryStore = <T>(fetch: (id: string) => Promise<T>) => {
     return memoizeBuilder((memoized, id: string) => {
-        const storeAtom = atom<T | null>(null);
+        const storeAtom = createPromiseLoaderAtom<T>();
 
         onMount(storeAtom, () => {
-            if (storeAtom.get() == null) {
-                void fetch(id).then(value => {
-                    storeAtom.set(value);
-                });
+            if (storeAtom.get().status === "unpending") {
+                storeAtom.pending(fetch(id));
             }
             return () => {
                 delete memoized.cache[id];

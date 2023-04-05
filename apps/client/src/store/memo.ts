@@ -84,7 +84,7 @@ export const createMemo = async (bookId: string, templateName?: string) => {
         GqlCreateMemoMutationVariables
     >(CreateMemoMutation, { bookId, templateName });
     const memo = data.createMemo;
-    memoStore(memo.id).set(memo);
+    memoStore(memo.id).resolve(memo);
     return memo;
 };
 
@@ -101,20 +101,24 @@ export const removeMemo = async (memoId: string) => {
         GqlRemoveMemoMutation,
         GqlRemoveMemoMutationVariables
     >(RemoveMemoMutation, { memoId });
-    memoStore(memoId).set(null);
+    memoStore(memoId).resolve(null);
 };
 
 const UpdateMemoContentsMutation = gql`
     mutation UpdateMemoContents($memoId: ID!, $contents: String!) {
         updateMemoContents(memoId: $memoId, contents: $contents) {
-            id
             contents
+            tags
+            createdAt
             updatedAt
         }
     }
 `;
 
-export const updateMemoContents = async (memoId: string, contents: string) => {
+export const updateMemoContents = async (
+    memoId: string,
+    contents: string,
+): Promise<void> => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { graphql } = net.get()!;
     const { data } = await graphql<
@@ -122,24 +126,20 @@ export const updateMemoContents = async (memoId: string, contents: string) => {
         GqlUpdateMemoContentsMutationVariables
     >(UpdateMemoContentsMutation, { memoId, contents });
 
-    const store = memoStore(data.updateMemoContents.id);
-    const memo = store.get();
-    if (memo) {
-        store.set({
-            ...memo,
-            contents: data.updateMemoContents.contents,
-            updatedAt: data.updateMemoContents.updatedAt,
-        });
-    }
-
-    return memo;
+    memoStore(memoId).resolve({
+        id: memoId,
+        ...data.updateMemoContents,
+    });
 };
 
 const UpsertMemoTagsMutation = gql`
     mutation UpsertMemoTags($memoId: ID!, $tags: [String!]!) {
         upsertMemoTags(memoIds: [$memoId], tags: $tags) {
             id
+            contents
             tags
+            createdAt
+            updatedAt
         }
     }
 `;
@@ -156,10 +156,6 @@ export const upsertMemoTags = async (
     >(UpsertMemoTagsMutation, { memoId, tags });
 
     for (const memo of data.upsertMemoTags) {
-        const store = memoStore(memo.id);
-        const currentMemo = store.get();
-        if (currentMemo != null) {
-            store.set({ ...currentMemo, tags: memo.tags });
-        }
+        memoStore(memo.id).resolve(memo);
     }
 };

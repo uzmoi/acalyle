@@ -3,7 +3,7 @@ import { vars } from "@acalyle/ui";
 import { globalStyle, style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { onMount } from "nanostores";
-import { StrictMode } from "react";
+import { StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { Location } from "./store/location";
 import { BookRoute, net } from ".";
@@ -79,7 +79,7 @@ const DevAppRoot: React.FC = () => {
                 backgroundColor: vars.color.bg1,
             })}
         >
-            {Router.match(BookRoute, location as never)}
+            <Suspense>{Router.match(BookRoute, location as never)}</Suspense>
         </div>
     );
 };

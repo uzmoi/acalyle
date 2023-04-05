@@ -66,6 +66,6 @@ export const createBook = async (title: string, description: string) => {
         // { "variables.thumbnail": thumbnail },
     );
     const book = data.createBook;
-    bookStore(book.id).set({ ...book, tags: [] });
+    bookStore(book.id).resolve({ ...book, tags: [] });
     return book;
 };
