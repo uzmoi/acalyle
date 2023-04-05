@@ -1,6 +1,6 @@
-import { Button, ControlGroup, Modal } from "@acalyle/ui";
+import { Button, ControlGroup, Modal, Spinner } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
-import { useCallback, useState } from "react";
+import { Suspense, useCallback, useState } from "react";
 import { BiCaretDown } from "react-icons/bi";
 import { link } from "~/pages/link";
 import { Location } from "~/store/location";
@@ -44,13 +44,30 @@ export const CreateMemoButton: React.FC<{
                     top: "calc(100% + 0.5em)",
                     right: 0,
                     overflow: "hidden",
+                    minWidth: "8em",
                     whiteSpace: "nowrap",
                     backgroundColor: "#222",
                     borderRadius: "0.25em",
                     boxShadow: "0 0 2em #111",
                 })}
             >
-                <CreateTemplateMemoButtonList bookId={bookId} />
+                <Suspense
+                    fallback={
+                        <Spinner
+                            className={style({
+                                display: "block",
+                                position: "relative",
+                                left: "50%",
+                                translate: "-50%",
+                                marginBlock: "0.5em",
+                                fontSize: "0.75em",
+                                vars: { "--size": "1.5em" },
+                            })}
+                        />
+                    }
+                >
+                    <CreateTemplateMemoButtonList bookId={bookId} />
+                </Suspense>
             </Modal>
         </div>
     );
