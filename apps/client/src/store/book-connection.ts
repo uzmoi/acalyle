@@ -1,11 +1,18 @@
 import { gql } from "graphql-tag";
+import { type WritableAtom, atom } from "nanostores";
 import {
     type GqlBookListPaginationQuery,
     type GqlBookListPaginationQueryVariables,
     GqlBookSortOrder,
     GqlSortOrder,
 } from "~/__generated__/graphql";
-import { createConnectionAtom } from "~/lib/connection";
+import {
+    type Connection,
+    type ConnectionExt,
+    createConnectionAtom,
+} from "~/lib/connection";
+import { derived } from "~/lib/derived";
+import { memoizeBuilder } from "~/lib/memoize-builder";
 import { net } from "~/store/net";
 
 const BookListPagination = gql`
@@ -48,8 +55,21 @@ export type Book = {
     tags: readonly string[];
 };
 
-export const bookConnection = createConnectionAtom<Book>(
-    async connectionAtom => {
+export const bookConnectionQuery = atom("");
+
+export const bookConnection = derived(get => {
+    const query = get(bookConnectionQuery);
+    return bookConnectionBuilder(query, query);
+}) satisfies ConnectionExt;
+
+bookConnection.loadNext = () => bookConnection.current.loadNext();
+bookConnection.refetch = () => bookConnection.current.refetch();
+
+const bookConnectionBuilder = memoizeBuilder<
+    WritableAtom<Connection<Book>> & ConnectionExt,
+    [query: string]
+>((_, _id, query) =>
+    createConnectionAtom<Book>(async connectionAtom => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const { graphql } = net.get()!;
         const { data } = await graphql<
@@ -58,10 +78,10 @@ export const bookConnection = createConnectionAtom<Book>(
         >(BookListPagination, {
             count: 32,
             cursor: connectionAtom.get().endCursor,
-            query: "",
+            query,
             orderBy: GqlBookSortOrder.LastUpdated,
             order: GqlSortOrder.Desc,
         });
         return data.books;
-    },
+    }),
 );

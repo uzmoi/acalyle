@@ -4,6 +4,7 @@ import { useStore } from "@nanostores/react";
 import { BiBookAdd } from "react-icons/bi";
 import { bookConnection } from "~/store/book-connection";
 import { BookList } from "~/ui/BookList";
+import { BookSearchBar } from "~/ui/BookSearchBar";
 import { Link } from "~/ui/Link";
 import { link } from "./link";
 
@@ -18,9 +19,15 @@ export const BookListPage: React.FC = () => {
 
     return (
         <main className={style({ padding: "2em" })}>
-            <div className={style({ display: "flex", paddingBottom: "0.5em" })}>
+            <div
+                className={style({
+                    display: "flex",
+                    alignItems: "center",
+                    paddingBottom: "0.5em",
+                })}
+            >
                 <div className={style({ flex: "1 1" })}>
-                    {/* BookSearchBar */}
+                    <BookSearchBar />
                 </div>
                 <Link to={link("new")} className={style({ marginLeft: "1em" })}>
                     <BiBookAdd className={style({ verticalAlign: "middle" })} />
