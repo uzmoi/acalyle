@@ -1,7 +1,7 @@
 export interface MemoizedBuilder<T, A extends readonly unknown[] = []> {
     (id: string, ...args: A): T;
     build(this: this, store: this, id: string, ...args: A): T;
-    cache: Record<string, T>;
+    readonly cache: Map<string, T>;
 }
 
 export const memoizeBuilder = <T, A extends readonly unknown[] | [] = []>(
@@ -13,16 +13,16 @@ export const memoizeBuilder = <T, A extends readonly unknown[] | [] = []>(
     ) => T,
 ): MemoizedBuilder<T, A> => {
     const store = (id: string, ...args: A) => {
-        if (!store.cache[id]) {
-            store.cache[id] = store.build(store, id, ...args);
+        if (!store.cache.has(id)) {
+            store.cache.set(id, store.build(store, id, ...args));
         }
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return store.cache[id]!;
+        return store.cache.get(id)!;
     };
 
     store.build = build;
 
-    store.cache = {} as Record<string, T>;
+    store.cache = new Map<string, T>();
 
     return store;
 };
