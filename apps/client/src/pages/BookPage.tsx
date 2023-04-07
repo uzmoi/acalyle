@@ -45,7 +45,7 @@ export const BookPage: React.FC<{
     }
 
     return (
-        <main className={style({ padding: "2em" })}>
+        <main className={style({ padding: "1.25em" })}>
             <h2 className={style({ paddingBottom: "0.5em" })}>
                 <Link to={link(":bookId", { bookId })}>{book.title}</Link>
             </h2>

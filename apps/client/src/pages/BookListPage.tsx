@@ -18,7 +18,7 @@ export const BookListPage: React.FC = () => {
     const { isLoading } = useStore(bookConnection);
 
     return (
-        <main className={style({ padding: "2em" })}>
+        <main className={style({ padding: "1.25em" })}>
             <div
                 className={style({
                     display: "flex",

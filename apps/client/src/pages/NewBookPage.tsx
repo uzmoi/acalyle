@@ -12,7 +12,7 @@ export const NewBookPage: React.FC = () => {
     }, []);
 
     return (
-        <main className={style({ padding: "2em" })}>
+        <main className={style({ padding: "1.25em" })}>
             <Link to={link("books")}>
                 <BiLeftArrowAlt
                     className={style({ verticalAlign: "middle" })}
