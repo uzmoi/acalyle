@@ -8,7 +8,7 @@ export const pure = <T>(value: T): PureAtom<T> => ({
     listen: () => noop,
 });
 
-type AtomGet = <T>(atom: PureAtom<T>) => T;
+type AtomGet = <T extends PureAtom>(atom: T) => StoreValue<T>;
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const derived = <T extends PureAtom, Ext = {}>(
@@ -19,18 +19,18 @@ export const derived = <T extends PureAtom, Ext = {}>(
     const subscriptions = new Map<PureAtom, () => void>();
     const run = () => {
         const nextSubscriptions = new Set<PureAtom>();
-        const get: AtomGet = store => {
+        const get = <U extends PureAtom>(store: U): StoreValue<U> => {
             if (!subscriptions.has(store)) {
                 const unbind = store.listen(run);
                 subscriptions.set(store, unbind);
             }
             nextSubscriptions.add(store);
-            return store.get();
+            return store.get() as StoreValue<U>;
         };
         const derivedStore = derive(get);
 
         derived.current = derivedStore;
-        derived.set(get(derivedStore) as StoreValue<T>);
+        derived.set(get(derivedStore));
 
         for (const [store, unbind] of subscriptions) {
             if (!nextSubscriptions.has(store)) {
