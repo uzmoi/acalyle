@@ -1,4 +1,4 @@
-import { nonNullable } from "emnorst";
+import { identify, nonNullable } from "emnorst";
 import {
     type ReadableAtom,
     type WritableAtom,
@@ -73,6 +73,22 @@ export const createConnectionAtom = <TNode extends { id: string }>(
         }),
     ) satisfies ConnectionExt;
 
+    const loadNodes = async (
+        getIds: (ids: readonly string[]) => readonly string[],
+    ) => {
+        const { edges, pageInfo } = await load(idConnectionStore);
+        const nodes = edges?.map(edge => edge?.node).filter(nonNullable) ?? [];
+        for (const node of nodes) {
+            nodeStore(node.id).resolve(node);
+        }
+        idConnectionStore.set({
+            nodeIds: getIds(nodes.map(node => node.id)),
+            hasNext: pageInfo.hasNextPage,
+            endCursor: (pageInfo.hasNextPage && pageInfo.endCursor) || null,
+            isLoading: false,
+        });
+    };
+
     connectionStore.loadNext = async () => {
         const { hasNext, isLoading } = idConnectionStore.get();
         if (!hasNext || isLoading) return;
@@ -80,20 +96,10 @@ export const createConnectionAtom = <TNode extends { id: string }>(
             ...idConnectionStore.get(),
             isLoading: true,
         });
-        const { edges, pageInfo } = await load(idConnectionStore);
-        const nodes = edges?.map(edge => edge?.node).filter(nonNullable) ?? [];
-        for (const node of nodes) {
-            nodeStore(node.id).resolve(node);
-        }
-        idConnectionStore.set({
-            nodeIds: [
-                ...idConnectionStore.get().nodeIds,
-                ...nodes.map(node => node.id),
-            ],
-            hasNext: pageInfo.hasNextPage,
-            endCursor: (pageInfo.hasNextPage && pageInfo.endCursor) || null,
-            isLoading: false,
-        });
+        await loadNodes(nodeIds => [
+            ...idConnectionStore.get().nodeIds,
+            ...nodeIds,
+        ]);
     };
 
     connectionStore.refetch = async () => {
@@ -103,17 +109,7 @@ export const createConnectionAtom = <TNode extends { id: string }>(
             endCursor: null,
             isLoading: true,
         });
-        const { edges, pageInfo } = await load(idConnectionStore);
-        const nodes = edges?.map(edge => edge?.node).filter(nonNullable) ?? [];
-        for (const node of nodes) {
-            nodeStore(node.id).resolve(node);
-        }
-        idConnectionStore.set({
-            nodeIds: nodes.map(node => node.id),
-            hasNext: pageInfo.hasNextPage,
-            endCursor: (pageInfo.hasNextPage && pageInfo.endCursor) || null,
-            isLoading: false,
-        });
+        await loadNodes(identify);
     };
 
     onStart(connectionStore, () => {
