@@ -22,8 +22,8 @@ const BookQuery = gql`
     }
 `;
 
-export const bookStore = createQueryStore<Book | null>(
-    async (bookId: string) => {
+export const bookStore = createQueryStore(
+    async (bookId: string): Promise<Book | null> => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const { graphql } = net.get()!;
         const { data } = await graphql<GqlBookQuery, GqlBookQueryVariables>(

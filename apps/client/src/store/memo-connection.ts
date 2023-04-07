@@ -1,11 +1,10 @@
 import { assert } from "emnorst";
 import { gql } from "graphql-tag";
-import type { ReadableAtom } from "nanostores";
 import type {
     GqlMemoListPaginationQuery,
     GqlMemoListPaginationQueryVariables,
 } from "~/__generated__/graphql";
-import { type Connection, createConnectionAtom } from "~/lib/connection";
+import { createConnectionAtom } from "~/lib/connection";
 import { memoizeBuilder } from "~/lib/memoize-builder";
 import { memoStore } from "~/store/memo";
 import { net } from "~/store/net";
@@ -40,21 +39,19 @@ export type Memo = {
     updatedAt: string;
 };
 
-export const memoConnection = memoizeBuilder<ReadableAtom<Connection<Memo>>>(
-    (_, bookId: string) => {
-        return createConnectionAtom(memoStore, async connectionAtom => {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            const { graphql } = net.get()!;
-            const { data } = await graphql<
-                GqlMemoListPaginationQuery,
-                GqlMemoListPaginationQueryVariables
-            >(MemoListPagination, {
-                bookId,
-                count: 32,
-                cursor: connectionAtom.get().endCursor,
-            });
-            assert.nonNullable(data.book);
-            return data.book.memos;
+export const memoConnection = memoizeBuilder((_, bookId: string) =>
+    createConnectionAtom(memoStore, async connectionAtom => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const { graphql } = net.get()!;
+        const { data } = await graphql<
+            GqlMemoListPaginationQuery,
+            GqlMemoListPaginationQueryVariables
+        >(MemoListPagination, {
+            bookId,
+            count: 32,
+            cursor: connectionAtom.get().endCursor,
         });
-    },
+        assert.nonNullable(data.book);
+        return data.book.memos;
+    }),
 );

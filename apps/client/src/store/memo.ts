@@ -32,8 +32,8 @@ const MemoQuery = gql`
     }
 `;
 
-export const memoStore = createQueryStore<Memo | null>(
-    async (memoId: string) => {
+export const memoStore = createQueryStore(
+    async (memoId: string): Promise<Memo | null> => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const { graphql } = net.get()!;
         const { data } = await graphql<GqlMemoQuery, GqlMemoQueryVariables>(
@@ -52,9 +52,7 @@ const MemoTemplateQuery = gql`
     }
 `;
 
-export const memoTemplateStore = createQueryStore<
-    readonly string[] | undefined
->(async (bookId: string) => {
+export const memoTemplateStore = createQueryStore(async (bookId: string) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { graphql } = net.get()!;
     const { data } = await graphql<
