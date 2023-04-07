@@ -9,24 +9,30 @@ describe("createConnectionAtom", () => {
     } satisfies GqlConnection<{ id: string }>;
     test("initial state", () => {
         const load = vi.fn().mockResolvedValue(emptyConnection);
-        const connection = createConnectionAtom(load);
-        expect(connection.get()).toEqual({
-            endCursor: null,
-            hasNext: true,
-            isLoading: true,
-            nodes: [],
-        });
+        const nodeStore = vi.fn();
+        const connection = createConnectionAtom(nodeStore, load);
+        expect(connection.get()).toEqual(
+            expect.objectContaining({
+                endCursor: null,
+                hasNext: true,
+                isLoading: true,
+                nodes: [],
+            }),
+        );
     });
     test("mount", async () => {
         const load = vi.fn().mockResolvedValue(emptyConnection);
-        const connection = createConnectionAtom(load);
+        const nodeStore = vi.fn();
+        const connection = createConnectionAtom(nodeStore, load);
         connection.subscribe(noop);
         await setImmediate();
-        expect(connection.get()).toEqual({
-            endCursor: null,
-            hasNext: false,
-            isLoading: false,
-            nodes: [],
-        });
+        expect(connection.get()).toEqual(
+            expect.objectContaining({
+                endCursor: null,
+                hasNext: false,
+                isLoading: false,
+                nodes: [],
+            }),
+        );
     });
 });

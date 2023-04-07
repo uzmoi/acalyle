@@ -1,5 +1,5 @@
 import { gql } from "graphql-tag";
-import { type WritableAtom, atom } from "nanostores";
+import { type ReadableAtom, atom } from "nanostores";
 import {
     type GqlBookListPaginationQuery,
     type GqlBookListPaginationQueryVariables,
@@ -13,6 +13,7 @@ import {
 } from "~/lib/connection";
 import { derived } from "~/lib/derived";
 import { memoizeBuilder } from "~/lib/memoize-builder";
+import { bookStore } from "~/store/book";
 import { net } from "~/store/net";
 
 const BookListPagination = gql`
@@ -66,10 +67,10 @@ bookConnection.loadNext = () => bookConnection.current.loadNext();
 bookConnection.refetch = () => bookConnection.current.refetch();
 
 const bookConnectionBuilder = memoizeBuilder<
-    WritableAtom<Connection<Book>> & ConnectionExt,
+    ReadableAtom<Connection<Book>> & ConnectionExt,
     [query: string]
 >((_, _id, query) =>
-    createConnectionAtom<Book>(async connectionAtom => {
+    createConnectionAtom(bookStore, async connectionAtom => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const { graphql } = net.get()!;
         const { data } = await graphql<
