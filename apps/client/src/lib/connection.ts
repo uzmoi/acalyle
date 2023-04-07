@@ -19,7 +19,6 @@ export type IdConnection = {
     nodeIds: readonly string[];
     hasNext: boolean;
     endCursor: string | null;
-    isLoading: boolean;
 };
 
 export type Connection<TNode extends { id: string }> = {
@@ -44,8 +43,8 @@ export const createConnectionAtom = <TNode extends { id: string }>(
         nodeIds: [],
         hasNext: true,
         endCursor: null,
-        isLoading: false,
     });
+    const isLoading = atom(false);
 
     const nodesStore = derived(get => {
         const nodeLoaders = get(idConnectionStore).nodeIds.map(id =>
@@ -70,12 +69,14 @@ export const createConnectionAtom = <TNode extends { id: string }>(
         pure({
             ...get(idConnectionStore),
             nodes: get(nodesStore),
+            isLoading: get(isLoading),
         }),
     ) satisfies ConnectionExt;
 
     const loadNodes = async (
         getIds: (ids: readonly string[]) => readonly string[],
     ) => {
+        isLoading.set(true);
         const { edges, pageInfo } = await load(idConnectionStore);
         const nodes = edges?.map(edge => edge?.node).filter(nonNullable) ?? [];
         for (const node of nodes) {
@@ -85,17 +86,13 @@ export const createConnectionAtom = <TNode extends { id: string }>(
             nodeIds: getIds(nodes.map(node => node.id)),
             hasNext: pageInfo.hasNextPage,
             endCursor: (pageInfo.hasNextPage && pageInfo.endCursor) || null,
-            isLoading: false,
         });
+        isLoading.set(false);
     };
 
     connectionStore.loadNext = async () => {
-        const { hasNext, isLoading } = idConnectionStore.get();
-        if (!hasNext || isLoading) return;
-        idConnectionStore.set({
-            ...idConnectionStore.get(),
-            isLoading: true,
-        });
+        const { hasNext } = idConnectionStore.get();
+        if (!hasNext || isLoading.get()) return;
         await loadNodes(nodeIds => [
             ...idConnectionStore.get().nodeIds,
             ...nodeIds,
@@ -107,7 +104,6 @@ export const createConnectionAtom = <TNode extends { id: string }>(
             nodeIds: [],
             hasNext: true,
             endCursor: null,
-            isLoading: true,
         });
         await loadNodes(identify);
     };
