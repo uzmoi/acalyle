@@ -37,7 +37,11 @@ export const BookOverview: React.FC<{
                         textOverflow: "ellipsis",
                     })}
                 >
-                    <Link to={link(":bookId", { bookId: book.id })}>
+                    <Link
+                        to={link(":bookId", {
+                            bookId: book.handle ? `@${book.handle}` : book.id,
+                        })}
+                    >
                         {book.title}
                     </Link>
                 </p>

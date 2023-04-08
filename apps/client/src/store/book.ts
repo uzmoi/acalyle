@@ -50,6 +50,9 @@ export const bookStore = createQueryStore(
 
 export const bookHandleStore = createQueryStore(
     async (handle: string): Promise<string | null> => {
+        if (handle === "") {
+            return null;
+        }
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const { graphql } = net.get()!;
         const { data } = await graphql<GqlBookQuery, GqlBookQueryVariables>(
@@ -111,11 +114,11 @@ export const createBook = async (title: string, description: string) => {
         { title, description, thumbnail: null },
         // { "variables.thumbnail": thumbnail },
     );
-    const book = data.createBook;
-    bookStore(book.id).resolve({
-        ...book,
-        handle: book.handle ?? null,
+    const book: Book = {
+        ...data.createBook,
+        handle: data.createBook.handle ?? null,
         tags: [],
-    });
+    };
+    bookStore(book.id).resolve(book);
     return book;
 };

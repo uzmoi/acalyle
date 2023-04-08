@@ -3,7 +3,7 @@ import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { Suspense } from "react";
 import { usePromiseLoader } from "~/lib/promise-loader";
-import { bookStore } from "~/store/book";
+import { bookHandleStore, bookStore, handleBookStore } from "~/store/book";
 import { CreateMemoButton } from "~/ui/CreateMemoButton";
 import { Link } from "~/ui/Link";
 import { Memo } from "~/ui/Memo";
@@ -38,7 +38,19 @@ export const BookPage: React.FC<{
     bookId: string;
     path: readonly string[];
 }> = ({ bookId, path }) => {
-    const book = usePromiseLoader(useStore(bookStore(bookId)));
+    const actualBookId =
+        usePromiseLoader(
+            useStore(
+                bookHandleStore(bookId.startsWith("@") ? bookId.slice(1) : ""),
+            ),
+        ) ?? bookId;
+    const book = usePromiseLoader(
+        useStore(
+            bookId.startsWith("@")
+                ? handleBookStore(bookId.slice(1))
+                : bookStore(bookId),
+        ),
+    );
 
     if (book == null) {
         return null;
@@ -49,7 +61,9 @@ export const BookPage: React.FC<{
             <h2 className={style({ paddingBottom: "0.5em" })}>
                 <Link to={link(":bookId", { bookId })}>{book.title}</Link>
             </h2>
-            <Suspense>{BookPageRoute.get(path, { bookId })}</Suspense>
+            <Suspense>
+                {BookPageRoute.get(path, { bookId: actualBookId })}
+            </Suspense>
         </main>
     );
 };
