@@ -1,5 +1,5 @@
 import { gql } from "graphql-tag";
-import { atom } from "nanostores";
+import { type WritableAtom, atom, onNotify } from "nanostores";
 import {
     type GqlBookListPaginationQuery,
     type GqlBookListPaginationQueryVariables,
@@ -7,6 +7,7 @@ import {
     GqlSortOrder,
 } from "~/__generated__/graphql";
 import { type ConnectionExt, createConnectionAtom } from "~/lib/connection";
+import { debounce } from "~/lib/debounce";
 import { derived } from "~/lib/derived";
 import { memoizeBuilder } from "~/lib/memoize-builder";
 import { bookStore } from "~/store/book";
@@ -54,8 +55,17 @@ export type Book = {
 
 export const bookConnectionQuery = atom("");
 
+const debouncedBookConnectionQuery = derived(
+    () => bookConnectionQuery,
+) satisfies Pick<WritableAtom, "notify">;
+const debouncedNotify = debounce(debouncedBookConnectionQuery.notify);
+onNotify(debouncedBookConnectionQuery, ({ abort }) => {
+    debouncedNotify();
+    abort();
+});
+
 export const bookConnection = derived(get => {
-    const query = get(bookConnectionQuery);
+    const query = get(debouncedBookConnectionQuery);
     return bookConnectionBuilder(query);
 }) satisfies ConnectionExt;
 
