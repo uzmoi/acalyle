@@ -47,6 +47,7 @@ export const Book = objectType({
     sourceType: { module: "@prisma/client", export: "Book" },
     definition(t) {
         t.implements("Node");
+        t.nullable.string("handle");
         t.string("title");
         t.string("description");
         t.string("thumbnail", {

@@ -31,6 +31,7 @@ const BookListPagination = gql`
             edges {
                 node {
                     id
+                    handle
                     title
                     description
                     thumbnail
@@ -47,6 +48,7 @@ const BookListPagination = gql`
 
 export type Book = {
     id: string;
+    handle: string | null;
     title: string;
     description: string;
     thumbnail: string;
@@ -73,19 +75,23 @@ bookConnection.loadNext = () => bookConnection.current.loadNext();
 bookConnection.refetch = () => bookConnection.current.refetch();
 
 const bookConnectionBuilder = memoizeBuilder((_id, query: string) =>
-    createConnectionAtom(bookStore, async connectionAtom => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const { graphql } = net.get()!;
-        const { data } = await graphql<
-            GqlBookListPaginationQuery,
-            GqlBookListPaginationQueryVariables
-        >(BookListPagination, {
-            count: 32,
-            cursor: connectionAtom.get().endCursor,
-            query,
-            orderBy: GqlBookSortOrder.LastUpdated,
-            order: GqlSortOrder.Desc,
-        });
-        return data.books;
-    }),
+    createConnectionAtom(
+        bookStore,
+        async connectionAtom => {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            const { graphql } = net.get()!;
+            const { data } = await graphql<
+                GqlBookListPaginationQuery,
+                GqlBookListPaginationQueryVariables
+            >(BookListPagination, {
+                count: 32,
+                cursor: connectionAtom.get().endCursor,
+                query,
+                orderBy: GqlBookSortOrder.LastUpdated,
+                order: GqlSortOrder.Desc,
+            });
+            return data.books;
+        },
+        book => ({ ...book, handle: book.handle ?? null }),
+    ),
 );

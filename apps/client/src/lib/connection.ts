@@ -21,7 +21,7 @@ export type IdConnection = {
     endCursor: string | null;
 };
 
-export type Connection<TNode extends { id: string }> = {
+export type Connection<TNode> = {
     nodes: readonly TNode[];
     hasNext: boolean;
     endCursor: string | null;
@@ -33,12 +33,13 @@ export type ConnectionExt = {
     refetch: () => Promise<void>;
 };
 
-export const createConnectionAtom = <TNode extends { id: string }>(
+export const createConnectionAtom = <GqlNode extends { id: string }, StoreNode>(
     nodeStore: (
         id: string,
-    ) => ReadableAtom<PromiseLoaderW<TNode | null>> & PromiseLoaderExt,
-    load: (atom: WritableAtom<IdConnection>) => Promise<GqlConnection<TNode>>,
-): ReadableAtom<Connection<TNode>> & ConnectionExt => {
+    ) => ReadableAtom<PromiseLoaderW<StoreNode>> & PromiseLoaderExt,
+    load: (atom: WritableAtom<IdConnection>) => Promise<GqlConnection<GqlNode>>,
+    normalize: (node: GqlNode) => StoreNode,
+): ReadableAtom<Connection<NonNullable<StoreNode>>> & ConnectionExt => {
     const idConnectionStore = atom<IdConnection>({
         nodeIds: [],
         hasNext: true,
@@ -52,15 +53,13 @@ export const createConnectionAtom = <TNode extends { id: string }>(
         );
         if (
             !nodeLoaders.every(
-                (
-                    loader,
-                ): loader is { status: "fulfilled"; value: TNode | null } =>
+                (loader): loader is { status: "fulfilled"; value: StoreNode } =>
                     loader.status === "fulfilled",
             )
         ) {
-            return pure<TNode[]>([]);
+            return pure<NonNullable<StoreNode>[]>([]);
         }
-        return pure<TNode[]>(
+        return pure<NonNullable<StoreNode>[]>(
             nodeLoaders.map(loader => loader.value).filter(nonNullable),
         );
     });
@@ -80,7 +79,9 @@ export const createConnectionAtom = <TNode extends { id: string }>(
         const { edges, pageInfo } = await load(idConnectionStore);
         const nodes = edges?.map(edge => edge?.node).filter(nonNullable) ?? [];
         for (const node of nodes) {
-            nodeStore(node.id).resolve(node);
+            nodeStore(node.id).resolve(
+                normalize ? normalize(node) : (node as StoreNode),
+            );
         }
         idConnectionStore.set({
             nodeIds: getIds(nodes.map(node => node.id)),

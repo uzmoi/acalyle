@@ -13,6 +13,7 @@ const BookQuery = gql`
     query Book($bookId: ID!) {
         book(id: $bookId) {
             id
+            handle
             title
             description
             thumbnail
@@ -30,7 +31,9 @@ export const bookStore = createQueryStore(
             BookQuery,
             { bookId },
         );
-        return data.book ?? null;
+        return data.book
+            ? { ...data.book, handle: data.book.handle ?? null }
+            : null;
     },
 );
 
@@ -46,6 +49,7 @@ const CreateBookMutation = gql`
             thumbnail: $thumbnail
         ) {
             id
+            handle
             title
             description
             thumbnail
@@ -66,6 +70,10 @@ export const createBook = async (title: string, description: string) => {
         // { "variables.thumbnail": thumbnail },
     );
     const book = data.createBook;
-    bookStore(book.id).resolve({ ...book, tags: [] });
+    bookStore(book.id).resolve({
+        ...book,
+        handle: book.handle ?? null,
+        tags: [],
+    });
     return book;
 };
