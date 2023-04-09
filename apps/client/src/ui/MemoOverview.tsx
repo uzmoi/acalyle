@@ -12,11 +12,21 @@ export const MemoOverview: React.FC<{
     return (
         <article
             id={memo.id}
-            className={style({ backgroundColor: vars.color.bg3 })}
+            className={style({
+                backgroundColor: vars.color.bg3,
+                padding: "0.25em 0.75em",
+            })}
         >
             <div>
                 <Link to={link(":bookId/:memoId", { bookId, memoId: memo.id })}>
-                    {memo.contents}
+                    <div
+                        className={style({
+                            whiteSpace: "pre-wrap",
+                            wordBreak: "break-all",
+                        })}
+                    >
+                        {memo.contents}
+                    </div>
                 </Link>
             </div>
             <TagList tags={memo.tags} />

@@ -78,7 +78,14 @@ export const Memo: React.FC<{
                         }}
                     />
                 ) : (
-                    <div>{memo.contents}</div>
+                    <div
+                        className={style({
+                            whiteSpace: "pre-wrap",
+                            wordBreak: "break-all",
+                        })}
+                    >
+                        {memo.contents}
+                    </div>
                 )}
             </div>
         </article>
