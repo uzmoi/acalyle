@@ -20,8 +20,15 @@ jobs:
       - run: npm ci
       - run: npm run coverage
 
+      - id: coverage_files
+        run: |
+          flags=$(ls {apps,packages}/*/coverage -d | cut -d'/' -f2 | paste -sd ",")
+          echo "flags=$flags" >> $GITHUB_OUTPUT
+          files=$(ls {apps,packages}/*/coverage -dp | sed 's/$/coverage-final.json/' | paste -sd ",")
+          echo "files=$files" >> $GITHUB_OUTPUT
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
-          flags: ${{ ls {apps,packages}/*/coverage -d | cut -d'/' -f2 | paste -sd "," }}
-          files: ${{ ls {apps,packages}/*/coverage -dp | sed 's/$/coverage-final.json/' | paste -sd "," }}
+          flags: ${{ steps.coverage_files.outputs.flags }}
+          files: ${{ steps.coverage_files.outputs.files }}
