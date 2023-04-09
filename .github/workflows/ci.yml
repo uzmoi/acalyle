@@ -23,4 +23,5 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
-          directory: ./coverage/
+          flags: ${{ ls {apps,packages}/*/coverage -d | cut -d'/' -f2 | paste -sd "," }}
+          files: ${{ ls {apps,packages}/*/coverage -dp | sed 's/$/coverage-final.json/' | paste -sd "," }}
