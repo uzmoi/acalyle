@@ -28,6 +28,7 @@ export const graphQLSchema = makeSchema({
         }),
     ],
     nonNullDefaults: { output: true },
+    shouldExitAfterGenerateArtifacts: !!process.env.CODEGEN,
     outputs: {
         schema: path.join(__dirname, "../../data/schema.graphql"),
         typegen: path.join(
