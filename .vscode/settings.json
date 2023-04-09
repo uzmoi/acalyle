@@ -11,6 +11,12 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "editor.formatOnSave": true,
     },
+    "[rust]": {
+        "editor.formatOnSave": true,
+    },
+    "rust-analyzer.linkedProjects": [
+        "apps/tauri/src-tauri/Cargo.toml"
+    ],
     "editor.codeActionsOnSave": {
         "source.fixAll": true,
     },
