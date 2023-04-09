@@ -10,6 +10,7 @@
     "build": "vite build",
     "check": "tsc",
     "test": "vitest",
+    "coverage": "vitest run --coverage",
     "codegen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
