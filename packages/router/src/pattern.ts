@@ -9,7 +9,7 @@ const parsePatternPart = (part: string): PatternPart => {
     const match = /^:(\w*)([+*?]?)/.exec(part);
     return match == null
         ? part
-        : { key: match[1], mark: match[2] as Mark | "" };
+        : { key: match[1] as string, mark: match[2] as Mark | "" };
 };
 
 export interface Pattern {
