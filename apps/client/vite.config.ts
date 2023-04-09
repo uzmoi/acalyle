@@ -1,6 +1,7 @@
 import { macaronVitePlugin } from "@macaron-css/vite";
 import react from "@vitejs/plugin-react";
 import dts from "vite-plugin-dts";
+import graphqlCodegen from "vite-plugin-graphql-codegen";
 import restart from "vite-plugin-restart";
 import { defineConfig } from "vitest/config";
 import { dependencies } from "./package.json";
@@ -16,6 +17,9 @@ export default defineConfig({
         dts({
             exclude: "**/*.css.ts",
             insertTypesEntry: true,
+        }),
+        graphqlCodegen({
+            configFilePathOverride: `${process.cwd()}/codegen.ts`,
         }),
         restart({
             restart: [
