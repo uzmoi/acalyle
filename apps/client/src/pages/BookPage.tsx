@@ -3,7 +3,7 @@ import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { Suspense } from "react";
 import { usePromiseLoader } from "~/lib/promise-loader";
-import { bookHandleStore, bookStore, handleBookStore } from "~/store/book";
+import { bookStore, handleBookStore } from "~/store/book";
 import { CreateMemoButton } from "~/ui/CreateMemoButton";
 import { Link } from "~/ui/Link";
 import { Memo } from "~/ui/Memo";
@@ -18,37 +18,31 @@ export type BookPageRoute = Router.Routes<{
 }>;
 
 const BookPageRoute = Router.routes<BookPageRoute, JSX.Element | null>({
-    "": Router.page(({ bookId }) => (
+    "": Router.page(({ bookId: bookHandle }) => (
         <div>
             <div>
-                <CreateMemoButton bookId={bookId} />
+                <CreateMemoButton bookHandle={bookHandle} />
                 {/* <MemoImportButton /> */}
             </div>
-            <MemoList bookId={bookId} />
+            <MemoList bookHandle={bookHandle} />
         </div>
     )),
     resources: Router.page(() => null),
     settings: Router.page(() => null),
-    ":memoId": Router.page(({ bookId, memoId }) => (
-        <Memo bookId={bookId} memoId={memoId} />
+    ":memoId": Router.page(({ bookId: bookHandle, memoId }) => (
+        <Memo bookHandle={bookHandle} memoId={memoId} />
     )),
 });
 
 export const BookPage: React.FC<{
-    bookId: string;
+    bookHandle: string;
     path: readonly string[];
-}> = ({ bookId, path }) => {
-    const actualBookId =
-        usePromiseLoader(
-            useStore(
-                bookHandleStore(bookId.startsWith("@") ? bookId.slice(1) : ""),
-            ),
-        ) ?? bookId;
+}> = ({ bookHandle, path }) => {
     const book = usePromiseLoader(
         useStore(
-            bookId.startsWith("@")
-                ? handleBookStore(bookId.slice(1))
-                : bookStore(bookId),
+            bookHandle.startsWith("@")
+                ? handleBookStore(bookHandle.slice(1))
+                : bookStore(bookHandle),
         ),
     );
 
@@ -59,10 +53,12 @@ export const BookPage: React.FC<{
     return (
         <main className={style({ padding: "1.25em" })}>
             <h2 className={style({ paddingBottom: "0.5em" })}>
-                <Link to={link(":bookId", { bookId })}>{book.title}</Link>
+                <Link to={link(":bookId", { bookId: bookHandle })}>
+                    {book.title}
+                </Link>
             </h2>
             <Suspense>
-                {BookPageRoute.get(path, { bookId: actualBookId })}
+                {BookPageRoute.get(path, { bookId: bookHandle })}
             </Suspense>
         </main>
     );

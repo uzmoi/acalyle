@@ -13,6 +13,6 @@ export const BookRoute = Router.routes<BookRoute, JSX.Element>({
     books: Router.page(() => <BookListPage />),
     new: Router.page(() => <NewBookPage />),
     ":bookId": Router.child((path, params) => (
-        <BookPage bookId={params.bookId} path={path} />
+        <BookPage bookHandle={params.bookId} path={path} />
     )),
 });

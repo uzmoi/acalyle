@@ -5,10 +5,10 @@ import { upsertMemoTags } from "~/store/memo";
 import { TagComplementList } from "./TagComplementList";
 
 export const AddTagForm: React.FC<{
-    bookId: string;
+    bookHandle: string;
     memoId: string;
     onCompleted?: () => void;
-}> = ({ bookId, memoId, onCompleted }) => {
+}> = ({ bookHandle, memoId, onCompleted }) => {
     const [tagString, setTagString] = useState("");
     const [caretIndex, setCaretIndex] = useState(0);
     const [selectedIndex, setSelectedIndex] = useState(0);
@@ -80,7 +80,7 @@ export const AddTagForm: React.FC<{
             />
             <TagComplementList
                 ref={complementTagRef}
-                bookId={bookId}
+                bookHandle={bookHandle}
                 input={tagString.slice(0, caretIndex)}
                 selectedIndex={selectedIndex}
                 onComplement={onComplement}
