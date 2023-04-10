@@ -7,9 +7,10 @@
   "main": "dist/main.js",
   "scripts": {
     "build": "node build.js",
-    "dev": "node build.js -- --dev",
+    "dev": "node build.js -- --dev --watch",
     "check": "tsc",
-    "test": "echo \"Error: no test specified\""
+    "test": "echo \"Error: no test specified\"",
+    "schemagen": "npm run build -w main -- --dev && cd ../ && CODEGEN=1 node ./main/dist/serve.js"
   },
   "dependencies": {
     "@acalyle/core": "*",

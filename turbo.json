@@ -1,15 +1,29 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
+    "codegen": {},
     "build": {
-      "dependsOn": ["^build", "check"],
+      "dependsOn": ["^build", "codegen", "check"],
       "outputs": ["dist/**"]
     },
     "dev": {
+      "dependsOn": ["^build", "codegen"],
       "cache": false,
       "persistent": true
     },
-    "check": {},
-    "lint": {}
+    "check": {
+      "dependsOn": ["^build", "codegen"]
+    },
+    "lint": {
+      "dependsOn": ["^build", "codegen"]
+    },
+    "test": {
+      "dependsOn": ["^build", "codegen"],
+      "persistent": true
+    },
+    "coverage": {
+      "dependsOn": ["^build", "codegen"],
+      "outputs": ["coverage/**"]
+    }
   }
 }

@@ -76,12 +76,14 @@ const createTheme = <T extends ThemeSourceMap>(
 ): Record<`--${string}`, string> => {
     const themeStyle: Record<`--${string}`, string> = {};
     for (const valueTypeName of Object.keys(themeSourceMap)) {
-        for (const valueName of valueNames(themeSourceMap[valueTypeName])) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        for (const valueName of valueNames(themeSourceMap[valueTypeName]!)) {
             const cssVarName =
                 `--${prefix}-${valueTypeName}-${valueName}` as const;
             const cssVarValue = String(
                 themeSource[valueTypeName as never]?.[valueName] ??
-                    themeSourceMap[valueTypeName as keyof T][
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    themeSourceMap[valueTypeName as keyof T]![
                         valueName as keyof ValueOf<T>
                     ],
             );
