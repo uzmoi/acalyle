@@ -2,6 +2,7 @@ import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { useMemo, useState } from "react";
 import { BiClipboard, BiEditAlt, BiTrash } from "react-icons/bi";
+import { usePromiseLoader } from "~/lib/promise-loader";
 import { memoStore, removeMemo } from "~/store/memo";
 import { AddTagButton } from "~/ui/AddTagButton";
 import { MemoContentsEditor } from "~/ui/MemoContentsEditor";
@@ -13,7 +14,7 @@ export const Memo: React.FC<{
     bookId: string;
     memoId: string;
 }> = ({ bookId, memoId }) => {
-    const memo = useStore(memoStore(memoId));
+    const memo = usePromiseLoader(useStore(memoStore(memoId)));
 
     const [isInEdit, setIsInEdit] = useState(false);
 
@@ -77,7 +78,14 @@ export const Memo: React.FC<{
                         }}
                     />
                 ) : (
-                    <div>{memo.contents}</div>
+                    <div
+                        className={style({
+                            whiteSpace: "pre-wrap",
+                            wordBreak: "break-all",
+                        })}
+                    >
+                        {memo.contents}
+                    </div>
                 )}
             </div>
         </article>

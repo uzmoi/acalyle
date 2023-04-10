@@ -3,12 +3,13 @@ import { vars } from "@acalyle/ui";
 import { globalStyle, style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { onMount } from "nanostores";
-import { StrictMode } from "react";
+import { StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { Location } from "./store/location";
 import { BookRoute, net } from ".";
 
 net.set({
+    get: path => new URL(path, "http://localhost:4323/").href,
     async graphql(docNode, variables, options) {
         const formData = new FormData();
         const operations = JSON.stringify({
@@ -49,9 +50,6 @@ onMount(Location, () => {
 
 globalStyle("*, *::before, *::after", {
     boxSizing: "border-box",
-});
-
-globalStyle("body, h1, h2, h3, h4, h5, h6, p, ul, ol, dl, dd", {
     margin: 0,
 });
 
@@ -81,7 +79,7 @@ const DevAppRoot: React.FC = () => {
                 backgroundColor: vars.color.bg1,
             })}
         >
-            {Router.match(BookRoute, location as never)}
+            <Suspense>{Router.match(BookRoute, location as never)}</Suspense>
         </div>
     );
 };

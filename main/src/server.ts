@@ -1,5 +1,7 @@
 import { graphql } from "graphql";
+import * as fs from "node:fs/promises";
 import { createServer } from "node:http";
+import * as path from "node:path";
 import { getBoundary, parse } from "parse-multipart-data";
 import { graphQLSchema } from "./gql-schema";
 import type { Context } from "./gql-schema/context";
@@ -28,6 +30,38 @@ export const listen = (context: Context) => {
             body.push(chunk);
         });
         req.on("end", () => {
+            if (req.method === "GET") {
+                const url = new URL(
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    req.url!.split("/").filter(Boolean).join("/"),
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    `http://${req.headers.host!}`,
+                );
+                console.log("server:get", req.url);
+                const [, bookId = "", resourcePath = ""] = url.pathname.split(
+                    "/",
+                    3,
+                );
+                const resourceFilePath = path.join(
+                    context.bookDataPath,
+                    bookId,
+                    resourcePath,
+                );
+                void fs
+                    .open(resourceFilePath)
+                    .then(fileHandle => {
+                        res.writeHead(200, {
+                            "Access-Control-Allow-Origin": "*",
+                        });
+                        fileHandle.createReadStream().pipe(res);
+                    })
+                    .catch(err => {
+                        res.writeHead(500);
+                        res.end(String(err));
+                        console.error(String(err));
+                    });
+                return;
+            }
             const boundary = getBoundary(req.headers["content-type"] ?? "");
             const parts = parse(Buffer.concat(body), boundary);
             const operations =
@@ -44,8 +78,7 @@ export const listen = (context: Context) => {
                 void gql(context, operations, buffers)
                     .then(result => {
                         res.writeHead(200, {
-                            "Access-Control-Allow-Origin":
-                                "http://localhost:5173",
+                            "Access-Control-Allow-Origin": "*",
                         });
                         res.end(JSON.stringify(result));
                     })

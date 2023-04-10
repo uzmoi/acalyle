@@ -1,21 +1,18 @@
 import { Button, Form, TextInput } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useCallback, useId, useState } from "react";
-
-export type CreateBookArgs = {
-    title: string;
-    description: string;
-};
+import type { GqlCreateBookMutation } from "~/__generated__/graphql";
+import { createBook } from "~/store/book";
 
 export const CreateBookForm: React.FC<{
-    onCreateBook: (args: CreateBookArgs) => void;
-}> = ({ onCreateBook }) => {
+    onCreatedBook: (args: GqlCreateBookMutation["createBook"]) => void;
+}> = ({ onCreatedBook }) => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
 
     const onSubmit = useCallback(() => {
-        onCreateBook({ title, description });
-    }, [onCreateBook, title, description]);
+        void createBook(title, description).then(onCreatedBook);
+    }, [onCreatedBook, title, description]);
 
     const htmlId = useId();
     const titleId = `${htmlId}-title`;

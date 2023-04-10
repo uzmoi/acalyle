@@ -7,16 +7,9 @@ const bookThumbnailFileName = "thumbnail.png";
 export const getBookThumbnailPath = (bookDataPath: string, bookId: string) =>
     path.join(bookDataPath, bookId, bookThumbnailFileName);
 
-export const resolveBookThumbnail = (
-    thumbnail: string,
-    bookDataPath: string,
-    bookId: string,
-) => {
+export const resolveBookThumbnail = (thumbnail: string, bookId: string) => {
     if (thumbnail === "#image") {
-        const thumbnailPath = getBookThumbnailPath(bookDataPath, bookId);
-        return process.env.NODE_ENV === "development"
-            ? `@fs${thumbnailPath}`
-            : `file://${thumbnailPath}`;
+        return path.join(bookId, bookThumbnailFileName);
     } else {
         return thumbnail;
     }

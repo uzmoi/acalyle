@@ -4,6 +4,7 @@ import { useStore } from "@nanostores/react";
 import { modulo } from "emnorst";
 import { forwardRef, useCallback, useImperativeHandle } from "react";
 import { complementTagSymbol } from "~/lib/complement-tag";
+import { usePromiseLoader } from "~/lib/promise-loader";
 import { bookStore } from "~/store/book";
 
 export const TagComplementList: React.FC<{
@@ -13,7 +14,7 @@ export const TagComplementList: React.FC<{
     selectedIndex: number;
     onComplement?: (tag: string) => void;
 }> = forwardRef(({ bookId, input, selectedIndex, onComplement }, ref) => {
-    const book = useStore(bookStore(bookId));
+    const book = usePromiseLoader(useStore(bookStore(bookId)));
 
     const symbols = complementTagSymbol(book?.tags ?? [], input);
 

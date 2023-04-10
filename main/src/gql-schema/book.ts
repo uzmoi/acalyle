@@ -50,12 +50,8 @@ export const Book = objectType({
         t.string("title");
         t.string("description");
         t.string("thumbnail", {
-            resolve(book, _, { bookDataPath }) {
-                return resolveBookThumbnail(
-                    book.thumbnail,
-                    bookDataPath,
-                    book.id,
-                );
+            resolve(book) {
+                return resolveBookThumbnail(book.thumbnail, book.id);
             },
         });
         t.dateTime("createdAt");
