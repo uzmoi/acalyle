@@ -5,21 +5,14 @@ import { assert } from "emnorst";
 import { useCallback } from "react";
 import { link } from "~/pages/link";
 import { usePromiseLoader } from "~/lib/promise-loader";
-import { bookHandleStore } from "~/store/book";
+import { useBookId } from "~/store/hook";
 import { Location } from "~/store/location";
 import { createMemo, memoTemplateStore } from "~/store/memo";
 
 export const CreateTemplateMemoButtonList: React.FC<{
     bookHandle: string;
 }> = ({ bookHandle }) => {
-    const bookId =
-        usePromiseLoader(
-            useStore(
-                bookHandleStore(
-                    bookHandle.startsWith("@") ? bookHandle.slice(1) : "",
-                ),
-            ),
-        ) ?? bookHandle;
+    const bookId = useBookId(bookHandle);
     const templateNames =
         usePromiseLoader(useStore(memoTemplateStore(bookId))) ?? [];
 

@@ -3,7 +3,7 @@ import { style } from "@macaron-css/core";
 import { Suspense, useCallback, useState } from "react";
 import { BiCaretDown } from "react-icons/bi";
 import { link } from "~/pages/link";
-import { bookHandleStore } from "~/store/book";
+import { useBookId } from "~/store/hook";
 import { Location } from "~/store/location";
 import { createMemo } from "~/store/memo";
 import { CreateTemplateMemoButtonList } from "./CreateTemplateMemoButtonList";
@@ -12,16 +12,9 @@ export const CreateMemoButton: React.FC<{
     bookHandle: string;
 }> = ({ bookHandle }) => {
     const [isOpenTemplatePopup, setIsOpenTemplatePopup] = useState(false);
+    const bookId = useBookId(bookHandle);
 
     const createMemoNoTemplate = useCallback(() => {
-        const bookId = bookHandle.startsWith("@")
-            ? (
-                  bookHandleStore(bookHandle.slice(1)).get() as {
-                      status: "fulfilled";
-                      value: string;
-                  }
-              ).value
-            : bookHandle;
         void createMemo(bookId).then(memo => {
             Location.set(
                 link(":bookId/:memoId", {
@@ -30,7 +23,7 @@ export const CreateMemoButton: React.FC<{
                 }),
             );
         });
-    }, [bookHandle]);
+    }, [bookHandle, bookId]);
 
     return (
         <div

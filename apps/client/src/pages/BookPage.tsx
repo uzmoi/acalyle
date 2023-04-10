@@ -1,9 +1,7 @@
 import * as Router from "@acalyle/router";
 import { style } from "@macaron-css/core";
-import { useStore } from "@nanostores/react";
 import { Suspense } from "react";
-import { usePromiseLoader } from "~/lib/promise-loader";
-import { bookStore, handleBookStore } from "~/store/book";
+import { useBook } from "~/store/hook";
 import { CreateMemoButton } from "~/ui/CreateMemoButton";
 import { Link } from "~/ui/Link";
 import { Memo } from "~/ui/Memo";
@@ -38,13 +36,7 @@ export const BookPage: React.FC<{
     bookHandle: string;
     path: readonly string[];
 }> = ({ bookHandle, path }) => {
-    const book = usePromiseLoader(
-        useStore(
-            bookHandle.startsWith("@")
-                ? handleBookStore(bookHandle.slice(1))
-                : bookStore(bookHandle),
-        ),
-    );
+    const book = useBook(bookHandle);
 
     if (book == null) {
         return null;

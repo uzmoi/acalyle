@@ -1,11 +1,9 @@
 import { Button, List } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
-import { useStore } from "@nanostores/react";
 import { modulo } from "emnorst";
 import { forwardRef, useCallback, useImperativeHandle } from "react";
 import { complementTagSymbol } from "~/lib/complement-tag";
-import { usePromiseLoader } from "~/lib/promise-loader";
-import { bookStore, handleBookStore } from "~/store/book";
+import { useBook } from "~/store/hook";
 
 export const TagComplementList: React.FC<{
     ref?: React.Ref<string | undefined>;
@@ -14,13 +12,7 @@ export const TagComplementList: React.FC<{
     selectedIndex: number;
     onComplement?: (tag: string) => void;
 }> = forwardRef(({ bookHandle, input, selectedIndex, onComplement }, ref) => {
-    const book = usePromiseLoader(
-        useStore(
-            bookHandle.startsWith("@")
-                ? handleBookStore(bookHandle.slice(1))
-                : bookStore(bookHandle),
-        ),
-    );
+    const book = useBook(bookHandle);
 
     const symbols = complementTagSymbol(book?.tags ?? [], input);
 

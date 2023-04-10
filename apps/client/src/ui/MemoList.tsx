@@ -1,22 +1,14 @@
 import { List } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
-import { usePromiseLoader } from "~/lib/promise-loader";
-import { bookHandleStore } from "~/store/book";
+import { useBookId } from "~/store/hook";
 import { memoConnection } from "~/store/memo-connection";
 import { MemoOverview } from "./MemoOverview";
 
 export const MemoList: React.FC<{
     bookHandle: string;
 }> = ({ bookHandle }) => {
-    const bookId =
-        usePromiseLoader(
-            useStore(
-                bookHandleStore(
-                    bookHandle.startsWith("@") ? bookHandle.slice(1) : "",
-                ),
-            ),
-        ) ?? bookHandle;
+    const bookId = useBookId(bookHandle);
     const { nodes } = useStore(memoConnection(bookId));
 
     return (
