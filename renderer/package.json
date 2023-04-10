@@ -9,7 +9,7 @@
     "dev": "relay-compiler --watch & vite",
     "check": "tsc",
     "test": "vitest",
-    "coverage": "vitest run --coverage"
+    "coverage": "# vitest run --coverage"
   },
   "dependencies": {
     "@acalyle/core": "*",

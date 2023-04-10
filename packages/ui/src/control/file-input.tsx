@@ -65,7 +65,7 @@ export const FileInput: React.FC<
             if (files != null) {
                 if (multiple) {
                     onFileChange?.(files);
-                } else {
+                } else if (files[0] != null) {
                     onFileChange?.(files[0]);
                 }
             }

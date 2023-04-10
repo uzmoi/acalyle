@@ -15,11 +15,17 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
+          cache: npm
 
       - run: npm ci
       - run: npm run coverage
 
+      - id: coverage_files
+        run: |
+          files=$(ls {apps,packages}/*/coverage/coverage-final.json | paste -sd ",")
+          echo "files=$files" >> $GITHUB_OUTPUT
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
-          directory: ./coverage/
+          files: ${{ steps.coverage_files.outputs.files }}
