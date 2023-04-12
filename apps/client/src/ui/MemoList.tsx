@@ -7,9 +7,10 @@ import { MemoOverview } from "./MemoOverview";
 
 export const MemoList: React.FC<{
     bookHandle: string;
-}> = ({ bookHandle }) => {
+    query?: string;
+}> = ({ bookHandle, query = "" }) => {
     const bookId = useBookId(bookHandle);
-    const { nodes } = useStore(memoConnection(bookId));
+    const { nodes } = useStore(memoConnection(bookId, query));
 
     return (
         <List>

@@ -10,9 +10,14 @@ import { memoStore } from "~/store/memo";
 import { net } from "~/store/net";
 
 const MemoListPagination = gql`
-    query MemoListPagination($bookId: ID!, $count: Int!, $cursor: String) {
+    query MemoListPagination(
+        $bookId: ID!
+        $count: Int!
+        $cursor: String
+        $query: String!
+    ) {
         book(id: $bookId) {
-            memos(first: $count, after: $cursor) {
+            memos(first: $count, after: $cursor, search: $query) {
                 edges {
                     node {
                         id
@@ -39,23 +44,25 @@ export type Memo = {
     updatedAt: string;
 };
 
-export const memoConnection = memoizeBuilder((_, bookId: string) =>
-    createConnectionAtom(
-        memoStore,
-        async connectionAtom => {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            const { graphql } = net.get()!;
-            const { data } = await graphql<
-                GqlMemoListPaginationQuery,
-                GqlMemoListPaginationQueryVariables
-            >(MemoListPagination, {
-                bookId,
-                count: 32,
-                cursor: connectionAtom.get().endCursor,
-            });
-            assert.nonNullable(data.book);
-            return data.book.memos;
-        },
-        identify,
-    ),
+export const memoConnection = memoizeBuilder(
+    (_, bookId: string, query: string) =>
+        createConnectionAtom(
+            memoStore,
+            async connectionAtom => {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                const { graphql } = net.get()!;
+                const { data } = await graphql<
+                    GqlMemoListPaginationQuery,
+                    GqlMemoListPaginationQueryVariables
+                >(MemoListPagination, {
+                    bookId,
+                    count: 32,
+                    cursor: connectionAtom.get().endCursor,
+                    query,
+                });
+                assert.nonNullable(data.book);
+                return data.book.memos;
+            },
+            identify,
+        ),
 );
