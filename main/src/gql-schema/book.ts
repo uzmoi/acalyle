@@ -47,6 +47,7 @@ export const Book = objectType({
     sourceType: { module: "@prisma/client", export: "Book" },
     definition(t) {
         t.implements("Node");
+        t.nullable.string("handle");
         t.string("title");
         t.string("description");
         t.string("thumbnail", {
@@ -138,10 +139,11 @@ export const Book = objectType({
 
 export const book = queryField("book", {
     type: nullable("Book"),
-    args: { id: nonNull("ID") },
+    args: { id: "ID", handle: "String" },
     resolve(_, args, { prisma }) {
         return prisma.book.findUnique({
-            where: { id: args.id },
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            where: args.id ? { id: args.id } : { handle: args.handle! },
         });
     },
 });

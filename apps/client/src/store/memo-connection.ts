@@ -1,4 +1,4 @@
-import { assert } from "emnorst";
+import { assert, identify } from "emnorst";
 import { gql } from "graphql-tag";
 import type {
     GqlMemoListPaginationQuery,
@@ -40,18 +40,22 @@ export type Memo = {
 };
 
 export const memoConnection = memoizeBuilder((_, bookId: string) =>
-    createConnectionAtom(memoStore, async connectionAtom => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const { graphql } = net.get()!;
-        const { data } = await graphql<
-            GqlMemoListPaginationQuery,
-            GqlMemoListPaginationQueryVariables
-        >(MemoListPagination, {
-            bookId,
-            count: 32,
-            cursor: connectionAtom.get().endCursor,
-        });
-        assert.nonNullable(data.book);
-        return data.book.memos;
-    }),
+    createConnectionAtom(
+        memoStore,
+        async connectionAtom => {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            const { graphql } = net.get()!;
+            const { data } = await graphql<
+                GqlMemoListPaginationQuery,
+                GqlMemoListPaginationQueryVariables
+            >(MemoListPagination, {
+                bookId,
+                count: 32,
+                cursor: connectionAtom.get().endCursor,
+            });
+            assert.nonNullable(data.book);
+            return data.book.memos;
+        },
+        identify,
+    ),
 );

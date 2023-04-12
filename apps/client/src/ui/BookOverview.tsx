@@ -1,5 +1,6 @@
 import { vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
+import { identify } from "emnorst";
 import { link } from "~/pages/link";
 import type { Book } from "~/store/book-connection";
 import { BookThumbnail } from "./BookThumbnail";
@@ -26,29 +27,61 @@ export const BookOverview: React.FC<{
                     paddingBlock: "0.5em",
                     paddingInline: "1em",
                     overflow: "hidden",
-                    whiteSpace: "nowrap",
                 })}
             >
-                <p
-                    className={style({
-                        marginBottom: "0.25em",
-                        overflow: "hidden",
-                        fontSize: "2em",
-                        textOverflow: "ellipsis",
+                <Link
+                    to={link(":bookId", {
+                        bookId: book.handle ? `@${book.handle}` : book.id,
                     })}
                 >
-                    <Link to={link(":bookId", { bookId: book.id })}>
+                    <p
+                        className={style({
+                            // (height / 2 - paddingBlock) / lineHeight
+                            fontSize: `${(6 / 2 - 0.5) / 1.375}em`,
+                            lineHeight: 1.375,
+                            overflow: "hidden",
+                            whiteSpace: "nowrap",
+                            textOverflow: "ellipsis",
+                        })}
+                    >
                         {book.title}
-                    </Link>
-                </p>
-                <p
-                    className={style({
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                    })}
-                >
-                    {book.description}
-                </p>
+                    </p>
+                    <div
+                        className={style({
+                            borderTop: "1px solid currentcolor",
+                            paddingTop: "0.25em",
+                        })}
+                    >
+                        {book.handle && (
+                            <p className={style({ fontSize: "0.75em" })}>
+                                @{book.handle}
+                            </p>
+                        )}
+                        <p
+                            className={style({
+                                overflow: "hidden",
+                                fontSize: "0.875em",
+                                // whiteSpace: "nowrap",
+                                // textOverflow: "ellipsis",
+                                // 複数行の三点リーダー表示
+                                // stylelintが先頭の文字を小文字にしてきやがるので
+                                // その対策でidentifyで囲っている。
+                                display: "-webkit-box",
+                                ...identify({
+                                    WebkitLineClamp: 1,
+                                    WebkitBoxOrient: "vertical",
+                                }),
+                                ":first-child": {
+                                    ...identify({
+                                        WebkitLineClamp: 2,
+                                    }),
+                                },
+                            })}
+                        >
+                            {book.description}
+                        </p>
+                    </div>
+                </Link>
             </div>
         </div>
     );

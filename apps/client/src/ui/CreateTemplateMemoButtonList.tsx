@@ -5,12 +5,14 @@ import { assert } from "emnorst";
 import { useCallback } from "react";
 import { link } from "~/pages/link";
 import { usePromiseLoader } from "~/lib/promise-loader";
+import { useBookId } from "~/store/hook";
 import { Location } from "~/store/location";
 import { createMemo, memoTemplateStore } from "~/store/memo";
 
 export const CreateTemplateMemoButtonList: React.FC<{
-    bookId: string;
-}> = ({ bookId }) => {
+    bookHandle: string;
+}> = ({ bookHandle }) => {
+    const bookId = useBookId(bookHandle);
     const templateNames =
         usePromiseLoader(useStore(memoTemplateStore(bookId))) ?? [];
 
@@ -20,11 +22,14 @@ export const CreateTemplateMemoButtonList: React.FC<{
             assert.nonNullable(templateName);
             void createMemo(bookId, templateName).then(memo => {
                 Location.set(
-                    link(":bookId/:memoId", { bookId, memoId: memo.id }),
+                    link(":bookId/:memoId", {
+                        bookId: bookHandle,
+                        memoId: memo.id,
+                    }),
                 );
             });
         },
-        [bookId],
+        [bookHandle, bookId],
     );
 
     return (

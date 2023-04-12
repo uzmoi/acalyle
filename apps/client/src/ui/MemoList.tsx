@@ -1,12 +1,14 @@
 import { List } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
+import { useBookId } from "~/store/hook";
 import { memoConnection } from "~/store/memo-connection";
 import { MemoOverview } from "./MemoOverview";
 
 export const MemoList: React.FC<{
-    bookId: string;
-}> = ({ bookId }) => {
+    bookHandle: string;
+}> = ({ bookHandle }) => {
+    const bookId = useBookId(bookHandle);
     const { nodes } = useStore(memoConnection(bookId));
 
     return (
@@ -16,7 +18,7 @@ export const MemoList: React.FC<{
                     key={memo.id}
                     className={style({ marginTop: "1em" })}
                 >
-                    <MemoOverview bookId={bookId} memo={memo} />
+                    <MemoOverview bookId={bookHandle} memo={memo} />
                 </List.Item>
             ))}
         </List>

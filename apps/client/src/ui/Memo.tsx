@@ -11,9 +11,9 @@ import { MemoMenu, type MenuAction } from "~/ui/MemoMenu";
 import { TagList } from "./TagList";
 
 export const Memo: React.FC<{
-    bookId: string;
+    bookHandle: string;
     memoId: string;
-}> = ({ bookId, memoId }) => {
+}> = ({ bookHandle, memoId }) => {
     const memo = usePromiseLoader(useStore(memoStore(memoId)));
 
     const [isInEdit, setIsInEdit] = useState(false);
@@ -65,7 +65,7 @@ export const Memo: React.FC<{
                         tags={memo.tags}
                         className={style({ display: "inline-block" })}
                     />
-                    <AddTagButton bookId={bookId} memoId={memoId} />
+                    <AddTagButton bookHandle={bookHandle} memoId={memoId} />
                 </div>
             </header>
             <div className={style({ marginTop: "1em" })}>
