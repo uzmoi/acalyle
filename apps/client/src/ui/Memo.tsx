@@ -1,3 +1,4 @@
+import { AcalyleMemoTag } from "@acalyle/core";
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { useMemo, useState } from "react";
@@ -7,7 +8,9 @@ import { memoStore, removeMemo } from "~/store/memo";
 import { AddTagButton } from "~/ui/AddTagButton";
 import { MemoContentsEditor } from "~/ui/MemoContentsEditor";
 import { MemoInfo } from "~/ui/MemoInfo";
+import { MemoList } from "~/ui/MemoList";
 import { MemoMenu, type MenuAction } from "~/ui/MemoMenu";
+import { MemoOverview } from "~/ui/MemoOverview";
 import { TagList } from "./TagList";
 
 export const Memo: React.FC<{
@@ -50,8 +53,17 @@ export const Memo: React.FC<{
         return null;
     }
 
+    const relateMemoId = memo.tags
+        .map(AcalyleMemoTag.fromString)
+        .find(tag => tag?.symbol === "@relate")?.prop;
+
     return (
         <article>
+            {relateMemoId && (
+                <div className={style({ marginBottom: "0.5em" })}>
+                    <MemoOverview bookId={bookHandle} memoId={relateMemoId} />
+                </div>
+            )}
             <header>
                 <div className={style({ display: "flex" })}>
                     <MemoInfo
@@ -88,6 +100,7 @@ export const Memo: React.FC<{
                     </div>
                 )}
             </div>
+            <MemoList bookHandle={bookHandle} query={`@relate:${memoId}`} />
         </article>
     );
 };

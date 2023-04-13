@@ -1,14 +1,22 @@
 import { vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
+import { useStore } from "@nanostores/react";
 import { link } from "~/pages/link";
-import type { Memo } from "~/store/memo-connection";
+import { usePromiseLoader } from "~/lib/promise-loader";
+import { memoStore } from "~/store/memo";
 import { Link } from "./Link";
 import { TagList } from "./TagList";
 
 export const MemoOverview: React.FC<{
     bookId: string;
-    memo: Memo;
-}> = ({ bookId, memo }) => {
+    memoId: string;
+}> = ({ bookId, memoId }) => {
+    const memo = usePromiseLoader(useStore(memoStore(memoId)));
+
+    if (memo == null) {
+        return null;
+    }
+
     return (
         <article
             id={memo.id}

@@ -22,7 +22,7 @@ const BookPageRoute = Router.routes<BookPageRoute, JSX.Element | null>({
                 <CreateMemoButton bookHandle={bookHandle} />
                 {/* <MemoImportButton /> */}
             </div>
-            <MemoList bookHandle={bookHandle} />
+            <MemoList bookHandle={bookHandle} query="-@relate:*" />
         </div>
     )),
     resources: Router.page(() => null),

@@ -19,7 +19,7 @@ export const MemoList: React.FC<{
                     key={memo.id}
                     className={style({ marginTop: "1em" })}
                 >
-                    <MemoOverview bookId={bookHandle} memo={memo} />
+                    <MemoOverview bookId={bookHandle} memoId={memo.id} />
                 </List.Item>
             ))}
         </List>
