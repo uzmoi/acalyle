@@ -13,4 +13,4 @@ export const vars = themeNames("acalyle", {
         sans: "'Noto Sans JP', sans-serif",
         mono: "'Roboto Mono', monospace",
     },
-} as const);
+});

@@ -3,3 +3,4 @@ acalyle
 emnorst
 tauri
 nanostores
+tsup
