@@ -19,7 +19,6 @@
   },
   "devDependencies": {
     "electron": "^23.0.0",
-    "esbuild": "^0.15.16",
     "eslint": "^8.25.0",
     "eslint-plugin-oreore-config": "github:rizzzse/eslint-plugin-oreore-config#build",
     "eslint-plugin-react": "^7.31.10",

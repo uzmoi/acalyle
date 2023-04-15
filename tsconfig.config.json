@@ -1,7 +1,7 @@
 {
     "extends": "@acalyle/tsconfig/tsconfig.node.json",
     "include": [
-        "**/*.config.*",
+        "**/*.config.js",
         "**/*.json",
         ".*",
         "main/*",
@@ -10,7 +10,5 @@
     ],
     "compilerOptions": {
         "composite": true,
-        "preserveValueImports": false,
-        "resolveJsonModule": true,
     },
 }
