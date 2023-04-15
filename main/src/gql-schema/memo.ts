@@ -112,18 +112,18 @@ export const memos = (
                         not: { contains: searchString },
                     })),
                 ].map(contents => ({ contents })),
-            tags: filters?.tags.to((include, exclude) => ({
-                some: include && {
-                    AND: include.map(tag => ({
-                        symbol: tag.symbol,
-                    })),
-                },
-                none: exclude && {
-                    OR: exclude.map(tag => ({
-                        symbol: tag.symbol,
-                    })),
-                },
-            })) satisfies Prisma.TagListRelationFilter | undefined,
+            tags: filters?.tags.to((include, exclude) => {
+                const tagWhere = (
+                    tag: AcalyleMemoTag,
+                ): Prisma.TagWhereInput => ({
+                    symbol: tag.symbol,
+                    prop: tag.prop === "*" ? undefined : tag.prop,
+                });
+                return {
+                    some: include && { AND: include.map(tagWhere) },
+                    none: exclude && { OR: exclude.map(tagWhere) },
+                } satisfies Prisma.TagListRelationFilter;
+            }),
         },
     };
 };

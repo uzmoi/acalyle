@@ -1,11 +1,10 @@
 import * as Router from "@acalyle/router";
 import { style } from "@macaron-css/core";
 import { Suspense } from "react";
+import { MemoListPage } from "~/pages/book/MemoListPage";
 import { useBook } from "~/store/hook";
-import { CreateMemoButton } from "~/ui/CreateMemoButton";
 import { Link } from "~/ui/Link";
 import { Memo } from "~/ui/Memo";
-import { MemoList } from "~/ui/MemoList";
 import { link } from "./link";
 
 export type BookPageRoute = Router.Routes<{
@@ -17,13 +16,7 @@ export type BookPageRoute = Router.Routes<{
 
 const BookPageRoute = Router.routes<BookPageRoute, JSX.Element | null>({
     "": Router.page(({ bookId: bookHandle }) => (
-        <div>
-            <div>
-                <CreateMemoButton bookHandle={bookHandle} />
-                {/* <MemoImportButton /> */}
-            </div>
-            <MemoList bookHandle={bookHandle} />
-        </div>
+        <MemoListPage bookHandle={bookHandle} />
     )),
     resources: Router.page(() => null),
     settings: Router.page(() => null),
