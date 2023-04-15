@@ -37,7 +37,7 @@ type ThemeSource<T extends ThemeSourceMap> = PartiallyPartial<
     }[keyof T]
 >;
 
-export const themeNames = <T extends ThemeSourceMap>(
+export const themeNames = <const T extends ThemeSourceMap>(
     prefix: string,
     themeSourceMap: T,
 ): Normalize<ThemeVars<T> & CreateTheme<T>> => {
