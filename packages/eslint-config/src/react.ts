@@ -18,7 +18,8 @@ export const react: Linter.FlatConfig[] = [
             react: reactPlugin,
             "react-hooks": reactHooks,
         },
-        rules: Object({
+        rules: (<T>(rules: Record<string, T>) =>
+            rules as Record<string, NonNullable<T>>)({
             ...reactPlugin.configs?.["recommended"]?.rules,
             ...reactPlugin.configs?.["jsx-runtime"]?.rules,
             ...reactHooks.configs?.["recommended"]?.rules,

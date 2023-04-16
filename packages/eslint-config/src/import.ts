@@ -1,7 +1,7 @@
 import type { Linter } from "eslint";
 import importPlugin from "eslint-plugin-import";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
-import { WARN, always, never, warn } from "./util";
+import { WARN, never, warn } from "./util";
 
 export const importConfig: Linter.FlatConfig = {
     plugins: {
@@ -11,7 +11,8 @@ export const importConfig: Linter.FlatConfig = {
     settings: {
         "import/resolver": "typescript",
     },
-    rules: Object({
+    rules: (<T>(rules: Record<string, T>) =>
+        rules as Record<string, NonNullable<T>>)({
         ...importPlugin.configs?.["recommended"]?.rules,
         ...importPlugin.configs?.["typescript"]?.rules,
         ...importPlugin.configs?.["react"]?.rules,
@@ -28,7 +29,7 @@ export const importConfig: Linter.FlatConfig = {
         "import/unambiguous": WARN,
         "import/first": WARN,
         "import/no-duplicates": WARN,
-        "import/extensions": warn(always, {
+        "import/extensions": warn("ignorePackages", {
             js: never,
             jsx: never,
             ts: never,

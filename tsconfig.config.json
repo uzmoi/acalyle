@@ -1,7 +1,7 @@
 {
     "extends": "@acalyle/tsconfig/tsconfig.node.json",
     "include": [
-        "**/*.config.js",
+        "**/*.config.*",
         "**/*.json",
         ".*",
         "main/*",

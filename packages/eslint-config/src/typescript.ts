@@ -1,6 +1,6 @@
-import type { ESLint, Linter } from "eslint";
 import ts from "@typescript-eslint/eslint-plugin";
 import parser from "@typescript-eslint/parser";
+import type { ESLint, Linter } from "eslint";
 
 export const typescript: Linter.FlatConfig = {
     files: ["**/*.{ts,tsx,mts,cts}"],
@@ -17,10 +17,11 @@ export const typescriptRecommended: Linter.FlatConfig = {
     files: ["**/*.{ts,tsx,mts,cts}"],
     rules: Object.fromEntries(
         Object.entries({
-            ...ts.configs["eslint-recommended"]?.overrides?.[0]?.rules!,
-            ...ts.configs["recommended"]?.rules!,
+            ...ts.configs["eslint-recommended"]?.overrides?.[0]?.rules,
+            ...ts.configs["recommended"]?.rules,
         }).map(
             // TODO rule.replace(/^@typescript-eslint\//, "ts/")
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             ([rule, ruleEntry]) => [rule, ruleEntry!] as const,
         ),
     ),
@@ -29,10 +30,11 @@ export const typescriptRecommended: Linter.FlatConfig = {
 export const typescriptRecommendedRequiringTypeChecking: Linter.FlatConfig = {
     files: ["**/*.{ts,tsx,mts,cts}"],
     rules: Object.fromEntries(
-        Object.entries(
-            ts.configs["recommended-requiring-type-checking"]!.rules!,
-        ).map(
+        Object.entries({
+            ...ts.configs["recommended-requiring-type-checking"]?.rules,
+        }).map(
             // TODO rule.replace(/^@typescript-eslint\//, "ts/")
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             ([rule, ruleEntry]) => [rule, ruleEntry!] as const,
         ),
     ),
