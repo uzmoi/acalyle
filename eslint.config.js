@@ -2,6 +2,7 @@
 
 import {
     typescript,
+    typescriptRecommended,
     typescriptRecommendedRequiringTypeChecking,
     react,
     importConfig,
@@ -30,6 +31,7 @@ export default [
         },
     },
     typescript,
+    typescriptRecommended,
     typescriptRecommendedRequiringTypeChecking,
     {
         languageOptions: {

@@ -13,17 +13,25 @@ export const typescript: Linter.FlatConfig = {
     },
 };
 
+export const typescriptRecommended: Linter.FlatConfig = {
+    files: ["**/*.{ts,tsx,mts,cts}"],
+    rules: Object.fromEntries(
+        Object.entries({
+            ...ts.configs["eslint-recommended"]?.overrides?.[0]?.rules!,
+            ...ts.configs["recommended"]?.rules!,
+        }).map(
+            // TODO rule.replace(/^@typescript-eslint\//, "ts/")
+            ([rule, ruleEntry]) => [rule, ruleEntry!] as const,
+        ),
+    ),
+};
+
 export const typescriptRecommendedRequiringTypeChecking: Linter.FlatConfig = {
     files: ["**/*.{ts,tsx,mts,cts}"],
     rules: Object.fromEntries(
-        [
-            ...Object.entries(
-                ts.configs["eslint-recommended"]?.overrides?.[0]?.rules!,
-            ),
-            ...Object.entries(
-                ts.configs["recommended-requiring-type-checking"]!.rules!,
-            ),
-        ].map(
+        Object.entries(
+            ts.configs["recommended-requiring-type-checking"]!.rules!,
+        ).map(
             // TODO rule.replace(/^@typescript-eslint\//, "ts/")
             ([rule, ruleEntry]) => [rule, ruleEntry!] as const,
         ),
