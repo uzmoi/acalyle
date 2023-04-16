@@ -20,4 +20,5 @@
     "editor.codeActionsOnSave": {
         "source.fixAll": true,
     },
+    "eslint.experimental.useFlatConfig": true,
 }
