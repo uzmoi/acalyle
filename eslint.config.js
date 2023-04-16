@@ -3,6 +3,7 @@
 import {
     typescript,
     typescriptRecommendedRequiringTypeChecking,
+    react,
 } from "@acalyle/eslint-config";
 import { readFile } from "node:fs/promises";
 import { parse } from "jsonc-parser";
@@ -36,4 +37,5 @@ export default [
             },
         },
     },
+    ...react,
 ];
