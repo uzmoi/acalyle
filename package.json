@@ -19,6 +19,7 @@
     "format": "prettier -w \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
+    "@eslint/js": "^8.38.0",
     "electron": "^23.0.0",
     "eslint": "^8.38.0",
     "jsonc-parser": "^3.2.0",

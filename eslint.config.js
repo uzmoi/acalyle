@@ -1,5 +1,7 @@
 // @ts-check
 
+// eslint-disable-next-line import/no-extraneous-dependencies
+import eslint from "@eslint/js";
 import { parse } from "jsonc-parser";
 import { readFile } from "node:fs/promises";
 import {
@@ -27,6 +29,7 @@ export default [
             "**/*.d.ts",
         ],
     },
+    eslint.configs.recommended,
     {
         linterOptions: {
             reportUnusedDisableDirectives: true,
