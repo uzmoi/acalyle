@@ -1,6 +1,7 @@
 {
   "private": true,
   "name": "acalyle",
+  "type": "module",
   "version": "0.1.0",
   "workspaces": [
     "renderer",
@@ -20,6 +21,7 @@
   "devDependencies": {
     "electron": "^23.0.0",
     "eslint": "^8.38.0",
+    "jsonc-parser": "^3.2.0",
     "prettier": "^2.8.7",
     "turbo": "^1.8.3",
     "typescript": "^5.0.4"
