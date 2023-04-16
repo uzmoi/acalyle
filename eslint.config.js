@@ -2,8 +2,6 @@
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import eslint from "@eslint/js";
-import { parse } from "jsonc-parser";
-import { readFile } from "node:fs/promises";
 import {
     importConfig,
     react,
@@ -11,9 +9,6 @@ import {
     typescriptRecommended,
     typescriptRecommendedRequiringTypeChecking,
 } from "@acalyle/eslint-config";
-
-/** @type {{ references: { path: string }[] }} */
-const tsconfig = parse(await readFile("./tsconfig.json", "utf8"));
 
 /** @type {import("eslint").Linter.FlatConfig[]} */
 // eslint-disable-next-line import/no-default-export
@@ -36,7 +31,11 @@ export default [
         },
         languageOptions: {
             parserOptions: {
-                project: tsconfig.references.map(reference => reference.path),
+                project: [
+                    "tsconfig.*.json",
+                    "apps/*/tsconfig.json",
+                    "packages/*/tsconfig.json",
+                ],
             },
         },
     },
