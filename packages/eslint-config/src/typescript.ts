@@ -35,6 +35,14 @@ export const typescriptRecommendedRequiringTypeChecking: Linter.FlatConfig = {
     ),
 };
 
+export const typescriptStrict: Linter.FlatConfig = {
+    files: typescriptFiles,
+    rules: replacePluginName(
+        ts.configs["strict"]?.rules,
+        {}, // TODO { "@typescript-eslint": "ts" },
+    ),
+};
+
 export const typescriptCustom: Linter.FlatConfig = {
     files: typescriptFiles,
     rules: {

@@ -6,6 +6,7 @@ import {
     typescriptCustom,
     typescriptRecommended,
     typescriptRecommendedRequiringTypeChecking,
+    typescriptStrict,
 } from "./typescript";
 
 export const configs = {
@@ -14,5 +15,6 @@ export const configs = {
     typescript,
     typescriptRecommended,
     typescriptRecommendedRequiringTypeChecking,
+    typescriptStrict,
     typescriptCustom,
 } satisfies Record<string, Linter.FlatConfig | readonly Linter.FlatConfig[]>;
