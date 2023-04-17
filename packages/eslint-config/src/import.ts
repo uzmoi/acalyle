@@ -11,8 +11,7 @@ export const importConfig: Linter.FlatConfig = {
     settings: {
         "import/resolver": "typescript",
     },
-    rules: (<T>(rules: Record<string, T>) =>
-        rules as Record<string, NonNullable<T>>)({
+    rules: {
         ...importPlugin.configs?.["recommended"]?.rules,
         ...importPlugin.configs?.["typescript"]?.rules,
         ...importPlugin.configs?.["react"]?.rules,
@@ -51,5 +50,5 @@ export const importConfig: Linter.FlatConfig = {
         "import/max-dependencies": warn({ max: 16 }),
         "import/no-named-default": WARN,
         "import/no-default-export": WARN,
-    }),
+    },
 };

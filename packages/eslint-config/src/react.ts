@@ -18,12 +18,12 @@ export const react: Linter.FlatConfig[] = [
             react: reactPlugin,
             "react-hooks": reactHooks,
         },
-        rules: (<T>(rules: Record<string, T>) =>
-            rules as Record<string, NonNullable<T>>)({
+        rules: {
             ...reactPlugin.configs?.["recommended"]?.rules,
             ...reactPlugin.configs?.["jsx-runtime"]?.rules,
             ...reactHooks.configs?.["recommended"]?.rules,
-        }),
+            ...{}, // 型エラー抑制
+        },
     },
     {
         files: ["**/*.tsx"],
