@@ -1,6 +1,5 @@
 // @ts-check
 
-// eslint-disable-next-line import/no-extraneous-dependencies
 import eslint from "@eslint/js";
 import {
     importConfig,
@@ -9,6 +8,12 @@ import {
     typescriptRecommended,
     typescriptRecommendedRequiringTypeChecking,
 } from "@acalyle/eslint-config";
+
+const typescriptProject = [
+    "tsconfig.*.json",
+    "apps/*/tsconfig.json",
+    "packages/*/tsconfig.json",
+];
 
 /** @type {import("eslint").Linter.FlatConfig[]} */
 // eslint-disable-next-line import/no-default-export
@@ -25,23 +30,32 @@ export default [
         ],
     },
     eslint.configs.recommended,
+    typescript,
+    typescriptRecommended,
+    typescriptRecommendedRequiringTypeChecking,
+    ...react,
+    importConfig,
     {
         linterOptions: {
             reportUnusedDisableDirectives: true,
         },
         languageOptions: {
             parserOptions: {
-                project: [
-                    "tsconfig.*.json",
-                    "apps/*/tsconfig.json",
-                    "packages/*/tsconfig.json",
-                ],
+                ecmaVersion: "latest",
+                sourceType: "module",
+                project: typescriptProject,
+            },
+        },
+        settings: {
+            "import/parsers": {
+                // cspell:word espree
+                espree: [".js", ".cjs", ".mjs", ".jsx"],
+            },
+            "import/resolver": {
+                typescript: {
+                    project: typescriptProject,
+                },
             },
         },
     },
-    typescript,
-    typescriptRecommended,
-    typescriptRecommendedRequiringTypeChecking,
-    ...react,
-    importConfig,
 ];
