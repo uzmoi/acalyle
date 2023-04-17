@@ -2,8 +2,10 @@ import ts from "@typescript-eslint/eslint-plugin";
 import parser from "@typescript-eslint/parser";
 import type { ESLint, Linter } from "eslint";
 
+export const typescriptFiles = ["**/*.{ts,tsx,mts,cts}"];
+
 export const typescript: Linter.FlatConfig = {
-    files: ["**/*.{ts,tsx,mts,cts}"],
+    files: typescriptFiles,
     plugins: {
         // TODO Rename to "ts".
         "@typescript-eslint": ts as unknown as ESLint.Plugin,
@@ -14,7 +16,7 @@ export const typescript: Linter.FlatConfig = {
 };
 
 export const typescriptRecommended: Linter.FlatConfig = {
-    files: ["**/*.{ts,tsx,mts,cts}"],
+    files: typescriptFiles,
     rules: Object.fromEntries(
         Object.entries({
             ...ts.configs["eslint-recommended"]?.overrides?.[0]?.rules,
@@ -28,7 +30,7 @@ export const typescriptRecommended: Linter.FlatConfig = {
 };
 
 export const typescriptRecommendedRequiringTypeChecking: Linter.FlatConfig = {
-    files: ["**/*.{ts,tsx,mts,cts}"],
+    files: typescriptFiles,
     rules: Object.fromEntries(
         Object.entries({
             ...ts.configs["recommended-requiring-type-checking"]?.rules,
