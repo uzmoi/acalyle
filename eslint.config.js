@@ -16,7 +16,6 @@ const typescriptProject = [
 ];
 
 /** @type {import("eslint").Linter.FlatConfig[]} */
-// eslint-disable-next-line import/no-default-export
 export default [
     {
         ignores: [
@@ -35,6 +34,12 @@ export default [
     typescriptRecommendedRequiringTypeChecking,
     ...react,
     importConfig,
+    {
+        files: ["**/*.config.*"],
+        rules: {
+            "import/no-default-export": "off",
+        },
+    },
     {
         linterOptions: {
             reportUnusedDisableDirectives: true,
