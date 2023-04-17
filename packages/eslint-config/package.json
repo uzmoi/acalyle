@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "types": "src/index.ts",
   "scripts": {
-    "build": "tsup src/index.ts --format esm --minify-syntax --clean",
+    "build": "tsup src/index.ts --format esm",
     "check": "tsc",
     "test": "vitest"
   },
