@@ -1,13 +1,7 @@
 // @ts-check
 
 import eslint from "@eslint/js";
-import {
-    importConfig,
-    react,
-    typescript,
-    typescriptRecommended,
-    typescriptRecommendedRequiringTypeChecking,
-} from "@acalyle/eslint-config";
+import { configs } from "@acalyle/eslint-config";
 
 const typescriptProject = [
     "tsconfig.*.json",
@@ -29,11 +23,11 @@ export default [
         ],
     },
     eslint.configs.recommended,
-    typescript,
-    typescriptRecommended,
-    typescriptRecommendedRequiringTypeChecking,
-    ...react,
-    importConfig,
+    configs.typescript,
+    configs.typescriptRecommended,
+    configs.typescriptRecommendedRequiringTypeChecking,
+    ...configs.react,
+    configs.import,
     {
         files: ["**/*.config.*"],
         rules: {
