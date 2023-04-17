@@ -1,6 +1,7 @@
 import ts from "@typescript-eslint/eslint-plugin";
 import parser from "@typescript-eslint/parser";
 import type { ESLint, Linter } from "eslint";
+import { warn } from "./util";
 
 export const typescriptFiles = ["**/*.{ts,tsx,mts,cts}"];
 
@@ -40,4 +41,58 @@ export const typescriptRecommendedRequiringTypeChecking: Linter.FlatConfig = {
             ([rule, ruleEntry]) => [rule, ruleEntry!] as const,
         ),
     ),
+};
+
+export const typescriptCustom: Linter.FlatConfig = {
+    files: typescriptFiles,
+    rules: {
+        "@typescript-eslint/no-namespace": warn({
+            allowDeclarations: true,
+            allowDefinitionFiles: true,
+        }),
+        "@typescript-eslint/no-unused-vars": warn({
+            varsIgnorePattern: "^_",
+            destructuredArrayIgnorePattern: "^_",
+            argsIgnorePattern: "^_",
+            caughtErrors: "all",
+            caughtErrorsIgnorePattern: "^_",
+        }),
+        "@typescript-eslint/naming-convention": warn(
+            { selector: "default", format: ["camelCase"] },
+            {
+                selector: "variableLike",
+                modifiers: ["unused"],
+                format: ["camelCase"],
+                leadingUnderscore: "allow",
+            },
+            {
+                selector: "variable",
+                modifiers: ["const"],
+                format: ["camelCase", "PascalCase", "UPPER_CASE"],
+            },
+            {
+                selector: "variable",
+                modifiers: ["const", "unused"],
+                format: ["camelCase", "PascalCase", "UPPER_CASE"],
+                leadingUnderscore: "allow",
+            },
+            {
+                selector: "property",
+                format: ["camelCase", "PascalCase"],
+                leadingUnderscore: "allowDouble",
+            },
+            {
+                selector: "property",
+                modifiers: ["requiresQuotes"],
+                format: null,
+            },
+            { selector: "typeLike", format: ["PascalCase"] },
+            {
+                selector: "typeLike",
+                modifiers: ["unused"],
+                format: ["PascalCase"],
+                leadingUnderscore: "allow",
+            },
+        ),
+    },
 };

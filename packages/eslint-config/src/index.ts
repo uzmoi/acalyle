@@ -3,6 +3,7 @@ import { importConfig } from "./import";
 import { react } from "./react";
 import {
     typescript,
+    typescriptCustom,
     typescriptRecommended,
     typescriptRecommendedRequiringTypeChecking,
 } from "./typescript";
@@ -13,4 +14,5 @@ export const configs = {
     typescript,
     typescriptRecommended,
     typescriptRecommendedRequiringTypeChecking,
+    typescriptCustom,
 } satisfies Record<string, Linter.FlatConfig | readonly Linter.FlatConfig[]>;

@@ -26,6 +26,7 @@ export default [
     configs.typescript,
     configs.typescriptRecommended,
     configs.typescriptRecommendedRequiringTypeChecking,
+    configs.typescriptCustom,
     ...configs.react,
     configs.import,
     {
