@@ -26,7 +26,7 @@ export const Memo = objectType({
         t.dateTime("updatedAt");
         t.string("contents");
         t.list.string("tags", {
-            async resolve(memo, __, { prisma }) {
+            async resolve(memo, _, { prisma }) {
                 const tags = await prisma.tag.findMany({
                     where: { memoId: memo.id },
                     select: { symbol: true, prop: true },
@@ -41,7 +41,7 @@ export const Memo = objectType({
         });
         t.field("book", {
             type: nonNull("Book"),
-            async resolve(memo, __, { prisma }) {
+            async resolve(memo, _, { prisma }) {
                 const { Book } = await prisma.memo.findUniqueOrThrow({
                     where: { id: memo.id },
                     select: { Book: true },

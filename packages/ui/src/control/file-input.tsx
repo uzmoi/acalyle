@@ -50,12 +50,14 @@ type FileInputProps = (
         onFileChange?: (fileList: FileList) => void;
     }
 ) & {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     _ref?: React.Ref<HTMLInputElement>;
 };
 
 export const FileInput: React.FC<
     FileInputProps &
         Omit<React.ComponentPropsWithoutRef<"input">, OmitPropNames>
+    // eslint-disable-next-line @typescript-eslint/naming-convention
 > = ({ onChange, onFileChange, multiple, className, _ref, ...restProps }) => {
     const handleChange =
         (onChange || onFileChange) &&

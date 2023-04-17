@@ -19,6 +19,7 @@ export const upsertMemoTags = mutationField("upsertMemoTags", {
         const upsertTags = (memoId: string) =>
             tags.map<Prisma.TagUpsertWithWhereUniqueWithoutMemoInput>(tag => ({
                 where: {
+                    // eslint-disable-next-line @typescript-eslint/naming-convention
                     memoId_symbol: { memoId, symbol: tag.symbol },
                 },
                 create: { symbol: tag.symbol, prop: tag.prop },

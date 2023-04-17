@@ -63,7 +63,7 @@ export const Book = objectType({
                     return BookSettingType.parse(
                         unpack(book.settings) as unknown,
                     );
-                } catch (e) {
+                } catch {
                     return BookSettingDefault;
                 }
             },
@@ -102,14 +102,14 @@ export const Book = objectType({
                     ...memos(book.id, args.search ?? null),
                 });
             },
-            totalCount(book, __, { prisma }) {
+            totalCount(book, _, { prisma }) {
                 return prisma.memo.count({
                     where: { bookId: book.id },
                 });
             },
         });
         t.list.string("tags", {
-            async resolve(book, __, { prisma }) {
+            async resolve(book, _, { prisma }) {
                 const tags = await prisma.tag.findMany({
                     where: { Memo: { bookId: book.id } },
                     distinct: "symbol",
@@ -191,7 +191,7 @@ export const books = queryField(t => {
                     } satisfies Prisma.BookWhereInput),
             });
         },
-        totalCount(_, __, { prisma }) {
+        totalCount(_, _args, { prisma }) {
             return prisma.book.count();
         },
     });
