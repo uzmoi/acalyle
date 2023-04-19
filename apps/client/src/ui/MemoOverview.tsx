@@ -1,8 +1,8 @@
 import { vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
-import { link } from "~/pages/link";
 import { usePromiseLoader } from "~/lib/promise-loader";
+import { link } from "~/pages/link";
 import { memoStore } from "~/store/memo";
 import { Link } from "./Link";
 import { TagList } from "./TagList";

@@ -5,6 +5,7 @@ type Dispose = () => void;
 type HmrAction = (...x: never[]) => Dispose | void;
 
 export const hmr = (
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     __dirname: string,
     paths: string[],
     hmrAction: HmrAction,

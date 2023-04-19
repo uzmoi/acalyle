@@ -40,10 +40,13 @@ export const resolveUnion = async <T extends Record<string, () => unknown>>(
     resolvers: T,
 ): Promise<ResolveUnion<T> | null> => {
     type Entries = [keyof T, ValueOf<T>][];
-    for (const [__typename, resolver] of Object.entries(resolvers) as Entries) {
+    for (const [typeName, resolver] of Object.entries(resolvers) as Entries) {
         const result = await resolver();
         if (result != null) {
-            return { ...result, __typename } as ResolveUnion<T>;
+            return {
+                ...result,
+                __typename: typeName,
+            } as ResolveUnion<T>;
         }
     }
     return null;

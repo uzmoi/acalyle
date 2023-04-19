@@ -1,6 +1,5 @@
 import { cx } from "@linaria/core";
 import { style, styleVariants } from "@macaron-css/core";
-import { vars } from "../theme";
 import { ControlPartOutlineStyle, ControlPartResetStyle } from "./base";
 
 export type ButtonVariant = keyof typeof variants;

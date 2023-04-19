@@ -1,6 +1,7 @@
 {
   "private": true,
   "name": "acalyle",
+  "type": "module",
   "version": "0.1.0",
   "workspaces": [
     "renderer",
@@ -12,16 +13,17 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "check": "turbo run check",
-    "lint": "turbo run lint",
+    "prelint": "npm run build -w @acalyle/eslint-config",
+    "lint": "eslint .",
     "test": "turbo run test",
     "coverage": "turbo run coverage",
     "format": "prettier -w \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
+    "@eslint/js": "^8.38.0",
     "electron": "^23.0.0",
-    "eslint": "^8.25.0",
-    "eslint-plugin-react": "^7.31.10",
-    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint": "^8.38.0",
+    "globals": "^13.20.0",
     "prettier": "^2.8.7",
     "turbo": "^1.8.3",
     "typescript": "^5.0.4"
