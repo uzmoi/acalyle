@@ -1,7 +1,6 @@
 import type { Link, MatchParams } from "./pattern";
 
 export class Route<
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     in _Path extends string,
     out ParamKeys extends string,
     out R = unknown,
