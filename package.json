@@ -13,7 +13,8 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "check": "turbo run check",
-    "lint": "turbo run lint",
+    "prelint": "npm run build -w @acalyle/eslint-config",
+    "lint": "eslint .",
     "test": "turbo run test",
     "coverage": "turbo run coverage",
     "format": "prettier -w \"**/*.{ts,tsx,md}\""
