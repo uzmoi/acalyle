@@ -9,6 +9,8 @@ import {
     typescriptStrict,
 } from "./typescript";
 
+export * from "./util";
+
 export const configs = {
     import: importConfig,
     react,

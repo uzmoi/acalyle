@@ -1,7 +1,7 @@
 import type { Linter } from "eslint";
 import importPlugin from "eslint-plugin-import";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
-import { WARN, never, warn } from "./util";
+import { ERROR, WARN, never, warn } from "./util";
 
 export const importConfig: Linter.FlatConfig = {
     plugins: {
@@ -17,14 +17,14 @@ export const importConfig: Linter.FlatConfig = {
         ...importPlugin.configs?.["react"]?.rules,
         "sort-imports": warn({ ignoreDeclarationSort: true }),
         "simple-import-sort/exports": WARN,
-        "import/no-absolute-path": WARN,
+        "import/no-absolute-path": ERROR,
         "import/no-self-import": WARN,
         "import/no-cycle": warn({ maxDepth: 16, ignoreExternal: true }),
         "import/no-useless-path-segments": warn({
             noUselessIndex: true,
             commonjs: true,
         }),
-        "import/no-extraneous-dependencies": WARN,
+        "import/no-extraneous-dependencies": ERROR,
         "import/unambiguous": WARN,
         "import/first": WARN,
         "import/no-duplicates": WARN,

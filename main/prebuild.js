@@ -1,5 +1,5 @@
 // @ts-check
-/* eslint-disable import/unambiguous, @typescript-eslint/no-var-requires */
+/* eslint-disable import/unambiguous */
 
 const { mkdir, open } = require("fs/promises");
 

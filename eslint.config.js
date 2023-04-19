@@ -1,7 +1,8 @@
 // @ts-check
 
 import eslint from "@eslint/js";
-import { configs } from "@acalyle/eslint-config";
+import globals from "globals";
+import { OFF, configs, error } from "@acalyle/eslint-config";
 
 const typescriptProject = [
     "tsconfig.*.json",
@@ -20,6 +21,7 @@ export default [
             "**/__generated__/**",
             "**/__*",
             "**/*.d.ts",
+            "renderer/**",
         ],
     },
     eslint.configs.recommended,
@@ -31,8 +33,14 @@ export default [
     configs.import,
     {
         files: ["!**/src/**"],
+        languageOptions: {
+            globals: globals.node,
+        },
         rules: {
-            "import/no-default-export": "off",
+            "import/no-default-export": OFF,
+            "import/no-extraneous-dependencies": error({
+                devDependencies: true,
+            }),
         },
     },
     {
