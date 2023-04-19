@@ -10,7 +10,6 @@
         "noUncheckedIndexedAccess": true,
         "forceConsistentCasingInFileNames": true,
         "moduleResolution": "bundler",
-        "isolatedModules": true,
         "noEmit": true,
         "typeRoots": ["./node_modules/@types"],
     },
