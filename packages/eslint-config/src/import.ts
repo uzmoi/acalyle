@@ -1,7 +1,7 @@
 import type { Linter } from "eslint";
 import importPlugin from "eslint-plugin-import";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
-import { ERROR, WARN, never, warn } from "./util";
+import { ERROR, WARN, error, never, warn } from "./util";
 
 export const importConfig: Linter.FlatConfig = {
     plugins: {
@@ -24,7 +24,9 @@ export const importConfig: Linter.FlatConfig = {
             noUselessIndex: true,
             commonjs: true,
         }),
-        "import/no-extraneous-dependencies": ERROR,
+        "import/no-extraneous-dependencies": error({
+            devDependencies: ["**/*.{test,spec}.*", "!**/src/**"],
+        }),
         "import/unambiguous": WARN,
         "import/first": WARN,
         "import/no-duplicates": WARN,

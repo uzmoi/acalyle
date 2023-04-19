@@ -2,7 +2,7 @@
 
 import eslint from "@eslint/js";
 import globals from "globals";
-import { OFF, configs, error } from "@acalyle/eslint-config";
+import { OFF, configs } from "@acalyle/eslint-config";
 
 const typescriptProject = [
     "tsconfig.*.json",
@@ -38,9 +38,6 @@ export default [
         },
         rules: {
             "import/no-default-export": OFF,
-            "import/no-extraneous-dependencies": error({
-                devDependencies: true,
-            }),
         },
     },
     {
