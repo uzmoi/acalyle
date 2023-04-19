@@ -30,7 +30,7 @@ export default [
     ...configs.react,
     configs.import,
     {
-        files: ["**/*.config.*"],
+        files: ["!**/src/**"],
         rules: {
             "import/no-default-export": "off",
         },
