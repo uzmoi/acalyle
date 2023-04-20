@@ -1,7 +1,6 @@
 import { cx } from "@linaria/core";
 import { style } from "@macaron-css/core";
-import { noop, timeout } from "emnorst";
-import { useEffect, useState } from "react";
+import { useTransitionStatus } from "./use-transition-status";
 
 export const Modal: React.FC<{
     open?: boolean;
@@ -18,17 +17,7 @@ export const Modal: React.FC<{
     transitionDuration = 200,
     variant = "modal",
 }) => {
-    const [isMounted, setIsMounted] = useState(false);
-
-    useEffect(() => {
-        const ac = new AbortController();
-        void timeout(transitionDuration, { signal: ac.signal }).then(() => {
-            setIsMounted(!!open);
-        }, noop);
-        return () => {
-            ac.abort();
-        };
-    }, [open, transitionDuration]);
+    const status = useTransitionStatus({ show: open, transitionDuration });
 
     const handleClick: React.MouseEventHandler<HTMLDivElement> = e => {
         e.stopPropagation();
@@ -36,10 +25,6 @@ export const Modal: React.FC<{
             onClose?.();
         }
     };
-
-    const status = open
-        ? `enter${isMounted ? "ed" : "ing"}`
-        : `exit${isMounted ? "ing" : "ed"}`;
 
     return (
         <div
@@ -76,7 +61,7 @@ export const Modal: React.FC<{
             )}
             onClick={handleClick}
         >
-            {(open || isMounted) && children}
+            {status === "exited" || children}
         </div>
     );
 };
