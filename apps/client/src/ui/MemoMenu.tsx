@@ -1,6 +1,6 @@
-import { Button, Modal } from "@acalyle/ui";
+import { Button, Popover } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
-import { cloneElement, useState } from "react";
+import { cloneElement } from "react";
 import type { IconBaseProps } from "react-icons";
 import { BiDotsVertical } from "react-icons/bi";
 
@@ -14,24 +14,16 @@ export type MenuAction = {
 export const MemoMenu: React.FC<{
     actions: readonly MenuAction[];
 }> = ({ actions }) => {
-    const [isOpenMenuPopup, setIsOpenMenuPopup] = useState(false);
-
     return (
-        <div className={style({ position: "relative" })}>
-            <Button
+        <Popover>
+            <Popover.Button
                 variant="icon"
-                onClick={e => {
-                    e.stopPropagation();
-                    setIsOpenMenuPopup(isOpen => !isOpen);
-                }}
                 className={style({ borderRadius: "50%" })}
             >
                 <BiDotsVertical className={style({ verticalAlign: "top" })} />
-            </Button>
-            <Modal
-                open={isOpenMenuPopup}
-                onClose={() => setIsOpenMenuPopup(false)}
-                variant="popup"
+            </Popover.Button>
+            <Popover.Content
+                closeOnClick
                 className={style({
                     top: "calc(100% + 0.5em)",
                     right: 0,
@@ -81,7 +73,7 @@ export const MemoMenu: React.FC<{
                         </Button>
                     ))}
                 </div>
-            </Modal>
-        </div>
+            </Popover.Content>
+        </Popover>
     );
 };
