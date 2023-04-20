@@ -1,5 +1,5 @@
-import { cx } from "@linaria/core";
 import { keyframes, style } from "@macaron-css/core";
+import { cx } from "./cx";
 
 const spin = keyframes({ to: { transform: "rotate(360deg)" } });
 

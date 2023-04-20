@@ -1,4 +1,4 @@
-import { cx } from "@linaria/core";
+import { cx } from "../base/cx";
 import { ControlPartResetStyle } from "./base";
 
 // prettier-ignore

@@ -1,5 +1,5 @@
-import { cx } from "@linaria/core";
 import { styleVariants } from "@macaron-css/core";
+import { cx } from "../base/cx";
 import { ControlPartOutlineStyle, ControlPartResetStyle } from "./base";
 
 // prettier-ignore

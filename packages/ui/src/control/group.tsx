@@ -1,5 +1,5 @@
-import { cx } from "@linaria/core";
 import { globalStyle, style } from "@macaron-css/core";
+import { cx } from "../base/cx";
 import { ControlPartOutlineStyle, borderRadius } from "./base";
 
 export const ControlGroup: React.FC<{

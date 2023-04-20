@@ -1,5 +1,5 @@
-import { cx } from "@linaria/core";
 import { style } from "@macaron-css/core";
+import { cx } from "./cx";
 import { useTransitionStatus } from "./use-transition-status";
 
 export const Modal: React.FC<{

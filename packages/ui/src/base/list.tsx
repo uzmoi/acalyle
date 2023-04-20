@@ -1,5 +1,5 @@
-import { cx } from "@linaria/core";
 import { styleVariants } from "@macaron-css/core";
+import { cx } from "./cx";
 
 export type ListVariant = keyof typeof variants;
 

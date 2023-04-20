@@ -1,5 +1,5 @@
-import { cx } from "@linaria/core";
 import { style, styleVariants } from "@macaron-css/core";
+import { cx } from "../base/cx";
 import { vars } from "../theme";
 import { ControlPartOutlineStyle, ControlPartResetStyle } from "./base";
 
