@@ -29,9 +29,6 @@ export const MemoMenu: React.FC<{
                     right: 0,
                     overflow: "hidden",
                     whiteSpace: "nowrap",
-                    backgroundColor: "#222",
-                    borderRadius: "0.25em",
-                    boxShadow: "0 0 2em #111",
                 })}
             >
                 <div role="menu">

@@ -3,6 +3,7 @@ import { useStore } from "@nanostores/react";
 import { atom, onMount } from "nanostores";
 import { createContext, useCallback, useContext, useId } from "react";
 import { Button } from "../control/button";
+import { vars } from "../theme/theme";
 import { cx } from "./cx";
 import { useTransitionStatus } from "./use-transition-status";
 
@@ -107,6 +108,9 @@ const PopoverContent: React.FC<
                 style({
                     position: "absolute",
                     zIndex: 9999,
+                    backgroundColor: vars.color.bg3,
+                    borderRadius: "0.25em",
+                    boxShadow: "0 0 2em #111",
                     transition: `opacity ${transitionDuration}ms`,
                     selectors: {
                         '&[data-open="true"]': {

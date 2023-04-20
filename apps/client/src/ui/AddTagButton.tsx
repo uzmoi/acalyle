@@ -15,11 +15,7 @@ export const AddTagButton: React.FC<{
             <Popover.Content
                 className={style({
                     top: "calc(100% + 0.5em)",
-                    overflow: "hidden",
                     whiteSpace: "nowrap",
-                    backgroundColor: "#222",
-                    borderRadius: "0.25em",
-                    boxShadow: "0 0 2em #111",
                 })}
             >
                 <AddTagForm

@@ -39,9 +39,6 @@ export const CreateMemoButton: React.FC<{
                     overflow: "hidden",
                     minWidth: "8em",
                     whiteSpace: "nowrap",
-                    backgroundColor: "#222",
-                    borderRadius: "0.25em",
-                    boxShadow: "0 0 2em #111",
                 })}
             >
                 <Suspense
