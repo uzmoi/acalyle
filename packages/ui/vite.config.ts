@@ -18,4 +18,7 @@ export default defineConfig({
             external: [/^react(?![^/])/, ...Object.keys(dependencies)],
         },
     },
+    test: {
+        environment: "happy-dom",
+    },
 });
