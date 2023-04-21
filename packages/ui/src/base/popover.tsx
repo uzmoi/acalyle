@@ -22,12 +22,7 @@ onMount(PopoverStore, () => {
 
 const PopoverIdContext = createContext<string | undefined>(undefined);
 
-export const Popover: React.FC<
-    {
-        className?: string;
-        children?: React.ReactNode;
-    } & React.ComponentPropsWithoutRef<"div">
-> & {
+export const Popover: React.FC<React.ComponentPropsWithoutRef<"div">> & {
     Button: typeof PopoverButton;
     Content: typeof PopoverContent;
 } = ({ className, children, ...restProps }) => {
