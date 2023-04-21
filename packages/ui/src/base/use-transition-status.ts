@@ -12,26 +12,26 @@ export type UseTransitionStatusOptions = {
 export type TransitionStatus = "entering" | "entered" | "exiting" | "exited";
 
 export const useTransitionStatus = ({
-    show,
+    show = false,
     appear = true,
     enter = true,
     exit = true,
     transitionDuration = 200,
 }: UseTransitionStatusOptions): TransitionStatus => {
-    const [isEntered, setIsEntered] = useState(!appear);
+    const [isEntered, setIsEntered] = useState(show && !appear);
 
-    const isInTransition = (show ? enter : exit) && !!show !== isEntered;
+    const isInTransition = (show ? enter : exit) && show !== isEntered;
     useEffect(() => {
         if (isInTransition) {
             const ac = new AbortController();
             void timeout(transitionDuration, { signal: ac.signal }).then(() => {
-                setIsEntered(!!show);
+                setIsEntered(show);
             }, noop);
             return () => {
                 ac.abort();
             };
         } else {
-            setIsEntered(!!show);
+            setIsEntered(show);
         }
     }, [isInTransition, show, transitionDuration]);
 
