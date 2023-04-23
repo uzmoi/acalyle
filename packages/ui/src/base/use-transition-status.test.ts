@@ -3,24 +3,25 @@ import { describe, expect, test, vi } from "vitest";
 import { useTransitionStatus } from "./use-transition-status";
 
 vi.useFakeTimers();
+const transition = () => Promise.resolve();
 
 describe("useTransitionStatus", () => {
     describe("初期値", () => {
         test("show: false, appear: true", () => {
             const { result } = renderHook(useTransitionStatus, {
-                initialProps: { show: false, appear: true },
+                initialProps: { show: false, appear: true, transition },
             });
             expect(result.current).toBe("exited");
         });
         test("show: false, appear: false", () => {
             const { result } = renderHook(useTransitionStatus, {
-                initialProps: { show: false, appear: false },
+                initialProps: { show: false, appear: false, transition },
             });
             expect(result.current).toBe("exited");
         });
         test("show: true, appear: true", async () => {
             const { result } = renderHook(useTransitionStatus, {
-                initialProps: { show: true, appear: true },
+                initialProps: { show: true, appear: true, transition },
             });
             expect(result.current).toBe("entering");
 
@@ -29,7 +30,7 @@ describe("useTransitionStatus", () => {
         });
         test("show: true, appear: false", () => {
             const { result } = renderHook(useTransitionStatus, {
-                initialProps: { show: true, appear: false },
+                initialProps: { show: true, appear: false, transition },
             });
             expect(result.current).toBe("entered");
         });
@@ -37,16 +38,16 @@ describe("useTransitionStatus", () => {
     describe("enter", () => {
         test('`enter: false`なら"entering"を挟まずに"entered"に移行', () => {
             const { result, rerender } = renderHook(useTransitionStatus, {
-                initialProps: {},
+                initialProps: { transition },
             });
-            rerender({ enter: false, show: true });
+            rerender({ enter: false, show: true, transition });
             expect(result.current).toBe("entered");
         });
         test("-> entering -> entered", async () => {
             const { result, rerender } = renderHook(useTransitionStatus, {
-                initialProps: {},
+                initialProps: { transition },
             });
-            rerender({ show: true });
+            rerender({ show: true, transition });
             expect(result.current).toBe("entering");
 
             await act(() => vi.advanceTimersToNextTimerAsync());
@@ -54,26 +55,26 @@ describe("useTransitionStatus", () => {
         });
         test("中断", () => {
             const { result, rerender } = renderHook(useTransitionStatus, {
-                initialProps: {},
+                initialProps: { transition },
             });
-            rerender({ show: true });
-            rerender({ show: false });
+            rerender({ show: true, transition });
+            rerender({ show: false, transition });
             expect(result.current).toBe("exited");
         });
     });
     describe("exit", () => {
         test('`exit: false`なら"exiting"を挟まずに"exited"に移行', () => {
             const { result, rerender } = renderHook(useTransitionStatus, {
-                initialProps: { appear: false, show: true },
+                initialProps: { appear: false, show: true, transition },
             });
-            rerender({ exit: false, show: false });
+            rerender({ exit: false, show: false, transition });
             expect(result.current).toBe("exited");
         });
         test("-> exiting -> exited", async () => {
             const { result, rerender } = renderHook(useTransitionStatus, {
-                initialProps: { appear: false, show: true },
+                initialProps: { appear: false, show: true, transition },
             });
-            rerender({ show: false });
+            rerender({ show: false, transition });
             expect(result.current).toBe("exiting");
 
             await act(() => vi.advanceTimersToNextTimerAsync());
@@ -81,10 +82,10 @@ describe("useTransitionStatus", () => {
         });
         test("中断", () => {
             const { result, rerender } = renderHook(useTransitionStatus, {
-                initialProps: { appear: false, show: true },
+                initialProps: { appear: false, show: true, transition },
             });
-            rerender({ show: false });
-            rerender({ show: true });
+            rerender({ show: false, transition });
+            rerender({ show: true, transition });
             expect(result.current).toBe("entered");
         });
     });

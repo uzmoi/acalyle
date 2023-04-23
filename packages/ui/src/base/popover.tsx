@@ -1,5 +1,6 @@
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
+import { timeout } from "emnorst";
 import { atom, onMount } from "nanostores";
 import { createContext, useCallback, useContext, useId } from "react";
 import { Button } from "../control/button";
@@ -73,6 +74,7 @@ if (import.meta.env.DEV) {
 }
 
 const transitionDuration = 200;
+const transition = () => timeout(transitionDuration);
 
 const PopoverContent: React.FC<
     {
@@ -82,10 +84,7 @@ const PopoverContent: React.FC<
     const popoverId = useContext(PopoverIdContext);
     const openedPopoverId = useStore(PopoverStore);
     const isOpen = popoverId === openedPopoverId;
-    const status = useTransitionStatus({
-        show: isOpen,
-        transitionDuration,
-    });
+    const status = useTransitionStatus({ show: isOpen, transition });
 
     const actualOnClick = closeOnClick
         ? onClick

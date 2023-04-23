@@ -1,4 +1,3 @@
-import { noop, timeout } from "emnorst";
 import { useEffect, useState } from "react";
 
 export type UseTransitionStatusOptions = {
@@ -6,7 +5,7 @@ export type UseTransitionStatusOptions = {
     appear?: boolean;
     enter?: boolean;
     exit?: boolean;
-    transitionDuration?: number;
+    transition: (signal: AbortSignal) => PromiseLike<void>;
 };
 
 export type TransitionStatus = "entering" | "entered" | "exiting" | "exited";
@@ -16,7 +15,7 @@ export const useTransitionStatus = ({
     appear = true,
     enter = true,
     exit = true,
-    transitionDuration = 200,
+    transition,
 }: UseTransitionStatusOptions): TransitionStatus => {
     const [isEntered, setIsEntered] = useState(show && !appear);
 
@@ -24,16 +23,20 @@ export const useTransitionStatus = ({
     useEffect(() => {
         if (isInTransition) {
             const ac = new AbortController();
-            void timeout(transitionDuration, { signal: ac.signal }).then(() => {
-                setIsEntered(show);
-            }, noop);
+            const onTransitionEnd = () => {
+                if (!ac.signal.aborted) {
+                    ac.abort();
+                    setIsEntered(show);
+                }
+            };
+            void transition(ac.signal).then(onTransitionEnd, onTransitionEnd);
             return () => {
                 ac.abort();
             };
         } else {
             setIsEntered(show);
         }
-    }, [isInTransition, show, transitionDuration]);
+    }, [isInTransition, show, transition]);
 
     return `${show ? "enter" : "exit"}${isInTransition ? "ing" : "ed"}`;
 };

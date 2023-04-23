@@ -1,4 +1,6 @@
 import { style } from "@macaron-css/core";
+import { timeout } from "emnorst";
+import { useCallback } from "react";
 import { cx } from "./cx";
 import { useTransitionStatus } from "./use-transition-status";
 
@@ -17,7 +19,11 @@ export const Modal: React.FC<{
     transitionDuration = 200,
     variant = "modal",
 }) => {
-    const status = useTransitionStatus({ show: open, transitionDuration });
+    const transition = useCallback(
+        () => timeout(transitionDuration),
+        [transitionDuration],
+    );
+    const status = useTransitionStatus({ show: open, transition });
 
     const handleClick: React.MouseEventHandler<HTMLDivElement> = e => {
         e.stopPropagation();
