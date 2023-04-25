@@ -10,15 +10,7 @@ export const Modal: React.FC<{
     children?: React.ReactNode;
     onClose?: () => void;
     transitionDuration?: number;
-    variant?: "modal" | "popup";
-}> = ({
-    open,
-    className,
-    children,
-    onClose,
-    transitionDuration = 200,
-    variant = "modal",
-}) => {
+}> = ({ open, className, children, onClose, transitionDuration = 200 }) => {
     const transition = useCallback(
         () => timeout(transitionDuration),
         [transitionDuration],
@@ -36,24 +28,18 @@ export const Modal: React.FC<{
         <div
             data-open={open}
             data-status={status}
-            data-variant={variant}
             style={{ transitionDuration: `${transitionDuration}ms` }}
             className={cx(
                 style({
                     zIndex: 9999,
+                    position: "fixed",
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 0,
+                    backgroundColor: "#0008",
                     transitionProperty: "opacity",
                     selectors: {
-                        '&[data-variant="modal"]': {
-                            position: "fixed",
-                            top: 0,
-                            right: 0,
-                            bottom: 0,
-                            left: 0,
-                            backgroundColor: "#0008",
-                        },
-                        '&[data-variant="popup"]': {
-                            position: "absolute",
-                        },
                         '&[data-open="true"]': {
                             opacity: 1,
                         },
