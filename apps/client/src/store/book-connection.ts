@@ -76,7 +76,6 @@ bookConnection.refetch = () => bookConnection.current.refetch();
 
 const bookConnectionBuilder = memoizeBuilder((_id, query: string) =>
     createConnectionAtom(
-        bookStore,
         async connectionAtom => {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const { graphql } = net.get()!;
@@ -92,6 +91,11 @@ const bookConnectionBuilder = memoizeBuilder((_id, query: string) =>
             });
             return data.books;
         },
-        book => ({ ...book, handle: book.handle ?? null }),
+        book => {
+            bookStore(book.id).resolve({
+                ...book,
+                handle: book.handle ?? null,
+            });
+        },
     ),
 );

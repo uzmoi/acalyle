@@ -1,14 +1,22 @@
 import { vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
+import { useStore } from "@nanostores/react";
 import { identify } from "emnorst";
+import { usePromiseLoader } from "~/lib/promise-loader";
 import { link } from "~/pages/link";
-import type { Book } from "~/store/book-connection";
+import { bookStore } from "~/store/book";
 import { BookThumbnail } from "./BookThumbnail";
 import { Link } from "./Link";
 
 export const BookOverview: React.FC<{
-    book: Book;
-}> = ({ book }) => {
+    bookId: string;
+}> = ({ bookId }) => {
+    const book = usePromiseLoader(useStore(bookStore(bookId)));
+
+    if (book == null) {
+        return null;
+    }
+
     return (
         <div
             className={style({

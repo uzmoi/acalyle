@@ -5,7 +5,7 @@ import { bookConnection } from "~/store/book-connection";
 import { BookOverview } from "./BookOverview";
 
 export const BookList: React.FC = () => {
-    const { nodes } = useStore(bookConnection);
+    const { nodeIds } = useStore(bookConnection);
 
     return (
         <List
@@ -15,9 +15,9 @@ export const BookList: React.FC = () => {
                 gridTemplateColumns: "repeat(auto-fit, minmax(32em, 1fr))",
             })}
         >
-            {nodes.map(book => (
-                <List.Item key={book.id}>
-                    <BookOverview book={book} />
+            {nodeIds.map(bookId => (
+                <List.Item key={bookId}>
+                    <BookOverview bookId={bookId} />
                 </List.Item>
             ))}
         </List>

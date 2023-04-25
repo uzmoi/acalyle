@@ -7,7 +7,6 @@ import {
 } from "nanostores";
 import type { GqlPageInfo, Maybe } from "~/__generated__/graphql";
 import { derived, pure } from "~/lib/derived";
-import type { PromiseLoaderExt, PromiseLoaderW } from "~/lib/promise-loader";
 
 export type GqlConnection<TNode extends { id: string }> = {
     __typename?: `${string}Connection`;
@@ -15,14 +14,8 @@ export type GqlConnection<TNode extends { id: string }> = {
     pageInfo: Pick<GqlPageInfo, "hasNextPage" | "endCursor">;
 };
 
-export type IdConnection = {
+export type Connection = {
     nodeIds: readonly string[];
-    hasNext: boolean;
-    endCursor: string | null;
-};
-
-export type Connection<TNode> = {
-    nodes: readonly TNode[];
     hasNext: boolean;
     endCursor: string | null;
     isLoading: boolean;
@@ -33,41 +26,22 @@ export type ConnectionExt = {
     refetch: () => Promise<void>;
 };
 
-export const createConnectionAtom = <GqlNode extends { id: string }, StoreNode>(
-    nodeStore: (
-        id: string,
-    ) => ReadableAtom<PromiseLoaderW<StoreNode>> & PromiseLoaderExt,
-    load: (atom: WritableAtom<IdConnection>) => Promise<GqlConnection<GqlNode>>,
-    normalize: (node: GqlNode) => StoreNode,
-): ReadableAtom<Connection<NonNullable<StoreNode>>> & ConnectionExt => {
-    const idConnectionStore = atom<IdConnection>({
+export const createConnectionAtom = <TNode extends { id: string }>(
+    load: (
+        atom: WritableAtom<Omit<Connection, "isLoading">>,
+    ) => Promise<GqlConnection<TNode>>,
+    updateNode: (node: TNode) => void,
+): ReadableAtom<Connection> & ConnectionExt => {
+    const idConnectionStore = atom<Omit<Connection, "isLoading">>({
         nodeIds: [],
         hasNext: true,
         endCursor: null,
     });
     const isLoading = atom(false);
 
-    const nodesStore = derived(get => {
-        const nodeLoaders = get(idConnectionStore).nodeIds.map(id =>
-            get(nodeStore(id)),
-        );
-        if (
-            !nodeLoaders.every(
-                (loader): loader is { status: "fulfilled"; value: StoreNode } =>
-                    loader.status === "fulfilled",
-            )
-        ) {
-            return pure<NonNullable<StoreNode>[]>([]);
-        }
-        return pure<NonNullable<StoreNode>[]>(
-            nodeLoaders.map(loader => loader.value).filter(nonNullable),
-        );
-    });
-
     const connectionStore = derived(get =>
         pure({
             ...get(idConnectionStore),
-            nodes: get(nodesStore),
             isLoading: get(isLoading),
         }),
     ) satisfies ConnectionExt;
@@ -78,11 +52,7 @@ export const createConnectionAtom = <GqlNode extends { id: string }, StoreNode>(
         isLoading.set(true);
         const { edges, pageInfo } = await load(idConnectionStore);
         const nodes = edges?.map(edge => edge?.node).filter(nonNullable) ?? [];
-        for (const node of nodes) {
-            nodeStore(node.id).resolve(
-                normalize ? normalize(node) : (node as StoreNode),
-            );
-        }
+        nodes.forEach(updateNode);
         idConnectionStore.set({
             nodeIds: getIds(nodes.map(node => node.id)),
             hasNext: pageInfo.hasNextPage,

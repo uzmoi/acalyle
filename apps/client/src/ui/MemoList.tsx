@@ -10,16 +10,13 @@ export const MemoList: React.FC<{
     query?: string;
 }> = ({ bookHandle, query = "" }) => {
     const bookId = useBookId(bookHandle);
-    const { nodes } = useStore(memoConnection(bookId, query));
+    const { nodeIds } = useStore(memoConnection(bookId, query));
 
     return (
         <List>
-            {nodes.map(memo => (
-                <List.Item
-                    key={memo.id}
-                    className={style({ marginTop: "1em" })}
-                >
-                    <MemoOverview bookId={bookHandle} memoId={memo.id} />
+            {nodeIds.map(memoId => (
+                <List.Item key={memoId} className={style({ marginTop: "1em" })}>
+                    <MemoOverview bookId={bookHandle} memoId={memoId} />
                 </List.Item>
             ))}
         </List>
