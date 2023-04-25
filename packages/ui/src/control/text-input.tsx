@@ -1,5 +1,6 @@
 import { styleVariants } from "@macaron-css/core";
 import { cx } from "../base/cx";
+import { vars } from "../theme";
 import { ControlPartOutlineStyle, ControlPartResetStyle } from "./base";
 
 // prettier-ignore
@@ -73,11 +74,7 @@ export const TextInput: React.FC<
             {...restProps}
             onChange={handleChange}
             type={type}
-            className={cx(
-                ControlPartResetStyle,
-                variants[variant],
-                className,
-            )}
+            className={cx(ControlPartResetStyle, variants[variant], className)}
             autoComplete="off"
             autoCapitalize="off"
             autoCorrect="off"
@@ -87,6 +84,6 @@ export const TextInput: React.FC<
 };
 
 const variants = styleVariants({
-    outline: [ControlPartOutlineStyle],
+    outline: [ControlPartOutlineStyle, { backgroundColor: vars.color.bg4 }],
     unstyled: [],
 });

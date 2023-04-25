@@ -17,12 +17,18 @@ export const ControlPartOutlineStyle = style({
     border: `1px solid ${vars.color.text}`,
     borderRadius: `${borderRadius}`,
     transition: "border-color 400ms",
-    ":focus": {
-        borderColor: "lightgreen",
-    },
     selectors: {
+        "&:focus": {
+            borderColor: "lightgreen",
+        },
+        "&:focus + &": {
+            borderLeftColor: "lightgreen",
+        },
         '&:invalid, &[aria-invalid="true"]': {
             borderColor: "red",
+        },
+        '&:invalid + &, &[aria-invalid="true"] + &': {
+            borderLeftColor: "red",
         },
     },
 });

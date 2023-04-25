@@ -1,5 +1,6 @@
 import { style, styleVariants } from "@macaron-css/core";
 import { cx } from "../base/cx";
+import { vars } from "../theme";
 import { ControlPartOutlineStyle, ControlPartResetStyle } from "./base";
 
 export type ButtonVariant = keyof typeof variants;
@@ -18,6 +19,10 @@ export const Button: React.FC<
                 style({
                     fontWeight: "bold",
                     cursor: "pointer",
+                    ":disabled": {
+                        color: vars.color.subtext,
+                        cursor: "not-allowed",
+                    },
                 }),
                 variants[variant],
                 className,
@@ -27,7 +32,7 @@ export const Button: React.FC<
 };
 
 const variants = styleVariants({
-    outline: [ControlPartOutlineStyle],
+    outline: [ControlPartOutlineStyle, { backgroundColor: vars.color.bg4 }],
     unstyled: [],
     icon: [
         ControlPartOutlineStyle,
