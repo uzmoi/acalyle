@@ -35,6 +35,6 @@ List.Item = ({ ...restProps }) => {
     return <li {...restProps} />;
 };
 
-if (import.meta.env.DEV) {
+if (process.env.NODE_ENV === "development") {
     List.Item.displayName = "List.Item";
 }

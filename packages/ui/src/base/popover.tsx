@@ -69,7 +69,7 @@ const PopoverButton: React.FC<
 };
 
 Popover.Button = PopoverButton;
-if (import.meta.env.DEV) {
+if (process.env.NODE_ENV === "development") {
     Popover.Button.displayName = "Popover.Button";
 }
 
@@ -126,6 +126,6 @@ const PopoverContent: React.FC<
 };
 
 Popover.Content = PopoverContent;
-if (import.meta.env.DEV) {
+if (process.env.NODE_ENV === "development") {
     Popover.Content.displayName = "Popover.Content";
 }

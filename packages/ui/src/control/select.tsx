@@ -51,7 +51,7 @@ Select.Group = ({ ...restProps }) => {
     return <optgroup {...restProps} />;
 };
 
-if (import.meta.env.DEV) {
+if (process.env.NODE_ENV === "development") {
     Select.Group.displayName = "Select.Group";
 }
 
@@ -68,6 +68,6 @@ Select.Option = ({ className, ...restProps }) => {
     );
 };
 
-if (import.meta.env.DEV) {
+if (process.env.NODE_ENV === "development") {
     Select.Option.displayName = "Select.Option";
 }
