@@ -6,7 +6,6 @@ import {
     onStart,
 } from "nanostores";
 import type { GqlPageInfo, Maybe } from "~/__generated__/graphql";
-import { derived, pure } from "~/lib/derived";
 
 export type GqlConnection<TNode extends { id: string }> = {
     __typename?: `${string}Connection`;
@@ -18,42 +17,35 @@ export type Connection = {
     nodeIds: readonly string[];
     hasNext: boolean;
     endCursor: string | null;
-    isLoading: boolean;
 };
 
 export type ConnectionExt = {
     loadNext: () => Promise<void>;
     refetch: () => Promise<void>;
+    isLoading: ReadableAtom<boolean>;
 };
 
 export const createConnectionAtom = <TNode extends { id: string }>(
-    load: (
-        atom: WritableAtom<Omit<Connection, "isLoading">>,
-    ) => Promise<GqlConnection<TNode>>,
+    load: (atom: WritableAtom<Connection>) => Promise<GqlConnection<TNode>>,
     updateNode: (node: TNode) => void,
 ): ReadableAtom<Connection> & ConnectionExt => {
-    const idConnectionStore = atom<Omit<Connection, "isLoading">>({
+    const connectionStore = atom<Connection, ConnectionExt>({
         nodeIds: [],
         hasNext: true,
         endCursor: null,
     });
     const isLoading = atom(false);
 
-    const connectionStore = derived(get =>
-        pure({
-            ...get(idConnectionStore),
-            isLoading: get(isLoading),
-        }),
-    ) satisfies ConnectionExt;
+    connectionStore.isLoading = isLoading;
 
     const loadNodes = async (
         getIds: (ids: readonly string[]) => readonly string[],
     ) => {
         isLoading.set(true);
-        const { edges, pageInfo } = await load(idConnectionStore);
+        const { edges, pageInfo } = await load(connectionStore);
         const nodes = edges?.map(edge => edge?.node).filter(nonNullable) ?? [];
         nodes.forEach(updateNode);
-        idConnectionStore.set({
+        connectionStore.set({
             nodeIds: getIds(nodes.map(node => node.id)),
             hasNext: pageInfo.hasNextPage,
             endCursor: (pageInfo.hasNextPage && pageInfo.endCursor) || null,
@@ -62,16 +54,16 @@ export const createConnectionAtom = <TNode extends { id: string }>(
     };
 
     connectionStore.loadNext = async () => {
-        const { hasNext } = idConnectionStore.get();
+        const { hasNext } = connectionStore.get();
         if (!hasNext || isLoading.get()) return;
         await loadNodes(nodeIds => [
-            ...idConnectionStore.get().nodeIds,
+            ...connectionStore.get().nodeIds,
             ...nodeIds,
         ]);
     };
 
     connectionStore.refetch = async () => {
-        idConnectionStore.set({
+        connectionStore.set({
             nodeIds: [],
             hasNext: true,
             endCursor: null,

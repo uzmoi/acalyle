@@ -15,7 +15,7 @@ const onIntersection = (entry: IntersectionObserverEntry) => {
 };
 
 export const BookListPage: React.FC = () => {
-    const { isLoading } = useStore(bookConnection);
+    const isLoading = useStore(bookConnection.isLoading);
 
     return (
         <main className={style({ padding: "1.25em" })}>

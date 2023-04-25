@@ -15,7 +15,6 @@ describe("createConnectionAtom", () => {
             expect.objectContaining({
                 endCursor: null,
                 hasNext: true,
-                isLoading: true,
                 nodeIds: [],
             }),
         );
@@ -30,7 +29,6 @@ describe("createConnectionAtom", () => {
             expect.objectContaining({
                 endCursor: null,
                 hasNext: false,
-                isLoading: false,
                 nodeIds: [],
             }),
         );

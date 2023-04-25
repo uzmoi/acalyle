@@ -73,6 +73,12 @@ export const bookConnection = derived(get => {
 
 bookConnection.loadNext = () => bookConnection.current.loadNext();
 bookConnection.refetch = () => bookConnection.current.refetch();
+Object.defineProperty(bookConnection, "isLoading", {
+    get() {
+        bookConnection.get();
+        return bookConnection.current.isLoading;
+    },
+});
 
 const bookConnectionBuilder = memoizeBuilder((_id, query: string) =>
     createConnectionAtom(
