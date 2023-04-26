@@ -48,7 +48,7 @@ export const BookOverview: React.FC<{
                     </p>
                     <div
                         className={style({
-                            borderTop: "1px solid currentcolor",
+                            borderTop: `1px solid ${vars.color.fg.mute}`,
                             paddingTop: "0.25em",
                         })}
                     >

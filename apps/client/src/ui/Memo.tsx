@@ -40,7 +40,7 @@ export const Memo: React.FC<{
             {
                 icon: <BiTrash />,
                 text: "Delete memo",
-                color: "#e44",
+                type: "denger",
                 onClick: () => {
                     void removeMemo(memoId);
                 },

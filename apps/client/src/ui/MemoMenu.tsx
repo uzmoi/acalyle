@@ -1,4 +1,4 @@
-import { Button, Popover } from "@acalyle/ui";
+import { Button, Popover, vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { cloneElement } from "react";
 import type { IconBaseProps } from "react-icons";
@@ -7,7 +7,7 @@ import { BiDotsVertical } from "react-icons/bi";
 export type MenuAction = {
     icon: JSX.Element;
     text: string;
-    color?: string;
+    type?: "denger";
     onClick: (() => void) | undefined;
 };
 
@@ -32,12 +32,12 @@ export const MemoMenu: React.FC<{
                 })}
             >
                 <div role="menu">
-                    {actions.map(({ icon, text, color, onClick }) => (
+                    {actions.map(({ icon, text, type, onClick }) => (
                         <Button
                             key={text}
                             role="menuitem"
                             onClick={onClick}
-                            style={{ color }}
+                            data-type={type}
                             variant="unstyled"
                             className={style({
                                 display: "block",
@@ -46,11 +46,17 @@ export const MemoMenu: React.FC<{
                                 fontSize: "0.9em",
                                 fontWeight: "normal",
                                 textAlign: "start",
+                                transition:
+                                    "background-color 200ms, color 200ms",
                                 selectors: {
                                     "& + &": {
                                         borderTop: "1px solid #666",
                                     },
-                                    "&:not(:disabled):is(:hover, :focus)": {
+                                    '&[data-type="denger"]:enabled:is(:hover, :focus)':
+                                        {
+                                            color: vars.color.denger,
+                                        },
+                                    "&:enabled:is(:hover, :focus)": {
                                         backgroundColor: "#fff2",
                                     },
                                 },

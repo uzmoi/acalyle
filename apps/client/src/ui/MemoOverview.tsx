@@ -19,14 +19,14 @@ export const MemoOverview: React.FC<{
 
     return (
         <article
-            id={memo.id}
+            id={memoId}
             className={style({
                 backgroundColor: vars.color.bg.block,
                 padding: "0.25em 0.75em",
             })}
         >
             <div>
-                <Link to={link(":bookId/:memoId", { bookId, memoId: memo.id })}>
+                <Link to={link(":bookId/:memoId", { bookId, memoId })}>
                     <div
                         className={style({
                             whiteSpace: "pre-wrap",

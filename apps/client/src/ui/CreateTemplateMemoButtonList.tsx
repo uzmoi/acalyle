@@ -58,7 +58,7 @@ export const CreateTemplateMemoButtonList: React.FC<{
                         textAlign: "start",
                         borderTop: "1px solid #666",
                         selectors: {
-                            "&:not(:disabled):is(:hover, :focus)": {
+                            "&:enabled:is(:hover, :focus)": {
                                 backgroundColor: "#fff2",
                             },
                         },

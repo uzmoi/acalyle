@@ -24,10 +24,10 @@ export const ControlPartOutlineStyle = style({
             borderLeftColor: "lightgreen",
         },
         '&:invalid, &[aria-invalid="true"]': {
-            borderColor: "red",
+            borderColor: vars.color.denger,
         },
         '&:invalid + &, &[aria-invalid="true"] + &': {
-            borderLeftColor: "red",
+            borderLeftColor: vars.color.denger,
         },
     },
 });

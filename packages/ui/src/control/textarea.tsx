@@ -1,5 +1,6 @@
 import { style, styleVariants } from "@macaron-css/core";
 import { cx } from "../base/cx";
+import { vars } from "../theme";
 import { ControlPartOutlineStyle, ControlPartResetStyle } from "./base";
 
 const ZeroWidthSpace = "\u200b";
@@ -47,7 +48,7 @@ export const TextArea: React.FC<
                     overflowWrap: "break-word",
                     whiteSpace: "pre-wrap",
                     vars: {
-                        "--caret-color": "white", // currentcolor
+                        "--caret-color": vars.color.fg.__,
                     },
                 }),
                 className,

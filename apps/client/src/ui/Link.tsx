@@ -1,3 +1,4 @@
+import { cx } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { Location } from "~/store/location";
 
@@ -9,10 +10,13 @@ export const Link: React.FC<
     return (
         <a
             {...rest}
-            className={`${style({
-                color: "inherit",
-                textDecoration: "none",
-            })} ${className ?? ""}`}
+            className={cx(
+                style({
+                    color: "inherit",
+                    textDecoration: "none",
+                }),
+                className,
+            )}
             href={to}
             onClick={e => {
                 if (e.defaultPrevented) return;
