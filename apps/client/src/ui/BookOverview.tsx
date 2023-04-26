@@ -14,7 +14,7 @@ export const BookOverview: React.FC<{
             className={style({
                 display: "flex",
                 height: "6em",
-                backgroundColor: vars.color.bg3,
+                backgroundColor: vars.color.bg.block,
             })}
         >
             <BookThumbnail

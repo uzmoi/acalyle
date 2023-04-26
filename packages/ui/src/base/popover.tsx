@@ -101,9 +101,9 @@ const PopoverContent: React.FC<
             className={cx(
                 style({
                     position: "absolute",
-                    zIndex: 9999,
-                    backgroundColor: vars.color.bg3,
-                    borderRadius: "0.25em",
+                    zIndex: vars.zIndex.popover,
+                    backgroundColor: vars.color.bg.block,
+                    borderRadius: vars.radius.block,
                     boxShadow: "0 0 2em #111",
                     transition: `opacity ${transitionDuration}ms`,
                     selectors: {

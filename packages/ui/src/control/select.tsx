@@ -61,7 +61,7 @@ Select.Option = ({ className, ...restProps }) => {
         <option
             {...restProps}
             className={cx(
-                style({ backgroundColor: vars.color.bg3 }),
+                style({ backgroundColor: vars.color.bg.block }),
                 className,
             )}
         />

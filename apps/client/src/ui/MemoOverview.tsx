@@ -21,7 +21,7 @@ export const MemoOverview: React.FC<{
         <article
             id={memo.id}
             className={style({
-                backgroundColor: vars.color.bg3,
+                backgroundColor: vars.color.bg.block,
                 padding: "0.25em 0.75em",
             })}
         >

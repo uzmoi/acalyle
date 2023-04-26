@@ -20,7 +20,7 @@ export const Button: React.FC<
                     fontWeight: "bold",
                     cursor: "pointer",
                     ":disabled": {
-                        color: vars.color.subtext,
+                        color: vars.color.fg.mute,
                         cursor: "not-allowed",
                     },
                 }),
@@ -32,7 +32,10 @@ export const Button: React.FC<
 };
 
 const variants = styleVariants({
-    outline: [ControlPartOutlineStyle, { backgroundColor: vars.color.bg4 }],
+    outline: [
+        ControlPartOutlineStyle,
+        { backgroundColor: vars.color.bg.inline },
+    ],
     unstyled: [],
     icon: [
         ControlPartOutlineStyle,

@@ -1,6 +1,7 @@
 import { style } from "@macaron-css/core";
 import { timeout } from "emnorst";
 import { useCallback } from "react";
+import { vars } from "../theme";
 import { cx } from "./cx";
 import { useTransitionStatus } from "./use-transition-status";
 
@@ -31,7 +32,7 @@ export const Modal: React.FC<{
             style={{ transitionDuration: `${transitionDuration}ms` }}
             className={cx(
                 style({
-                    zIndex: 9999,
+                    zIndex: vars.zIndex.modal,
                     position: "fixed",
                     top: 0,
                     right: 0,

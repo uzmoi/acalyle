@@ -1,6 +1,7 @@
 import { globalStyle, style } from "@macaron-css/core";
 import { cx } from "../base/cx";
-import { ControlPartOutlineStyle, borderRadius } from "./base";
+import { vars } from "../theme";
+import { ControlPartOutlineStyle } from "./base";
 
 export const ControlGroup: React.FC<{
     children?: React.ReactNode;
@@ -18,15 +19,15 @@ globalStyle(`.${ControlGroupStyle} > .${ControlPartOutlineStyle}`, {
 });
 
 globalStyle(`.${ControlGroupStyle} > :first-child`, {
-    borderRadius: `${borderRadius} 0 0 ${borderRadius}`,
+    borderRadius: `${vars.radius.control} 0 0 ${vars.radius.control}`,
 });
 
 globalStyle(`.${ControlGroupStyle} > :last-child`, {
-    borderRadius: `0 ${borderRadius} ${borderRadius} 0`,
+    borderRadius: `0 ${vars.radius.control} ${vars.radius.control} 0`,
 });
 
 globalStyle(`.${ControlGroupStyle} > :only-child`, {
-    borderRadius,
+    borderRadius: vars.radius.control,
 });
 
 globalStyle(

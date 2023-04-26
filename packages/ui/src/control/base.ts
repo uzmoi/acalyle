@@ -11,11 +11,10 @@ export const ControlPartResetStyle = style({
     appearance: "none",
 });
 
-export const borderRadius = "4px";
 export const ControlPartOutlineStyle = style({
     padding: "0.2em 0.8em",
-    border: `1px solid ${vars.color.text}`,
-    borderRadius: `${borderRadius}`,
+    border: `1px solid ${vars.color.fg.__}`,
+    borderRadius: `${vars.radius.control}`,
     transition: "border-color 400ms",
     selectors: {
         "&:focus": {

@@ -84,6 +84,9 @@ export const TextInput: React.FC<
 };
 
 const variants = styleVariants({
-    outline: [ControlPartOutlineStyle, { backgroundColor: vars.color.bg4 }],
+    outline: [
+        ControlPartOutlineStyle,
+        { backgroundColor: vars.color.bg.inline },
+    ],
     unstyled: [],
 });

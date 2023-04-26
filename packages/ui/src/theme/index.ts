@@ -1,2 +1,2 @@
-export { themeNames } from "./create";
+export * from "./create";
 export * from "./theme";
