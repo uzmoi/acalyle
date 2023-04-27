@@ -7,6 +7,7 @@ import { BiDotsVertical } from "react-icons/bi";
 export type MenuAction = {
     icon: JSX.Element;
     text: string;
+    disabled?: boolean;
     type?: "denger";
     onClick: (() => void) | undefined;
 };
@@ -37,10 +38,11 @@ export const MemoMenu: React.FC<{
                 })}
             >
                 <div role="menu">
-                    {actions.map(({ icon, text, type, onClick }) => (
+                    {actions.map(({ icon, text, disabled, type, onClick }) => (
                         <Button
                             key={text}
                             role="menuitem"
+                            disabled={disabled}
                             onClick={onClick}
                             data-type={type}
                             variant="unstyled"

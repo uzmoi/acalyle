@@ -26,6 +26,7 @@ export const Memo: React.FC<{
             {
                 icon: <BiEditAlt />,
                 text: "Edit contents",
+                disabled: isInEdit,
                 onClick: () => {
                     setIsInEdit(true);
                 },
@@ -46,7 +47,7 @@ export const Memo: React.FC<{
                 },
             },
         ],
-        [memoId],
+        [memoId, isInEdit],
     );
 
     if (memo == null) {
