@@ -7,6 +7,7 @@ import { dependencies } from "./package.json";
 export default defineConfig({
     plugins: [react(), macaronVitePlugin(), dts({ exclude: "**/*.css.ts" })],
     build: {
+        target: "esnext",
         sourcemap: true,
         minify: false,
         lib: {
