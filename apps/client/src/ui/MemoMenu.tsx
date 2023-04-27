@@ -57,7 +57,7 @@ export const MemoMenu: React.FC<{
                                     "background-color 200ms, color 200ms",
                                 selectors: {
                                     "& + &": {
-                                        borderTop: "1px solid #666",
+                                        borderTop: `1px solid ${vars.color.fg.mute}`,
                                     },
                                     '&[data-type="denger"]:enabled:is(:hover, :focus)':
                                         {
