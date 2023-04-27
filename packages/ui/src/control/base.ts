@@ -1,33 +1,55 @@
-import { style } from "@macaron-css/core";
+import { styleVariants } from "@macaron-css/core";
 import { vars } from "../theme";
 
-export const ControlPartResetStyle = style({
-    padding: 0,
-    font: "inherit",
-    color: "inherit",
-    backgroundColor: "transparent",
-    border: "none",
-    outline: "none",
-    appearance: "none",
-});
+export type ControlPartVariant = Exclude<
+    keyof typeof control,
+    "reset" | "base"
+>;
 
-export const ControlPartOutlineStyle = style({
-    padding: "0.2em 0.8em",
-    border: `1px solid ${vars.color.fg.__}`,
-    borderRadius: `${vars.radius.control}`,
-    transition: "border-color 400ms",
-    selectors: {
-        "&:focus": {
-            borderColor: "lightgreen",
+export const control = styleVariants({
+    reset: {
+        padding: 0,
+        font: "inherit",
+        color: "inherit",
+        backgroundColor: "transparent",
+        border: "none",
+        outline: "none",
+        appearance: "none",
+    },
+    base: {
+        padding: "0.2em 0.8em",
+        borderRadius: `${vars.radius.control}`,
+    },
+    unstyled: { padding: 0, borderRadius: 0 },
+    outline: {
+        border: `2px solid ${vars.color.fg.__}`,
+        transition: "border-color 400ms",
+        selectors: {
+            "&:focus-visible": {
+                borderColor: "lightgreen",
+            },
+            "&:focus-visible + &": {
+                borderLeftColor: "lightgreen",
+            },
+            '&:invalid, &[aria-invalid="true"]': {
+                borderColor: vars.color.denger,
+            },
+            '&:invalid + &, &[aria-invalid="true"] + &': {
+                borderLeftColor: vars.color.denger,
+            },
         },
-        "&:focus + &": {
-            borderLeftColor: "lightgreen",
-        },
-        '&:invalid, &[aria-invalid="true"]': {
-            borderColor: vars.color.denger,
-        },
-        '&:invalid + &, &[aria-invalid="true"] + &': {
-            borderLeftColor: vars.color.denger,
+    },
+    solid: {
+        backgroundColor: vars.color.bg.inline,
+        borderBottom: `2px solid ${vars.color.fg.__}`,
+        transition: "border-bottom-color 400ms",
+        selectors: {
+            "&:focus-visible": {
+                borderBottomColor: "lightgreen",
+            },
+            '&:invalid, &[aria-invalid="true"]': {
+                borderBottomColor: vars.color.denger,
+            },
         },
     },
 });

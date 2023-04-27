@@ -29,7 +29,9 @@ export const CreateMemoButton: React.FC<{
             <ControlGroup>
                 <Button onClick={createMemoNoTemplate}>Add memo</Button>
                 <Popover.Button>
-                    <BiCaretDown />
+                    <BiCaretDown
+                        className={style({ verticalAlign: "middle" })}
+                    />
                 </Popover.Button>
             </ControlGroup>
             <Popover.Content

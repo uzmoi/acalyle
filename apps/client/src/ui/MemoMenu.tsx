@@ -17,8 +17,13 @@ export const MemoMenu: React.FC<{
     return (
         <Popover>
             <Popover.Button
-                variant="icon"
-                className={style({ borderRadius: "50%" })}
+                className={style({
+                    borderRadius: "50%",
+                    padding: "0.25em",
+                    fontSize: "1.25em",
+                    lineHeight: 1,
+                    border: 0,
+                })}
             >
                 <BiDotsVertical className={style({ verticalAlign: "top" })} />
             </Popover.Button>

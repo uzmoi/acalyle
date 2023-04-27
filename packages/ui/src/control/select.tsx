@@ -1,13 +1,11 @@
-import { style, styleVariants } from "@macaron-css/core";
+import { style } from "@macaron-css/core";
 import { cx } from "../base/cx";
 import { vars } from "../theme";
-import { ControlPartOutlineStyle, ControlPartResetStyle } from "./base";
-
-export type SelectVariant = keyof typeof variants;
+import { type ControlPartVariant, control } from "./base";
 
 export const Select: React.FC<
     {
-        variant?: SelectVariant;
+        variant?: ControlPartVariant;
         onValueChange?: (value: string) => void;
     } & React.ComponentPropsWithoutRef<"select">
 > & {
@@ -32,17 +30,17 @@ export const Select: React.FC<
         <select
             {...restProps}
             onChange={handleChange}
-            className={cx(ControlPartResetStyle, variants[variant], className)}
+            className={cx(
+                control.reset,
+                control.base,
+                control[variant],
+                className,
+            )}
         >
             {children}
         </select>
     );
 };
-
-const variants = styleVariants({
-    outline: [ControlPartOutlineStyle],
-    unstyled: [],
-});
 
 type SelectOptionGroupComponent = React.FC<
     React.ComponentPropsWithoutRef<"optgroup">

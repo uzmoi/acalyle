@@ -1,7 +1,5 @@
-import { styleVariants } from "@macaron-css/core";
 import { cx } from "../base/cx";
-import { vars } from "../theme";
-import { ControlPartOutlineStyle, ControlPartResetStyle } from "./base";
+import { type ControlPartVariant, control } from "./base";
 
 // prettier-ignore
 type OmitPropNames = (
@@ -44,19 +42,17 @@ type TextInputType = (
     | "tel"
 );
 
-export type TextInputVariant = keyof typeof variants;
-
 export const TextInput: React.FC<
     {
         type?: TextInputType;
-        variant?: TextInputVariant;
+        variant?: ControlPartVariant;
         value?: string;
         defaultValue?: string;
         onValueChange?: (value: string) => void;
     } & Omit<React.ComponentPropsWithoutRef<"input">, OmitPropNames>
 > = ({
     type = "text",
-    variant = "outline",
+    variant = "solid",
     onChange,
     onValueChange,
     className,
@@ -74,7 +70,12 @@ export const TextInput: React.FC<
             {...restProps}
             onChange={handleChange}
             type={type}
-            className={cx(ControlPartResetStyle, variants[variant], className)}
+            className={cx(
+                control.reset,
+                control.base,
+                control[variant],
+                className,
+            )}
             autoComplete="off"
             autoCapitalize="off"
             autoCorrect="off"
@@ -82,11 +83,3 @@ export const TextInput: React.FC<
         />
     );
 };
-
-const variants = styleVariants({
-    outline: [
-        ControlPartOutlineStyle,
-        { backgroundColor: vars.color.bg.inline },
-    ],
-    unstyled: [],
-});

@@ -24,7 +24,15 @@ export const BookSearchBar: React.FC<{
                     // eslint-disable-next-line @typescript-eslint/unbound-method
                     onValueChange={bookConnectionQuery.set}
                 />
-                <Button type="submit" variant="icon" aria-label="Refresh">
+                <Button
+                    type="submit"
+                    aria-label="Refresh"
+                    className={style({
+                        padding: "0.25em",
+                        fontSize: "1.25em",
+                        lineHeight: 1,
+                    })}
+                >
                     <BiRefresh />
                 </Button>
             </ControlGroup>
