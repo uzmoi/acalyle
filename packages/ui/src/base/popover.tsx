@@ -27,19 +27,14 @@ export const Popover: React.FC<React.ComponentPropsWithoutRef<"div">> & {
     Button: typeof PopoverButton;
     Content: typeof PopoverContent;
 } = ({ className, children, ...restProps }) => {
-    const id = useId();
+    const popoverId = useId();
 
     return (
         <div
             {...restProps}
-            className={cx(
-                style({
-                    position: "relative",
-                }),
-                className,
-            )}
+            className={cx(style({ position: "relative" }), className)}
         >
-            <PopoverIdContext.Provider value={id}>
+            <PopoverIdContext.Provider value={popoverId}>
                 {children}
             </PopoverIdContext.Provider>
         </div>
@@ -47,9 +42,15 @@ export const Popover: React.FC<React.ComponentPropsWithoutRef<"div">> & {
 };
 
 const PopoverButton: React.FC<
-    React.ComponentPropsWithoutRef<typeof Button>
+    Omit<
+        React.ComponentPropsWithoutRef<typeof Button>,
+        "aria-expanded" | "aria-controls"
+    >
 > = ({ onClick, children, ...restProps }) => {
     const popoverId = useContext(PopoverIdContext);
+    const openedPopoverId = useStore(PopoverStore);
+    const isOpen = popoverId === openedPopoverId;
+
     const actualOnClick = useCallback(
         (e: React.MouseEvent<HTMLButtonElement>) => {
             e.stopPropagation();
@@ -62,7 +63,12 @@ const PopoverButton: React.FC<
     );
 
     return (
-        <Button {...restProps} onClick={actualOnClick}>
+        <Button
+            {...restProps}
+            aria-expanded={isOpen}
+            aria-controls={popoverId}
+            onClick={actualOnClick}
+        >
             {children}
         </Button>
     );
@@ -79,7 +85,7 @@ const transition = () => timeout(transitionDuration);
 const PopoverContent: React.FC<
     {
         closeOnClick?: boolean;
-    } & React.ComponentPropsWithoutRef<"div">
+    } & Omit<React.ComponentPropsWithoutRef<"div">, "id">
 > = ({ closeOnClick, onClick, className, children, ...restProps }) => {
     const popoverId = useContext(PopoverIdContext);
     const openedPopoverId = useStore(PopoverStore);
@@ -96,6 +102,7 @@ const PopoverContent: React.FC<
     return (
         <div
             {...restProps}
+            id={popoverId}
             data-open={isOpen}
             data-status={status}
             className={cx(
@@ -107,12 +114,11 @@ const PopoverContent: React.FC<
                     boxShadow: "0 0 2em #111",
                     transition: `opacity ${transitionDuration}ms`,
                     selectors: {
-                        '&[data-open="true"]': {
-                            opacity: 1,
-                        },
                         '&[data-open="false"]': {
-                            pointerEvents: "none",
                             opacity: 0,
+                        },
+                        '&[data-status="exited"]': {
+                            visibility: "hidden",
                         },
                     },
                 }),

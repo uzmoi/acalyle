@@ -18,6 +18,7 @@ export const MemoMenu: React.FC<{
     return (
         <Popover>
             <Popover.Button
+                aria-haspopup
                 className={style({
                     borderRadius: "50%",
                     padding: "0.25em",

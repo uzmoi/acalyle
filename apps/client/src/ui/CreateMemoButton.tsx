@@ -28,7 +28,7 @@ export const CreateMemoButton: React.FC<{
         <Popover className={style({ display: "inline-block" })}>
             <ControlGroup>
                 <Button onClick={createMemoNoTemplate}>Add memo</Button>
-                <Popover.Button>
+                <Popover.Button aria-haspopup>
                     <BiCaretDown
                         className={style({ verticalAlign: "middle" })}
                     />
