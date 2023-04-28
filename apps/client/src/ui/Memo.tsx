@@ -1,4 +1,5 @@
 import { AcalyleMemoTag } from "@acalyle/core";
+import { vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { useMemo, useState } from "react";
@@ -66,7 +67,9 @@ export const Memo: React.FC<{
                 </div>
             )}
             <header>
-                <div className={style({ display: "flex" })}>
+                <div
+                    className={style({ display: "flex", alignItems: "center" })}
+                >
                     <MemoInfo
                         memo={memo}
                         className={style({ flex: "1 0", fontSize: "0.725em" })}
@@ -93,6 +96,8 @@ export const Memo: React.FC<{
                 ) : (
                     <div
                         className={style({
+                            backgroundColor: vars.color.bg.block,
+                            padding: "0.25em 0.75em",
                             whiteSpace: "pre-wrap",
                             wordBreak: "break-all",
                         })}
