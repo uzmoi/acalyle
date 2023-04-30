@@ -36,14 +36,14 @@ export const Modal: React.FC<{
                     position: "fixed",
                     inset: 0,
                     backgroundColor: "#0008",
+                    backdropFilter: "blur(0.125em)",
                     transitionProperty: "opacity",
                     selectors: {
-                        '&[data-open="true"]': {
-                            opacity: 1,
-                        },
                         '&[data-open="false"]': {
-                            pointerEvents: "none",
                             opacity: 0,
+                        },
+                        '&[data-status="exited"]': {
+                            visibility: "hidden",
                         },
                     },
                 }),
@@ -51,7 +51,21 @@ export const Modal: React.FC<{
             )}
             onClick={handleClick}
         >
-            {status === "exited" || children}
+            {status === "exited" || (
+                <div
+                    className={style({
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        translate: "-50% -50%",
+                        zIndex: vars.zIndex.modal,
+                        backgroundColor: vars.color.bg.layout,
+                        borderRadius: vars.radius.block,
+                    })}
+                >
+                    {children}
+                </div>
+            )}
         </div>
     );
 };
