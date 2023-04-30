@@ -1,21 +1,18 @@
 import { style } from "@macaron-css/core";
 import { timeout } from "emnorst";
-import { useCallback } from "react";
 import { vars } from "../theme";
 import { cx } from "./cx";
 import { useTransitionStatus } from "./use-transition-status";
+
+const transitionDuration = 200;
+const transition = () => timeout(transitionDuration);
 
 export const Modal: React.FC<{
     open?: boolean;
     className?: string;
     children?: React.ReactNode;
     onClose?: () => void;
-    transitionDuration?: number;
-}> = ({ open, className, children, onClose, transitionDuration = 200 }) => {
-    const transition = useCallback(
-        () => timeout(transitionDuration),
-        [transitionDuration],
-    );
+}> = ({ open, className, children, onClose }) => {
     const status = useTransitionStatus({ show: open, transition });
 
     const handleClick: React.MouseEventHandler<HTMLDivElement> = e => {
@@ -29,7 +26,6 @@ export const Modal: React.FC<{
         <div
             data-open={open}
             data-status={status}
-            style={{ transitionDuration: `${transitionDuration}ms` }}
             className={cx(
                 style({
                     zIndex: vars.zIndex.modal,
@@ -37,7 +33,7 @@ export const Modal: React.FC<{
                     inset: 0,
                     backgroundColor: "#0008",
                     backdropFilter: "blur(0.125em)",
-                    transitionProperty: "opacity",
+                    transition: `opacity ${transitionDuration}ms`,
                     selectors: {
                         '&[data-open="false"]': {
                             opacity: 0,
