@@ -1,9 +1,10 @@
 import { act, renderHook } from "@testing-library/react";
+import { timeout } from "emnorst";
 import { describe, expect, test, vi } from "vitest";
 import { useTransitionStatus } from "./use-transition-status";
 
 vi.useFakeTimers();
-const transition = () => Promise.resolve();
+const transition = () => timeout(1000);
 
 describe("useTransitionStatus", () => {
     describe("初期値", () => {
