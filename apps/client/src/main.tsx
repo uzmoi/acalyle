@@ -1,5 +1,5 @@
 import * as Router from "@acalyle/router";
-import { createTheme, vars } from "@acalyle/ui";
+import { ModalContainer, createTheme, vars } from "@acalyle/ui";
 import { globalStyle, style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { onMount } from "nanostores";
@@ -103,6 +103,7 @@ const DevAppRoot: React.FC = () => {
             })}
         >
             <Suspense>{Router.match(BookRoute, location as never)}</Suspense>
+            <ModalContainer />
         </div>
     );
 };
