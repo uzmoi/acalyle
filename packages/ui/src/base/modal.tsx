@@ -1,36 +1,70 @@
 import { style } from "@macaron-css/core";
+import { useStore } from "@nanostores/react";
 import { timeout } from "emnorst";
+import { atom } from "nanostores";
 import { vars } from "../theme";
 import { cx } from "./cx";
-import { useTransitionStatus } from "./use-transition-status";
+import type { TransitionStatus } from "./use-transition-status";
+
+type ModalData<out T> = {
+    default: T;
+    render: (close: (result?: T) => void) => React.ReactNode;
+};
+
+const ModalStore = atom<{
+    contents: React.ReactNode;
+    close: () => void;
+} | null>(null);
+
+const ModalStatusStore = atom<TransitionStatus>("exited");
+
+export const openModal = <T,>(entry: ModalData<T>): Promise<T> => {
+    return new Promise(resolve => {
+        let open = true;
+        const close = (result = entry.default) => {
+            if (!open) return;
+            open = false;
+            resolve(result);
+            ModalStatusStore.set("exiting");
+            void timeout(transitionDuration).then(() => {
+                ModalStore.set(null);
+                ModalStatusStore.set("exited");
+            });
+        };
+        ModalStore.set({
+            contents: entry.render(close),
+            close,
+        });
+        ModalStatusStore.set("entering");
+        void timeout(transitionDuration).then(() => {
+            ModalStatusStore.set("entered");
+        });
+    });
+};
 
 const transitionDuration = 200;
-const transition = () => timeout(transitionDuration);
 
-export const Modal: React.FC<{
-    open?: boolean;
+export const ModalContainer: React.FC<{
     className?: string;
-    children?: React.ReactNode;
-    onClose?: () => void;
-}> = ({ open, className, children, onClose }) => {
-    const status = useTransitionStatus({ show: open, transition });
+}> = ({ className }) => {
+    const modal = useStore(ModalStore);
+    const status = useStore(ModalStatusStore);
 
-    const handleClick: React.MouseEventHandler<HTMLDivElement> = e => {
-        e.stopPropagation();
+    const onClickBackdrop = (e: React.MouseEvent<HTMLDivElement>) => {
         if (e.target === e.currentTarget) {
-            onClose?.();
+            modal?.close();
         }
     };
 
     return (
         <div
-            data-open={open}
+            data-open={status.startsWith("enter")}
             data-status={status}
             className={cx(
                 style({
-                    zIndex: vars.zIndex.modal,
                     position: "fixed",
                     inset: 0,
+                    zIndex: vars.zIndex.modal,
                     backgroundColor: "#0008",
                     backdropFilter: "blur(0.125em)",
                     transition: `opacity ${transitionDuration}ms`,
@@ -45,7 +79,7 @@ export const Modal: React.FC<{
                 }),
                 className,
             )}
-            onClick={handleClick}
+            onClick={onClickBackdrop}
         >
             {status === "exited" || (
                 <div
@@ -54,12 +88,12 @@ export const Modal: React.FC<{
                         top: "50%",
                         left: "50%",
                         translate: "-50% -50%",
-                        zIndex: vars.zIndex.modal,
                         backgroundColor: vars.color.bg.layout,
                         borderRadius: vars.radius.block,
+                        boxShadow: "0 0 2em #111",
                     })}
                 >
-                    {children}
+                    {modal && modal.contents}
                 </div>
             )}
         </div>
