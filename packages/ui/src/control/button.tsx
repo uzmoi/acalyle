@@ -1,40 +1,31 @@
-import { cx } from "@linaria/core";
-import { style, styleVariants } from "@macaron-css/core";
-import { ControlPartOutlineStyle, ControlPartResetStyle } from "./base";
-
-export type ButtonVariant = keyof typeof variants;
+import { style } from "@macaron-css/core";
+import { cx } from "../base/cx";
+import { vars } from "../theme";
+import { type ControlPartVariant, control } from "./base";
 
 export const Button: React.FC<
     {
-        variant?: ButtonVariant;
+        variant?: ControlPartVariant;
     } & React.ComponentPropsWithoutRef<"button">
-> = ({ variant = "outline", className, ...restProps }) => {
+> = ({ variant = "solid", className, ...restProps }) => {
     return (
         <button
             type="button"
             {...restProps}
             className={cx(
-                ControlPartResetStyle,
+                control.reset,
+                control.base,
+                control[variant],
                 style({
                     fontWeight: "bold",
                     cursor: "pointer",
+                    ":disabled": {
+                        color: vars.color.fg.mute,
+                        cursor: "not-allowed",
+                    },
                 }),
-                variants[variant],
                 className,
             )}
         />
     );
 };
-
-const variants = styleVariants({
-    outline: [ControlPartOutlineStyle],
-    unstyled: [],
-    icon: [
-        ControlPartOutlineStyle,
-        {
-            padding: "0.25em",
-            fontSize: "1.25em",
-            lineHeight: 1,
-        },
-    ],
-});

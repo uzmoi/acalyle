@@ -1,5 +1,5 @@
-import { cx } from "@linaria/core";
 import { styleVariants } from "@macaron-css/core";
+import { cx } from "./cx";
 
 export type ListVariant = keyof typeof variants;
 
@@ -35,6 +35,6 @@ List.Item = ({ ...restProps }) => {
     return <li {...restProps} />;
 };
 
-if (import.meta.env.DEV) {
+if (process.env.NODE_ENV === "development") {
     List.Item.displayName = "List.Item";
 }

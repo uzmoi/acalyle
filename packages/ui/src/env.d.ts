@@ -1,4 +1,3 @@
-import "vite/client";
 import "react";
 
 declare module "react" {

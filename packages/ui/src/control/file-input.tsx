@@ -1,5 +1,5 @@
-import { cx } from "@linaria/core";
-import { ControlPartResetStyle } from "./base";
+import { cx } from "../base/cx";
+import { control } from "./base";
 
 // prettier-ignore
 type OmitPropNames = (
@@ -80,7 +80,7 @@ export const FileInput: React.FC<
             onChange={handleChange}
             type="file"
             multiple={multiple}
-            className={cx(ControlPartResetStyle, className)}
+            className={cx(control.reset, className)}
         />
     );
 };

@@ -23,7 +23,7 @@ export const BookListPage: React.FC = () => {
                 className={style({
                     display: "flex",
                     alignItems: "center",
-                    paddingBottom: "0.5em",
+                    marginBottom: "1.5em",
                 })}
             >
                 <div className={style({ flex: "1 1" })}>

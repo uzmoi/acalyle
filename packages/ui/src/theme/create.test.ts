@@ -1,37 +1,26 @@
-import { describe, expect, test } from "vitest";
-import { themeNames } from "./create";
+import { expect, test } from "vitest";
+import { createTheme } from "./create";
 
-describe("theme create", () => {
-    test("vars", () => {
-        const vars = themeNames("prefix", { hoge: ["foo"] } as const);
-        expect(vars.hoge.foo).toBe("var(--prefix-hoge-foo)");
+test("createTheme", () => {
+    const themeStyle = createTheme<{
+        hoge: `var(--${string})`;
+    }>("prefix", {
+        hoge: "value",
     });
-    test("themeStyle", () => {
-        const vars = themeNames("prefix", { hoge: ["foo"] } as const);
-        const themeStyle = vars.createTheme({
-            hoge: { foo: "cssValue" },
-        });
-        expect(themeStyle).toEqual({ "--prefix-hoge-foo": "cssValue" });
+
+    expect(themeStyle).toEqual({
+        "--prefix-hoge": "value",
     });
-    describe("themeStyle with default", () => {
-        const vars = themeNames("prefix", {
-            hoge: { foo: "defaultValue" },
-        } as const);
-        test("すべて指定", () => {
-            const themeStyle = vars.createTheme({
-                hoge: { foo: "cssValue" },
-            });
-            expect(themeStyle).toEqual({ "--prefix-hoge-foo": "cssValue" });
-        });
-        test("値が無い", () => {
-            const themeStyle = vars.createTheme({
-                hoge: {},
-            });
-            expect(themeStyle).toEqual({ "--prefix-hoge-foo": "defaultValue" });
-        });
-        test("オブジェクトが無い", () => {
-            const themeStyle = vars.createTheme({});
-            expect(themeStyle).toEqual({ "--prefix-hoge-foo": "defaultValue" });
-        });
+});
+
+test("nest", () => {
+    const themeStyle = createTheme<{
+        hoge: { fuga: `var(--${string})` };
+    }>("prefix", {
+        hoge: { fuga: "value" },
+    });
+
+    expect(themeStyle).toEqual({
+        "--prefix-hoge-fuga": "value",
     });
 });

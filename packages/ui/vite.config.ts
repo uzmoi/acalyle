@@ -7,6 +7,7 @@ import { dependencies } from "./package.json";
 export default defineConfig({
     plugins: [react(), macaronVitePlugin(), dts({ exclude: "**/*.css.ts" })],
     build: {
+        target: "esnext",
         sourcemap: true,
         minify: false,
         lib: {
@@ -17,5 +18,8 @@ export default defineConfig({
         rollupOptions: {
             external: [/^react(?![^/])/, ...Object.keys(dependencies)],
         },
+    },
+    test: {
+        environment: "happy-dom",
     },
 });

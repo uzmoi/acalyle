@@ -1,54 +1,51 @@
-import { Button, Modal } from "@acalyle/ui";
+import { Button, Popover, vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
-import { cloneElement, useState } from "react";
+import { cloneElement } from "react";
 import type { IconBaseProps } from "react-icons";
 import { BiDotsVertical } from "react-icons/bi";
 
 export type MenuAction = {
     icon: JSX.Element;
     text: string;
-    color?: string;
+    disabled?: boolean;
+    type?: "denger";
     onClick: (() => void) | undefined;
 };
 
 export const MemoMenu: React.FC<{
     actions: readonly MenuAction[];
 }> = ({ actions }) => {
-    const [isOpenMenuPopup, setIsOpenMenuPopup] = useState(false);
-
     return (
-        <div className={style({ position: "relative" })}>
-            <Button
-                variant="icon"
-                onClick={e => {
-                    e.stopPropagation();
-                    setIsOpenMenuPopup(isOpen => !isOpen);
-                }}
-                className={style({ borderRadius: "50%" })}
+        <Popover>
+            <Popover.Button
+                aria-haspopup
+                className={style({
+                    borderRadius: "50%",
+                    padding: "0.25em",
+                    fontSize: "1.25em",
+                    lineHeight: 1,
+                    border: 0,
+                })}
             >
                 <BiDotsVertical className={style({ verticalAlign: "top" })} />
-            </Button>
-            <Modal
-                open={isOpenMenuPopup}
-                onClose={() => setIsOpenMenuPopup(false)}
-                variant="popup"
+            </Popover.Button>
+            <Popover.Content
+                closeOnClick
                 className={style({
                     top: "calc(100% + 0.5em)",
                     right: 0,
                     overflow: "hidden",
                     whiteSpace: "nowrap",
-                    backgroundColor: "#222",
-                    borderRadius: "0.25em",
-                    boxShadow: "0 0 2em #111",
                 })}
             >
                 <div role="menu">
-                    {actions.map(({ icon, text, color, onClick }) => (
+                    {actions.map(({ icon, text, disabled, type, onClick }) => (
                         <Button
                             key={text}
                             role="menuitem"
+                            disabled={disabled}
                             onClick={onClick}
-                            style={{ color }}
+                            data-type={type}
                             variant="unstyled"
                             className={style({
                                 display: "block",
@@ -57,11 +54,17 @@ export const MemoMenu: React.FC<{
                                 fontSize: "0.9em",
                                 fontWeight: "normal",
                                 textAlign: "start",
+                                transition:
+                                    "background-color 200ms, color 200ms",
                                 selectors: {
                                     "& + &": {
-                                        borderTop: "1px solid #666",
+                                        borderTop: `1px solid ${vars.color.fg.mute}`,
                                     },
-                                    "&:not(:disabled):is(:hover, :focus)": {
+                                    '&[data-type="denger"]:enabled:is(:hover, :focus)':
+                                        {
+                                            color: vars.color.denger,
+                                        },
+                                    "&:enabled:is(:hover, :focus)": {
                                         backgroundColor: "#fff2",
                                     },
                                 },
@@ -81,7 +84,7 @@ export const MemoMenu: React.FC<{
                         </Button>
                     ))}
                 </div>
-            </Modal>
-        </div>
+            </Popover.Content>
+        </Popover>
     );
 };

@@ -2,7 +2,7 @@ import "@acalyle/client/dist/style.css";
 
 import { BookRoute, Location, net } from "@acalyle/client";
 import * as Router from "@acalyle/router";
-import { vars } from "@acalyle/ui";
+import { createTheme, vars } from "@acalyle/ui";
 import { globalStyle, style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { appDataDir } from "@tauri-apps/api/path";
@@ -60,16 +60,35 @@ globalStyle(":root, body, #app", {
     height: "100%",
 });
 
-const themeStyle = vars.createTheme({
+const themeStyle = createTheme<typeof vars>("acalyle", {
     color: {
-        text: "#e0e0e0",
-        subtext: "#a0a0a0",
-        caret: vars.color.text,
-        bg1: "#191c1f",
-        bg2: "#1e2125",
-        bg3: "#22262a",
-        bg4: "#101214",
-        selection: "rgba(0 128 256 / 20%)",
+        fg: {
+            __: "#e0e0e0",
+            mute: "#a0a0a0",
+        },
+        bg: {
+            app: "#191c1f",
+            layout: "#1e2125",
+            block: "#22262a",
+            inline: "#101214",
+        },
+        denger: "#e44",
+        accent: "#a88",
+    },
+    font: {
+        sans: "'Noto Sans JP', sans-serif",
+        mono: "'Roboto Mono', monospace",
+    },
+    radius: {
+        control: "4px",
+        block: "0.25em",
+    },
+    zIndex: {
+        toast: 100,
+        modal: 101,
+        popover: 102,
+        contextMenu: 103,
+        max: 9999,
     },
 });
 
@@ -81,8 +100,8 @@ export const App: React.FC = () => {
             className={style({
                 minHeight: "100%",
                 fontFamily: vars.font.sans,
-                color: vars.color.text,
-                backgroundColor: vars.color.bg1,
+                color: vars.color.fg.__,
+                backgroundColor: vars.color.bg.app,
             })}
             style={themeStyle}
         >

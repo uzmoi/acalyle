@@ -1,82 +1,101 @@
-import { cx } from "@linaria/core";
 import { style } from "@macaron-css/core";
-import { noop, timeout } from "emnorst";
-import { useEffect, useState } from "react";
+import { useStore } from "@nanostores/react";
+import { timeout } from "emnorst";
+import { atom } from "nanostores";
+import { vars } from "../theme";
+import { cx } from "./cx";
+import type { TransitionStatus } from "./use-transition-status";
 
-export const Modal: React.FC<{
-    open?: boolean;
-    className?: string;
-    children?: React.ReactNode;
-    onClose?: () => void;
-    transitionDuration?: number;
-    variant?: "modal" | "popup";
-}> = ({
-    open,
-    className,
-    children,
-    onClose,
-    transitionDuration = 200,
-    variant = "modal",
-}) => {
-    const [isMounted, setIsMounted] = useState(false);
+type ModalData<out T> = {
+    default: T;
+    render: (close: (result?: T) => void) => React.ReactNode;
+};
 
-    useEffect(() => {
-        const ac = new AbortController();
-        void timeout(transitionDuration, { signal: ac.signal }).then(() => {
-            setIsMounted(!!open);
-        }, noop);
-        return () => {
-            ac.abort();
+const ModalStore = atom<{
+    contents: React.ReactNode;
+    close: () => void;
+} | null>(null);
+
+const ModalStatusStore = atom<TransitionStatus>("exited");
+
+export const openModal = <T,>(entry: ModalData<T>): Promise<T> => {
+    return new Promise(resolve => {
+        let open = true;
+        const close = (result = entry.default) => {
+            if (!open) return;
+            open = false;
+            resolve(result);
+            ModalStatusStore.set("exiting");
+            void timeout(transitionDuration).then(() => {
+                ModalStore.set(null);
+                ModalStatusStore.set("exited");
+            });
         };
-    }, [open, transitionDuration]);
+        ModalStore.set({
+            contents: entry.render(close),
+            close,
+        });
+        ModalStatusStore.set("entering");
+        void timeout(transitionDuration).then(() => {
+            ModalStatusStore.set("entered");
+        });
+    });
+};
 
-    const handleClick: React.MouseEventHandler<HTMLDivElement> = e => {
-        e.stopPropagation();
+const transitionDuration = 200;
+
+export const ModalContainer: React.FC<{
+    className?: string;
+}> = ({ className }) => {
+    const modal = useStore(ModalStore);
+    const status = useStore(ModalStatusStore);
+
+    const onClickBackdrop = (e: React.MouseEvent<HTMLDivElement>) => {
         if (e.target === e.currentTarget) {
-            onClose?.();
+            modal?.close();
         }
     };
 
-    const status = open
-        ? `enter${isMounted ? "ed" : "ing"}`
-        : `exit${isMounted ? "ing" : "ed"}`;
-
     return (
         <div
-            data-open={open}
+            data-open={status.startsWith("enter")}
             data-status={status}
-            data-variant={variant}
-            style={{ transitionDuration: `${transitionDuration}ms` }}
             className={cx(
                 style({
-                    zIndex: 9999,
-                    transitionProperty: "opacity",
+                    position: "fixed",
+                    inset: 0,
+                    zIndex: vars.zIndex.modal,
+                    backgroundColor: "#0008",
+                    backdropFilter: "blur(0.125em)",
+                    transition: `opacity ${transitionDuration}ms`,
                     selectors: {
-                        '&[data-variant="modal"]': {
-                            position: "fixed",
-                            top: 0,
-                            right: 0,
-                            bottom: 0,
-                            left: 0,
-                            backgroundColor: "#0008",
-                        },
-                        '&[data-variant="popup"]': {
-                            position: "absolute",
-                        },
-                        '&[data-open="true"]': {
-                            opacity: 1,
-                        },
                         '&[data-open="false"]': {
-                            pointerEvents: "none",
                             opacity: 0,
+                        },
+                        '&[data-status="exited"]': {
+                            visibility: "hidden",
                         },
                     },
                 }),
                 className,
             )}
-            onClick={handleClick}
+            onClick={onClickBackdrop}
         >
-            {(open || isMounted) && children}
+            {status === "exited" || (
+                <div
+                    className={style({
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        translate: "-50% -50%",
+                        backgroundColor: vars.color.bg.layout,
+                        borderRadius: vars.radius.block,
+                        boxShadow: "0 0 2em #111",
+                    })}
+                >
+                    {modal && modal.contents}
+                </div>
+            )}
         </div>
     );
 };

@@ -1,14 +1,13 @@
-import { cx } from "@linaria/core";
-import { style, styleVariants } from "@macaron-css/core";
-import { ControlPartOutlineStyle, ControlPartResetStyle } from "./base";
+import { style } from "@macaron-css/core";
+import { cx } from "../base/cx";
+import { vars } from "../theme";
+import { type ControlPartVariant, control } from "./base";
 
 const ZeroWidthSpace = "\u200b";
 
-export type TextAreaVariant = keyof typeof variants;
-
 export const TextArea: React.FC<
     {
-        variant?: TextAreaVariant;
+        variant?: ControlPartVariant;
         value?: string;
         defaultValue?: string;
         onValueChange?: (value: string) => void;
@@ -19,7 +18,7 @@ export const TextArea: React.FC<
         readOnly?: boolean;
     } & React.ComponentPropsWithoutRef<"div">
 > = ({
-    variant = "outline",
+    variant = "solid",
     value,
     defaultValue,
     onValueChange,
@@ -41,13 +40,14 @@ export const TextArea: React.FC<
         <div
             {...restProps}
             className={cx(
-                variants[variant],
+                control.base,
+                control[variant],
                 style({
                     position: "relative",
                     overflowWrap: "break-word",
                     whiteSpace: "pre-wrap",
                     vars: {
-                        "--caret-color": "white", // currentcolor
+                        "--caret-color": vars.color.fg.__,
                     },
                 }),
                 className,
@@ -61,7 +61,7 @@ export const TextArea: React.FC<
                 defaultValue={defaultValue}
                 onChange={handleChange}
                 className={cx(
-                    ControlPartResetStyle,
+                    control.reset,
                     style({
                         position: "absolute",
                         top: 0,
@@ -106,8 +106,3 @@ export const TextArea: React.FC<
         </div>
     );
 };
-
-const variants = styleVariants({
-    outline: [ControlPartOutlineStyle],
-    unstyled: [],
-});
