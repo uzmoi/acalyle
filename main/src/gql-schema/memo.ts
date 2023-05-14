@@ -286,3 +286,20 @@ export const importMemos = mutationField("importMemos", {
         return "ok";
     },
 });
+
+export const transferMemo = mutationField("transferMemo", {
+    type: "String",
+    args: {
+        memoIds: nonNull(list(nonNull("ID"))),
+        bookId: nonNull("ID"),
+    },
+    async resolve(_, args, { prisma }) {
+        await prisma.memo.updateMany({
+            where: {
+                id: { in: args.memoIds },
+            },
+            data: { bookId: args.bookId },
+        });
+        return "ok";
+    },
+});
