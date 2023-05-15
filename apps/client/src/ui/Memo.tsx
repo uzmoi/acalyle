@@ -3,9 +3,10 @@ import { vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { useMemo, useState } from "react";
-import { BiClipboard, BiEditAlt, BiTrash } from "react-icons/bi";
+import { BiClipboard, BiEditAlt, BiTransfer, BiTrash } from "react-icons/bi";
 import { usePromiseLoader } from "~/lib/promise-loader";
-import { memoStore, removeMemo } from "~/store/memo";
+import { selectBook } from "~/modal";
+import { memoStore, removeMemo, transferMemo } from "~/store/memo";
 import { AddTagButton } from "~/ui/AddTagButton";
 import { MemoContentsEditor } from "~/ui/MemoContentsEditor";
 import { MemoInfo } from "~/ui/MemoInfo";
@@ -37,6 +38,17 @@ export const Memo: React.FC<{
                 text: "Copy memo id",
                 onClick: () => {
                     void navigator.clipboard.writeText(memoId);
+                },
+            },
+            {
+                icon: <BiTransfer />,
+                text: "Transfer memo",
+                onClick: () => {
+                    void selectBook().then(bookId => {
+                        if (bookId != null) {
+                            void transferMemo(memoId, bookId);
+                        }
+                    });
                 },
             },
             {
