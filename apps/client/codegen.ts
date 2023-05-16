@@ -18,6 +18,7 @@ export default {
                 scalars: {
                     Upload: "null",
                     DateTime: "string",
+                    ID: 'import("emnorst").Meta<string, "ID">',
                 },
                 arrayInputCoercion: false,
                 immutableTypes: true,

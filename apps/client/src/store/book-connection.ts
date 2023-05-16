@@ -5,6 +5,7 @@ import {
     type GqlBookListPaginationQueryVariables,
     GqlBookSortOrder,
     GqlSortOrder,
+    type Scalars,
 } from "~/__generated__/graphql";
 import { type ConnectionExt, createConnectionAtom } from "~/lib/connection";
 import { debounce } from "~/lib/debounce";
@@ -47,7 +48,7 @@ const BookListPagination = gql`
 `;
 
 export type Book = {
-    id: string;
+    id: Scalars["ID"];
     handle: string | null;
     title: string;
     description: string;

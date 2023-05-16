@@ -3,6 +3,7 @@ import { gql } from "graphql-tag";
 import type {
     GqlMemoListPaginationQuery,
     GqlMemoListPaginationQueryVariables,
+    Scalars,
 } from "~/__generated__/graphql";
 import { createConnectionAtom } from "~/lib/connection";
 import { memoizeBuilder } from "~/lib/memoize-builder";
@@ -45,7 +46,7 @@ export type Memo = {
 };
 
 export const memoConnection = memoizeBuilder(
-    (_, bookId: string, query: string) =>
+    (_, bookId: Scalars["ID"], query: string) =>
         createConnectionAtom(
             async connectionAtom => {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

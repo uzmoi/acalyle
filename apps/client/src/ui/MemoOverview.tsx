@@ -1,6 +1,7 @@
 import { vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
+import type { Scalars } from "~/__generated__/graphql";
 import { usePromiseLoader } from "~/lib/promise-loader";
 import { link } from "~/pages/link";
 import { memoStore } from "~/store/memo";
@@ -9,7 +10,7 @@ import { TagList } from "./TagList";
 
 export const MemoOverview: React.FC<{
     bookId: string;
-    memoId: string;
+    memoId: Scalars["ID"];
 }> = ({ bookId, memoId }) => {
     const memo = usePromiseLoader(useStore(memoStore(memoId)));
 

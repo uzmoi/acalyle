@@ -2,6 +2,7 @@ import { vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { identify } from "emnorst";
+import type { Scalars } from "~/__generated__/graphql";
 import { usePromiseLoader } from "~/lib/promise-loader";
 import { link } from "~/pages/link";
 import { bookStore } from "~/store/book";
@@ -9,7 +10,7 @@ import { BookThumbnail } from "./BookThumbnail";
 import { Link } from "./Link";
 
 export const BookOverview: React.FC<{
-    bookId: string;
+    bookId: Scalars["ID"];
 }> = ({ bookId }) => {
     const book = usePromiseLoader(useStore(bookStore(bookId)));
 

@@ -1,11 +1,12 @@
 import { Popover, closePopover } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { BiPlus } from "react-icons/bi";
+import type { Scalars } from "~/__generated__/graphql";
 import { AddTagForm } from "./AddTagForm";
 
 export const AddTagButton: React.FC<{
     bookHandle: string;
-    memoId: string;
+    memoId: Scalars["ID"];
 }> = ({ bookHandle, memoId }) => {
     return (
         <Popover className={style({ display: "inline-block" })}>

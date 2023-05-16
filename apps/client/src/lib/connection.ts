@@ -5,7 +5,7 @@ import {
     atom,
     onStart,
 } from "nanostores";
-import type { GqlPageInfo, Maybe } from "~/__generated__/graphql";
+import type { GqlPageInfo, Maybe, Scalars } from "~/__generated__/graphql";
 
 export type GqlConnection<TNode extends { id: string }> = {
     __typename?: `${string}Connection`;
@@ -14,7 +14,7 @@ export type GqlConnection<TNode extends { id: string }> = {
 };
 
 export type Connection = {
-    nodeIds: readonly string[];
+    nodeIds: readonly Scalars["ID"][];
     hasNext: boolean;
     endCursor: string | null;
 };
@@ -25,7 +25,7 @@ export type ConnectionExt = {
     isLoading: ReadableAtom<boolean>;
 };
 
-export const createConnectionAtom = <TNode extends { id: string }>(
+export const createConnectionAtom = <TNode extends { id: Scalars["ID"] }>(
     load: (atom: WritableAtom<Connection>) => Promise<GqlConnection<TNode>>,
     updateNode: (node: TNode) => void,
 ): ReadableAtom<Connection> & ConnectionExt => {
@@ -39,7 +39,7 @@ export const createConnectionAtom = <TNode extends { id: string }>(
     connectionStore.isLoading = isLoading;
 
     const loadNodes = async (
-        getIds: (ids: readonly string[]) => readonly string[],
+        getIds: (ids: readonly Scalars["ID"][]) => readonly Scalars["ID"][],
     ) => {
         isLoading.set(true);
         const { edges, pageInfo } = await load(connectionStore);
