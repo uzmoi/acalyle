@@ -4,8 +4,10 @@ import { useStore } from "@nanostores/react";
 import { bookConnection } from "~/store/book-connection";
 import { BookOverview } from "./BookOverview";
 
-export const BookList: React.FC = () => {
-    const { nodeIds } = useStore(bookConnection);
+export const BookList: React.FC<{
+    query?: string;
+}> = ({ query = "" }) => {
+    const { nodeIds } = useStore(bookConnection(query));
 
     return (
         <List
