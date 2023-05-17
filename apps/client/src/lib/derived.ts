@@ -1,36 +1,31 @@
-import { noop } from "emnorst";
-import { type ReadableAtom, type StoreValue, atom, onMount } from "nanostores";
+import { type ReadableAtom, atom, onMount } from "nanostores";
 
-export type PureAtom<T = unknown> = Pick<ReadableAtom<T>, "get" | "listen">;
+export type PureAtom<T = unknown> = {
+    listen?(listener: (value: T) => void): () => void;
+    get(): T;
+};
 
-export const pure = <T>(value: T): PureAtom<T> => ({
-    get: () => value,
-    listen: () => noop,
-});
-
-type AtomGet = <T extends PureAtom>(atom: T) => StoreValue<T>;
+type AtomGet = <T>(atom: PureAtom<T>) => T;
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export const derived = <T extends PureAtom, Ext = {}>(
+export const derived = <T, Ext = {}>(
     derive: (get: AtomGet) => T,
-): ReadableAtom<StoreValue<T>> & { current: T } & Ext => {
-    const derived = atom<StoreValue<T> | undefined, { current: T } & Ext>();
+): ReadableAtom<T> & Ext => {
+    const derived = atom<T | undefined, Ext>();
 
     const subscriptions = new Map<PureAtom, () => void>();
     const run = () => {
         const nextSubscriptions = new Set<PureAtom>();
-        const get = <U extends PureAtom>(store: U): StoreValue<U> => {
-            if (!subscriptions.has(store)) {
+        const get: AtomGet = store => {
+            if (store.listen && !subscriptions.has(store)) {
                 const unbind = store.listen(run);
                 subscriptions.set(store, unbind);
             }
             nextSubscriptions.add(store);
-            return store.get() as StoreValue<U>;
+            return store.get();
         };
-        const derivedStore = derive(get);
 
-        derived.current = derivedStore;
-        derived.set(get(derivedStore));
+        derived.set(derive(get));
 
         for (const [store, unbind] of subscriptions) {
             if (!nextSubscriptions.has(store)) {
@@ -43,12 +38,12 @@ export const derived = <T extends PureAtom, Ext = {}>(
     onMount(derived, () => {
         run();
         return () => {
-            for (const [, unbind] of subscriptions) {
+            for (const unbind of subscriptions.values()) {
                 unbind();
             }
             subscriptions.clear();
         };
     });
 
-    return derived as ReadableAtom<StoreValue<T>> & { current: T } & Ext;
+    return derived as ReadableAtom<T> & Ext;
 };

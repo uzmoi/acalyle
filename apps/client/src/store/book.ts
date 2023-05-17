@@ -6,7 +6,7 @@ import type {
     GqlCreateBookMutationVariables,
     Scalars,
 } from "~/__generated__/graphql";
-import { type PureAtom, derived, pure } from "~/lib/derived";
+import { derived } from "~/lib/derived";
 import { memoizeBuilder } from "~/lib/memoize-builder";
 import type { PromiseLoaderW } from "~/lib/promise-loader";
 import { createQueryStore } from "~/lib/query-store";
@@ -70,16 +70,14 @@ export const bookHandleStore = createQueryStore(
 );
 
 export const handleBookStore = memoizeBuilder((_, handle: string) =>
-    derived((get): PureAtom<PromiseLoaderW<Book | null>> => {
+    derived((get): PromiseLoaderW<Book | null> => {
         const bookIdLoader = get(bookHandleStore(handle));
         if (bookIdLoader.status !== "fulfilled" || bookIdLoader.value == null) {
-            return pure(
-                bookIdLoader as
-                    | { status: "fulfilled"; value: null }
-                    | Exclude<typeof bookIdLoader, { status: "fulfilled" }>,
-            );
+            return bookIdLoader as
+                | Exclude<typeof bookIdLoader, { status: "fulfilled" }>
+                | { status: "fulfilled"; value: null };
         }
-        return bookStore(bookIdLoader.value);
+        return get(bookStore(bookIdLoader.value));
     }),
 );
 
