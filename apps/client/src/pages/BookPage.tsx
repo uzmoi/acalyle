@@ -1,6 +1,7 @@
 import * as Router from "@acalyle/router";
 import { style } from "@macaron-css/core";
 import { Suspense } from "react";
+import type { Scalars } from "~/__generated__/graphql";
 import { MemoListPage } from "~/pages/book/MemoListPage";
 import { useBook } from "~/store/hook";
 import { Link } from "~/ui/Link";
@@ -21,7 +22,7 @@ const BookPageRoute = Router.routes<BookPageRoute, JSX.Element | null>({
     resources: Router.page(() => null),
     settings: Router.page(() => null),
     ":memoId": Router.page(({ bookId: bookHandle, memoId }) => (
-        <Memo bookHandle={bookHandle} memoId={memoId} />
+        <Memo bookHandle={bookHandle} memoId={memoId as Scalars["ID"]} />
     )),
 });
 

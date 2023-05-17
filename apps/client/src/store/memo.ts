@@ -14,6 +14,7 @@ import type {
     GqlUpdateMemoContentsMutationVariables,
     GqlUpsertMemoTagsMutation,
     GqlUpsertMemoTagsMutationVariables,
+    Scalars,
 } from "~/__generated__/graphql";
 import { createQueryStore } from "~/lib/query-store";
 import type { Memo } from "./memo-connection";
@@ -35,7 +36,7 @@ const MemoQuery = gql`
 `;
 
 export const memoStore = createQueryStore(
-    async (memoId: string): Promise<Memo | null> => {
+    async (memoId: Scalars["ID"]): Promise<Memo | null> => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const { graphql } = net.get()!;
         const { data } = await graphql<GqlMemoQuery, GqlMemoQueryVariables>(
@@ -54,15 +55,17 @@ const MemoTemplateQuery = gql`
     }
 `;
 
-export const memoTemplateStore = createQueryStore(async (bookId: string) => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const { graphql } = net.get()!;
-    const { data } = await graphql<
-        GqlMemoTemplateQuery,
-        GqlMemoTemplateQueryVariables
-    >(MemoTemplateQuery, { bookId });
-    return data.book?.tagProps;
-});
+export const memoTemplateStore = createQueryStore(
+    async (bookId: Scalars["ID"]) => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const { graphql } = net.get()!;
+        const { data } = await graphql<
+            GqlMemoTemplateQuery,
+            GqlMemoTemplateQueryVariables
+        >(MemoTemplateQuery, { bookId });
+        return data.book?.tagProps;
+    },
+);
 
 const CreateMemoMutation = gql`
     mutation CreateMemo($bookId: ID!, $templateName: String) {
@@ -76,7 +79,10 @@ const CreateMemoMutation = gql`
     }
 `;
 
-export const createMemo = async (bookId: string, templateName?: string) => {
+export const createMemo = async (
+    bookId: Scalars["ID"],
+    templateName?: string,
+) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { graphql } = net.get()!;
     const { data } = await graphql<
@@ -94,7 +100,7 @@ const RemoveMemoMutation = gql`
     }
 `;
 
-export const removeMemo = async (memoId: string) => {
+export const removeMemo = async (memoId: Scalars["ID"]) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { graphql } = net.get()!;
     const { data: _ } = await graphql<
@@ -116,7 +122,7 @@ const UpdateMemoContentsMutation = gql`
 `;
 
 export const updateMemoContents = async (
-    memoId: string,
+    memoId: Scalars["ID"],
     contents: string,
 ): Promise<void> => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -145,7 +151,7 @@ const UpsertMemoTagsMutation = gql`
 `;
 
 export const upsertMemoTags = async (
-    memoId: string,
+    memoId: Scalars["ID"],
     tags: readonly string[],
 ) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

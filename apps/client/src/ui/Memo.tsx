@@ -4,6 +4,7 @@ import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { useMemo, useState } from "react";
 import { BiClipboard, BiEditAlt, BiTransfer, BiTrash } from "react-icons/bi";
+import type { Scalars } from "~/__generated__/graphql";
 import { usePromiseLoader } from "~/lib/promise-loader";
 import { selectBook } from "~/modal";
 import { memoStore, removeMemo, transferMemo } from "~/store/memo";
@@ -17,7 +18,7 @@ import { TagList } from "./TagList";
 
 export const Memo: React.FC<{
     bookHandle: string;
-    memoId: string;
+    memoId: Scalars["ID"];
 }> = ({ bookHandle, memoId }) => {
     const memo = usePromiseLoader(useStore(memoStore(memoId)));
 
@@ -75,7 +76,10 @@ export const Memo: React.FC<{
         <article>
             {relateMemoId && (
                 <div className={style({ marginBottom: "0.5em" })}>
-                    <MemoOverview bookId={bookHandle} memoId={relateMemoId} />
+                    <MemoOverview
+                        bookId={bookHandle}
+                        memoId={relateMemoId as Scalars["ID"]}
+                    />
                 </div>
             )}
             <header>

@@ -1,10 +1,11 @@
 import { Button, ControlGroup, Form, TextArea } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useCallback, useState } from "react";
+import type { Scalars } from "~/__generated__/graphql";
 import { updateMemoContents } from "~/store/memo";
 
 export const MemoContentsEditor: React.FC<{
-    memoId: string;
+    memoId: Scalars["ID"];
     defaultContents: string;
     onEditEnd?: () => void;
 }> = ({ memoId, defaultContents, onEditEnd }) => {
