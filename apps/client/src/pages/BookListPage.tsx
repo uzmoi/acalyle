@@ -1,6 +1,7 @@
 import { Intersection, Spinner } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
+import { useCallback, useDeferredValue, useState } from "react";
 import { BiBookAdd } from "react-icons/bi";
 import { bookConnection } from "~/store/book-connection";
 import { BookList } from "~/ui/BookList";
@@ -8,14 +9,23 @@ import { BookSearchBar } from "~/ui/BookSearchBar";
 import { Link } from "~/ui/Link";
 import { link } from "./link";
 
-const onIntersection = (entry: IntersectionObserverEntry) => {
-    if (entry.isIntersecting) {
-        void bookConnection.loadNext();
-    }
-};
-
 export const BookListPage: React.FC = () => {
-    const { isLoading } = useStore(bookConnection);
+    const [query, setQuery] = useState("");
+    const deferredQuery = useDeferredValue(query);
+    const isLoading = useStore(bookConnection(deferredQuery).isLoading);
+
+    const onIntersection = useCallback(
+        (entry: IntersectionObserverEntry) => {
+            if (entry.isIntersecting) {
+                void bookConnection(deferredQuery).loadNext();
+            }
+        },
+        [deferredQuery],
+    );
+
+    const refetchBookConnection = useCallback(() => {
+        void bookConnection(deferredQuery).refetch();
+    }, [deferredQuery]);
 
     return (
         <main className={style({ padding: "1.25em" })}>
@@ -27,14 +37,18 @@ export const BookListPage: React.FC = () => {
                 })}
             >
                 <div className={style({ flex: "1 1" })}>
-                    <BookSearchBar />
+                    <BookSearchBar
+                        query={query}
+                        onQueryChange={setQuery}
+                        onRefresh={refetchBookConnection}
+                    />
                 </div>
                 <Link to={link("new")} className={style({ marginLeft: "1em" })}>
                     <BiBookAdd className={style({ verticalAlign: "middle" })} />
                     <span className={style({ marginLeft: "0.25em" })}>New</span>
                 </Link>
             </div>
-            <BookList />
+            <BookList query={deferredQuery} />
             <Intersection
                 onIntersection={onIntersection}
                 rootMargin="25% 0px"

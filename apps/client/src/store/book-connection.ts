@@ -1,14 +1,12 @@
 import { gql } from "graphql-tag";
-import { type WritableAtom, atom, onNotify } from "nanostores";
 import {
     type GqlBookListPaginationQuery,
     type GqlBookListPaginationQueryVariables,
     GqlBookSortOrder,
     GqlSortOrder,
+    type Scalars,
 } from "~/__generated__/graphql";
-import { type ConnectionExt, createConnectionAtom } from "~/lib/connection";
-import { debounce } from "~/lib/debounce";
-import { derived } from "~/lib/derived";
+import { createConnectionAtom } from "~/lib/connection";
 import { memoizeBuilder } from "~/lib/memoize-builder";
 import { bookStore } from "~/store/book";
 import { net } from "~/store/net";
@@ -47,7 +45,7 @@ const BookListPagination = gql`
 `;
 
 export type Book = {
-    id: string;
+    id: Scalars["ID"];
     handle: string | null;
     title: string;
     description: string;
@@ -55,28 +53,8 @@ export type Book = {
     tags: readonly string[];
 };
 
-export const bookConnectionQuery = atom("");
-
-const debouncedBookConnectionQuery = derived(
-    () => bookConnectionQuery,
-) satisfies Pick<WritableAtom, "notify">;
-const debouncedNotify = debounce(debouncedBookConnectionQuery.notify);
-onNotify(debouncedBookConnectionQuery, ({ abort }) => {
-    debouncedNotify();
-    abort();
-});
-
-export const bookConnection = derived(get => {
-    const query = get(debouncedBookConnectionQuery);
-    return bookConnectionBuilder(query);
-}) satisfies ConnectionExt;
-
-bookConnection.loadNext = () => bookConnection.current.loadNext();
-bookConnection.refetch = () => bookConnection.current.refetch();
-
-const bookConnectionBuilder = memoizeBuilder((_id, query: string) =>
+export const bookConnection = memoizeBuilder((_id, query: string) =>
     createConnectionAtom(
-        bookStore,
         async connectionAtom => {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const { graphql } = net.get()!;
@@ -92,6 +70,11 @@ const bookConnectionBuilder = memoizeBuilder((_id, query: string) =>
             });
             return data.books;
         },
-        book => ({ ...book, handle: book.handle ?? null }),
+        book => {
+            bookStore(book.id).resolve({
+                ...book,
+                handle: book.handle ?? null,
+            });
+        },
     ),
 );

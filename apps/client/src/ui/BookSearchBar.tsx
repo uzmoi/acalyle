@@ -1,28 +1,22 @@
 import { Button, ControlGroup, Form, TextInput } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
-import { useStore } from "@nanostores/react";
 import { BiRefresh } from "react-icons/bi";
-import { bookConnection, bookConnectionQuery } from "~/store/book-connection";
-
-const refetchBookConnection = () => {
-    void bookConnection.refetch();
-};
 
 export const BookSearchBar: React.FC<{
     className?: string;
-}> = ({ className }) => {
-    const query = useStore(bookConnectionQuery);
-
+    query?: string;
+    onQueryChange?: (query: string) => void;
+    onRefresh?: () => void;
+}> = ({ className, query, onQueryChange, onRefresh }) => {
     return (
-        <Form onSubmit={refetchBookConnection} className={className}>
+        <Form onSubmit={onRefresh} className={className}>
             <ControlGroup className={style({ display: "flex" })}>
                 <TextInput
                     type="search"
                     className={style({ flex: "1 1" })}
                     placeholder="Find a book"
                     value={query}
-                    // eslint-disable-next-line @typescript-eslint/unbound-method
-                    onValueChange={bookConnectionQuery.set}
+                    onValueChange={onQueryChange}
                 />
                 <Button
                     type="submit"
