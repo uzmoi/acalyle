@@ -172,7 +172,10 @@ const TransferMemoMutation = gql`
     }
 `;
 
-export const transferMemo = async (memoId: string, bookId: string) => {
+export const transferMemo = async (
+    memoId: Scalars["ID"],
+    bookId: Scalars["ID"],
+) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { graphql } = net.get()!;
     const { data: _ } = await graphql<

@@ -2,12 +2,13 @@ import { Button, ControlGroup, Form, List, openModal } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { useCallback, useState } from "react";
+import type { Scalars } from "~/__generated__/graphql";
 import { bookConnection } from "~/store/book-connection";
 import { BookOverview } from "~/ui/BookOverview";
 import { BookSearchBar } from "~/ui/BookSearchBar";
 
 export const selectBook = () => {
-    return openModal<string | null>({
+    return openModal<Scalars["ID"] | null>({
         default: null,
         render: close => (
             <div className={style({ padding: "1.25em" })}>
@@ -19,14 +20,15 @@ export const selectBook = () => {
 };
 
 const BookSelectForm: React.FC<{
-    onSubmit?: (bookId?: string | null) => void;
-}> = ({ onSubmit }) => {
-    const [bookId, setBookId] = useState<string | null>(null);
-    const { nodes } = useStore(bookConnection);
+    query?: string;
+    onSubmit?: (bookId?: Scalars["ID"] | null) => void;
+}> = ({ query = "", onSubmit }) => {
+    const [selectedBookId, setBookId] = useState<Scalars["ID"] | null>(null);
+    const { nodeIds } = useStore(bookConnection(query));
 
     const handleSubmit = useCallback(() => {
-        onSubmit?.(bookId);
-    }, [onSubmit, bookId]);
+        onSubmit?.(selectedBookId);
+    }, [onSubmit, selectedBookId]);
 
     const cancel = useCallback(() => {
         onSubmit?.();
@@ -41,15 +43,15 @@ const BookSelectForm: React.FC<{
                     marginBottom: "1em",
                 })}
             >
-                {nodes.map(book => (
+                {nodeIds.map(bookId => (
                     <List.Item
-                        key={book.id}
-                        data-selected={book.id === bookId}
+                        key={bookId}
+                        data-selected={bookId === selectedBookId}
                         // HACK
                         onClickCapture={e => {
                             e.stopPropagation();
                             e.preventDefault();
-                            setBookId(book.id);
+                            setBookId(bookId);
                         }}
                         className={style({
                             selectors: {
@@ -59,13 +61,13 @@ const BookSelectForm: React.FC<{
                             },
                         })}
                     >
-                        <BookOverview book={book} />
+                        <BookOverview bookId={bookId} />
                     </List.Item>
                 ))}
             </List>
             <ControlGroup>
                 <Button onClick={cancel}>Cancel</Button>
-                <Button type="submit" disabled={bookId == null}>
+                <Button type="submit" disabled={selectedBookId == null}>
                     Submit
                 </Button>
             </ControlGroup>
