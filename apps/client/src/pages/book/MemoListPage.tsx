@@ -1,7 +1,6 @@
 import { TextInput } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
-import { useMemo, useState } from "react";
-import { debounce } from "~/lib/debounce";
+import { useDeferredValue, useState } from "react";
 import { CreateMemoButton } from "~/ui/CreateMemoButton";
 import { MemoList } from "~/ui/MemoList";
 
@@ -9,8 +8,7 @@ export const MemoListPage: React.FC<{
     bookHandle: string;
 }> = ({ bookHandle }) => {
     const [query, setQuery] = useState("");
-
-    const debouncedSetQuery = useMemo(() => debounce(setQuery), []);
+    const deferredQuery = useDeferredValue(query);
 
     return (
         <div>
@@ -18,12 +16,15 @@ export const MemoListPage: React.FC<{
                 <TextInput
                     type="search"
                     className={style({ flex: "1 1" })}
-                    onValueChange={debouncedSetQuery}
+                    onValueChange={setQuery}
                 />
                 <CreateMemoButton bookHandle={bookHandle} />
                 {/* <MemoImportButton /> */}
             </div>
-            <MemoList bookHandle={bookHandle} query={`-@relate:* ${query}`} />
+            <MemoList
+                bookHandle={bookHandle}
+                query={`-@relate:* ${deferredQuery}`}
+            />
         </div>
     );
 };
