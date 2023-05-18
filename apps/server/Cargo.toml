@@ -2,3 +2,7 @@
 name = "acalyle-server"
 version = "0.1.0"
 edition = "2021"
+
+[dependencies]
+async-graphql = { version = "5.0.8", features = ["chrono"] }
+chrono = "0.4.24"
