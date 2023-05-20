@@ -25,13 +25,13 @@ impl Loader<MemoId> for SqliteLoader {
             "SELECT id, contents, createdAt, updatedAt, bookId FROM Memo WHERE id IN",
         );
         query_builder.push_tuples(keys, |mut separated, key| {
-            separated.push_bind(key.0);
+            separated.push_bind(key.0.clone());
         });
         let query = query_builder.build_query_as::<MemoData>();
 
         Ok(query
             .fetch(&self.pool)
-            .map_ok(|memo| (MemoId(memo.id), memo))
+            .map_ok(|memo| (MemoId(memo.id.clone()), memo))
             .map_err(Arc::new)
             .try_collect()
             .await?)
