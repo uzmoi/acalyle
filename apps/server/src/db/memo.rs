@@ -1,6 +1,9 @@
 use crate::db::loader::SqliteLoader;
-use async_graphql::{async_trait::async_trait, dataloader::Loader, futures_util::TryStreamExt};
+use async_graphql::{
+    async_trait::async_trait, dataloader::Loader, futures_util::TryStreamExt, Result,
+};
 use chrono::{DateTime, Utc};
+use sqlx::SqliteExecutor;
 use std::{collections::HashMap, sync::Arc};
 
 #[derive(Clone, PartialEq, Eq, Hash)]
@@ -36,4 +39,24 @@ impl Loader<MemoId> for SqliteLoader {
             .try_collect()
             .await?)
     }
+}
+
+pub(crate) async fn insert_memos(
+    executor: impl SqliteExecutor<'_>,
+    memos: impl IntoIterator<Item = MemoData>,
+) -> Result<()> {
+    let mut query_builder =
+        sqlx::QueryBuilder::new("INSERT INTO Memo(id, contents, createdAt, updatedAt, bookId) ");
+    query_builder.push_values(memos, |mut separated, memo| {
+        separated
+            .push_bind(memo.id)
+            .push_bind(memo.contents)
+            .push_bind(memo.created_at)
+            .push_bind(memo.updated_at)
+            .push_bind(memo.book_id);
+    });
+    let query = query_builder.build();
+
+    query.execute(executor).await?;
+    Ok(())
 }
