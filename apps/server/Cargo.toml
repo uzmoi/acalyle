@@ -4,5 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-async-graphql = { version = "5.0.8", features = ["chrono"] }
+async-graphql = { version = "5.0.8", features = ["chrono", "dataloader"] }
 chrono = "0.4.24"
+sqlx = { version = "0.6.3", features = ["runtime-tokio-rustls", "sqlite", "chrono"] }

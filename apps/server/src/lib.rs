@@ -1,3 +1,4 @@
+mod db;
 mod graphql;
 
 pub fn add(left: usize, right: usize) -> usize {

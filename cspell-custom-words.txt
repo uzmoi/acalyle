@@ -4,3 +4,4 @@ emnorst
 tauri
 nanostores
 tsup
+sqlx
