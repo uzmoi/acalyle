@@ -1,37 +1,60 @@
 use super::book::Book;
-use async_graphql::{InputObject, Object, ID};
+use crate::db::{
+    loader::SqliteLoader,
+    memo::{MemoData, MemoId},
+};
+use async_graphql::{dataloader::DataLoader, Context, InputObject, Object, Result, ID};
 use chrono::{DateTime, Utc};
 
-struct MemoData {
-    _contents: String,
-    _created_at: DateTime<Utc>,
-    _updated_at: DateTime<Utc>,
-    _book_id: ID,
-}
-
-pub(super) struct Memo {
-    id: ID,
-    _memo: Option<MemoData>,
-}
+#[derive(Default)]
+pub(super) struct MemoQuery;
 
 #[allow(unreachable_code)]
 #[Object]
+impl MemoQuery {
+    async fn memo(&self, ctx: &Context<'_>, id: ID) -> Result<Memo> {
+        let loader = ctx.data_unchecked::<DataLoader<SqliteLoader>>();
+        let id = MemoId(id.to_string());
+        let memo = loader.load_one(id.clone()).await?;
+        Ok(Memo { id, memo })
+    }
+}
+
+pub(super) struct Memo {
+    id: MemoId,
+    memo: Option<MemoData>,
+}
+
+impl Memo {
+    async fn load_memo(&self, ctx: &Context<'_>) -> MemoData {
+        if let Some(memo) = &self.memo {
+            return memo.clone();
+        }
+        let loader = ctx.data_unchecked::<DataLoader<SqliteLoader>>();
+        let memo = loader.load_one(self.id.clone()).await;
+        memo.unwrap().unwrap()
+    }
+}
+
+#[Object]
 impl Memo {
     pub(super) async fn id(&self) -> ID {
-        self.id.clone()
+        ID(self.id.0.clone())
     }
-    async fn contents(&self) -> String {
-        todo!()
+    async fn contents(&self, ctx: &Context<'_>) -> String {
+        self.load_memo(ctx).await.contents
     }
+    #[allow(unreachable_code)]
     async fn tags(&self) -> Vec<String> {
         todo!()
     }
-    async fn created_at(&self) -> DateTime<Utc> {
-        todo!()
+    async fn created_at(&self, ctx: &Context<'_>) -> DateTime<Utc> {
+        self.load_memo(ctx).await.created_at
     }
-    async fn updated_at(&self) -> DateTime<Utc> {
-        todo!()
+    async fn updated_at(&self, ctx: &Context<'_>) -> DateTime<Utc> {
+        self.load_memo(ctx).await.updated_at
     }
+    #[allow(unreachable_code)]
     async fn book(&self) -> Book {
         todo!()
     }
