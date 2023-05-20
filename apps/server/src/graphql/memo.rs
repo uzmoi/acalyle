@@ -97,8 +97,29 @@ impl MemoMutation {
             memo: Some(memo),
         })
     }
-    async fn import_memos(&self, _book_id: ID, _memos: Vec<MemoInput>) -> String {
-        todo!()
+    // TODO tagsに対応
+    // TODO Book.updatedAtを更新
+    async fn import_memos(
+        &self,
+        ctx: &Context<'_>,
+        book_id: ID,
+        memos: Vec<MemoInput>,
+    ) -> Result<bool> {
+        let pool = ctx.data::<SqlitePool>()?;
+
+        insert_memos(
+            pool,
+            memos.iter().map(|memo| MemoData {
+                id: memo.id.to_string(),
+                contents: memo.contents.clone(),
+                created_at: memo.created_at,
+                updated_at: memo.updated_at,
+                book_id: book_id.to_string(),
+            }),
+        )
+        .await?;
+
+        Ok(true)
     }
     async fn update_memo_contents(&self, _memo_id: ID, _contents: String) -> Memo {
         todo!()
