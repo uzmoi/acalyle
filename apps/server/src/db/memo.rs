@@ -11,7 +11,7 @@ pub(crate) struct MemoId(pub String);
 
 #[derive(sqlx::FromRow, Clone)]
 pub(crate) struct MemoData {
-    id: String,
+    pub id: String,
     pub contents: String,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,

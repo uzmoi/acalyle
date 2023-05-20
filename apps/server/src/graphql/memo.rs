@@ -1,10 +1,12 @@
 use super::book::Book;
 use crate::db::{
     loader::SqliteLoader,
-    memo::{MemoData, MemoId},
+    memo::{insert_memos, MemoData, MemoId},
 };
 use async_graphql::{dataloader::DataLoader, Context, InputObject, Object, Result, ID};
 use chrono::{DateTime, Utc};
+use sqlx::SqlitePool;
+use uuid::Uuid;
 
 #[derive(Default)]
 pub(super) struct MemoQuery;
@@ -66,8 +68,34 @@ pub(super) struct MemoMutation;
 #[allow(unreachable_code)]
 #[Object]
 impl MemoMutation {
-    async fn create_memo(&self, _book_id: ID, _template: Option<String>) -> Memo {
-        todo!()
+    // TODO templateに対応
+    // TODO Book.updatedAtを更新
+    async fn create_memo(
+        &self,
+        ctx: &Context<'_>,
+        book_id: ID,
+        _template: Option<String>,
+    ) -> Result<Memo> {
+        let id = Uuid::new_v4();
+        let contents = "";
+        let now = Utc::now();
+
+        let memo = MemoData {
+            id: id.to_string(),
+            contents: contents.to_string(),
+            created_at: now,
+            updated_at: now,
+            book_id: book_id.to_string(),
+        };
+
+        let pool = ctx.data::<SqlitePool>()?;
+
+        insert_memos(pool, vec![memo.clone()]).await?;
+
+        Ok(Memo {
+            id: MemoId(id.to_string()),
+            memo: Some(memo),
+        })
     }
     async fn import_memos(&self, _book_id: ID, _memos: Vec<MemoInput>) -> String {
         todo!()
