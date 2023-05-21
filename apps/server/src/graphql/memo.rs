@@ -1,7 +1,9 @@
 use super::book::Book;
 use crate::db::{
     loader::{SqliteLoader, SqliteTagLoader},
-    memo::{delete_memo, insert_memos, insert_tags, MemoData, MemoId, MemoTag},
+    memo::{
+        delete_memo, insert_memos, insert_tags, update_memo_contents, MemoData, MemoId, MemoTag,
+    },
 };
 use async_graphql::{dataloader::DataLoader, Context, InputObject, Object, Result, ID};
 use chrono::{DateTime, Utc};
@@ -135,8 +137,21 @@ impl MemoMutation {
 
         Ok(true)
     }
-    async fn update_memo_contents(&self, _memo_id: ID, _contents: String) -> Memo {
-        todo!()
+    async fn update_memo_contents(
+        &self,
+        ctx: &Context<'_>,
+        memo_id: ID,
+        contents: String,
+    ) -> Result<Memo> {
+        let pool = ctx.data::<SqlitePool>()?;
+        let now = Utc::now();
+
+        update_memo_contents(pool, memo_id.to_string(), contents, now).await?;
+
+        let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
+        let memo_id = MemoId(memo_id.to_string());
+        let memo = loader.load_one(memo_id.clone()).await?;
+        Ok(Memo { id: memo_id, memo })
     }
     async fn upsert_memo_tags(&self, _memo_ids: Vec<ID>, _tags: Vec<String>) -> Vec<Memo> {
         todo!()

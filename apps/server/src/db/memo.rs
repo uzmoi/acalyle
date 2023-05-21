@@ -61,6 +61,22 @@ pub(crate) async fn insert_memos(
     Ok(())
 }
 
+pub(crate) async fn update_memo_contents(
+    executor: impl SqliteExecutor<'_>,
+    memo_id: String,
+    contents: String,
+    updated_at: DateTime<Utc>,
+) -> sqlx::Result<()> {
+    let query = sqlx::query("UPDATE Memo WHERE id = ? SET contents = ? AND updatedAt = ?");
+    query
+        .bind(memo_id)
+        .bind(contents)
+        .bind(updated_at)
+        .execute(executor)
+        .await?;
+    Ok(())
+}
+
 pub(crate) async fn delete_memo(
     executor: impl SqliteExecutor<'_>,
     memo_ids: &[String],
