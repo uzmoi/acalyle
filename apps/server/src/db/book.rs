@@ -9,11 +9,11 @@ pub(crate) struct BookId(pub String);
 #[derive(sqlx::FromRow, Clone)]
 pub(crate) struct BookData {
     id: String,
-    handle: Option<String>,
-    thumbnail: String,
-    title: String,
-    description: String,
-    created_at: DateTime<Utc>,
+    pub handle: Option<String>,
+    pub title: String,
+    pub description: String,
+    pub thumbnail: String,
+    pub created_at: DateTime<Utc>,
     updated_at: DateTime<Utc>,
     settings: Vec<u8>,
 }

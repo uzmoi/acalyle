@@ -1,5 +1,9 @@
 use super::memo::Memo;
-use async_graphql::{connection::Connection, Object, Upload, ID};
+use crate::db::{
+    book::{BookData, BookId},
+    loader::SqliteLoader,
+};
+use async_graphql::{connection::Connection, dataloader::DataLoader, Context, Object, Upload, ID};
 use chrono::{DateTime, Utc};
 
 #[derive(Default)]
@@ -33,43 +37,47 @@ impl BookConnectionExtend {
     }
 }
 
-struct BookData {
-    _handle: String,
-    _title: String,
-    _description: String,
-    _thumbnail: String,
-    _created_at: DateTime<Utc>,
-}
-
 pub(super) struct Book {
-    id: ID,
-    _book: Option<BookData>,
+    id: BookId,
+    book: Option<BookData>,
 }
 
-#[allow(unreachable_code)]
+impl Book {
+    async fn load_book(&self, ctx: &Context<'_>) -> BookData {
+        if let Some(book) = &self.book {
+            return book.clone();
+        }
+        let loader = ctx.data_unchecked::<DataLoader<SqliteLoader>>();
+        let book = loader.load_one(self.id.clone()).await;
+        book.unwrap().unwrap()
+    }
+}
+
 #[Object]
 impl Book {
     pub(super) async fn id(&self) -> ID {
-        self.id.clone()
+        ID(self.id.0.clone())
     }
-    async fn handle(&self) -> Option<String> {
-        todo!()
+    async fn handle(&self, ctx: &Context<'_>) -> Option<String> {
+        self.load_book(ctx).await.handle
     }
-    async fn title(&self) -> String {
-        todo!()
+    async fn title(&self, ctx: &Context<'_>) -> String {
+        self.load_book(ctx).await.title
     }
-    async fn description(&self) -> String {
-        todo!()
+    async fn description(&self, ctx: &Context<'_>) -> String {
+        self.load_book(ctx).await.description
     }
-    async fn thumbnail(&self) -> String {
-        todo!()
+    async fn thumbnail(&self, ctx: &Context<'_>) -> String {
+        self.load_book(ctx).await.thumbnail
     }
-    async fn created_at(&self) -> DateTime<Utc> {
-        todo!()
+    async fn created_at(&self, ctx: &Context<'_>) -> DateTime<Utc> {
+        self.load_book(ctx).await.created_at
     }
+    #[allow(unreachable_code)]
     async fn memo(&self, _id: ID) -> Option<Memo> {
         todo!()
     }
+    #[allow(unreachable_code)]
     async fn memos(
         &self,
         _after: Option<String>,
@@ -80,18 +88,20 @@ impl Book {
     ) -> Option<Connection<usize, Memo, MemoConnectionExtend>> {
         todo!()
     }
-    //   resources: [String!]!
-    //   settings: BookSetting!
+    #[allow(unreachable_code)]
     async fn tags(&self) -> Vec<String> {
         todo!()
     }
     // TODO rename input "name" to "symbol"
+    #[allow(unreachable_code)]
     async fn tag_props(&self, _name: String) -> Vec<String> {
         todo!()
     }
+    #[allow(unreachable_code)]
     async fn resources(&self) -> Vec<String> {
         todo!()
     }
+    #[allow(unreachable_code)]
     async fn settings(&self) -> BookSetting {
         todo!()
     }
