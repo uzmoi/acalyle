@@ -11,7 +11,6 @@ use uuid::Uuid;
 #[derive(Default)]
 pub(super) struct MemoQuery;
 
-#[allow(unreachable_code)]
 #[Object]
 impl MemoQuery {
     async fn memo(&self, ctx: &Context<'_>, id: ID) -> Result<Memo> {
@@ -91,7 +90,7 @@ impl MemoMutation {
 
         let pool = ctx.data::<SqlitePool>()?;
 
-        insert_memos(pool, vec![memo.clone()]).await?;
+        insert_memos(pool, [memo.clone()]).await?;
 
         Ok(Memo {
             id: MemoId(id.to_string()),
