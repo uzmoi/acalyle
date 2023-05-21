@@ -3,6 +3,7 @@ use async_graphql::{
     async_trait::async_trait, dataloader::Loader, futures_util::TryStreamExt, Result,
 };
 use chrono::{DateTime, Utc};
+use sqlx::SqliteExecutor;
 use std::{collections::HashMap, sync::Arc};
 
 #[derive(Clone, PartialEq, Eq, Hash)]
@@ -10,14 +11,14 @@ pub(crate) struct BookId(pub String);
 
 #[derive(sqlx::FromRow, Clone)]
 pub(crate) struct BookData {
-    id: String,
+    pub id: String,
     pub handle: Option<String>,
     pub title: String,
     pub description: String,
     pub thumbnail: String,
     pub created_at: DateTime<Utc>,
-    updated_at: DateTime<Utc>,
-    settings: Vec<u8>,
+    pub updated_at: DateTime<Utc>,
+    pub settings: Vec<u8>,
 }
 
 #[async_trait]
@@ -49,6 +50,27 @@ impl Loader<BookId> for SqliteLoader {
             .try_collect()
             .await?)
     }
+}
+
+pub(crate) async fn insert_book(
+    executor: impl SqliteExecutor<'_>,
+    books: impl IntoIterator<Item = BookData>,
+) -> Result<()> {
+    let mut query_builder = sqlx::QueryBuilder::new("INSERT INTO Book(memoId, symbol, prop) ");
+    query_builder.push_values(books, |mut separated, book| {
+        separated
+            .push_bind(book.id)
+            .push_bind(book.handle)
+            .push_bind(book.title)
+            .push_bind(book.description)
+            .push_bind(book.thumbnail)
+            .push_bind(book.created_at)
+            .push_bind(book.updated_at)
+            .push_bind(book.settings);
+    });
+    let query = query_builder.build();
+    query.execute(executor).await?;
+    Ok(())
 }
 
 #[derive(sqlx::FromRow, Clone)]

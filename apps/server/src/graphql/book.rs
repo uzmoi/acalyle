@@ -1,10 +1,14 @@
 use super::memo::Memo;
 use crate::db::{
-    book::{BookData, BookId},
+    book::{insert_book, BookData, BookId},
     loader::{SqliteLoader, SqliteTagLoader},
 };
-use async_graphql::{connection::Connection, dataloader::DataLoader, Context, Object, Upload, ID};
+use async_graphql::{
+    connection::Connection, dataloader::DataLoader, Context, Object, Result, Upload, ID,
+};
 use chrono::{DateTime, Utc};
+use sqlx::SqlitePool;
+use uuid::Uuid;
 
 #[derive(Default)]
 pub(super) struct BookQuery;
@@ -134,13 +138,36 @@ pub(super) struct BookMutation;
 #[allow(unreachable_code)]
 #[Object]
 impl BookMutation {
+    // TODO thumbnailに対応
     async fn create_book(
         &self,
-        _title: String,
-        _description: Option<String>,
+        ctx: &Context<'_>,
+        title: String,
+        description: Option<String>,
         _thumbnail: Option<Upload>,
-    ) -> Book {
-        todo!()
+    ) -> Result<Book> {
+        let id = Uuid::new_v4();
+        let now = Utc::now();
+
+        let book = BookData {
+            id: id.to_string(),
+            handle: None,
+            title,
+            description: description.unwrap_or_default(),
+            thumbnail: format!("color:hsl({}deg,80%,40%)", rand::random::<f32>() * 360f32),
+            created_at: now,
+            updated_at: now,
+            settings: Vec::new(),
+        };
+
+        let pool = ctx.data::<SqlitePool>()?;
+
+        insert_book(pool, [book.clone()]).await?;
+
+        Ok(Book {
+            id: BookId(id.to_string()),
+            book: Some(book),
+        })
     }
     async fn update_book_title(&self, _id: ID, _title: String) -> Book {
         todo!()
