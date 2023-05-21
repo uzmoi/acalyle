@@ -68,6 +68,16 @@ pub(crate) struct MemoTag {
     prop: Option<String>,
 }
 
+impl MemoTag {
+    pub(crate) fn new(memo_id: String, symbol: String, prop: Option<String>) -> MemoTag {
+        MemoTag {
+            memo_id,
+            symbol,
+            prop,
+        }
+    }
+}
+
 #[async_trait]
 impl Loader<MemoId> for SqliteTagLoader {
     type Value = Vec<String>;

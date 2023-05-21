@@ -1,7 +1,7 @@
 use super::book::Book;
 use crate::db::{
-    loader::SqliteLoader,
-    memo::{insert_memos, MemoData, MemoId},
+    loader::{SqliteLoader, SqliteTagLoader},
+    memo::{insert_memos, insert_tags, MemoData, MemoId, MemoTag},
 };
 use async_graphql::{dataloader::DataLoader, Context, InputObject, Object, Result, ID};
 use chrono::{DateTime, Utc};
@@ -46,9 +46,10 @@ impl Memo {
     async fn contents(&self, ctx: &Context<'_>) -> String {
         self.load_memo(ctx).await.contents
     }
-    #[allow(unreachable_code)]
-    async fn tags(&self) -> Vec<String> {
-        todo!()
+    async fn tags(&self, ctx: &Context<'_>) -> Vec<String> {
+        let loader = ctx.data_unchecked::<DataLoader<SqliteTagLoader>>();
+        let tags = loader.load_one(self.id.clone()).await;
+        tags.unwrap().unwrap()
     }
     async fn created_at(&self, ctx: &Context<'_>) -> DateTime<Utc> {
         self.load_memo(ctx).await.created_at
@@ -97,7 +98,6 @@ impl MemoMutation {
             memo: Some(memo),
         })
     }
-    // TODO tagsに対応
     // TODO Book.updatedAtを更新
     async fn import_memos(
         &self,
@@ -118,6 +118,21 @@ impl MemoMutation {
             }),
         )
         .await?;
+
+        fn memo_tags<'a>(memos: &'a [MemoInput]) -> impl IntoIterator<Item = MemoTag> + 'a {
+            memos.iter().flat_map(|memo| {
+                memo.tags.iter().filter_map(|tag| {
+                    // cspell:ignore splitn
+                    let mut tag = tag.splitn(2, ':');
+                    Some(MemoTag::new(
+                        memo.id.to_string(),
+                        tag.next()?.to_string(),
+                        tag.next().map(|prop| prop.to_string()),
+                    ))
+                })
+            })
+        }
+        insert_tags(pool, memo_tags(&memos)).await?;
 
         Ok(true)
     }
