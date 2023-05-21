@@ -61,6 +61,20 @@ pub(crate) async fn insert_memos(
     Ok(())
 }
 
+pub(crate) async fn delete_memo(
+    executor: impl SqliteExecutor<'_>,
+    memo_ids: &[String],
+) -> sqlx::Result<()> {
+    let mut query_builder = sqlx::QueryBuilder::new("DELETE Memo WHERE id IN");
+    query_builder.push_tuples(memo_ids, |mut separated, id| {
+        separated.push_bind(id.clone());
+    });
+    let query = query_builder.build();
+
+    query.execute(executor).await?;
+    Ok(())
+}
+
 #[derive(sqlx::FromRow, Clone)]
 pub(crate) struct MemoTag {
     memo_id: String,

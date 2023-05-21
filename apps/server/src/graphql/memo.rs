@@ -1,7 +1,7 @@
 use super::book::Book;
 use crate::db::{
     loader::{SqliteLoader, SqliteTagLoader},
-    memo::{insert_memos, insert_tags, MemoData, MemoId, MemoTag},
+    memo::{delete_memo, insert_memos, insert_tags, MemoData, MemoId, MemoTag},
 };
 use async_graphql::{dataloader::DataLoader, Context, InputObject, Object, Result, ID};
 use chrono::{DateTime, Utc};
@@ -145,8 +145,15 @@ impl MemoMutation {
         todo!()
     }
     // TODO rename "ids" to "memo_ids"
-    async fn remove_memo(&self, _ids: Vec<ID>) -> Vec<ID> {
-        todo!()
+    async fn remove_memo(&self, ctx: &Context<'_>, ids: Vec<ID>) -> Result<Vec<ID>> {
+        let pool = ctx.data::<SqlitePool>()?;
+        let memo_ids = ids
+            .iter()
+            .map(|memo_id| memo_id.to_string())
+            .collect::<Vec<String>>();
+
+        delete_memo(pool, &memo_ids).await?;
+        Ok(ids)
     }
     async fn transfer_memo(&self, _memo_ids: Vec<ID>, _book_id: ID) -> String {
         todo!()
