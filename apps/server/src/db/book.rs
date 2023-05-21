@@ -1,5 +1,7 @@
-use crate::db::loader::SqliteLoader;
-use async_graphql::{async_trait::async_trait, dataloader::Loader, futures_util::TryStreamExt};
+use super::loader::{SqliteLoader, SqliteTagLoader};
+use async_graphql::{
+    async_trait::async_trait, dataloader::Loader, futures_util::TryStreamExt, Result,
+};
 use chrono::{DateTime, Utc};
 use std::{collections::HashMap, sync::Arc};
 
@@ -46,5 +48,37 @@ impl Loader<BookId> for SqliteLoader {
             .map_err(Arc::new)
             .try_collect()
             .await?)
+    }
+}
+
+#[derive(sqlx::FromRow, Clone)]
+struct BookTag {
+    book_id: String,
+    symbol: String,
+}
+
+#[async_trait]
+impl Loader<BookId> for SqliteTagLoader {
+    type Value = Vec<String>;
+    type Error = Arc<sqlx::Error>;
+
+    async fn load(&self, keys: &[BookId]) -> Result<HashMap<BookId, Self::Value>, Self::Error> {
+        let mut query_builder = sqlx::QueryBuilder::new("SELECT Memo.bookId, Tag.symbol FROM Tag INNER JOIN Memo ON Memo.id = Tag.memoId WHERE Memo.bookId IN");
+        query_builder.push_tuples(keys, |mut separated, key| {
+            separated.push_bind(key.0.clone());
+        });
+        let query = query_builder.build_query_as::<BookTag>();
+
+        Ok(query
+            .fetch_all(&self.pool)
+            .await?
+            .iter()
+            .fold(HashMap::new(), |mut accum, tag| {
+                accum
+                    .entry(BookId(tag.book_id.clone()))
+                    .or_insert_with(Vec::new)
+                    .push(tag.symbol.clone());
+                accum
+            }))
     }
 }

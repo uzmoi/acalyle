@@ -1,7 +1,7 @@
 use super::memo::Memo;
 use crate::db::{
     book::{BookData, BookId},
-    loader::SqliteLoader,
+    loader::{SqliteLoader, SqliteTagLoader},
 };
 use async_graphql::{connection::Connection, dataloader::DataLoader, Context, Object, Upload, ID};
 use chrono::{DateTime, Utc};
@@ -88,9 +88,10 @@ impl Book {
     ) -> Option<Connection<usize, Memo, MemoConnectionExtend>> {
         todo!()
     }
-    #[allow(unreachable_code)]
-    async fn tags(&self) -> Vec<String> {
-        todo!()
+    async fn tags(&self, ctx: &Context<'_>) -> Vec<String> {
+        let loader = ctx.data_unchecked::<DataLoader<SqliteTagLoader>>();
+        let tags = loader.load_one(self.id.clone()).await;
+        tags.unwrap().unwrap()
     }
     // TODO rename input "name" to "symbol"
     #[allow(unreachable_code)]
