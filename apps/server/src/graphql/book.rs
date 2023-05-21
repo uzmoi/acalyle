@@ -33,9 +33,9 @@ impl BookQuery {
 
 struct BookConnectionExtend;
 
-#[allow(unreachable_code)]
 #[Object]
 impl BookConnectionExtend {
+    #[allow(unreachable_code)]
     async fn total_count(&self) -> i32 {
         todo!()
     }
@@ -114,9 +114,9 @@ impl Book {
 
 struct MemoConnectionExtend;
 
-#[allow(unreachable_code)]
 #[Object]
 impl MemoConnectionExtend {
+    #[allow(unreachable_code)]
     async fn total_count(&self) -> i32 {
         todo!()
     }
@@ -124,9 +124,9 @@ impl MemoConnectionExtend {
 
 struct BookSetting;
 
-#[allow(unreachable_code)]
 #[Object]
 impl BookSetting {
+    #[allow(unreachable_code)]
     async fn extensions(&self) -> Vec<String> {
         todo!()
     }
@@ -135,7 +135,6 @@ impl BookSetting {
 #[derive(Default)]
 pub(super) struct BookMutation;
 
-#[allow(unreachable_code)]
 #[Object]
 impl BookMutation {
     // TODO thumbnailに対応
@@ -169,12 +168,15 @@ impl BookMutation {
             book: Some(book),
         })
     }
+    #[allow(unreachable_code)]
     async fn update_book_title(&self, _id: ID, _title: String) -> Book {
         todo!()
     }
+    #[allow(unreachable_code)]
     async fn update_book_thumbnail(&self, _id: ID, _thumbnail: Option<Upload>) -> Book {
         todo!()
     }
+    #[allow(unreachable_code)]
     async fn upload_resource(
         &self,
         _book_id: ID,
@@ -183,9 +185,11 @@ impl BookMutation {
     ) -> String {
         todo!()
     }
+    #[allow(unreachable_code)]
     async fn rename_tag(&self, _book_id: ID, _new_symbol: String, _old_symbol: String) -> String {
         todo!()
     }
+    #[allow(unreachable_code)]
     async fn delete_book(&self, _id: ID) -> ID {
         todo!()
     }

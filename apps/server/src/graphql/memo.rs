@@ -68,7 +68,6 @@ impl Memo {
 #[derive(Default)]
 pub(super) struct MemoMutation;
 
-#[allow(unreachable_code)]
 #[Object]
 impl MemoMutation {
     // TODO templateに対応
@@ -154,9 +153,11 @@ impl MemoMutation {
         let memo = loader.load_one(memo_id.clone()).await?;
         Ok(Memo { id: memo_id, memo })
     }
+    #[allow(unreachable_code)]
     async fn upsert_memo_tags(&self, _memo_ids: Vec<ID>, _tags: Vec<String>) -> Vec<Memo> {
         todo!()
     }
+    #[allow(unreachable_code)]
     async fn remove_memo_tags(&self, _memo_ids: Vec<ID>, _symbols: Vec<String>) -> Vec<Memo> {
         todo!()
     }
