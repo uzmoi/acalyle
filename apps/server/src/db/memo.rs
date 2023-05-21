@@ -91,6 +91,22 @@ pub(crate) async fn delete_memo(
     Ok(())
 }
 
+pub(crate) async fn transfer_memo(
+    executor: impl SqliteExecutor<'_>,
+    memo_ids: &[String],
+    dest_book_id: String,
+) -> sqlx::Result<()> {
+    let mut query_builder = sqlx::QueryBuilder::new("UPDATE Memo WHERE id IN");
+    query_builder.push_tuples(memo_ids, |mut separated, id| {
+        separated.push_bind(id.clone());
+    });
+    query_builder.push("SET bookId = ?");
+    let query = query_builder.build();
+
+    query.bind(dest_book_id).execute(executor).await?;
+    Ok(())
+}
+
 #[derive(sqlx::FromRow, Clone)]
 pub(crate) struct MemoTag {
     memo_id: String,
