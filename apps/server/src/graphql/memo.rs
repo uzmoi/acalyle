@@ -1,5 +1,6 @@
 use super::book::Book;
 use crate::db::{
+    book::update_book,
     loader::{SqliteLoader, SqliteTagLoader},
     memo::{
         delete_memo, insert_memos, insert_tags, transfer_memo, update_memo_contents, MemoData,
@@ -77,13 +78,13 @@ pub(super) struct MemoMutation;
 #[Object]
 impl MemoMutation {
     // TODO templateに対応
-    // TODO Book.updatedAtを更新
     async fn create_memo(
         &self,
         ctx: &Context<'_>,
         book_id: ID,
         _template: Option<String>,
     ) -> Result<Memo> {
+        let pool = ctx.data::<SqlitePool>()?;
         let id = Uuid::new_v4();
         let contents = "";
         let now = Utc::now();
@@ -96,13 +97,11 @@ impl MemoMutation {
             book_id: book_id.to_string(),
         };
 
-        let pool = ctx.data::<SqlitePool>()?;
-
         insert_memos(pool, [memo.clone()]).await?;
+        update_book(pool, book_id.to_string(), now).await?;
 
         Ok(Memo::new(id.to_string(), Some(memo)))
     }
-    // TODO Book.updatedAtを更新
     async fn import_memos(
         &self,
         ctx: &Context<'_>,
@@ -110,6 +109,7 @@ impl MemoMutation {
         memos: Vec<MemoInput>,
     ) -> Result<bool> {
         let pool = ctx.data::<SqlitePool>()?;
+        let now = Utc::now();
 
         insert_memos(
             pool,
@@ -138,6 +138,8 @@ impl MemoMutation {
         }
         insert_tags(pool, memo_tags(&memos)).await?;
 
+        update_book(pool, book_id.to_string(), now).await?;
+
         Ok(true)
     }
     async fn update_memo_contents(
@@ -153,6 +155,9 @@ impl MemoMutation {
 
         let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
         let memo = loader.load_one(MemoId(memo_id.to_string())).await?;
+
+        update_book(pool, memo.clone().unwrap().book_id, now).await?;
+
         Ok(Memo::new(memo_id.to_string(), memo))
     }
     #[allow(unreachable_code)]
@@ -163,6 +168,7 @@ impl MemoMutation {
     async fn remove_memo_tags(&self, _memo_ids: Vec<ID>, _symbols: Vec<String>) -> Vec<Memo> {
         todo!()
     }
+    // TODO update_book
     // TODO rename "ids" to "memo_ids"
     async fn remove_memo(&self, ctx: &Context<'_>, ids: Vec<ID>) -> Result<Vec<ID>> {
         let pool = ctx.data::<SqlitePool>()?;

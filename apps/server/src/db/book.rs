@@ -73,6 +73,19 @@ pub(crate) async fn insert_book(
     Ok(())
 }
 
+pub(crate) async fn update_book(
+    executor: impl SqliteExecutor<'_>,
+    book_id: String,
+    updated_at: DateTime<Utc>,
+) -> Result<()> {
+    sqlx::query("UPDATE Book SET updatedAt = ? WHERE id = ?")
+        .bind(updated_at)
+        .bind(book_id)
+        .execute(executor)
+        .await?;
+    Ok(())
+}
+
 pub(crate) async fn delete_book(
     executor: impl SqliteExecutor<'_>,
     book_ids: &[String],
