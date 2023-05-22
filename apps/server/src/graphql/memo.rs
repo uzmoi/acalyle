@@ -30,6 +30,12 @@ pub(super) struct Memo {
 }
 
 impl Memo {
+    pub(crate) fn new(id: String, memo: Option<MemoData>) -> Memo {
+        Memo {
+            id: MemoId(id),
+            memo,
+        }
+    }
     async fn load_memo(&self, ctx: &Context<'_>) -> MemoData {
         if let Some(memo) = &self.memo {
             return memo.clone();
@@ -59,9 +65,9 @@ impl Memo {
     async fn updated_at(&self, ctx: &Context<'_>) -> DateTime<Utc> {
         self.load_memo(ctx).await.updated_at
     }
-    #[allow(unreachable_code)]
-    async fn book(&self) -> Book {
-        todo!()
+    async fn book(&self, ctx: &Context<'_>) -> Book {
+        let book_id = self.load_memo(ctx).await.book_id;
+        Book::new(book_id, None)
     }
 }
 
@@ -94,10 +100,7 @@ impl MemoMutation {
 
         insert_memos(pool, [memo.clone()]).await?;
 
-        Ok(Memo {
-            id: MemoId(id.to_string()),
-            memo: Some(memo),
-        })
+        Ok(Memo::new(id.to_string(), Some(memo)))
     }
     // TODO Book.updatedAtを更新
     async fn import_memos(
@@ -149,9 +152,8 @@ impl MemoMutation {
         update_memo_contents(pool, memo_id.to_string(), contents, now).await?;
 
         let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
-        let memo_id = MemoId(memo_id.to_string());
-        let memo = loader.load_one(memo_id.clone()).await?;
-        Ok(Memo { id: memo_id, memo })
+        let memo = loader.load_one(MemoId(memo_id.to_string())).await?;
+        Ok(Memo::new(memo_id.to_string(), memo))
     }
     #[allow(unreachable_code)]
     async fn upsert_memo_tags(&self, _memo_ids: Vec<ID>, _tags: Vec<String>) -> Vec<Memo> {

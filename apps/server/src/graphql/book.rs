@@ -2,6 +2,7 @@ use super::memo::Memo;
 use crate::db::{
     book::{insert_book, BookData, BookId},
     loader::{SqliteLoader, SqliteTagLoader},
+    memo::MemoId,
 };
 use async_graphql::{
     connection::Connection, dataloader::DataLoader, Context, Object, Result, Upload, ID,
@@ -13,12 +14,21 @@ use uuid::Uuid;
 #[derive(Default)]
 pub(super) struct BookQuery;
 
-#[allow(unreachable_code)]
 #[Object]
 impl BookQuery {
-    async fn book(&self, _id: Option<ID>, _handle: Option<String>) -> Option<Book> {
-        todo!()
+    // TODO handleに対応
+    async fn book(
+        &self,
+        ctx: &Context<'_>,
+        id: Option<ID>,
+        _handle: Option<String>,
+    ) -> Result<Book> {
+        let loader = ctx.data_unchecked::<DataLoader<SqliteLoader>>();
+        let id = BookId(id.unwrap().to_string());
+        let book = loader.load_one(id.clone()).await?;
+        Ok(Book::new(id.0, book))
     }
+    #[allow(unreachable_code)]
     async fn books(
         &self,
         _after: Option<String>,
@@ -47,6 +57,12 @@ pub(super) struct Book {
 }
 
 impl Book {
+    pub(crate) fn new(id: String, book: Option<BookData>) -> Book {
+        Book {
+            id: BookId(id),
+            book,
+        }
+    }
     async fn load_book(&self, ctx: &Context<'_>) -> BookData {
         if let Some(book) = &self.book {
             return book.clone();
@@ -77,9 +93,10 @@ impl Book {
     async fn created_at(&self, ctx: &Context<'_>) -> DateTime<Utc> {
         self.load_book(ctx).await.created_at
     }
-    #[allow(unreachable_code)]
-    async fn memo(&self, _id: ID) -> Option<Memo> {
-        todo!()
+    async fn memo(&self, ctx: &Context<'_>, id: ID) -> Result<Memo> {
+        let loader = ctx.data_unchecked::<DataLoader<SqliteLoader>>();
+        let memo = loader.load_one(MemoId(id.to_string())).await?;
+        Ok(Memo::new(id.to_string(), memo))
     }
     #[allow(unreachable_code)]
     async fn memos(
@@ -163,10 +180,7 @@ impl BookMutation {
 
         insert_book(pool, [book.clone()]).await?;
 
-        Ok(Book {
-            id: BookId(id.to_string()),
-            book: Some(book),
-        })
+        Ok(Book::new(id.to_string(), Some(book)))
     }
     #[allow(unreachable_code)]
     async fn update_book_title(&self, _id: ID, _title: String) -> Book {
