@@ -66,17 +66,14 @@ mod tests {
         let schema = init_schema().await.unwrap();
         let req = Request::new(
             r#"mutation {
-                createBook(title: "hoge") {
-                    id
-                    title
-                }
+                createBook(title: "hoge") { title }
             }"#,
         );
         let res = schema.execute(req).await;
         assert_eq!(
             res.data,
             value!({
-                "createBook": { "id": "", "title": "hoge" }
+                "createBook": { "title": "hoge" }
             })
         );
     }
