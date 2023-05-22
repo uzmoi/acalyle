@@ -3,8 +3,8 @@ use crate::db::{
     book::update_book,
     loader::{SqliteLoader, SqliteTagLoader},
     memo::{
-        delete_memo, insert_memos, insert_tags, transfer_memo, update_memo_contents, MemoData,
-        MemoId, MemoTag,
+        delete_memo, insert_memos, insert_tags, transfer_memo, update_memo_contents, Memo, MemoId,
+        MemoTag,
     },
 };
 use async_graphql::{dataloader::DataLoader, Context, InputObject, Object, Result, ID};
@@ -20,55 +20,32 @@ impl MemoQuery {
     async fn memo(&self, ctx: &Context<'_>, id: ID) -> Result<Memo> {
         let loader = ctx.data_unchecked::<DataLoader<SqliteLoader>>();
         let id = MemoId(id.to_string());
-        let memo = loader.load_one(id.clone()).await?;
-        Ok(Memo { id, memo })
-    }
-}
-
-pub(super) struct Memo {
-    id: MemoId,
-    memo: Option<MemoData>,
-}
-
-impl Memo {
-    pub(crate) fn new(id: String, memo: Option<MemoData>) -> Memo {
-        Memo {
-            id: MemoId(id),
-            memo,
-        }
-    }
-    async fn load_memo(&self, ctx: &Context<'_>) -> MemoData {
-        if let Some(memo) = &self.memo {
-            return memo.clone();
-        }
-        let loader = ctx.data_unchecked::<DataLoader<SqliteLoader>>();
-        let memo = loader.load_one(self.id.clone()).await;
-        memo.unwrap().unwrap()
+        let memo = loader.load_one(id).await?.unwrap();
+        Ok(memo)
     }
 }
 
 #[Object]
 impl Memo {
     pub(super) async fn id(&self) -> ID {
-        ID(self.id.0.clone())
+        ID(self.id.clone())
     }
-    async fn contents(&self, ctx: &Context<'_>) -> String {
-        self.load_memo(ctx).await.contents
+    async fn contents(&self) -> String {
+        self.contents.clone()
     }
     async fn tags(&self, ctx: &Context<'_>) -> Vec<String> {
         let loader = ctx.data_unchecked::<DataLoader<SqliteTagLoader>>();
-        let tags = loader.load_one(self.id.clone()).await;
+        let tags = loader.load_one(MemoId(self.id.clone())).await;
         tags.unwrap().unwrap_or_default()
     }
-    async fn created_at(&self, ctx: &Context<'_>) -> DateTime<Utc> {
-        self.load_memo(ctx).await.created_at
+    async fn created_at(&self) -> DateTime<Utc> {
+        self.created_at
     }
-    async fn updated_at(&self, ctx: &Context<'_>) -> DateTime<Utc> {
-        self.load_memo(ctx).await.updated_at
+    async fn updated_at(&self) -> DateTime<Utc> {
+        self.updated_at
     }
-    async fn book(&self, ctx: &Context<'_>) -> Book {
-        let book_id = self.load_memo(ctx).await.book_id;
-        Book::new(book_id, None)
+    async fn book(&self) -> Book {
+        Book::new(self.book_id.clone(), None)
     }
 }
 
@@ -89,7 +66,7 @@ impl MemoMutation {
         let contents = "";
         let now = Utc::now();
 
-        let memo = MemoData {
+        let memo = Memo {
             id: id.to_string(),
             contents: contents.to_string(),
             created_at: now,
@@ -100,7 +77,7 @@ impl MemoMutation {
         insert_memos(pool, [memo.clone()]).await?;
         update_book(pool, book_id.to_string(), now).await?;
 
-        Ok(Memo::new(id.to_string(), Some(memo)))
+        Ok(memo)
     }
     async fn import_memos(
         &self,
@@ -113,7 +90,7 @@ impl MemoMutation {
 
         insert_memos(
             pool,
-            memos.iter().map(|memo| MemoData {
+            memos.iter().map(|memo| Memo {
                 id: memo.id.to_string(),
                 contents: memo.contents.clone(),
                 created_at: memo.created_at,
@@ -158,7 +135,7 @@ impl MemoMutation {
 
         update_book(pool, memo.clone().unwrap().book_id, now).await?;
 
-        Ok(Memo::new(memo_id.to_string(), memo))
+        Ok(memo.unwrap())
     }
     #[allow(unreachable_code)]
     async fn upsert_memo_tags(&self, _memo_ids: Vec<ID>, _tags: Vec<String>) -> Vec<Memo> {

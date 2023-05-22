@@ -10,7 +10,7 @@ use std::{collections::HashMap, sync::Arc};
 pub(crate) struct MemoId(pub String);
 
 #[derive(sqlx::FromRow, Clone)]
-pub(crate) struct MemoData {
+pub(crate) struct Memo {
     pub id: String,
     pub contents: String,
     #[sqlx(rename = "createdAt")]
@@ -23,7 +23,7 @@ pub(crate) struct MemoData {
 
 #[async_trait]
 impl Loader<MemoId> for SqliteLoader {
-    type Value = MemoData;
+    type Value = Memo;
     type Error = Arc<sqlx::Error>;
 
     async fn load(&self, keys: &[MemoId]) -> Result<HashMap<MemoId, Self::Value>, Self::Error> {
@@ -33,7 +33,7 @@ impl Loader<MemoId> for SqliteLoader {
         query_builder.push_tuples(keys, |mut separated, key| {
             separated.push_bind(key.0.clone());
         });
-        let query = query_builder.build_query_as::<MemoData>();
+        let query = query_builder.build_query_as::<Memo>();
 
         Ok(query
             .fetch(&self.pool)
@@ -46,7 +46,7 @@ impl Loader<MemoId> for SqliteLoader {
 
 pub(crate) async fn insert_memos(
     executor: impl SqliteExecutor<'_>,
-    memos: impl IntoIterator<Item = MemoData>,
+    memos: impl IntoIterator<Item = Memo>,
 ) -> Result<()> {
     let mut query_builder =
         sqlx::QueryBuilder::new("INSERT INTO Memo(id, contents, createdAt, updatedAt, bookId) ");

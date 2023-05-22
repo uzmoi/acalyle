@@ -1,8 +1,7 @@
-use super::memo::Memo;
 use crate::db::{
     book::{delete_book, insert_book, BookData, BookHandle, BookId},
     loader::{SqliteLoader, SqliteTagLoader},
-    memo::MemoId,
+    memo::{Memo, MemoId},
 };
 use async_graphql::{
     connection::Connection, dataloader::DataLoader, Context, Object, Result, Upload, ID,
@@ -100,7 +99,7 @@ impl Book {
     async fn memo(&self, ctx: &Context<'_>, id: ID) -> Result<Memo> {
         let loader = ctx.data_unchecked::<DataLoader<SqliteLoader>>();
         let memo = loader.load_one(MemoId(id.to_string())).await?;
-        Ok(Memo::new(id.to_string(), memo))
+        Ok(memo.unwrap())
     }
     #[allow(unreachable_code)]
     async fn memos(
