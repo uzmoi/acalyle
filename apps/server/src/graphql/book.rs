@@ -15,6 +15,7 @@ pub(super) struct BookQuery;
 
 #[Object]
 impl BookQuery {
+    // TODO bookByHandle
     async fn book(
         &self,
         ctx: &Context<'_>,
@@ -75,7 +76,8 @@ impl Book {
     async fn memo(&self, ctx: &Context<'_>, id: ID) -> Result<Memo> {
         let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
         let memo = loader.load_one(MemoId(id.to_string())).await?;
-        memo.ok_or_else(|| async_graphql::Error::new("not found"))
+        memo.filter(|memo| memo.book_id == self.id)
+            .ok_or_else(|| async_graphql::Error::new("not found"))
     }
     #[allow(unreachable_code)]
     async fn memos(
