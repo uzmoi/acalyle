@@ -67,11 +67,11 @@ pub(crate) async fn update_memo_contents(
     contents: String,
     updated_at: DateTime<Utc>,
 ) -> sqlx::Result<()> {
-    let query = sqlx::query("UPDATE Memo WHERE id = ? SET contents = ? AND updatedAt = ?");
+    let query = sqlx::query("UPDATE Memo SET contents = ?, updatedAt = ? WHERE id = ?");
     query
-        .bind(memo_id)
         .bind(contents)
         .bind(updated_at)
+        .bind(memo_id)
         .execute(executor)
         .await?;
     Ok(())

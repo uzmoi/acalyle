@@ -99,7 +99,7 @@ impl Loader<BookId> for SqliteTagLoader {
     type Error = Arc<sqlx::Error>;
 
     async fn load(&self, keys: &[BookId]) -> Result<HashMap<BookId, Self::Value>, Self::Error> {
-        let mut query_builder = sqlx::QueryBuilder::new("SELECT Memo.bookId, Tag.symbol FROM Tag INNER JOIN Memo ON Memo.id = Tag.memoId WHERE Memo.bookId IN");
+        let mut query_builder = sqlx::QueryBuilder::new("SELECT Memo.bookId, Tag.symbol FROM Tag, Memo WHERE Memo.id = Tag.memoId AND Memo.bookId IN");
         query_builder.push_tuples(keys, |mut separated, key| {
             separated.push_bind(key.0.clone());
         });
