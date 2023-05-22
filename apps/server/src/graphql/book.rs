@@ -1,6 +1,6 @@
 use super::memo::Memo;
 use crate::db::{
-    book::{delete_book, insert_book, BookData, BookId},
+    book::{delete_book, insert_book, BookData, BookHandle, BookId},
     loader::{SqliteLoader, SqliteTagLoader},
     memo::MemoId,
 };
@@ -24,9 +24,9 @@ impl BookQuery {
         _handle: Option<String>,
     ) -> Result<Book> {
         let loader = ctx.data_unchecked::<DataLoader<SqliteLoader>>();
-        let id = BookId(id.unwrap().to_string());
-        let book = loader.load_one(id.clone()).await?;
-        Ok(Book::new(id.0, book))
+        let id = id.unwrap().to_string();
+        let book = loader.load_one(BookHandle::Id(id.clone())).await?;
+        Ok(Book::new(id, book))
     }
     #[allow(unreachable_code)]
     async fn books(
@@ -52,14 +52,14 @@ impl BookConnectionExtend {
 }
 
 pub(super) struct Book {
-    id: BookId,
+    id: BookHandle,
     book: Option<BookData>,
 }
 
 impl Book {
     pub(crate) fn new(id: String, book: Option<BookData>) -> Book {
         Book {
-            id: BookId(id),
+            id: BookHandle::Id(id),
             book,
         }
     }
@@ -75,8 +75,8 @@ impl Book {
 
 #[Object]
 impl Book {
-    pub(super) async fn id(&self) -> ID {
-        ID(self.id.0.clone())
+    pub(super) async fn id(&self, ctx: &Context<'_>) -> ID {
+        ID(self.load_book(ctx).await.id)
     }
     async fn handle(&self, ctx: &Context<'_>) -> Option<String> {
         self.load_book(ctx).await.handle
@@ -110,8 +110,13 @@ impl Book {
         todo!()
     }
     async fn tags(&self, ctx: &Context<'_>) -> Vec<String> {
+        let id = BookId(if let BookHandle::Id(id) = self.id.clone() {
+            id
+        } else {
+            self.load_book(ctx).await.id
+        });
         let loader = ctx.data_unchecked::<DataLoader<SqliteTagLoader>>();
-        let tags = loader.load_one(self.id.clone()).await;
+        let tags = loader.load_one(id).await;
         tags.unwrap().unwrap_or_default()
     }
     // TODO rename input "name" to "symbol"

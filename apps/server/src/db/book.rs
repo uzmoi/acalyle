@@ -1,13 +1,34 @@
 use super::loader::{SqliteLoader, SqliteTagLoader};
-use async_graphql::{
-    async_trait::async_trait, dataloader::Loader, futures_util::TryStreamExt, Result,
-};
+use async_graphql::{async_trait::async_trait, dataloader::Loader, Result};
 use chrono::{DateTime, Utc};
 use sqlx::SqliteExecutor;
 use std::{collections::HashMap, sync::Arc};
 
 #[derive(Clone, PartialEq, Eq, Hash)]
 pub(crate) struct BookId(pub String);
+
+#[derive(Clone, PartialEq, Eq, Hash)]
+pub(crate) enum BookHandle {
+    Id(String),
+    Handle(String),
+}
+
+impl BookHandle {
+    fn id(&self) -> Option<&String> {
+        if let BookHandle::Id(id) = self {
+            Some(id)
+        } else {
+            None
+        }
+    }
+    fn handle(&self) -> Option<&String> {
+        if let BookHandle::Handle(id) = self {
+            Some(id)
+        } else {
+            None
+        }
+    }
+}
 
 #[derive(sqlx::FromRow, Clone)]
 pub(crate) struct BookData {
@@ -22,11 +43,14 @@ pub(crate) struct BookData {
 }
 
 #[async_trait]
-impl Loader<BookId> for SqliteLoader {
+impl Loader<BookHandle> for SqliteLoader {
     type Value = BookData;
     type Error = Arc<sqlx::Error>;
 
-    async fn load(&self, keys: &[BookId]) -> Result<HashMap<BookId, Self::Value>, Self::Error> {
+    async fn load(
+        &self,
+        keys: &[BookHandle],
+    ) -> Result<HashMap<BookHandle, Self::Value>, Self::Error> {
         let mut query_builder = sqlx::QueryBuilder::new(
             "SELECT id
                 , handle
@@ -38,17 +62,30 @@ impl Loader<BookId> for SqliteLoader {
                 , settings
             FROM Book WHERE id IN",
         );
-        query_builder.push_tuples(keys, |mut separated, key| {
-            separated.push_bind(key.0.clone());
+        let ids = keys.iter().filter_map(BookHandle::id);
+        query_builder.push_tuples(ids, |mut separated, key| {
+            separated.push_bind(key.clone());
+        });
+        query_builder.push("OR handle IN");
+        let handles = keys.iter().filter_map(BookHandle::handle);
+        query_builder.push_tuples(handles.clone(), |mut separated, key| {
+            separated.push_bind(key.clone());
         });
         let query = query_builder.build_query_as::<BookData>();
 
         Ok(query
-            .fetch(&self.pool)
-            .map_ok(|book| (BookId(book.id.clone()), book))
-            .map_err(Arc::new)
-            .try_collect()
-            .await?)
+            .fetch_all(&self.pool)
+            .await?
+            .iter()
+            .fold(HashMap::new(), |mut accum, book| {
+                let id = BookHandle::Id(book.id.clone());
+                accum.entry(id).or_insert(book.clone());
+                if let Some(handle) = &book.handle {
+                    let handle = BookHandle::Handle(handle.clone());
+                    accum.entry(handle).or_insert(book.clone());
+                }
+                accum
+            }))
     }
 }
 
