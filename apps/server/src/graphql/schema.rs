@@ -13,7 +13,9 @@ pub struct Query(NodeQuery, BookQuery, MemoQuery);
 #[derive(MergedObject, Default)]
 pub struct Mutation(BookMutation, MemoMutation);
 
-pub fn graphql_schema(pool: SqlitePool) -> Schema<Query, Mutation, EmptySubscription> {
+pub type GraphQLSchema = Schema<Query, Mutation, EmptySubscription>;
+
+pub fn graphql_schema(pool: SqlitePool) -> GraphQLSchema {
     let loader = DataLoader::new(SqliteLoader { pool: pool.clone() }, tokio::spawn);
     let tag_loader = DataLoader::new(SqliteTagLoader { pool: pool.clone() }, tokio::spawn);
     let schema = Schema::build(Query::default(), Mutation::default(), EmptySubscription)

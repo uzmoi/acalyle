@@ -8,6 +8,78 @@ pub fn add(left: usize, right: usize) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use async_graphql::{value, Request};
+    use sqlx::SqlitePool;
+
+    async fn init_schema() -> sqlx::Result<graphql::GraphQLSchema> {
+        let pool = SqlitePool::connect("sqlite::memory:").await?;
+
+        sqlx::query(
+            "CREATE TABLE Book (
+                id TEXT NOT NULL PRIMARY KEY,
+                handle TEXT,
+                thumbnail TEXT NOT NULL,
+                title TEXT NOT NULL,
+                description TEXT NOT NULL,
+                createdAt DATETIME NOT NULL,
+                updatedAt DATETIME NOT NULL,
+                settings BLOB NOT NULL
+            )",
+        )
+        .execute(&pool)
+        .await?;
+
+        sqlx::query(
+            "CREATE TABLE Memo (
+                id TEXT NOT NULL PRIMARY KEY,
+                contents TEXT NOT NULL,
+                createdAt DATETIME NOT NULL,
+                updatedAt DATETIME NOT NULL,
+                bookId TEXT NOT NULL,
+                CONSTRAINT Memo_bookId_f_key FOREIGN KEY (bookId) REFERENCES Book (id)
+                    ON DELETE CASCADE
+                    ON UPDATE CASCADE
+            )",
+        )
+        .execute(&pool)
+        .await?;
+
+        sqlx::query(
+            "CREATE TABLE Tag (
+                memoId TEXT NOT NULL,
+                symbol TEXT NOT NULL,
+                prop TEXT,
+                PRIMARY KEY (memoId, symbol),
+                CONSTRAINT MemoTag_memoId_f_key FOREIGN KEY (memoId) REFERENCES Memo (id)
+                    ON DELETE RESTRICT
+                    ON UPDATE CASCADE
+            )",
+        )
+        .execute(&pool)
+        .await?;
+
+        Ok(graphql::graphql_schema(pool))
+    }
+
+    #[tokio::test]
+    async fn create_book() {
+        let schema = init_schema().await.unwrap();
+        let req = Request::new(
+            r#"mutation {
+                createBook(title: "hoge") {
+                    id
+                    title
+                }
+            }"#,
+        );
+        let res = schema.execute(req).await;
+        assert_eq!(
+            res.data,
+            value!({
+                "createBook": { "id": "", "title": "hoge" }
+            })
+        );
+    }
 
     #[test]
     fn it_works() {
