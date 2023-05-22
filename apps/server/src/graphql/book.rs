@@ -15,14 +15,13 @@ pub(super) struct BookQuery;
 
 #[Object]
 impl BookQuery {
-    // TODO handleに対応
     async fn book(
         &self,
         ctx: &Context<'_>,
         id: Option<ID>,
         handle: Option<String>,
     ) -> Result<Book> {
-        let loader = ctx.data_unchecked::<DataLoader<SqliteLoader>>();
+        let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
         let handle = id.map_or_else(
             || BookHandle::Handle(handle.unwrap().to_string()),
             |id| BookHandle::Id(id.to_string()),
@@ -74,9 +73,9 @@ impl Book {
         self.created_at
     }
     async fn memo(&self, ctx: &Context<'_>, id: ID) -> Result<Memo> {
-        let loader = ctx.data_unchecked::<DataLoader<SqliteLoader>>();
+        let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
         let memo = loader.load_one(MemoId(id.to_string())).await?;
-        Ok(memo.unwrap())
+        memo.ok_or_else(|| async_graphql::Error::new("not found"))
     }
     #[allow(unreachable_code)]
     async fn memos(

@@ -17,10 +17,10 @@ pub(super) struct MemoQuery;
 #[Object]
 impl MemoQuery {
     async fn memo(&self, ctx: &Context<'_>, id: ID) -> Result<Memo> {
-        let loader = ctx.data_unchecked::<DataLoader<SqliteLoader>>();
+        let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
         let id = MemoId(id.to_string());
-        let memo = loader.load_one(id).await?.unwrap();
-        Ok(memo)
+        let memo = loader.load_one(id).await?;
+        memo.ok_or_else(|| async_graphql::Error::new("not found"))
     }
 }
 
@@ -132,11 +132,11 @@ impl MemoMutation {
         update_memo_contents(pool, memo_id.to_string(), contents, now).await?;
 
         let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
-        let memo = loader.load_one(MemoId(memo_id.to_string())).await?;
+        let memo = loader.load_one(MemoId(memo_id.to_string())).await?.unwrap();
 
-        update_book(pool, memo.clone().unwrap().book_id, now).await?;
+        update_book(pool, memo.clone().book_id, now).await?;
 
-        Ok(memo.unwrap())
+        Ok(memo)
     }
     #[allow(unreachable_code)]
     async fn upsert_memo_tags(&self, _memo_ids: Vec<ID>, _tags: Vec<String>) -> Vec<Memo> {
