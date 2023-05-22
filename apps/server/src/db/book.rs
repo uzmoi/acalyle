@@ -73,6 +73,20 @@ pub(crate) async fn insert_book(
     Ok(())
 }
 
+pub(crate) async fn delete_book(
+    executor: impl SqliteExecutor<'_>,
+    book_ids: &[String],
+) -> sqlx::Result<()> {
+    let mut query_builder = sqlx::QueryBuilder::new("DELETE Book WHERE id IN");
+    query_builder.push_tuples(book_ids, |mut separated, id| {
+        separated.push_bind(id.clone());
+    });
+    let query = query_builder.build();
+
+    query.execute(executor).await?;
+    Ok(())
+}
+
 #[derive(sqlx::FromRow, Clone)]
 struct BookTag {
     book_id: String,

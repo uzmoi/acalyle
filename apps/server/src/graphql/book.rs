@@ -1,6 +1,6 @@
 use super::memo::Memo;
 use crate::db::{
-    book::{insert_book, BookData, BookId},
+    book::{delete_book, insert_book, BookData, BookId},
     loader::{SqliteLoader, SqliteTagLoader},
     memo::MemoId,
 };
@@ -203,8 +203,9 @@ impl BookMutation {
     async fn rename_tag(&self, _book_id: ID, _new_symbol: String, _old_symbol: String) -> String {
         todo!()
     }
-    #[allow(unreachable_code)]
-    async fn delete_book(&self, _id: ID) -> ID {
-        todo!()
+    async fn delete_book(&self, ctx: &Context<'_>, id: ID) -> Result<ID> {
+        let pool = ctx.data::<SqlitePool>()?;
+        delete_book(pool, &[id.to_string()]).await?;
+        Ok(id)
     }
 }
