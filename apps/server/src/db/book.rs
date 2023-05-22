@@ -37,7 +37,9 @@ pub(crate) struct BookData {
     pub title: String,
     pub description: String,
     pub thumbnail: String,
+    #[sqlx(rename = "createdAt")]
     pub created_at: DateTime<Utc>,
+    #[sqlx(rename = "updatedAt")]
     pub updated_at: DateTime<Utc>,
     pub settings: Vec<u8>,
 }
@@ -93,7 +95,16 @@ pub(crate) async fn insert_book(
     executor: impl SqliteExecutor<'_>,
     books: impl IntoIterator<Item = BookData>,
 ) -> Result<()> {
-    let mut query_builder = sqlx::QueryBuilder::new("INSERT INTO Book(memoId, symbol, prop) ");
+    let mut query_builder = sqlx::QueryBuilder::new(
+        "INSERT INTO Book(id
+        , handle
+        , title
+        , description
+        , thumbnail
+        , createdAt
+        , updatedAt
+        , settings) ",
+    );
     query_builder.push_values(books, |mut separated, book| {
         separated
             .push_bind(book.id)
@@ -139,6 +150,7 @@ pub(crate) async fn delete_book(
 
 #[derive(sqlx::FromRow, Clone)]
 struct BookTag {
+    #[sqlx(rename = "bookId")]
     book_id: String,
     symbol: String,
 }

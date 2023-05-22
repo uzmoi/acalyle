@@ -13,8 +13,11 @@ pub(crate) struct MemoId(pub String);
 pub(crate) struct MemoData {
     pub id: String,
     pub contents: String,
+    #[sqlx(rename = "createdAt")]
     pub created_at: DateTime<Utc>,
+    #[sqlx(rename = "updatedAt")]
     pub updated_at: DateTime<Utc>,
+    #[sqlx(rename = "bookId")]
     pub book_id: String,
 }
 
@@ -109,6 +112,7 @@ pub(crate) async fn transfer_memo(
 
 #[derive(sqlx::FromRow, Clone)]
 pub(crate) struct MemoTag {
+    #[sqlx(rename = "memoId")]
     memo_id: String,
     symbol: String,
     prop: Option<String>,
