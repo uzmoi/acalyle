@@ -57,7 +57,7 @@ impl Memo {
     async fn tags(&self, ctx: &Context<'_>) -> Vec<String> {
         let loader = ctx.data_unchecked::<DataLoader<SqliteTagLoader>>();
         let tags = loader.load_one(self.id.clone()).await;
-        tags.unwrap().unwrap()
+        tags.unwrap().unwrap_or_default()
     }
     async fn created_at(&self, ctx: &Context<'_>) -> DateTime<Utc> {
         self.load_memo(ctx).await.created_at
