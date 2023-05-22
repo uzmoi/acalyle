@@ -21,12 +21,16 @@ impl BookQuery {
         &self,
         ctx: &Context<'_>,
         id: Option<ID>,
-        _handle: Option<String>,
+        handle: Option<String>,
     ) -> Result<Book> {
         let loader = ctx.data_unchecked::<DataLoader<SqliteLoader>>();
-        let id = id.unwrap().to_string();
-        let book = loader.load_one(BookHandle::Id(id.clone())).await?;
-        Ok(Book::new(id, book))
+        let handle = id.map_or_else(
+            || BookHandle::Handle(handle.unwrap().to_string()),
+            |id| BookHandle::Id(id.to_string()),
+        );
+        let book = loader.load_one(handle).await?;
+        book.map(|book| Book::new(book.clone().id, Some(book)))
+            .ok_or_else(|| async_graphql::Error::new("not found"))
     }
     #[allow(unreachable_code)]
     async fn books(
