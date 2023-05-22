@@ -1,6 +1,5 @@
-use super::book::Book;
 use crate::db::{
-    book::update_book,
+    book::{update_book, Book, BookHandle},
     loader::{SqliteLoader, SqliteTagLoader},
     memo::{
         delete_memo, insert_memos, insert_tags, transfer_memo, update_memo_contents, Memo, MemoId,
@@ -44,8 +43,10 @@ impl Memo {
     async fn updated_at(&self) -> DateTime<Utc> {
         self.updated_at
     }
-    async fn book(&self) -> Book {
-        Book::new(self.book_id.clone(), None)
+    async fn book(&self, ctx: &Context<'_>) -> Book {
+        let loader = ctx.data_unchecked::<DataLoader<SqliteLoader>>();
+        let book = loader.load_one(BookHandle::Id(self.book_id.clone())).await;
+        book.unwrap().unwrap()
     }
 }
 

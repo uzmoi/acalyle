@@ -31,7 +31,7 @@ impl BookHandle {
 }
 
 #[derive(sqlx::FromRow, Clone)]
-pub(crate) struct BookData {
+pub(crate) struct Book {
     pub id: String,
     pub handle: Option<String>,
     pub title: String,
@@ -46,7 +46,7 @@ pub(crate) struct BookData {
 
 #[async_trait]
 impl Loader<BookHandle> for SqliteLoader {
-    type Value = BookData;
+    type Value = Book;
     type Error = Arc<sqlx::Error>;
 
     async fn load(
@@ -73,7 +73,7 @@ impl Loader<BookHandle> for SqliteLoader {
         query_builder.push_tuples(handles.clone(), |mut separated, key| {
             separated.push_bind(key.clone());
         });
-        let query = query_builder.build_query_as::<BookData>();
+        let query = query_builder.build_query_as::<Book>();
 
         Ok(query
             .fetch_all(&self.pool)
@@ -93,7 +93,7 @@ impl Loader<BookHandle> for SqliteLoader {
 
 pub(crate) async fn insert_book(
     executor: impl SqliteExecutor<'_>,
-    books: impl IntoIterator<Item = BookData>,
+    books: impl IntoIterator<Item = Book>,
 ) -> Result<()> {
     let mut query_builder = sqlx::QueryBuilder::new(
         "INSERT INTO Book(id

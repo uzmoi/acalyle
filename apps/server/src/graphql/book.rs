@@ -1,5 +1,5 @@
 use crate::db::{
-    book::{delete_book, insert_book, BookData, BookHandle, BookId},
+    book::{delete_book, insert_book, Book, BookHandle, BookId},
     loader::{SqliteLoader, SqliteTagLoader},
     memo::{Memo, MemoId},
 };
@@ -28,8 +28,7 @@ impl BookQuery {
             |id| BookHandle::Id(id.to_string()),
         );
         let book = loader.load_one(handle).await?;
-        book.map(|book| Book::new(book.clone().id, Some(book)))
-            .ok_or_else(|| async_graphql::Error::new("not found"))
+        book.ok_or_else(|| async_graphql::Error::new("not found"))
     }
     #[allow(unreachable_code)]
     async fn books(
@@ -54,47 +53,25 @@ impl BookConnectionExtend {
     }
 }
 
-pub(super) struct Book {
-    id: BookHandle,
-    book: Option<BookData>,
-}
-
-impl Book {
-    pub(crate) fn new(id: String, book: Option<BookData>) -> Book {
-        Book {
-            id: BookHandle::Id(id),
-            book,
-        }
-    }
-    async fn load_book(&self, ctx: &Context<'_>) -> BookData {
-        if let Some(book) = &self.book {
-            return book.clone();
-        }
-        let loader = ctx.data_unchecked::<DataLoader<SqliteLoader>>();
-        let book = loader.load_one(self.id.clone()).await;
-        book.unwrap().unwrap()
-    }
-}
-
 #[Object]
 impl Book {
-    pub(super) async fn id(&self, ctx: &Context<'_>) -> ID {
-        ID(self.load_book(ctx).await.id)
+    pub(super) async fn id(&self) -> ID {
+        ID(self.id.clone())
     }
-    async fn handle(&self, ctx: &Context<'_>) -> Option<String> {
-        self.load_book(ctx).await.handle
+    async fn handle(&self) -> Option<String> {
+        self.handle.clone()
     }
-    async fn title(&self, ctx: &Context<'_>) -> String {
-        self.load_book(ctx).await.title
+    async fn title(&self) -> String {
+        self.title.clone()
     }
-    async fn description(&self, ctx: &Context<'_>) -> String {
-        self.load_book(ctx).await.description
+    async fn description(&self) -> String {
+        self.description.clone()
     }
-    async fn thumbnail(&self, ctx: &Context<'_>) -> String {
-        self.load_book(ctx).await.thumbnail
+    async fn thumbnail(&self) -> String {
+        self.thumbnail.clone()
     }
-    async fn created_at(&self, ctx: &Context<'_>) -> DateTime<Utc> {
-        self.load_book(ctx).await.created_at
+    async fn created_at(&self) -> DateTime<Utc> {
+        self.created_at
     }
     async fn memo(&self, ctx: &Context<'_>, id: ID) -> Result<Memo> {
         let loader = ctx.data_unchecked::<DataLoader<SqliteLoader>>();
@@ -113,13 +90,8 @@ impl Book {
         todo!()
     }
     async fn tags(&self, ctx: &Context<'_>) -> Vec<String> {
-        let id = BookId(if let BookHandle::Id(id) = self.id.clone() {
-            id
-        } else {
-            self.load_book(ctx).await.id
-        });
         let loader = ctx.data_unchecked::<DataLoader<SqliteTagLoader>>();
-        let tags = loader.load_one(id).await;
+        let tags = loader.load_one(BookId(self.id.clone())).await;
         tags.unwrap().unwrap_or_default()
     }
     // TODO rename input "name" to "symbol"
@@ -173,7 +145,7 @@ impl BookMutation {
         let id = Uuid::new_v4();
         let now = Utc::now();
 
-        let book = BookData {
+        let book = Book {
             id: id.to_string(),
             handle: None,
             title,
@@ -188,7 +160,7 @@ impl BookMutation {
 
         insert_book(pool, [book.clone()]).await?;
 
-        Ok(Book::new(id.to_string(), Some(book)))
+        Ok(book)
     }
     #[allow(unreachable_code)]
     async fn update_book_title(&self, _id: ID, _title: String) -> Book {

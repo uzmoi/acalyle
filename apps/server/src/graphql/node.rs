@@ -1,5 +1,4 @@
-use super::book::Book;
-use crate::db::memo::Memo;
+use crate::db::{book::Book, memo::Memo};
 use async_graphql::{Interface, Object, ID};
 
 #[derive(Default)]
