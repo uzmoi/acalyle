@@ -21,14 +21,13 @@ impl BookQuery {
         ctx: &Context<'_>,
         id: Option<ID>,
         handle: Option<String>,
-    ) -> Result<Book> {
+    ) -> Result<Option<Book>> {
         let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
-        let handle = id.map_or_else(
-            || BookHandle::Handle(handle.unwrap().to_string()),
-            |id| BookHandle::Id(id.to_string()),
-        );
-        let book = loader.load_one(handle).await?;
-        book.ok_or_else(|| async_graphql::Error::new("not found"))
+        let handle = id
+            .map(|id| BookHandle::Id(id.to_string()))
+            .or_else(|| handle.map(|handle| BookHandle::Handle(handle.to_string())))
+            .ok_or_else(|| async_graphql::Error::new("id or handle is required"))?;
+        Ok(loader.load_one(handle).await?)
     }
     #[allow(unreachable_code)]
     async fn books(
@@ -38,7 +37,7 @@ impl BookQuery {
         _first: Option<i32>,
         _last: Option<i32>,
         _query: Option<String>,
-    ) -> Option<Connection<usize, Book, BookConnectionExtend>> {
+    ) -> Result<Connection<usize, Book, BookConnectionExtend>> {
         todo!()
     }
 }
@@ -73,11 +72,10 @@ impl Book {
     async fn created_at(&self) -> DateTime<Utc> {
         self.created_at
     }
-    async fn memo(&self, ctx: &Context<'_>, id: ID) -> Result<Memo> {
+    async fn memo(&self, ctx: &Context<'_>, id: ID) -> Result<Option<Memo>> {
         let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
         let memo = loader.load_one(MemoId(id.to_string())).await?;
-        memo.filter(|memo| memo.book_id == self.id)
-            .ok_or_else(|| async_graphql::Error::new("not found"))
+        Ok(memo.filter(|memo| memo.book_id == self.id))
     }
     #[allow(unreachable_code)]
     async fn memos(
@@ -87,13 +85,13 @@ impl Book {
         _first: Option<i32>,
         _last: Option<i32>,
         _search: Option<String>,
-    ) -> Option<Connection<usize, Memo, MemoConnectionExtend>> {
+    ) -> Result<Connection<usize, Memo, MemoConnectionExtend>> {
         todo!()
     }
-    async fn tags(&self, ctx: &Context<'_>) -> Vec<String> {
-        let loader = ctx.data_unchecked::<DataLoader<SqliteTagLoader>>();
-        let tags = loader.load_one(BookId(self.id.clone())).await;
-        tags.unwrap().unwrap_or_default()
+    async fn tags(&self, ctx: &Context<'_>) -> Result<Vec<String>> {
+        let loader = ctx.data::<DataLoader<SqliteTagLoader>>()?;
+        let tags = loader.load_one(BookId(self.id.clone())).await?;
+        Ok(tags.unwrap_or_default())
     }
     // TODO rename input "name" to "symbol"
     #[allow(unreachable_code)]

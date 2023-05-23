@@ -16,11 +16,10 @@ pub(super) struct MemoQuery;
 
 #[Object]
 impl MemoQuery {
-    async fn memo(&self, ctx: &Context<'_>, id: ID) -> Result<Memo> {
+    async fn memo(&self, ctx: &Context<'_>, id: ID) -> Result<Option<Memo>> {
         let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
         let id = MemoId(id.to_string());
-        let memo = loader.load_one(id).await?;
-        memo.ok_or_else(|| async_graphql::Error::new("not found"))
+        Ok(loader.load_one(id).await?)
     }
 }
 
@@ -32,10 +31,10 @@ impl Memo {
     async fn contents(&self) -> String {
         self.contents.clone()
     }
-    async fn tags(&self, ctx: &Context<'_>) -> Vec<String> {
-        let loader = ctx.data_unchecked::<DataLoader<SqliteTagLoader>>();
-        let tags = loader.load_one(MemoId(self.id.clone())).await;
-        tags.unwrap().unwrap_or_default()
+    async fn tags(&self, ctx: &Context<'_>) -> Result<Vec<String>> {
+        let loader = ctx.data::<DataLoader<SqliteTagLoader>>()?;
+        let tags = loader.load_one(MemoId(self.id.clone())).await?;
+        Ok(tags.unwrap_or_default())
     }
     async fn created_at(&self) -> DateTime<Utc> {
         self.created_at
@@ -43,10 +42,12 @@ impl Memo {
     async fn updated_at(&self) -> DateTime<Utc> {
         self.updated_at
     }
-    async fn book(&self, ctx: &Context<'_>) -> Book {
-        let loader = ctx.data_unchecked::<DataLoader<SqliteLoader>>();
-        let book = loader.load_one(BookHandle::Id(self.book_id.clone())).await;
-        book.unwrap().unwrap()
+    async fn book(&self, ctx: &Context<'_>) -> Result<Book> {
+        let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
+        let book = loader
+            .load_one(BookHandle::Id(self.book_id.clone()))
+            .await?;
+        book.ok_or_else(|| async_graphql::Error::new("book not found"))
     }
 }
 
@@ -125,16 +126,18 @@ impl MemoMutation {
         ctx: &Context<'_>,
         memo_id: ID,
         contents: String,
-    ) -> Result<Memo> {
+    ) -> Result<Option<Memo>> {
         let pool = ctx.data::<SqlitePool>()?;
         let now = Utc::now();
 
         update_memo_contents(pool, memo_id.to_string(), contents, now).await?;
 
         let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
-        let memo = loader.load_one(MemoId(memo_id.to_string())).await?.unwrap();
+        let memo = loader.load_one(MemoId(memo_id.to_string())).await?;
 
-        update_book(pool, memo.clone().book_id, now).await?;
+        if let Some(memo) = &memo {
+            update_book(pool, memo.book_id.clone(), now).await?;
+        }
 
         Ok(memo)
     }
