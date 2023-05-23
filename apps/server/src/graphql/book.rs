@@ -1,10 +1,14 @@
 use crate::db::{
-    book::{delete_book, insert_book, Book, BookHandle, BookId},
+    book::{
+        delete_book, fetch_books, insert_book, Book, BookHandle, BookId, BookSortOrderBy, SortOrder,
+    },
     loader::{SqliteLoader, SqliteTagLoader},
     memo::{Memo, MemoId},
 };
 use async_graphql::{
-    connection::Connection, dataloader::DataLoader, Context, Object, Result, Upload, ID,
+    connection::{self, Connection, Edge},
+    dataloader::DataLoader,
+    Context, Object, Result, Upload, ID,
 };
 use chrono::{DateTime, Utc};
 use sqlx::SqlitePool;
@@ -29,16 +33,55 @@ impl BookQuery {
             .ok_or_else(|| async_graphql::Error::new("id or handle is required"))?;
         Ok(loader.load_one(handle).await?)
     }
-    #[allow(unreachable_code)]
     async fn books(
         &self,
-        _after: Option<String>,
-        _before: Option<String>,
-        _first: Option<i32>,
-        _last: Option<i32>,
-        _query: Option<String>,
-    ) -> Result<Connection<usize, Book, BookConnectionExtend>> {
-        todo!()
+        ctx: &Context<'_>,
+        after: Option<String>,
+        before: Option<String>,
+        first: Option<i32>,
+        last: Option<i32>,
+        query: Option<String>,
+    ) -> Result<Connection<String, Book, BookConnectionExtend>> {
+        let pool = ctx.data::<SqlitePool>()?;
+
+        connection::query(
+            after,
+            before,
+            first,
+            last,
+            |after, before, first, last| async move {
+                let forward_pagination = first.map(|first| (first, after, None));
+                let backward_pagination = last.map(|last| (last, None, before));
+                let (limit, lt_cursor, gt_cursor) =
+                    forward_pagination.xor(backward_pagination).unwrap();
+
+                let query = crate::db::book::BookQuery {
+                    filter: query.unwrap_or_default(),
+                    order: SortOrder::Desc,
+                    order_by: BookSortOrderBy::Updated,
+                    lt_cursor: lt_cursor.zip(Some(false)),
+                    gt_cursor: gt_cursor.zip(Some(false)),
+                    offset: 0,
+                    limit: (limit + 1) as i32,
+                };
+                let books = fetch_books(pool, query).await?;
+
+                let has_previous_page = last.map_or(false, |last| last < books.len());
+                let has_next_page = first.map_or(false, |first| first < books.len());
+                let mut connection = Connection::with_additional_fields(
+                    has_previous_page,
+                    has_next_page,
+                    BookConnectionExtend {},
+                );
+                let book_edges = books
+                    .into_iter()
+                    .take(limit)
+                    .map(|book| Edge::new(book.id.clone(), book));
+                connection.edges.extend(book_edges);
+                Ok::<_, async_graphql::Error>(connection)
+            },
+        )
+        .await
     }
 }
 

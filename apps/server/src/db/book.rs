@@ -44,6 +44,83 @@ pub(crate) struct Book {
     pub settings: Vec<u8>,
 }
 
+#[derive(strum::Display)]
+#[strum(serialize_all = "UPPERCASE")]
+pub(crate) enum SortOrder {
+    Asc,
+    Desc,
+}
+
+#[derive(strum::Display)]
+pub(crate) enum BookSortOrderBy {
+    #[strum(serialize = "title")]
+    Title,
+    #[strum(serialize = "createdAt")]
+    Created,
+    #[strum(serialize = "updatedAt")]
+    Updated,
+}
+
+pub(crate) struct BookQuery {
+    pub lt_cursor: Option<(String, bool)>,
+    pub gt_cursor: Option<(String, bool)>,
+    pub filter: String,
+    pub order: SortOrder,
+    pub order_by: BookSortOrderBy,
+    pub limit: i32,
+    pub offset: i32,
+}
+
+pub(crate) async fn fetch_books(
+    executor: impl SqliteExecutor<'_>,
+    query: BookQuery,
+) -> Result<Vec<Book>> {
+    let mut query_builder = sqlx::QueryBuilder::new(
+        "SELECT id, handle, thumbnail, title, description, createdAt, updatedAt, settings
+        FROM Book WHERE ",
+    );
+
+    // cursor
+    if let Some((lt_cursor, eq)) = query.lt_cursor {
+        query_builder.push(&query.order_by);
+        query_builder.push(if eq { " <=" } else { " <" });
+        query_builder.push(" (SELECT ");
+        query_builder.push(&query.order_by);
+        query_builder.push(" FROM Book WHERE id = ");
+        query_builder.push_bind(lt_cursor);
+        query_builder.push(") AND ");
+    }
+    if let Some((gt_cursor, eq)) = query.gt_cursor {
+        query_builder.push(&query.order_by);
+        query_builder.push(if eq { " >=" } else { " >" });
+        query_builder.push(" (SELECT ");
+        query_builder.push(&query.order_by);
+        query_builder.push(" FROM Book WHERE id = ");
+        query_builder.push_bind(gt_cursor);
+        query_builder.push(") AND ");
+    }
+    // filter
+    let filter = format!("%{}%", query.filter);
+    query_builder.push("(title LIKE ");
+    query_builder.push_bind(&filter);
+    query_builder.push(" OR description LIKE ");
+    query_builder.push_bind(&filter);
+    query_builder.push(") ");
+
+    let mut separated = query_builder.separated(" ");
+    separated.push("ORDER BY");
+    separated.push(query.order_by);
+    separated.push(query.order);
+    separated.push("LIMIT");
+    separated.push_bind(query.limit);
+    separated.push("OFFSET");
+    separated.push_bind(query.offset);
+
+    let query = query_builder.build_query_as::<Book>();
+
+    Ok(query.fetch_all(executor).await?)
+}
+
 #[async_trait]
 impl Loader<BookHandle> for SqliteLoader {
     type Value = Book;
