@@ -3,7 +3,7 @@ use crate::db::{
         delete_book, fetch_books, insert_book, Book, BookHandle, BookId, BookSortOrderBy, SortOrder,
     },
     loader::{SqliteLoader, SqliteTagLoader},
-    memo::{Memo, MemoId},
+    memo::{fetch_memos, Memo, MemoId, MemoSortOrderBy},
 };
 use async_graphql::{
     connection::{self, Connection, Edge},
@@ -120,16 +120,56 @@ impl Book {
         let memo = loader.load_one(MemoId(id.to_string())).await?;
         Ok(memo.filter(|memo| memo.book_id == self.id))
     }
-    #[allow(unreachable_code)]
     async fn memos(
         &self,
-        _after: Option<String>,
-        _before: Option<String>,
-        _first: Option<i32>,
-        _last: Option<i32>,
-        _search: Option<String>,
-    ) -> Result<Connection<usize, Memo, MemoConnectionExtend>> {
-        todo!()
+        ctx: &Context<'_>,
+        after: Option<String>,
+        before: Option<String>,
+        first: Option<i32>,
+        last: Option<i32>,
+        // TODO rename to query
+        search: Option<String>,
+    ) -> Result<Connection<String, Memo, MemoConnectionExtend>> {
+        let pool = ctx.data::<SqlitePool>()?;
+
+        connection::query(
+            after,
+            before,
+            first,
+            last,
+            |after, before, first, last| async move {
+                let forward_pagination = first.map(|first| (first, after, None));
+                let backward_pagination = last.map(|last| (last, None, before));
+                let (limit, lt_cursor, gt_cursor) =
+                    forward_pagination.xor(backward_pagination).unwrap();
+
+                let query = crate::db::memo::MemoQuery {
+                    filter: (self.id.clone(), search.unwrap_or_default()),
+                    order: SortOrder::Desc,
+                    order_by: MemoSortOrderBy::Updated,
+                    lt_cursor: lt_cursor.zip(Some(false)),
+                    gt_cursor: gt_cursor.zip(Some(false)),
+                    offset: 0,
+                    limit: (limit + 1) as i32,
+                };
+                let memos = fetch_memos(pool, query).await?;
+
+                let has_previous_page = last.map_or(false, |last| last < memos.len());
+                let has_next_page = first.map_or(false, |first| first < memos.len());
+                let mut connection = Connection::with_additional_fields(
+                    has_previous_page,
+                    has_next_page,
+                    MemoConnectionExtend {},
+                );
+                let memo_edges = memos
+                    .into_iter()
+                    .take(limit)
+                    .map(|memo| Edge::new(memo.id.clone(), memo));
+                connection.edges.extend(memo_edges);
+                Ok::<_, async_graphql::Error>(connection)
+            },
+        )
+        .await
     }
     async fn tags(&self, ctx: &Context<'_>) -> Result<Vec<String>> {
         let loader = ctx.data::<DataLoader<SqliteTagLoader>>()?;

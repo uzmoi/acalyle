@@ -1,4 +1,7 @@
-use super::loader::{SqliteLoader, SqliteTagLoader};
+use super::{
+    book::SortOrder,
+    loader::{SqliteLoader, SqliteTagLoader},
+};
 use async_graphql::{
     async_trait::async_trait, dataloader::Loader, futures_util::TryStreamExt, Result,
 };
@@ -19,6 +22,72 @@ pub(crate) struct Memo {
     pub updated_at: DateTime<Utc>,
     #[sqlx(rename = "bookId")]
     pub book_id: String,
+}
+
+#[derive(strum::Display)]
+pub(crate) enum MemoSortOrderBy {
+    #[strum(serialize = "createdAt")]
+    Created,
+    #[strum(serialize = "updatedAt")]
+    Updated,
+}
+
+pub(crate) struct MemoQuery {
+    pub lt_cursor: Option<(String, bool)>,
+    pub gt_cursor: Option<(String, bool)>,
+    pub filter: (String, String),
+    pub order: SortOrder,
+    pub order_by: MemoSortOrderBy,
+    pub limit: i32,
+    pub offset: i32,
+}
+
+pub(crate) async fn fetch_memos(
+    executor: impl SqliteExecutor<'_>,
+    query: MemoQuery,
+) -> Result<Vec<Memo>> {
+    let mut query_builder = sqlx::QueryBuilder::new(
+        "SELECT id, contents, createdAt, updatedAt, bookId FROM Memo WHERE ",
+    );
+
+    // cursor
+    if let Some((lt_cursor, eq)) = query.lt_cursor {
+        query_builder.push(&query.order_by);
+        query_builder.push(if eq { " <=" } else { " <" });
+        query_builder.push(" (SELECT ");
+        query_builder.push(&query.order_by);
+        query_builder.push(" FROM Memo WHERE id = ");
+        query_builder.push_bind(lt_cursor);
+        query_builder.push(") AND ");
+    }
+    if let Some((gt_cursor, eq)) = query.gt_cursor {
+        query_builder.push(&query.order_by);
+        query_builder.push(if eq { " >=" } else { " >" });
+        query_builder.push(" (SELECT ");
+        query_builder.push(&query.order_by);
+        query_builder.push(" FROM Memo WHERE id = ");
+        query_builder.push_bind(gt_cursor);
+        query_builder.push(") AND ");
+    }
+    // filter
+    let filter = format!("%{}%", query.filter.1);
+    query_builder.push("(contents LIKE ");
+    query_builder.push_bind(&filter);
+    query_builder.push(") AND bookId = ");
+    query_builder.push_bind(query.filter.0);
+
+    let mut separated = query_builder.separated(" ");
+    separated.push("ORDER BY");
+    separated.push(query.order_by);
+    separated.push(query.order);
+    separated.push("LIMIT");
+    separated.push_bind(query.limit);
+    separated.push("OFFSET");
+    separated.push_bind(query.offset);
+
+    let query = query_builder.build_query_as::<Memo>();
+
+    Ok(query.fetch_all(executor).await?)
 }
 
 #[async_trait]
