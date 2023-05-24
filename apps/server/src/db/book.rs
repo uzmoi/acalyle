@@ -1,4 +1,5 @@
 use super::loader::{SqliteLoader, SqliteTagLoader};
+use crate::query::NodeListQuery;
 use async_graphql::{async_trait::async_trait, dataloader::Loader, Result};
 use chrono::{DateTime, Utc};
 use sqlx::SqliteExecutor;
@@ -45,13 +46,6 @@ pub(crate) struct Book {
 }
 
 #[derive(strum::Display)]
-#[strum(serialize_all = "UPPERCASE")]
-pub(crate) enum SortOrder {
-    Asc,
-    Desc,
-}
-
-#[derive(strum::Display)]
 pub(crate) enum BookSortOrderBy {
     #[strum(serialize = "title")]
     Title,
@@ -61,19 +55,9 @@ pub(crate) enum BookSortOrderBy {
     Updated,
 }
 
-pub(crate) struct BookQuery {
-    pub lt_cursor: Option<(String, bool)>,
-    pub gt_cursor: Option<(String, bool)>,
-    pub filter: String,
-    pub order: SortOrder,
-    pub order_by: BookSortOrderBy,
-    pub limit: i32,
-    pub offset: i32,
-}
-
 pub(crate) async fn fetch_books(
     executor: impl SqliteExecutor<'_>,
-    query: BookQuery,
+    query: NodeListQuery<String, BookSortOrderBy>,
 ) -> Result<Vec<Book>> {
     let mut query_builder = sqlx::QueryBuilder::new(
         "SELECT id, handle, thumbnail, title, description, createdAt, updatedAt, settings

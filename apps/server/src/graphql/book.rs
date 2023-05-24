@@ -1,9 +1,10 @@
-use crate::db::{
-    book::{
-        delete_book, fetch_books, insert_book, Book, BookHandle, BookId, BookSortOrderBy, SortOrder,
+use crate::{
+    db::{
+        book::{delete_book, fetch_books, insert_book, Book, BookHandle, BookId, BookSortOrderBy},
+        loader::{SqliteLoader, SqliteTagLoader},
+        memo::{fetch_memos, Memo, MemoId, MemoSortOrderBy},
     },
-    loader::{SqliteLoader, SqliteTagLoader},
-    memo::{fetch_memos, Memo, MemoId, MemoSortOrderBy},
+    query::{NodeListQuery, SortOrder},
 };
 use async_graphql::{
     connection::{self, Connection, Edge},
@@ -55,7 +56,7 @@ impl BookQuery {
                 let (limit, lt_cursor, gt_cursor) =
                     forward_pagination.xor(backward_pagination).unwrap();
 
-                let query = crate::db::book::BookQuery {
+                let query = NodeListQuery {
                     filter: query.unwrap_or_default(),
                     order: SortOrder::Desc,
                     order_by: BookSortOrderBy::Updated,
@@ -143,8 +144,8 @@ impl Book {
                 let (limit, lt_cursor, gt_cursor) =
                     forward_pagination.xor(backward_pagination).unwrap();
 
-                let query = crate::db::memo::MemoQuery {
-                    filter: (self.id.clone(), search.unwrap_or_default()),
+                let query = NodeListQuery {
+                    filter: (BookId(self.id.clone()), search.unwrap_or_default()),
                     order: SortOrder::Desc,
                     order_by: MemoSortOrderBy::Updated,
                     lt_cursor: lt_cursor.zip(Some(false)),

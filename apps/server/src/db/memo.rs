@@ -1,7 +1,8 @@
 use super::{
-    book::SortOrder,
+    book::BookId,
     loader::{SqliteLoader, SqliteTagLoader},
 };
+use crate::query::NodeListQuery;
 use async_graphql::{
     async_trait::async_trait, dataloader::Loader, futures_util::TryStreamExt, Result,
 };
@@ -32,19 +33,9 @@ pub(crate) enum MemoSortOrderBy {
     Updated,
 }
 
-pub(crate) struct MemoQuery {
-    pub lt_cursor: Option<(String, bool)>,
-    pub gt_cursor: Option<(String, bool)>,
-    pub filter: (String, String),
-    pub order: SortOrder,
-    pub order_by: MemoSortOrderBy,
-    pub limit: i32,
-    pub offset: i32,
-}
-
 pub(crate) async fn fetch_memos(
     executor: impl SqliteExecutor<'_>,
-    query: MemoQuery,
+    query: NodeListQuery<(BookId, String), MemoSortOrderBy>,
 ) -> Result<Vec<Memo>> {
     let mut query_builder = sqlx::QueryBuilder::new(
         "SELECT id, contents, createdAt, updatedAt, bookId FROM Memo WHERE ",
@@ -74,7 +65,7 @@ pub(crate) async fn fetch_memos(
     query_builder.push("(contents LIKE ");
     query_builder.push_bind(&filter);
     query_builder.push(") AND bookId = ");
-    query_builder.push_bind(query.filter.0);
+    query_builder.push_bind(query.filter.0 .0);
 
     let mut separated = query_builder.separated(" ");
     separated.push("ORDER BY");
