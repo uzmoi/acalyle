@@ -1,6 +1,9 @@
 use crate::{
     db::{
-        book::{delete_book, fetch_books, insert_book, Book, BookHandle, BookId, BookSortOrderBy},
+        book::{
+            delete_book, fetch_books, insert_book, Book, BookHandle, BookId, BookSortOrderBy,
+            BookTag,
+        },
         loader::{SqliteLoader, SqliteTagLoader},
         memo::{fetch_memos, Memo, MemoId, MemoSortOrderBy},
     },
@@ -178,9 +181,10 @@ impl Book {
         Ok(tags.unwrap_or_default())
     }
     // TODO rename input "name" to "symbol"
-    #[allow(unreachable_code)]
-    async fn tag_props(&self, _name: String) -> Vec<String> {
-        todo!()
+    async fn tag_props(&self, ctx: &Context<'_>, name: String) -> Result<Vec<String>> {
+        let loader = ctx.data::<DataLoader<SqliteTagLoader>>()?;
+        let props = loader.load_one(BookTag::new(self.id.clone(), name)).await?;
+        Ok(props.unwrap_or_default())
     }
     #[allow(unreachable_code)]
     async fn resources(&self) -> Vec<String> {

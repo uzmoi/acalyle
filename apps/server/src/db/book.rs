@@ -209,11 +209,17 @@ pub(crate) async fn delete_book(
     Ok(())
 }
 
-#[derive(sqlx::FromRow, Clone)]
-struct BookTag {
+#[derive(sqlx::FromRow, Clone, PartialEq, Eq, Hash)]
+pub(crate) struct BookTag {
     #[sqlx(rename = "bookId")]
     book_id: String,
     symbol: String,
+}
+
+impl BookTag {
+    pub fn new(book_id: String, symbol: String) -> BookTag {
+        BookTag { book_id, symbol }
+    }
 }
 
 #[async_trait]
@@ -237,6 +243,50 @@ impl Loader<BookId> for SqliteTagLoader {
                     .entry(BookId(tag.book_id.clone()))
                     .or_insert_with(Vec::new)
                     .push(tag.symbol.clone());
+                accum
+            }))
+    }
+}
+
+#[derive(sqlx::FromRow, Clone)]
+struct BookMemoTag {
+    #[sqlx(rename = "bookId")]
+    book_id: String,
+    symbol: String,
+    prop: String,
+}
+
+#[async_trait]
+impl Loader<BookTag> for SqliteTagLoader {
+    type Value = Vec<String>;
+    type Error = Arc<sqlx::Error>;
+
+    async fn load(&self, keys: &[BookTag]) -> Result<HashMap<BookTag, Self::Value>, Self::Error> {
+        let mut query_builder = sqlx::QueryBuilder::new(
+            "SELECT Memo.bookId, Tag.symbol, Tag.prop
+            FROM Tag, Memo
+            WHERE Memo.id = Tag.memoId
+            AND Tag.prop NOT NULL
+            AND (Memo.bookId, Tag.symbol) IN",
+        );
+        query_builder.push_tuples(keys, |mut separated, key| {
+            separated.push_bind(key.book_id.clone());
+            separated.push_bind(key.symbol.clone());
+        });
+        let query = query_builder.build_query_as::<BookMemoTag>();
+
+        Ok(query
+            .fetch_all(&self.pool)
+            .await?
+            .iter()
+            .fold(HashMap::new(), |mut accum, tag| {
+                accum
+                    .entry(BookTag {
+                        book_id: tag.book_id.clone(),
+                        symbol: tag.symbol.clone(),
+                    })
+                    .or_insert_with(Vec::new)
+                    .push(tag.prop.clone());
                 accum
             }))
     }
