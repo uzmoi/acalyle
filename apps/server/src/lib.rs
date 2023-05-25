@@ -167,6 +167,74 @@ mod tests {
         assert_eq!(get_node(&res, 0), json!({ "title": "hoge" }));
         assert_eq!(obj_get(&get_page_info(&res), "hasNextPage"), &json!(false));
     }
+    #[tokio::test]
+    async fn memo_connetion() {
+        let schema = Schema::new().await.unwrap();
+        fn get_id(res: &Response, key: &str) -> String {
+            let data = res.data.clone().into_json().unwrap();
+            let id = obj_get(obj_get(&data, key), "id");
+            id.as_str().unwrap().to_string()
+        }
+        fn get_node(res: &Response, index: usize) -> serde_json::Value {
+            let data = &res.data.clone().into_json().unwrap();
+            let edges = obj_get(obj_get(obj_get(data, "book"), "memos"), "edges");
+            obj_get(edges.as_array().unwrap().get(index).unwrap(), "node").clone()
+        }
+        fn get_page_info(res: &Response) -> serde_json::Value {
+            let data = &res.data.clone().into_json().unwrap();
+            let page_info = obj_get(obj_get(obj_get(data, "book"), "memos"), "pageInfo");
+            page_info.clone()
+        }
+
+        // create book
+        let query = r#"mutation($title: String!) {
+            createBook(title: $title) { id }
+        }"#;
+        let res = schema.exec(query, value!({ "title": "hoge" })).await;
+        let book_id = get_id(&res, "createBook");
+
+        // create memos
+        let query = r#"mutation($id: ID!) {
+            createMemo(bookId: $id) { id }
+        }"#;
+        let hoge = schema.exec(query, value!({ "id": book_id })).await;
+        sleep(Duration::from_millis(1)).await;
+        let fuga = schema.exec(query, value!({ "id": book_id })).await;
+        sleep(Duration::from_millis(1)).await;
+        let piyo = schema.exec(query, value!({ "id": book_id })).await;
+
+        // fetch memos
+        let query = r#"query($id: ID!, $cursor: String) {
+            book(id: $id) {
+                memos(first: 1, after: $cursor) {
+                    edges { node { id } }
+                    pageInfo { endCursor hasNextPage }
+                }
+            }
+        }"#;
+        let res = schema.exec(query, value!({ "id": book_id })).await;
+        assert_eq!(
+            get_node(&res, 0),
+            json!({ "id": get_id(&piyo,"createMemo") })
+        );
+        assert_eq!(obj_get(&get_page_info(&res), "hasNextPage"), &json!(true));
+
+        let vars = value!({ "id": book_id, "cursor": obj_get(&get_page_info(&res), "endCursor") });
+        let res = schema.exec(query, vars).await;
+        assert_eq!(
+            get_node(&res, 0),
+            json!({ "id": get_id(&fuga,"createMemo") })
+        );
+        assert_eq!(obj_get(&get_page_info(&res), "hasNextPage"), &json!(true));
+
+        let vars = value!({ "id": book_id, "cursor": obj_get(&get_page_info(&res), "endCursor") });
+        let res = schema.exec(query, vars).await;
+        assert_eq!(
+            get_node(&res, 0),
+            json!({ "id": get_id(&hoge,"createMemo") })
+        );
+        assert_eq!(obj_get(&get_page_info(&res), "hasNextPage"), &json!(false));
+    }
 
     #[test]
     fn it_works() {
