@@ -66,6 +66,7 @@ pub(crate) async fn fetch_memos(
     query_builder.push_bind(&filter);
     query_builder.push(") AND bookId = ");
     query_builder.push_bind(query.filter.0 .0);
+    query_builder.push(" ");
 
     let mut separated = query_builder.separated(" ");
     separated.push("ORDER BY");
