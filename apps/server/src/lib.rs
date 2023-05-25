@@ -1,5 +1,5 @@
 pub mod db;
-mod graphql;
+pub mod graphql;
 mod query;
 pub mod server;
 
