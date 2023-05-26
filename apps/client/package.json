@@ -11,7 +11,7 @@
     "check": "tsc",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "precodegen": "turbo run build --filter=main && npm run schemagen -w main",
+    "precodegen": "cargo run -p acalyle-server --bin schema-gen",
     "codegen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
