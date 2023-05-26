@@ -2,8 +2,6 @@ import { gql } from "graphql-tag";
 import {
     type GqlBookListPaginationQuery,
     type GqlBookListPaginationQueryVariables,
-    GqlBookSortOrder,
-    GqlSortOrder,
     type Scalars,
 } from "~/__generated__/graphql";
 import { createConnectionAtom } from "~/lib/connection";
@@ -12,20 +10,8 @@ import { bookStore } from "~/store/book";
 import { net } from "~/store/net";
 
 const BookListPagination = gql`
-    query BookListPagination(
-        $count: Int!
-        $cursor: String
-        $query: String!
-        $orderBy: BookSortOrder!
-        $order: SortOrder!
-    ) {
-        books(
-            first: $count
-            after: $cursor
-            query: $query
-            orderBy: $orderBy
-            order: $order
-        ) {
+    query BookListPagination($count: Int!, $cursor: String, $query: String!) {
+        books(first: $count, after: $cursor, query: $query) {
             edges {
                 node {
                     id
@@ -64,9 +50,7 @@ export const bookConnection = memoizeBuilder((_id, query: string) =>
             >(BookListPagination, {
                 count: 32,
                 cursor: connectionAtom.get().endCursor,
-                query,
-                orderBy: GqlBookSortOrder.LastUpdated,
-                order: GqlSortOrder.Desc,
+                query, // `orderby:updated order:desc ${query}`
             });
             return data.books;
         },

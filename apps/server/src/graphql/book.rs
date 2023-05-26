@@ -131,8 +131,7 @@ impl Book {
         before: Option<String>,
         first: Option<i32>,
         last: Option<i32>,
-        // TODO rename to query
-        search: Option<String>,
+        query: Option<String>,
     ) -> Result<Connection<String, Memo, MemoConnectionExtend>> {
         let pool = ctx.data::<SqlitePool>()?;
 
@@ -148,7 +147,7 @@ impl Book {
                     forward_pagination.xor(backward_pagination).unwrap();
 
                 let query = NodeListQuery {
-                    filter: (BookId(self.id.clone()), search.unwrap_or_default()),
+                    filter: (BookId(self.id.clone()), query.unwrap_or_default()),
                     order: SortOrder::Desc,
                     order_by: MemoSortOrderBy::Updated,
                     lt_cursor: lt_cursor.zip(Some(false)),
@@ -180,10 +179,11 @@ impl Book {
         let tags = loader.load_one(BookId(self.id.clone())).await?;
         Ok(tags.unwrap_or_default())
     }
-    // TODO rename input "name" to "symbol"
-    async fn tag_props(&self, ctx: &Context<'_>, name: String) -> Result<Vec<String>> {
+    async fn tag_props(&self, ctx: &Context<'_>, symbol: String) -> Result<Vec<String>> {
         let loader = ctx.data::<DataLoader<SqliteTagLoader>>()?;
-        let props = loader.load_one(BookTag::new(self.id.clone(), name)).await?;
+        let props = loader
+            .load_one(BookTag::new(self.id.clone(), symbol))
+            .await?;
         Ok(props.unwrap_or_default())
     }
     #[allow(unreachable_code)]
