@@ -10,7 +10,7 @@ _*
 *.tsbuildinfo
 
 /app
-/data/schema.graphql
+/data
 
 /prisma/*
 !/prisma/schema.prisma
