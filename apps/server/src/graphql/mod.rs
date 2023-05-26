@@ -1,4 +1,5 @@
 mod book;
+mod cursor;
 mod memo;
 mod node;
 mod schema;

@@ -1,3 +1,4 @@
+use super::cursor::Cursor;
 use crate::{
     db::{
         book::{
@@ -45,7 +46,7 @@ impl BookQuery {
         first: Option<i32>,
         last: Option<i32>,
         query: Option<String>,
-    ) -> Result<Connection<String, Book, BookConnectionExtend>> {
+    ) -> Result<Connection<Cursor, Book, BookConnectionExtend>> {
         let pool = ctx.data::<SqlitePool>()?;
 
         connection::query(
@@ -63,8 +64,8 @@ impl BookQuery {
                     filter: query.unwrap_or_default(),
                     order: SortOrder::Desc,
                     order_by: BookSortOrderBy::Updated,
-                    lt_cursor: lt_cursor.zip(Some(false)),
-                    gt_cursor: gt_cursor.zip(Some(false)),
+                    lt_cursor: lt_cursor.map(|lt_cursor: Cursor| (lt_cursor.0, false)),
+                    gt_cursor: gt_cursor.map(|gt_cursor| (gt_cursor.0, false)),
                     offset: 0,
                     limit: (limit + 1) as i32,
                 };
@@ -80,7 +81,7 @@ impl BookQuery {
                 let book_edges = books
                     .into_iter()
                     .take(limit)
-                    .map(|book| Edge::new(book.id.clone(), book));
+                    .map(|book| Edge::new(Cursor(book.id.clone()), book));
                 connection.edges.extend(book_edges);
                 Ok::<_, async_graphql::Error>(connection)
             },
@@ -132,7 +133,7 @@ impl Book {
         first: Option<i32>,
         last: Option<i32>,
         query: Option<String>,
-    ) -> Result<Connection<String, Memo, MemoConnectionExtend>> {
+    ) -> Result<Connection<Cursor, Memo, MemoConnectionExtend>> {
         let pool = ctx.data::<SqlitePool>()?;
 
         connection::query(
@@ -150,8 +151,8 @@ impl Book {
                     filter: (BookId(self.id.clone()), query.unwrap_or_default()),
                     order: SortOrder::Desc,
                     order_by: MemoSortOrderBy::Updated,
-                    lt_cursor: lt_cursor.zip(Some(false)),
-                    gt_cursor: gt_cursor.zip(Some(false)),
+                    lt_cursor: lt_cursor.map(|lt_cursor: Cursor| (lt_cursor.0, false)),
+                    gt_cursor: gt_cursor.map(|gt_cursor| (gt_cursor.0, false)),
                     offset: 0,
                     limit: (limit + 1) as i32,
                 };
@@ -167,7 +168,7 @@ impl Book {
                 let memo_edges = memos
                     .into_iter()
                     .take(limit)
-                    .map(|memo| Edge::new(memo.id.clone(), memo));
+                    .map(|memo| Edge::new(Cursor(memo.id.clone()), memo));
                 connection.edges.extend(memo_edges);
                 Ok::<_, async_graphql::Error>(connection)
             },
