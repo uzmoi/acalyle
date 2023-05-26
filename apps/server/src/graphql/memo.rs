@@ -124,16 +124,16 @@ impl MemoMutation {
     async fn update_memo_contents(
         &self,
         ctx: &Context<'_>,
-        memo_id: ID,
+        id: ID,
         contents: String,
     ) -> Result<Option<Memo>> {
         let pool = ctx.data::<SqlitePool>()?;
         let now = Utc::now();
 
-        update_memo_contents(pool, memo_id.to_string(), contents, now).await?;
+        update_memo_contents(pool, id.to_string(), contents, now).await?;
 
         let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
-        let memo = loader.load_one(MemoId(memo_id.to_string())).await?;
+        let memo = loader.load_one(MemoId(id.to_string())).await?;
 
         if let Some(memo) = &memo {
             update_book(pool, memo.book_id.clone(), now).await?;
@@ -142,15 +142,14 @@ impl MemoMutation {
         Ok(memo)
     }
     #[allow(unreachable_code)]
-    async fn upsert_memo_tags(&self, _memo_ids: Vec<ID>, _tags: Vec<String>) -> Vec<Memo> {
+    async fn upsert_memo_tags(&self, _ids: Vec<ID>, _tags: Vec<String>) -> Vec<Memo> {
         todo!()
     }
     #[allow(unreachable_code)]
-    async fn remove_memo_tags(&self, _memo_ids: Vec<ID>, _symbols: Vec<String>) -> Vec<Memo> {
+    async fn remove_memo_tags(&self, _ids: Vec<ID>, _symbols: Vec<String>) -> Vec<Memo> {
         todo!()
     }
     // TODO update_book
-    // TODO rename "ids" to "memo_ids"
     async fn remove_memo(&self, ctx: &Context<'_>, ids: Vec<ID>) -> Result<Vec<ID>> {
         let pool = ctx.data::<SqlitePool>()?;
         let memo_ids = ids

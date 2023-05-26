@@ -50,7 +50,7 @@ export const memoStore = createQueryStore(
 const MemoTemplateQuery = gql`
     query MemoTemplate($bookId: ID!) {
         book(id: $bookId) {
-            tagProps(name: "template")
+            tagProps(symbol: "template")
         }
     }
 `;
@@ -112,7 +112,7 @@ export const removeMemo = async (memoId: Scalars["ID"]) => {
 
 const UpdateMemoContentsMutation = gql`
     mutation UpdateMemoContents($memoId: ID!, $contents: String!) {
-        updateMemoContents(memoId: $memoId, contents: $contents) {
+        updateMemoContents(id: $memoId, contents: $contents) {
             contents
             tags
             createdAt
@@ -132,15 +132,17 @@ export const updateMemoContents = async (
         GqlUpdateMemoContentsMutationVariables
     >(UpdateMemoContentsMutation, { memoId, contents });
 
-    memoStore(memoId).resolve({
-        id: memoId,
-        ...data.updateMemoContents,
-    });
+    if (data.updateMemoContents != null) {
+        memoStore(memoId).resolve({
+            id: memoId,
+            ...data.updateMemoContents,
+        });
+    }
 };
 
 const UpsertMemoTagsMutation = gql`
     mutation UpsertMemoTags($memoId: ID!, $tags: [String!]!) {
-        upsertMemoTags(memoIds: [$memoId], tags: $tags) {
+        upsertMemoTags(ids: [$memoId], tags: $tags) {
             id
             contents
             tags

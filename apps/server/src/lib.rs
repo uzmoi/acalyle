@@ -1,6 +1,7 @@
-mod db;
-mod graphql;
+pub mod db;
+pub mod graphql;
 mod query;
+pub mod server;
 
 pub fn add(left: usize, right: usize) -> usize {
     left + right
@@ -9,6 +10,7 @@ pub fn add(left: usize, right: usize) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::db::init;
     use async_graphql::{value, Request, Response, Value, Variables};
     use serde_json::json;
     use sqlx::SqlitePool;
@@ -20,51 +22,7 @@ mod tests {
     impl Schema {
         async fn new() -> sqlx::Result<Schema> {
             let pool = SqlitePool::connect("sqlite::memory:").await?;
-
-            sqlx::query(
-                "CREATE TABLE Book (
-                    id TEXT NOT NULL PRIMARY KEY,
-                    handle TEXT,
-                    thumbnail TEXT NOT NULL,
-                    title TEXT NOT NULL,
-                    description TEXT NOT NULL,
-                    createdAt DATETIME NOT NULL,
-                    updatedAt DATETIME NOT NULL,
-                    settings BLOB NOT NULL
-                )",
-            )
-            .execute(&pool)
-            .await?;
-
-            sqlx::query(
-                "CREATE TABLE Memo (
-                    id TEXT NOT NULL PRIMARY KEY,
-                    contents TEXT NOT NULL,
-                    createdAt DATETIME NOT NULL,
-                    updatedAt DATETIME NOT NULL,
-                    bookId TEXT NOT NULL,
-                    CONSTRAINT Memo_bookId_f_key FOREIGN KEY (bookId) REFERENCES Book (id)
-                        ON DELETE CASCADE
-                        ON UPDATE CASCADE
-                )",
-            )
-            .execute(&pool)
-            .await?;
-
-            sqlx::query(
-                "CREATE TABLE Tag (
-                    memoId TEXT NOT NULL,
-                    symbol TEXT NOT NULL,
-                    prop TEXT,
-                    PRIMARY KEY (memoId, symbol),
-                    CONSTRAINT MemoTag_memoId_f_key FOREIGN KEY (memoId) REFERENCES Memo (id)
-                        ON DELETE RESTRICT
-                        ON UPDATE CASCADE
-                )",
-            )
-            .execute(&pool)
-            .await?;
-
+            init::create_tables(&pool).await?;
             Ok(Schema(graphql::graphql_schema(pool)))
         }
         async fn exec(&self, query: &str, vars: Value) -> Response {

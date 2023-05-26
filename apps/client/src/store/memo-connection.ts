@@ -18,7 +18,7 @@ const MemoListPagination = gql`
         $query: String!
     ) {
         book(id: $bookId) {
-            memos(first: $count, after: $cursor, search: $query) {
+            memos(first: $count, after: $cursor, query: $query) {
                 edges {
                     node {
                         id
