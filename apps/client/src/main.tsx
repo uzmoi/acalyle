@@ -8,24 +8,34 @@ import { createRoot } from "react-dom/client";
 import { Location } from "./store/location";
 import { BookRoute, net } from ".";
 
+const baseUrl = new URL("/api", location.origin);
+
 net.set({
-    get: path => new URL(path, "http://localhost:4323/").href,
+    get: path => new URL(path, baseUrl).href,
     async graphql(docNode, variables, options) {
-        const formData = new FormData();
         const operations = JSON.stringify({
             query: docNode.loc?.source.body,
             variables,
         });
-        formData.append("operations", operations);
-        const res = await fetch("http://localhost:4323", {
+        let body: BodyInit = operations;
+        const shuldUseFormData = true;
+        if (shuldUseFormData) {
+            body = new FormData();
+            body.append(
+                "operations",
+                new Blob([operations], { type: "application/json" }),
+            );
+            body.append("map", new Blob(["{}"], { type: "application/json" }));
+        }
+        const res = await fetch(baseUrl, {
             method: "POST",
-            body: formData,
+            body,
             signal: options?.signal,
         });
         if (res.ok) {
             return (await res.json()) as { data: never };
         }
-        throw res.text();
+        throw await res.text();
     },
 });
 
