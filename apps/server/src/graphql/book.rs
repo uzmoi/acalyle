@@ -1,4 +1,7 @@
-use super::cursor::Cursor;
+use super::{
+    cursor::Cursor,
+    node::{connection, connection_args, NodeType},
+};
 use crate::{
     db::{
         book::{
@@ -11,7 +14,7 @@ use crate::{
     query::{NodeListQuery, SortOrder},
 };
 use async_graphql::{
-    connection::{self, Connection, Edge},
+    connection::{self, Connection},
     dataloader::DataLoader,
     Context, Object, Result, Upload, ID,
 };
@@ -55,34 +58,20 @@ impl BookQuery {
             first,
             last,
             |after, before, first, last| async move {
-                let forward_pagination = first.map(|first| (first, after, None));
-                let backward_pagination = last.map(|last| (last, None, before));
-                let (limit, lt_cursor, gt_cursor) =
-                    forward_pagination.xor(backward_pagination).unwrap();
+                let (limit, lt_cursor, gt_cursor) = connection_args(after, before, first, last);
 
                 let query = NodeListQuery {
                     filter: query.unwrap_or_default(),
                     order: SortOrder::Desc,
                     order_by: BookSortOrderBy::Updated,
-                    lt_cursor: lt_cursor.map(|lt_cursor: Cursor| (lt_cursor.0, false)),
-                    gt_cursor: gt_cursor.map(|gt_cursor| (gt_cursor.0, false)),
+                    lt_cursor,
+                    gt_cursor,
                     offset: 0,
                     limit: (limit + 1) as i32,
                 };
                 let books = fetch_books(pool, query).await?;
 
-                let has_previous_page = last.map_or(false, |last| last < books.len());
-                let has_next_page = first.map_or(false, |first| first < books.len());
-                let mut connection = Connection::with_additional_fields(
-                    has_previous_page,
-                    has_next_page,
-                    BookConnectionExtend {},
-                );
-                let book_edges = books
-                    .into_iter()
-                    .take(limit)
-                    .map(|book| Edge::new(Cursor(book.id.0.clone()), book));
-                connection.edges.extend(book_edges);
+                let connection = connection(books, limit, first, last, BookConnectionExtend {});
                 Ok::<_, async_graphql::Error>(connection)
             },
         )
@@ -97,6 +86,12 @@ impl BookConnectionExtend {
     #[allow(unreachable_code)]
     async fn total_count(&self) -> i32 {
         todo!()
+    }
+}
+
+impl NodeType for Book {
+    fn id(&self) -> String {
+        self.id.0.clone()
     }
 }
 
@@ -142,34 +137,20 @@ impl Book {
             first,
             last,
             |after, before, first, last| async move {
-                let forward_pagination = first.map(|first| (first, after, None));
-                let backward_pagination = last.map(|last| (last, None, before));
-                let (limit, lt_cursor, gt_cursor) =
-                    forward_pagination.xor(backward_pagination).unwrap();
+                let (limit, lt_cursor, gt_cursor) = connection_args(after, before, first, last);
 
                 let query = NodeListQuery {
                     filter: (self.id.clone(), query.unwrap_or_default()),
                     order: SortOrder::Desc,
                     order_by: MemoSortOrderBy::Updated,
-                    lt_cursor: lt_cursor.map(|lt_cursor: Cursor| (lt_cursor.0, false)),
-                    gt_cursor: gt_cursor.map(|gt_cursor| (gt_cursor.0, false)),
+                    lt_cursor,
+                    gt_cursor,
                     offset: 0,
                     limit: (limit + 1) as i32,
                 };
                 let memos = fetch_memos(pool, query).await?;
 
-                let has_previous_page = last.map_or(false, |last| last < memos.len());
-                let has_next_page = first.map_or(false, |first| first < memos.len());
-                let mut connection = Connection::with_additional_fields(
-                    has_previous_page,
-                    has_next_page,
-                    MemoConnectionExtend {},
-                );
-                let memo_edges = memos
-                    .into_iter()
-                    .take(limit)
-                    .map(|memo| Edge::new(Cursor(memo.id.0.clone()), memo));
-                connection.edges.extend(memo_edges);
+                let connection = connection(memos, limit, first, last, MemoConnectionExtend {});
                 Ok::<_, async_graphql::Error>(connection)
             },
         )

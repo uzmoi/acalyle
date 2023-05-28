@@ -11,6 +11,8 @@ use chrono::{DateTime, Utc};
 use sqlx::SqlitePool;
 use uuid::Uuid;
 
+use super::node::NodeType;
+
 #[derive(Default)]
 pub(super) struct MemoQuery;
 
@@ -19,6 +21,12 @@ impl MemoQuery {
     async fn memo(&self, ctx: &Context<'_>, id: ID) -> Result<Option<Memo>> {
         let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
         Ok(loader.load_one(MemoId(id.0)).await?)
+    }
+}
+
+impl NodeType for Memo {
+    fn id(&self) -> String {
+        self.id.0.clone()
     }
 }
 
