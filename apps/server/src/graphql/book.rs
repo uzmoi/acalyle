@@ -33,8 +33,8 @@ impl BookQuery {
     ) -> Result<Option<Book>> {
         let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
         let handle = id
-            .map(|id| BookHandle::Id(id.to_string()))
-            .or_else(|| handle.map(|handle| BookHandle::Handle(handle.to_string())))
+            .map(|id| BookHandle::Id(id.0))
+            .or_else(|| handle.map(BookHandle::Handle))
             .ok_or_else(|| async_graphql::Error::new("id or handle is required"))?;
         Ok(loader.load_one(handle).await?)
     }
@@ -81,7 +81,7 @@ impl BookQuery {
                 let book_edges = books
                     .into_iter()
                     .take(limit)
-                    .map(|book| Edge::new(Cursor(book.id.clone()), book));
+                    .map(|book| Edge::new(Cursor(book.id.0.clone()), book));
                 connection.edges.extend(book_edges);
                 Ok::<_, async_graphql::Error>(connection)
             },
@@ -103,7 +103,7 @@ impl BookConnectionExtend {
 #[Object]
 impl Book {
     pub(super) async fn id(&self) -> ID {
-        ID(self.id.clone())
+        ID(self.id.0.clone())
     }
     async fn handle(&self) -> Option<String> {
         self.handle.clone()
@@ -122,7 +122,7 @@ impl Book {
     }
     async fn memo(&self, ctx: &Context<'_>, id: ID) -> Result<Option<Memo>> {
         let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
-        let memo = loader.load_one(MemoId(id.to_string())).await?;
+        let memo = loader.load_one(MemoId(id.0)).await?;
         Ok(memo.filter(|memo| memo.book_id == self.id))
     }
     async fn memos(
@@ -148,7 +148,7 @@ impl Book {
                     forward_pagination.xor(backward_pagination).unwrap();
 
                 let query = NodeListQuery {
-                    filter: (BookId(self.id.clone()), query.unwrap_or_default()),
+                    filter: (self.id.clone(), query.unwrap_or_default()),
                     order: SortOrder::Desc,
                     order_by: MemoSortOrderBy::Updated,
                     lt_cursor: lt_cursor.map(|lt_cursor: Cursor| (lt_cursor.0, false)),
@@ -168,7 +168,7 @@ impl Book {
                 let memo_edges = memos
                     .into_iter()
                     .take(limit)
-                    .map(|memo| Edge::new(Cursor(memo.id.clone()), memo));
+                    .map(|memo| Edge::new(Cursor(memo.id.0.clone()), memo));
                 connection.edges.extend(memo_edges);
                 Ok::<_, async_graphql::Error>(connection)
             },
@@ -177,7 +177,7 @@ impl Book {
     }
     async fn tags(&self, ctx: &Context<'_>) -> Result<Vec<String>> {
         let loader = ctx.data::<DataLoader<SqliteTagLoader>>()?;
-        let tags = loader.load_one(BookId(self.id.clone())).await?;
+        let tags = loader.load_one(self.id.clone()).await?;
         Ok(tags.unwrap_or_default())
     }
     async fn tag_props(&self, ctx: &Context<'_>, symbol: String) -> Result<Vec<String>> {
@@ -234,7 +234,7 @@ impl BookMutation {
         let now = Utc::now();
 
         let book = Book {
-            id: id.to_string(),
+            id: BookId(id.to_string()),
             handle: None,
             title,
             description: description.unwrap_or_default(),
@@ -273,7 +273,7 @@ impl BookMutation {
     }
     async fn delete_book(&self, ctx: &Context<'_>, id: ID) -> Result<ID> {
         let pool = ctx.data::<SqlitePool>()?;
-        delete_book(pool, &[id.to_string()]).await?;
+        delete_book(pool, &[BookId(id.to_string())]).await?;
         Ok(id)
     }
 }

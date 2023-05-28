@@ -10,19 +10,20 @@ use chrono::{DateTime, Utc};
 use sqlx::SqliteExecutor;
 use std::{collections::HashMap, sync::Arc};
 
-#[derive(Clone, PartialEq, Eq, Hash)]
+#[derive(Clone, PartialEq, Eq, Hash, sqlx::Type)]
+#[sqlx(transparent)]
 pub(crate) struct MemoId(pub String);
 
 #[derive(sqlx::FromRow, Clone)]
 pub(crate) struct Memo {
-    pub id: String,
+    pub id: MemoId,
     pub contents: String,
     #[sqlx(rename = "createdAt")]
     pub created_at: DateTime<Utc>,
     #[sqlx(rename = "updatedAt")]
     pub updated_at: DateTime<Utc>,
     #[sqlx(rename = "bookId")]
-    pub book_id: String,
+    pub book_id: BookId,
 }
 
 #[derive(strum::Display)]
@@ -92,13 +93,13 @@ impl Loader<MemoId> for SqliteLoader {
             "SELECT id, contents, createdAt, updatedAt, bookId FROM Memo WHERE id IN",
         );
         query_builder.push_tuples(keys, |mut separated, key| {
-            separated.push_bind(key.0.clone());
+            separated.push_bind(key);
         });
         let query = query_builder.build_query_as::<Memo>();
 
         Ok(query
             .fetch(&self.pool)
-            .map_ok(|memo| (MemoId(memo.id.clone()), memo))
+            .map_ok(|memo| (memo.id.clone(), memo))
             .map_err(Arc::new)
             .try_collect()
             .await?)
@@ -127,9 +128,9 @@ pub(crate) async fn insert_memos(
 
 pub(crate) async fn update_memo_contents(
     executor: impl SqliteExecutor<'_>,
-    memo_id: String,
+    memo_id: &MemoId,
     contents: String,
-    updated_at: DateTime<Utc>,
+    updated_at: &DateTime<Utc>,
 ) -> sqlx::Result<()> {
     let query = sqlx::query("UPDATE Memo SET contents = ?, updatedAt = ? WHERE id = ?");
     query
@@ -143,11 +144,11 @@ pub(crate) async fn update_memo_contents(
 
 pub(crate) async fn delete_memo(
     executor: impl SqliteExecutor<'_>,
-    memo_ids: &[String],
+    memo_ids: &[MemoId],
 ) -> sqlx::Result<()> {
     let mut query_builder = sqlx::QueryBuilder::new("DELETE Memo WHERE id IN");
     query_builder.push_tuples(memo_ids, |mut separated, id| {
-        separated.push_bind(id.clone());
+        separated.push_bind(id);
     });
     let query = query_builder.build();
 
@@ -157,12 +158,12 @@ pub(crate) async fn delete_memo(
 
 pub(crate) async fn transfer_memo(
     executor: impl SqliteExecutor<'_>,
-    memo_ids: &[String],
-    dest_book_id: String,
+    memo_ids: &[MemoId],
+    dest_book_id: &BookId,
 ) -> sqlx::Result<()> {
     let mut query_builder = sqlx::QueryBuilder::new("UPDATE Memo WHERE id IN");
     query_builder.push_tuples(memo_ids, |mut separated, id| {
-        separated.push_bind(id.clone());
+        separated.push_bind(id);
     });
     query_builder.push("SET bookId = ?");
     let query = query_builder.build();
@@ -174,13 +175,13 @@ pub(crate) async fn transfer_memo(
 #[derive(sqlx::FromRow, Clone)]
 pub(crate) struct MemoTag {
     #[sqlx(rename = "memoId")]
-    memo_id: String,
+    memo_id: MemoId,
     symbol: String,
     prop: Option<String>,
 }
 
 impl MemoTag {
-    pub(crate) fn new(memo_id: String, symbol: String, prop: Option<String>) -> MemoTag {
+    pub(crate) fn new(memo_id: MemoId, symbol: String, prop: Option<String>) -> MemoTag {
         MemoTag {
             memo_id,
             symbol,
@@ -198,7 +199,7 @@ impl Loader<MemoId> for SqliteTagLoader {
         let mut query_builder =
             sqlx::QueryBuilder::new("SELECT memoId, symbol, prop FROM Tag WHERE memoId IN");
         query_builder.push_tuples(keys, |mut separated, key| {
-            separated.push_bind(key.0.clone());
+            separated.push_bind(key);
         });
         let query = query_builder.build_query_as::<MemoTag>();
 
@@ -207,16 +208,12 @@ impl Loader<MemoId> for SqliteTagLoader {
             .await?
             .iter()
             .fold(HashMap::new(), |mut accum, tag| {
-                let MemoTag {
-                    memo_id,
-                    symbol,
-                    prop,
-                } = tag;
-                let tag_string = prop
-                    .clone()
-                    .map_or(symbol.clone(), |prop| format!("{symbol}:{prop}",));
+                let tag_string = tag.prop.as_ref().map_or_else(
+                    || tag.symbol.to_owned(),
+                    |prop| format!("{}:{prop}", tag.symbol),
+                );
                 accum
-                    .entry(MemoId(memo_id.clone()))
+                    .entry(tag.memo_id.to_owned())
                     .or_insert_with(Vec::new)
                     .push(tag_string);
                 accum
