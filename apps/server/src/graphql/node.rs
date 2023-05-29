@@ -36,7 +36,9 @@ pub(super) fn connection_args(
 ) -> (usize, Option<(String, bool)>, Option<(String, bool)>) {
     let forward_pagination = first.map(|first| (first, after, None));
     let backward_pagination = last.map(|last| (last, None, before));
-    let (limit, lt_cursor, gt_cursor) = forward_pagination.xor(backward_pagination).unwrap();
+    let (limit, lt_cursor, gt_cursor) = forward_pagination
+        .xor(backward_pagination)
+        .unwrap_or((0, None, None));
     (
         limit,
         lt_cursor.map(|lt_cursor| (lt_cursor.0, false)),
