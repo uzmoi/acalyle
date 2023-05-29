@@ -44,7 +44,7 @@ export default defineConfig({
         proxy: {
             "/api": {
                 target: "http://localhost:4323/",
-                rewrite: path => path.replace(/^\/api/, ""),
+                rewrite: path => `${path.replace(/^\/api/, "")}?endpoint=/api`,
             },
         },
     },

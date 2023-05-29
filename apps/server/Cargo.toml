@@ -10,6 +10,7 @@ axum = "0.6.18"
 base64 = "0.21.2"
 chrono = "0.4.24"
 rand = "0.8.5"
+serde = "1.0.163"
 serde_json = "1.0.96"
 sqlx = { version = "0.6.3", features = ["runtime-tokio-rustls", "sqlite", "chrono"] }
 strum = { version = "0.24.1", features = ["derive"] }
