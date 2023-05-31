@@ -110,6 +110,22 @@ pub(crate) async fn fetch_books(
     Ok(query.fetch_all(executor).await?)
 }
 
+pub(crate) async fn count_books(executor: impl SqliteExecutor<'_>, filter: String) -> Result<i32> {
+    let mut query_builder = sqlx::QueryBuilder::new("SELECT COUNT(*) FROM Book WHERE ");
+
+    // filter
+    let filter = format!("%{}%", filter);
+    query_builder.push("(title LIKE ");
+    query_builder.push_bind(&filter);
+    query_builder.push(" OR description LIKE ");
+    query_builder.push_bind(&filter);
+    query_builder.push(") ");
+
+    let query = query_builder.build_query_as::<(i32,)>();
+
+    Ok(query.fetch_one(executor).await?.0)
+}
+
 #[async_trait]
 impl Loader<BookHandle> for SqliteLoader {
     type Value = Book;

@@ -84,6 +84,24 @@ pub(crate) async fn fetch_memos(
     Ok(query.fetch_all(executor).await?)
 }
 
+pub(crate) async fn count_memos(
+    executor: impl SqliteExecutor<'_>,
+    filter: (BookId, String),
+) -> Result<i32> {
+    let mut query_builder = sqlx::QueryBuilder::new("SELECT COUNT(*) FROM Memo WHERE ");
+
+    // filter
+    let contents_filter = format!("%{}%", filter.1);
+    query_builder.push("(contents LIKE ");
+    query_builder.push_bind(&contents_filter);
+    query_builder.push(") AND bookId = ");
+    query_builder.push_bind(filter.0 .0);
+
+    let query = query_builder.build_query_as::<(i32,)>();
+
+    Ok(query.fetch_one(executor).await?.0)
+}
+
 #[async_trait]
 impl Loader<MemoId> for SqliteLoader {
     type Value = Memo;

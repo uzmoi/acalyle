@@ -5,11 +5,11 @@ use super::{
 use crate::{
     db::{
         book::{
-            delete_book, fetch_books, insert_book, Book, BookHandle, BookId, BookSortOrderBy,
-            BookTag,
+            count_books, delete_book, fetch_books, insert_book, Book, BookHandle, BookId,
+            BookSortOrderBy, BookTag,
         },
         loader::{SqliteLoader, SqliteTagLoader},
-        memo::{fetch_memos, Memo, MemoId, MemoSortOrderBy},
+        memo::{count_memos, fetch_memos, Memo, MemoId, MemoSortOrderBy},
     },
     query::{NodeListQuery, SortOrder},
 };
@@ -69,9 +69,11 @@ impl BookQuery {
                     offset: 0,
                     limit: (limit + 1) as i32,
                 };
+                let filter = query.filter.clone();
                 let books = fetch_books(pool, query).await?;
 
-                let connection = connection(books, limit, first, last, BookConnectionExtend {});
+                let connection =
+                    connection(books, limit, first, last, BookConnectionExtend { filter });
                 Ok::<_, async_graphql::Error>(connection)
             },
         )
@@ -79,13 +81,16 @@ impl BookQuery {
     }
 }
 
-struct BookConnectionExtend;
+struct BookConnectionExtend {
+    filter: String,
+}
 
 #[Object]
 impl BookConnectionExtend {
-    #[allow(unreachable_code)]
-    async fn total_count(&self) -> i32 {
-        todo!()
+    async fn total_count(&self, ctx: &Context<'_>) -> Result<i32> {
+        let pool = ctx.data::<SqlitePool>()?;
+        let filter = self.filter.clone();
+        count_books(pool, filter).await
     }
 }
 
@@ -148,9 +153,11 @@ impl Book {
                     offset: 0,
                     limit: (limit + 1) as i32,
                 };
+                let filter = query.filter.clone();
                 let memos = fetch_memos(pool, query).await?;
 
-                let connection = connection(memos, limit, first, last, MemoConnectionExtend {});
+                let connection =
+                    connection(memos, limit, first, last, MemoConnectionExtend { filter });
                 Ok::<_, async_graphql::Error>(connection)
             },
         )
@@ -178,13 +185,16 @@ impl Book {
     }
 }
 
-struct MemoConnectionExtend;
+struct MemoConnectionExtend {
+    filter: (BookId, String),
+}
 
 #[Object]
 impl MemoConnectionExtend {
-    #[allow(unreachable_code)]
-    async fn total_count(&self) -> i32 {
-        todo!()
+    async fn total_count(&self, ctx: &Context<'_>) -> Result<i32> {
+        let pool = ctx.data::<SqlitePool>()?;
+        let filter = self.filter.clone();
+        count_memos(pool, filter).await
     }
 }
 
