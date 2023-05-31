@@ -1,5 +1,6 @@
 use super::{
     loader::{SqliteLoader, SqliteTagLoader},
+    memo::MemoId,
     util::QueryBuilderExt,
 };
 use crate::query::NodeListQuery;
@@ -192,6 +193,21 @@ pub(crate) async fn update_book(
         .bind(book_id)
         .execute(executor)
         .await?;
+    Ok(())
+}
+
+pub(crate) async fn update_book_by_memo_id(
+    executor: impl SqliteExecutor<'_>,
+    memo_ids: impl IntoIterator<Item = MemoId>,
+    updated_at: &DateTime<Utc>,
+) -> Result<()> {
+    let mut query_builder = sqlx::QueryBuilder::new("UPDATE Book SET updatedAt = ");
+    query_builder.push_bind(updated_at);
+    query_builder.push("FROM Memo WHERE Book.id = Memo.bookId AND Memo.id IN");
+    query_builder.push_bind_values(memo_ids);
+    let query = query_builder.build();
+
+    query.execute(executor).await?;
     Ok(())
 }
 

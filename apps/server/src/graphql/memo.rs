@@ -1,5 +1,5 @@
 use crate::db::{
-    book::{update_book, Book, BookHandle, BookId},
+    book::{update_book, update_book_by_memo_id, Book, BookHandle, BookId},
     loader::{SqliteLoader, SqliteTagLoader},
     memo::{
         delete_memo, insert_memos, insert_tags, transfer_memo, update_memo_contents, Memo, MemoId,
@@ -157,12 +157,13 @@ impl MemoMutation {
     async fn remove_memo_tags(&self, _ids: Vec<ID>, _symbols: Vec<String>) -> Vec<Memo> {
         todo!()
     }
-    // TODO update_book
     async fn remove_memo(&self, ctx: &Context<'_>, ids: Vec<ID>) -> Result<Vec<ID>> {
         let pool = ctx.data::<SqlitePool>()?;
+        let now = Utc::now();
         let memo_ids = ids.clone().into_iter().map(|memo_id| MemoId(memo_id.0));
 
-        delete_memo(pool, memo_ids).await?;
+        delete_memo(pool, memo_ids.clone()).await?;
+        update_book_by_memo_id(pool, memo_ids, &now).await?;
         Ok(ids)
     }
     async fn transfer_memo(
