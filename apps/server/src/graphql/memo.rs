@@ -2,8 +2,8 @@ use crate::db::{
     book::{update_book, update_book_by_memo_id, Book, BookHandle, BookId},
     loader::{SqliteLoader, SqliteTagLoader},
     memo::{
-        delete_memo, insert_memos, insert_tags, transfer_memo, update_memo_contents, Memo, MemoId,
-        MemoTag,
+        delete_memo, delete_tags, insert_memos, insert_tags, transfer_memo, update_memo_contents,
+        Memo, MemoId, MemoTag,
     },
 };
 use async_graphql::{dataloader::DataLoader, Context, InputObject, Object, Result, ID};
@@ -153,9 +153,23 @@ impl MemoMutation {
     async fn upsert_memo_tags(&self, _ids: Vec<ID>, _tags: Vec<String>) -> Vec<Memo> {
         todo!()
     }
-    #[allow(unreachable_code)]
-    async fn remove_memo_tags(&self, _ids: Vec<ID>, _symbols: Vec<String>) -> Vec<Memo> {
-        todo!()
+    async fn remove_memo_tags(
+        &self,
+        ctx: &Context<'_>,
+        ids: Vec<ID>,
+        symbols: Vec<String>,
+    ) -> Result<Vec<Option<Memo>>> {
+        let pool = ctx.data::<SqlitePool>()?;
+        let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
+        let now = Utc::now();
+        let memo_ids = ids.into_iter().map(|memo_id| MemoId(memo_id.0));
+
+        delete_tags(pool, memo_ids.clone(), symbols).await?;
+        update_book_by_memo_id(pool, memo_ids.clone(), &now).await?;
+
+        let memos = loader.load_many(memo_ids.clone()).await?;
+        let memos = memo_ids.map(|memo_id| memos.clone().get(&memo_id).cloned());
+        Ok(memos.collect())
     }
     async fn remove_memo(&self, ctx: &Context<'_>, ids: Vec<ID>) -> Result<Vec<ID>> {
         let pool = ctx.data::<SqlitePool>()?;

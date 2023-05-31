@@ -230,3 +230,18 @@ pub(crate) async fn insert_tags(
     query.execute(executor).await?;
     Ok(())
 }
+
+pub(crate) async fn delete_tags(
+    executor: impl SqliteExecutor<'_>,
+    memo_ids: impl IntoIterator<Item = MemoId>,
+    tag_symbols: impl IntoIterator<Item = String>,
+) -> Result<()> {
+    let mut query_builder = sqlx::QueryBuilder::new("DELETE Tag WHERE memoId IN");
+    query_builder.push_bind_values(memo_ids);
+    query_builder.push(" AND symbol IN");
+    query_builder.push_bind_values(tag_symbols);
+    let query = query_builder.build();
+
+    query.execute(executor).await?;
+    Ok(())
+}
