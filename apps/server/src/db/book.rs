@@ -1,4 +1,7 @@
-use super::loader::{SqliteLoader, SqliteTagLoader};
+use super::{
+    loader::{SqliteLoader, SqliteTagLoader},
+    util::QueryBuilderExt,
+};
 use crate::query::NodeListQuery;
 use async_graphql::{async_trait::async_trait, dataloader::Loader, Result};
 use chrono::{DateTime, Utc};
@@ -127,14 +130,10 @@ impl Loader<BookHandle> for SqliteLoader {
             FROM Book WHERE id IN",
         );
         let ids = keys.iter().filter_map(BookHandle::id);
-        query_builder.push_tuples(ids, |mut separated, key| {
-            separated.push_bind(key);
-        });
+        query_builder.push_bind_values(ids);
         query_builder.push("OR handle IN");
         let handles = keys.iter().filter_map(BookHandle::handle);
-        query_builder.push_tuples(handles, |mut separated, key| {
-            separated.push_bind(key);
-        });
+        query_builder.push_bind_values(handles);
         let query = query_builder.build_query_as::<Book>();
 
         Ok(query
@@ -201,9 +200,7 @@ pub(crate) async fn delete_book(
     book_ids: &[BookId],
 ) -> sqlx::Result<()> {
     let mut query_builder = sqlx::QueryBuilder::new("DELETE Book WHERE id IN");
-    query_builder.push_tuples(book_ids, |mut separated, id| {
-        separated.push_bind(id);
-    });
+    query_builder.push_bind_values(book_ids);
     let query = query_builder.build();
 
     query.execute(executor).await?;
@@ -230,9 +227,7 @@ impl Loader<BookId> for SqliteTagLoader {
 
     async fn load(&self, keys: &[BookId]) -> Result<HashMap<BookId, Self::Value>, Self::Error> {
         let mut query_builder = sqlx::QueryBuilder::new("SELECT Memo.bookId, Tag.symbol FROM Tag, Memo WHERE Memo.id = Tag.memoId AND Memo.bookId IN");
-        query_builder.push_tuples(keys, |mut separated, key| {
-            separated.push_bind(key);
-        });
+        query_builder.push_bind_values(keys);
         let query = query_builder.build_query_as::<BookTag>();
 
         Ok(query

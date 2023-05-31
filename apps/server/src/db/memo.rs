@@ -1,6 +1,7 @@
 use super::{
     book::BookId,
     loader::{SqliteLoader, SqliteTagLoader},
+    util::QueryBuilderExt,
 };
 use crate::query::NodeListQuery;
 use async_graphql::{
@@ -92,9 +93,7 @@ impl Loader<MemoId> for SqliteLoader {
         let mut query_builder = sqlx::QueryBuilder::new(
             "SELECT id, contents, createdAt, updatedAt, bookId FROM Memo WHERE id IN",
         );
-        query_builder.push_tuples(keys, |mut separated, key| {
-            separated.push_bind(key);
-        });
+        query_builder.push_bind_values(keys);
         let query = query_builder.build_query_as::<Memo>();
 
         Ok(query
@@ -144,12 +143,10 @@ pub(crate) async fn update_memo_contents(
 
 pub(crate) async fn delete_memo(
     executor: impl SqliteExecutor<'_>,
-    memo_ids: &[MemoId],
+    memo_ids: impl IntoIterator<Item = MemoId>,
 ) -> sqlx::Result<()> {
     let mut query_builder = sqlx::QueryBuilder::new("DELETE Memo WHERE id IN");
-    query_builder.push_tuples(memo_ids, |mut separated, id| {
-        separated.push_bind(id);
-    });
+    query_builder.push_bind_values(memo_ids);
     let query = query_builder.build();
 
     query.execute(executor).await?;
@@ -158,17 +155,16 @@ pub(crate) async fn delete_memo(
 
 pub(crate) async fn transfer_memo(
     executor: impl SqliteExecutor<'_>,
-    memo_ids: &[MemoId],
+    memo_ids: impl IntoIterator<Item = MemoId>,
     dest_book_id: &BookId,
 ) -> sqlx::Result<()> {
-    let mut query_builder = sqlx::QueryBuilder::new("UPDATE Memo WHERE id IN");
-    query_builder.push_tuples(memo_ids, |mut separated, id| {
-        separated.push_bind(id);
-    });
-    query_builder.push("SET bookId = ?");
+    let mut query_builder = sqlx::QueryBuilder::new("UPDATE Memo SET bookId = ");
+    query_builder.push_bind(dest_book_id);
+    query_builder.push(" WHERE id IN");
+    query_builder.push_bind_values(memo_ids);
     let query = query_builder.build();
 
-    query.bind(dest_book_id).execute(executor).await?;
+    query.execute(executor).await?;
     Ok(())
 }
 
@@ -198,9 +194,7 @@ impl Loader<MemoId> for SqliteTagLoader {
     async fn load(&self, keys: &[MemoId]) -> Result<HashMap<MemoId, Self::Value>, Self::Error> {
         let mut query_builder =
             sqlx::QueryBuilder::new("SELECT memoId, symbol, prop FROM Tag WHERE memoId IN");
-        query_builder.push_tuples(keys, |mut separated, key| {
-            separated.push_bind(key);
-        });
+        query_builder.push_bind_values(keys);
         let query = query_builder.build_query_as::<MemoTag>();
 
         Ok(query

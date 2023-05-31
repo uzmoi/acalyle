@@ -160,12 +160,9 @@ impl MemoMutation {
     // TODO update_book
     async fn remove_memo(&self, ctx: &Context<'_>, ids: Vec<ID>) -> Result<Vec<ID>> {
         let pool = ctx.data::<SqlitePool>()?;
-        let memo_ids = ids
-            .iter()
-            .map(|memo_id| MemoId(memo_id.to_string()))
-            .collect::<Vec<MemoId>>();
+        let memo_ids = ids.clone().into_iter().map(|memo_id| MemoId(memo_id.0));
 
-        delete_memo(pool, &memo_ids).await?;
+        delete_memo(pool, memo_ids).await?;
         Ok(ids)
     }
     async fn transfer_memo(
@@ -175,12 +172,9 @@ impl MemoMutation {
         book_id: ID,
     ) -> Result<bool> {
         let pool = ctx.data::<SqlitePool>()?;
-        let memo_ids = memo_ids
-            .into_iter()
-            .map(|memo_id| MemoId(memo_id.0))
-            .collect::<Vec<MemoId>>();
+        let memo_ids = memo_ids.into_iter().map(|memo_id| MemoId(memo_id.0));
 
-        transfer_memo(pool, &memo_ids, &BookId(book_id.0)).await?;
+        transfer_memo(pool, memo_ids, &BookId(book_id.0)).await?;
         Ok(true)
     }
 }
