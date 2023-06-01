@@ -22,15 +22,12 @@ import { net } from "./net";
 
 const MemoQuery = gql`
     query Memo($memoId: ID!) {
-        node(id: $memoId) {
-            __typename
-            ... on Memo {
-                id
-                contents
-                tags
-                createdAt
-                updatedAt
-            }
+        memo(id: $memoId) {
+            id
+            contents
+            tags
+            createdAt
+            updatedAt
         }
     }
 `;
@@ -43,7 +40,7 @@ export const memoStore = createQueryStore(
             MemoQuery,
             { memoId },
         );
-        return data.node?.__typename === "Memo" ? data.node : null;
+        return data.memo ?? null;
     },
 );
 
