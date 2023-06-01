@@ -1,7 +1,12 @@
-use crate::db::{book::Book, memo::Memo};
+use crate::db::{
+    book::{Book, BookHandle},
+    loader::SqliteLoader,
+    memo::{Memo, MemoId},
+};
 use async_graphql::{
     connection::{Connection, Edge},
-    Interface, Object, ObjectType, ID,
+    dataloader::DataLoader,
+    Context, Interface, Object, ObjectType, Result, ID,
 };
 
 use super::cursor::Cursor;
@@ -12,8 +17,19 @@ pub(super) struct NodeQuery;
 #[allow(unreachable_code)]
 #[Object]
 impl NodeQuery {
-    async fn node(&self, _id: ID) -> Option<Node> {
-        todo!()
+    // OPTIMIZE idにプレフィックスとしてbとかmとか付けて、load回数を1回で済むようにしたほうが良さそう。
+    async fn node(&self, ctx: &Context<'_>, id: ID) -> Result<Option<Node>> {
+        let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
+
+        let memo_id = MemoId(id.0.clone());
+        let memo = loader.load_one(memo_id).await?;
+        if memo.is_some() {
+            return Ok(memo.map(Node::Memo));
+        }
+
+        let book_id = BookHandle::Id(id.0);
+        let book = loader.load_one(book_id).await?;
+        Ok(book.map(Node::Book))
     }
 }
 
