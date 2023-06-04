@@ -4,10 +4,6 @@ mod query;
 mod resource;
 pub mod server;
 
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -194,11 +190,5 @@ mod tests {
             json!({ "id": get_id(&hoge,"createMemo") })
         );
         assert_eq!(obj_get(&get_page_info(&res), "hasNextPage"), &json!(false));
-    }
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
     }
 }
