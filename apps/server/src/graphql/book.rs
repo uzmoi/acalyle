@@ -115,7 +115,11 @@ impl Book {
         self.description.clone()
     }
     async fn thumbnail(&self) -> String {
-        self.thumbnail.clone()
+        if self.thumbnail == "#image" {
+            format!("{}/thumbnail.png", self.id.0)
+        } else {
+            self.thumbnail.clone()
+        }
     }
     async fn created_at(&self) -> DateTime<Utc> {
         self.created_at

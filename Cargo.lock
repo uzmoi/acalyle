@@ -37,6 +37,7 @@ dependencies = [
  "sqlx",
  "strum",
  "tokio",
+ "tokio-util",
  "uuid",
 ]
 

@@ -8,7 +8,7 @@ import { createRoot } from "react-dom/client";
 import { Location } from "./store/location";
 import { BookRoute, net } from ".";
 
-const baseUrl = new URL("/api", location.origin);
+const baseUrl = new URL("/api/", location.origin);
 
 net.set({
     get: path => new URL(path, baseUrl).href,

@@ -1,6 +1,7 @@
 pub mod db;
 pub mod graphql;
 mod query;
+mod resource;
 pub mod server;
 
 pub fn add(left: usize, right: usize) -> usize {
