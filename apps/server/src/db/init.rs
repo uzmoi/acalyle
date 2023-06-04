@@ -47,3 +47,11 @@ pub async fn create_tables(pool: &SqlitePool) -> sqlx::Result<()> {
 
     Ok(())
 }
+
+pub async fn foreign_keys(pool: &SqlitePool) -> sqlx::Result<()> {
+    sqlx::query("PRAGMA foreign_keys = ON")
+        .execute(pool)
+        .await?;
+
+    Ok(())
+}

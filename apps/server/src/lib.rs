@@ -24,6 +24,7 @@ mod tests {
         async fn new() -> sqlx::Result<Schema> {
             let pool = SqlitePool::connect("sqlite::memory:").await?;
             init::create_tables(&pool).await?;
+            init::foreign_keys(&pool).await?;
             Ok(Schema(graphql::graphql_schema(pool)))
         }
         async fn exec(&self, query: &str, vars: Value) -> Response {

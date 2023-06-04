@@ -1,4 +1,7 @@
-use acalyle_server::{db::init::create_tables, server::serve};
+use acalyle_server::{
+    db::init::{create_tables, foreign_keys},
+    server::serve,
+};
 use sqlx::{Result, SqlitePool};
 use std::{fs::OpenOptions, io, path::Path};
 
@@ -19,6 +22,7 @@ async fn main() -> Result<()> {
     if create_tables(&pool).await.is_ok() {
         println!("Initialized {db_file_path}.");
     };
+    foreign_keys(&pool).await?;
 
     serve(&([127, 0, 0, 1], 4323).into(), pool).await;
 
