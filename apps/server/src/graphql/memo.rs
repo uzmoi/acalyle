@@ -149,9 +149,34 @@ impl MemoMutation {
 
         Ok(memo)
     }
-    #[allow(unreachable_code)]
-    async fn upsert_memo_tags(&self, _ids: Vec<ID>, _tags: Vec<String>) -> Vec<Memo> {
-        todo!()
+    async fn add_memo_tags(
+        &self,
+        ctx: &Context<'_>,
+        ids: Vec<ID>,
+        tags: Vec<String>,
+    ) -> Result<Vec<Option<Memo>>> {
+        let pool = ctx.data::<SqlitePool>()?;
+        let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
+        let now = Utc::now();
+        let memo_ids = ids.into_iter().map(|memo_id| MemoId(memo_id.0));
+
+        let tags = memo_ids.clone().flat_map(|memo_id| {
+            tags.clone().into_iter().filter_map(move |tag| {
+                // cspell:ignore splitn
+                let mut tag = tag.splitn(2, ':');
+                Some(MemoTag::new(
+                    memo_id.clone(),
+                    tag.next()?.to_string(),
+                    tag.next().map(|prop| prop.to_string()),
+                ))
+            })
+        });
+        insert_tags(pool, tags).await?;
+        update_book_by_memo_id(pool, memo_ids.clone(), &now).await?;
+
+        let memos = loader.load_many(memo_ids.clone()).await?;
+        let memos = memo_ids.map(|memo_id| memos.clone().get(&memo_id).cloned());
+        Ok(memos.collect())
     }
     async fn remove_memo_tags(
         &self,

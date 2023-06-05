@@ -2,7 +2,7 @@ import { Form, TextInput, vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useCallback, useRef, useState } from "react";
 import type { Scalars } from "~/__generated__/graphql";
-import { upsertMemoTags } from "~/store/memo";
+import { addMemoTags } from "~/store/memo";
 import { TagComplementList } from "./TagComplementList";
 
 export const AddTagForm: React.FC<{
@@ -61,7 +61,7 @@ export const AddTagForm: React.FC<{
     );
 
     const onSubmit = useCallback(() => {
-        void upsertMemoTags(memoId, [tagString]).then(onCompleted);
+        void addMemoTags(memoId, [tagString]).then(onCompleted);
     }, [memoId, onCompleted, tagString]);
 
     return (
