@@ -33,7 +33,7 @@ async fn graphiql_handler(req: Query<Endpoint>) -> impl response::IntoResponse {
 async fn resource_handler(
     Path((id, file_name)): Path<(String, String)>,
 ) -> Result<impl response::IntoResponse, StatusCode> {
-    let file = read_resource(&id, &file_name).await.map_err(|err| {
+    let file = read_resource(id, file_name).await.map_err(|err| {
         if err.kind() == std::io::ErrorKind::NotFound {
             StatusCode::NOT_FOUND
         } else {

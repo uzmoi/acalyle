@@ -12,6 +12,7 @@ use crate::{
         memo::{count_memos, fetch_memos, Memo, MemoId, MemoSortOrderBy},
     },
     query::{NodeListQuery, SortOrder},
+    resource::write_resource,
 };
 use async_graphql::{
     connection::{self, Connection},
@@ -20,6 +21,7 @@ use async_graphql::{
 };
 use chrono::{DateTime, Utc};
 use sqlx::SqlitePool;
+use std::io::Read;
 use uuid::Uuid;
 
 #[derive(Default)]
@@ -217,14 +219,14 @@ pub(super) struct BookMutation;
 
 #[Object]
 impl BookMutation {
-    // TODO thumbnailに対応
     async fn create_book(
         &self,
         ctx: &Context<'_>,
         title: String,
         description: Option<String>,
-        _thumbnail: Option<Upload>,
+        thumbnail: Option<Upload>,
     ) -> Result<Book> {
+        let pool = ctx.data::<SqlitePool>()?;
         let id = Uuid::new_v4();
         let now = Utc::now();
 
@@ -233,13 +235,23 @@ impl BookMutation {
             handle: None,
             title,
             description: description.unwrap_or_default(),
-            thumbnail: format!("color:hsl({}deg,80%,40%)", rand::random::<f32>() * 360f32),
+            thumbnail: if thumbnail.is_some() {
+                String::from("#image")
+            } else {
+                let hue = rand::random::<f32>() * 360f32;
+                format!("color:hsl({hue}deg,80%,40%)")
+            },
             created_at: now,
             updated_at: now,
             settings: Vec::new(),
         };
 
-        let pool = ctx.data::<SqlitePool>()?;
+        if let Some(thumbnail) = thumbnail {
+            let mut buffer = Vec::new();
+            thumbnail.value(ctx)?.into_read().read_to_end(&mut buffer)?;
+            let file_name = String::from("thumbnail.png");
+            write_resource(&book.id, file_name, buffer).await?;
+        }
 
         insert_book(pool, [book.clone()]).await?;
 
@@ -249,18 +261,43 @@ impl BookMutation {
     async fn update_book_title(&self, _id: ID, _title: String) -> Book {
         todo!()
     }
-    #[allow(unreachable_code)]
-    async fn update_book_thumbnail(&self, _id: ID, _thumbnail: Option<Upload>) -> Book {
-        todo!()
+    async fn update_book_thumbnail(
+        &self,
+        ctx: &Context<'_>,
+        id: ID,
+        thumbnail: Upload,
+    ) -> Result<Option<Book>> {
+        let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
+        let book = loader.load_one(BookHandle::Id(id.to_string())).await?;
+        if book.is_none() {
+            return Ok(None);
+        }
+
+        let mut buffer = Vec::new();
+        thumbnail.value(ctx)?.into_read().read_to_end(&mut buffer)?;
+        let file_name = String::from("thumbnail.png");
+        write_resource(&BookId(id.0), file_name, buffer).await?;
+
+        Ok(book)
     }
-    #[allow(unreachable_code)]
     async fn upload_resource(
         &self,
-        _book_id: ID,
-        _file_name: String,
-        _file: Option<Upload>,
-    ) -> String {
-        todo!()
+        ctx: &Context<'_>,
+        book_id: ID,
+        file_name: String,
+        file: Upload,
+    ) -> Result<Option<String>> {
+        let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
+        let book = loader.load_one(BookHandle::Id(book_id.to_string())).await?;
+        if book.is_none() {
+            return Ok(None);
+        }
+
+        let mut buffer = Vec::new();
+        file.value(ctx)?.into_read().read_to_end(&mut buffer)?;
+        let resource_ref = write_resource(&BookId(book_id.0), file_name, buffer).await?;
+
+        Ok(Some(resource_ref))
     }
     #[allow(unreachable_code)]
     async fn rename_tag(&self, _book_id: ID, _new_symbol: String, _old_symbol: String) -> String {
