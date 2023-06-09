@@ -107,14 +107,14 @@ impl Book {
     pub(super) async fn id(&self) -> ID {
         ID(self.id.0.clone())
     }
-    async fn handle(&self) -> Option<String> {
-        self.handle.clone()
+    async fn handle(&self) -> Option<&String> {
+        self.handle.as_ref()
     }
-    async fn title(&self) -> String {
-        self.title.clone()
+    async fn title(&self) -> &str {
+        &self.title
     }
-    async fn description(&self) -> String {
-        self.description.clone()
+    async fn description(&self) -> &str {
+        &self.description
     }
     async fn thumbnail(&self) -> String {
         if self.thumbnail == "#image" {

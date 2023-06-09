@@ -35,8 +35,8 @@ impl Memo {
     pub(super) async fn id(&self) -> ID {
         ID(self.id.0.clone())
     }
-    async fn contents(&self) -> String {
-        self.contents.clone()
+    async fn contents(&self) -> &str {
+        &self.contents
     }
     async fn tags(&self, ctx: &Context<'_>) -> Result<Vec<String>> {
         let loader = ctx.data::<DataLoader<SqliteTagLoader>>()?;
@@ -175,7 +175,7 @@ impl MemoMutation {
         update_book_by_memo_id(pool, memo_ids.clone(), &now).await?;
 
         let memos = loader.load_many(memo_ids.clone()).await?;
-        let memos = memo_ids.map(|memo_id| memos.clone().get(&memo_id).cloned());
+        let memos = memo_ids.map(|memo_id| memos.get(&memo_id).cloned());
         Ok(memos.collect())
     }
     async fn remove_memo_tags(
@@ -193,7 +193,7 @@ impl MemoMutation {
         update_book_by_memo_id(pool, memo_ids.clone(), &now).await?;
 
         let memos = loader.load_many(memo_ids.clone()).await?;
-        let memos = memo_ids.map(|memo_id| memos.clone().get(&memo_id).cloned());
+        let memos = memo_ids.map(|memo_id| memos.get(&memo_id).cloned());
         Ok(memos.collect())
     }
     async fn remove_memo(&self, ctx: &Context<'_>, ids: Vec<ID>) -> Result<Vec<ID>> {
