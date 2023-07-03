@@ -8,7 +8,7 @@ import type {
 import { createConnectionAtom } from "~/lib/connection";
 import { memoizeBuilder } from "~/lib/memoize-builder";
 import { memoStore } from "~/store/memo";
-import { net } from "~/store/net";
+import { acalyle } from "../app/main";
 
 const MemoListPagination = gql`
     query MemoListPagination(
@@ -49,9 +49,7 @@ export const memoConnection = memoizeBuilder(
     (_, bookId: Scalars["ID"], query: string) =>
         createConnectionAtom(
             async connectionAtom => {
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                const { graphql } = net.get()!;
-                const { data } = await graphql<
+                const { data } = await acalyle.net.gql<
                     GqlMemoListPaginationQuery,
                     GqlMemoListPaginationQueryVariables
                 >(MemoListPagination, {

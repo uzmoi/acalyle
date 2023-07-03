@@ -6,38 +6,7 @@ import { onMount } from "nanostores";
 import { StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import { Location } from "./store/location";
-import { BookRoute, net } from ".";
-
-const baseUrl = new URL("/api/", location.origin);
-
-net.set({
-    get: path => new URL(path, baseUrl).href,
-    async graphql(docNode, variables, options) {
-        const operations = JSON.stringify({
-            query: docNode.loc?.source.body,
-            variables,
-        });
-        let body: BodyInit = operations;
-        const shuldUseFormData = true;
-        if (shuldUseFormData) {
-            body = new FormData();
-            body.append(
-                "operations",
-                new Blob([operations], { type: "application/json" }),
-            );
-            body.append("map", new Blob(["{}"], { type: "application/json" }));
-        }
-        const res = await fetch(baseUrl, {
-            method: "POST",
-            body,
-            signal: options?.signal,
-        });
-        if (res.ok) {
-            return (await res.json()) as { data: never };
-        }
-        throw await res.text();
-    },
-});
+import { BookRoute } from ".";
 
 onMount(Location, () => {
     const getLocation = () =>

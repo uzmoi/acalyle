@@ -7,7 +7,7 @@ import {
 import { createConnectionAtom } from "~/lib/connection";
 import { memoizeBuilder } from "~/lib/memoize-builder";
 import { bookStore } from "~/store/book";
-import { net } from "~/store/net";
+import { acalyle } from "../app/main";
 
 const BookListPagination = gql`
     query BookListPagination($count: Int!, $cursor: String, $query: String!) {
@@ -42,9 +42,7 @@ export type Book = {
 export const bookConnection = memoizeBuilder((_id, query: string) =>
     createConnectionAtom(
         async connectionAtom => {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            const { graphql } = net.get()!;
-            const { data } = await graphql<
+            const { data } = await acalyle.net.gql<
                 GqlBookListPaginationQuery,
                 GqlBookListPaginationQueryVariables
             >(BookListPagination, {

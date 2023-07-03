@@ -1,6 +1,6 @@
 import { cx } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
-import { net } from "~/store/net";
+import { acalyle } from "../app/main";
 
 export const BookThumbnail: React.FC<{
     src: string;
@@ -20,7 +20,7 @@ export const BookThumbnail: React.FC<{
     return (
         <div className={cx(ThumbnailStyle, className)}>
             <img
-                src={net.get()?.get(src)}
+                src={acalyle.net.resolveResource(src).href}
                 alt="book thumbnail"
                 className={style({ width: "100%" })}
             />
