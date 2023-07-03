@@ -1,11 +1,16 @@
-use super::loader::{SqliteLoader, SqliteTagLoader};
+use super::{
+    loader::{SqliteLoader, SqliteTagLoader},
+    memo::MemoId,
+    util::QueryBuilderExt,
+};
 use crate::query::NodeListQuery;
 use async_graphql::{async_trait::async_trait, dataloader::Loader, Result};
 use chrono::{DateTime, Utc};
 use sqlx::SqliteExecutor;
 use std::{collections::HashMap, sync::Arc};
 
-#[derive(Clone, PartialEq, Eq, Hash)]
+#[derive(Clone, PartialEq, Eq, Hash, sqlx::Type)]
+#[sqlx(transparent)]
 pub(crate) struct BookId(pub String);
 
 #[derive(Clone, PartialEq, Eq, Hash)]
@@ -33,7 +38,7 @@ impl BookHandle {
 
 #[derive(sqlx::FromRow, Clone)]
 pub(crate) struct Book {
-    pub id: String,
+    pub id: BookId,
     pub handle: Option<String>,
     pub title: String,
     pub description: String,
@@ -105,6 +110,22 @@ pub(crate) async fn fetch_books(
     Ok(query.fetch_all(executor).await?)
 }
 
+pub(crate) async fn count_books(executor: impl SqliteExecutor<'_>, filter: String) -> Result<i32> {
+    let mut query_builder = sqlx::QueryBuilder::new("SELECT COUNT(*) FROM Book WHERE ");
+
+    // filter
+    let filter = format!("%{}%", filter);
+    query_builder.push("(title LIKE ");
+    query_builder.push_bind(&filter);
+    query_builder.push(" OR description LIKE ");
+    query_builder.push_bind(&filter);
+    query_builder.push(") ");
+
+    let query = query_builder.build_query_as::<(i32,)>();
+
+    Ok(query.fetch_one(executor).await?.0)
+}
+
 #[async_trait]
 impl Loader<BookHandle> for SqliteLoader {
     type Value = Book;
@@ -126,14 +147,10 @@ impl Loader<BookHandle> for SqliteLoader {
             FROM Book WHERE id IN",
         );
         let ids = keys.iter().filter_map(BookHandle::id);
-        query_builder.push_tuples(ids, |mut separated, key| {
-            separated.push_bind(key.clone());
-        });
+        query_builder.push_bind_values(ids);
         query_builder.push("OR handle IN");
         let handles = keys.iter().filter_map(BookHandle::handle);
-        query_builder.push_tuples(handles.clone(), |mut separated, key| {
-            separated.push_bind(key.clone());
-        });
+        query_builder.push_bind_values(handles);
         let query = query_builder.build_query_as::<Book>();
 
         Ok(query
@@ -141,7 +158,7 @@ impl Loader<BookHandle> for SqliteLoader {
             .await?
             .iter()
             .fold(HashMap::new(), |mut accum, book| {
-                let id = BookHandle::Id(book.id.clone());
+                let id = BookHandle::Id(book.id.0.clone());
                 accum.entry(id).or_insert(book.clone());
                 if let Some(handle) = &book.handle {
                     let handle = BookHandle::Handle(handle.clone());
@@ -184,8 +201,8 @@ pub(crate) async fn insert_book(
 
 pub(crate) async fn update_book(
     executor: impl SqliteExecutor<'_>,
-    book_id: String,
-    updated_at: DateTime<Utc>,
+    book_id: &BookId,
+    updated_at: &DateTime<Utc>,
 ) -> Result<()> {
     sqlx::query("UPDATE Book SET updatedAt = ? WHERE id = ?")
         .bind(updated_at)
@@ -195,14 +212,27 @@ pub(crate) async fn update_book(
     Ok(())
 }
 
+pub(crate) async fn update_book_by_memo_id(
+    executor: impl SqliteExecutor<'_>,
+    memo_ids: impl IntoIterator<Item = MemoId>,
+    updated_at: &DateTime<Utc>,
+) -> Result<()> {
+    let mut query_builder = sqlx::QueryBuilder::new("UPDATE Book SET updatedAt = ");
+    query_builder.push_bind(updated_at);
+    query_builder.push("FROM Memo WHERE Book.id = Memo.bookId AND Memo.id IN");
+    query_builder.push_bind_values(memo_ids);
+    let query = query_builder.build();
+
+    query.execute(executor).await?;
+    Ok(())
+}
+
 pub(crate) async fn delete_book(
     executor: impl SqliteExecutor<'_>,
-    book_ids: &[String],
+    book_ids: &[BookId],
 ) -> sqlx::Result<()> {
     let mut query_builder = sqlx::QueryBuilder::new("DELETE Book WHERE id IN");
-    query_builder.push_tuples(book_ids, |mut separated, id| {
-        separated.push_bind(id.clone());
-    });
+    query_builder.push_bind_values(book_ids);
     let query = query_builder.build();
 
     query.execute(executor).await?;
@@ -212,12 +242,12 @@ pub(crate) async fn delete_book(
 #[derive(sqlx::FromRow, Clone, PartialEq, Eq, Hash)]
 pub(crate) struct BookTag {
     #[sqlx(rename = "bookId")]
-    book_id: String,
+    book_id: BookId,
     symbol: String,
 }
 
 impl BookTag {
-    pub fn new(book_id: String, symbol: String) -> BookTag {
+    pub fn new(book_id: BookId, symbol: String) -> BookTag {
         BookTag { book_id, symbol }
     }
 }
@@ -229,9 +259,7 @@ impl Loader<BookId> for SqliteTagLoader {
 
     async fn load(&self, keys: &[BookId]) -> Result<HashMap<BookId, Self::Value>, Self::Error> {
         let mut query_builder = sqlx::QueryBuilder::new("SELECT Memo.bookId, Tag.symbol FROM Tag, Memo WHERE Memo.id = Tag.memoId AND Memo.bookId IN");
-        query_builder.push_tuples(keys, |mut separated, key| {
-            separated.push_bind(key.0.clone());
-        });
+        query_builder.push_bind_values(keys);
         let query = query_builder.build_query_as::<BookTag>();
 
         Ok(query
@@ -240,7 +268,7 @@ impl Loader<BookId> for SqliteTagLoader {
             .iter()
             .fold(HashMap::new(), |mut accum, tag| {
                 accum
-                    .entry(BookId(tag.book_id.clone()))
+                    .entry(tag.book_id.clone())
                     .or_insert_with(Vec::new)
                     .push(tag.symbol.clone());
                 accum
@@ -251,7 +279,7 @@ impl Loader<BookId> for SqliteTagLoader {
 #[derive(sqlx::FromRow, Clone)]
 struct BookMemoTag {
     #[sqlx(rename = "bookId")]
-    book_id: String,
+    book_id: BookId,
     symbol: String,
     prop: String,
 }
@@ -270,8 +298,7 @@ impl Loader<BookTag> for SqliteTagLoader {
             AND (Memo.bookId, Tag.symbol) IN",
         );
         query_builder.push_tuples(keys, |mut separated, key| {
-            separated.push_bind(key.book_id.clone());
-            separated.push_bind(key.symbol.clone());
+            separated.push_bind(&key.book_id).push_bind(&key.symbol);
         });
         let query = query_builder.build_query_as::<BookMemoTag>();
 

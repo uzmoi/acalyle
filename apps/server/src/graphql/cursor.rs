@@ -13,6 +13,6 @@ impl CursorType for Cursor {
     }
 
     fn encode_cursor(&self) -> String {
-        STANDARD.encode(self.0.clone())
+        STANDARD.encode(&self.0)
     }
 }

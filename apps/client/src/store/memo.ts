@@ -1,5 +1,7 @@
 import { gql } from "graphql-tag";
 import type {
+    GqlAddMemoTagsMutation,
+    GqlAddMemoTagsMutationVariables,
     GqlCreateMemoMutation,
     GqlCreateMemoMutationVariables,
     GqlMemoQuery,
@@ -12,8 +14,6 @@ import type {
     GqlTransferMemoMutationVariables,
     GqlUpdateMemoContentsMutation,
     GqlUpdateMemoContentsMutationVariables,
-    GqlUpsertMemoTagsMutation,
-    GqlUpsertMemoTagsMutationVariables,
     Scalars,
 } from "~/__generated__/graphql";
 import { createQueryStore } from "~/lib/query-store";
@@ -22,15 +22,12 @@ import { net } from "./net";
 
 const MemoQuery = gql`
     query Memo($memoId: ID!) {
-        node(id: $memoId) {
-            __typename
-            ... on Memo {
-                id
-                contents
-                tags
-                createdAt
-                updatedAt
-            }
+        memo(id: $memoId) {
+            id
+            contents
+            tags
+            createdAt
+            updatedAt
         }
     }
 `;
@@ -43,7 +40,7 @@ export const memoStore = createQueryStore(
             MemoQuery,
             { memoId },
         );
-        return data.node?.__typename === "Memo" ? data.node : null;
+        return data.memo ?? null;
     },
 );
 
@@ -140,9 +137,9 @@ export const updateMemoContents = async (
     }
 };
 
-const UpsertMemoTagsMutation = gql`
-    mutation UpsertMemoTags($memoId: ID!, $tags: [String!]!) {
-        upsertMemoTags(ids: [$memoId], tags: $tags) {
+const AddMemoTagsMutation = gql`
+    mutation AddMemoTags($memoId: ID!, $tags: [String!]!) {
+        addMemoTags(ids: [$memoId], tags: $tags) {
             id
             contents
             tags
@@ -152,19 +149,21 @@ const UpsertMemoTagsMutation = gql`
     }
 `;
 
-export const upsertMemoTags = async (
+export const addMemoTags = async (
     memoId: Scalars["ID"],
     tags: readonly string[],
 ) => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const { graphql } = net.get()!;
     const { data } = await graphql<
-        GqlUpsertMemoTagsMutation,
-        GqlUpsertMemoTagsMutationVariables
-    >(UpsertMemoTagsMutation, { memoId, tags });
+        GqlAddMemoTagsMutation,
+        GqlAddMemoTagsMutationVariables
+    >(AddMemoTagsMutation, { memoId, tags });
 
-    for (const memo of data.upsertMemoTags) {
-        memoStore(memo.id).resolve(memo);
+    for (const memo of data.addMemoTags) {
+        if (memo != null) {
+            memoStore(memo.id).resolve(memo);
+        }
     }
 };
 

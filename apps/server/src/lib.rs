@@ -1,11 +1,8 @@
 pub mod db;
 pub mod graphql;
 mod query;
+mod resource;
 pub mod server;
-
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
 
 #[cfg(test)]
 mod tests {
@@ -23,6 +20,7 @@ mod tests {
         async fn new() -> sqlx::Result<Schema> {
             let pool = SqlitePool::connect("sqlite::memory:").await?;
             init::create_tables(&pool).await?;
+            init::foreign_keys(&pool).await?;
             Ok(Schema(graphql::graphql_schema(pool)))
         }
         async fn exec(&self, query: &str, vars: Value) -> Response {
@@ -192,11 +190,5 @@ mod tests {
             json!({ "id": get_id(&hoge,"createMemo") })
         );
         assert_eq!(obj_get(&get_page_info(&res), "hasNextPage"), &json!(false));
-    }
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
     }
 }

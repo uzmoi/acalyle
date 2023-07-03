@@ -40,4 +40,12 @@ export default defineConfig({
             external: [/^react/, /^react-dom/, /^@acalyle\//],
         },
     },
+    server: {
+        proxy: {
+            "/api": {
+                target: "http://localhost:4323/",
+                rewrite: path => `${path.replace(/^\/api/, "")}?endpoint=/api`,
+            },
+        },
+    },
 });
