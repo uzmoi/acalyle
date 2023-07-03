@@ -6,7 +6,6 @@ import { useMemo, useState } from "react";
 import { BiClipboard, BiEditAlt, BiTransfer, BiTrash } from "react-icons/bi";
 import type { Scalars } from "~/__generated__/graphql";
 import { usePromiseLoader } from "~/lib/promise-loader";
-import { selectBook } from "~/modal";
 import { memoStore, removeMemo, transferMemo } from "~/store/memo";
 import { AddTagButton } from "~/ui/AddTagButton";
 import { MemoContentsEditor } from "~/ui/MemoContentsEditor";
@@ -14,6 +13,7 @@ import { MemoInfo } from "~/ui/MemoInfo";
 import { MemoList } from "~/ui/MemoList";
 import { MemoMenu, type MenuAction } from "~/ui/MemoMenu";
 import { MemoOverview } from "~/ui/MemoOverview";
+import { selectBook } from "~/ui/modal";
 import { TagList } from "./TagList";
 
 export const Memo: React.FC<{
