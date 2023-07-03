@@ -1,10 +1,11 @@
 import * as Router from "@acalyle/router";
-import { ModalContainer, createTheme, vars } from "@acalyle/ui";
+import { ModalContainer, vars } from "@acalyle/ui";
 import { globalStyle, style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { onMount } from "nanostores";
 import { StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
+import { devAppTheme } from "./dev/theme";
 import { Location } from "./store/location";
 import { BookRoute } from ".";
 
@@ -34,38 +35,6 @@ globalStyle("*, *::before, *::after", {
 
 globalStyle(":root, body, #app", {
     height: "100%",
-});
-
-const devAppTheme = createTheme<typeof vars>("acalyle", {
-    color: {
-        fg: {
-            __: "#e0e0e0",
-            mute: "#a0a0a0",
-        },
-        bg: {
-            app: "#191c1f",
-            layout: "#1e2125",
-            block: "#22262a",
-            inline: "#101214",
-        },
-        denger: "#e44",
-        accent: "#fff",
-    },
-    font: {
-        sans: "'Noto Sans JP', sans-serif",
-        mono: "'Roboto Mono', monospace",
-    },
-    radius: {
-        control: "4px",
-        block: "0.25em",
-    },
-    zIndex: {
-        toast: 100,
-        modal: 101,
-        popover: 102,
-        contextMenu: 103,
-        max: 9999,
-    },
 });
 
 const DevAppRoot: React.FC = () => {
