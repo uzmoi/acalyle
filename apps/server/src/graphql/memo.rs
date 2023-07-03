@@ -154,7 +154,7 @@ impl MemoMutation {
         ctx: &Context<'_>,
         ids: Vec<ID>,
         tags: Vec<String>,
-    ) -> Result<Vec<Option<Memo>>> {
+    ) -> Result<Vec<Memo>> {
         let pool = ctx.data::<SqlitePool>()?;
         let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
         let now = Utc::now();
@@ -174,16 +174,15 @@ impl MemoMutation {
         insert_tags(pool, tags).await?;
         update_book_by_memo_id(pool, memo_ids.clone(), &now).await?;
 
-        let memos = loader.load_many(memo_ids.clone()).await?;
-        let memos = memo_ids.map(|memo_id| memos.get(&memo_id).cloned());
-        Ok(memos.collect())
+        let memos = loader.load_many(memo_ids).await?;
+        Ok(memos.into_values().collect())
     }
     async fn remove_memo_tags(
         &self,
         ctx: &Context<'_>,
         ids: Vec<ID>,
         symbols: Vec<String>,
-    ) -> Result<Vec<Option<Memo>>> {
+    ) -> Result<Vec<Memo>> {
         let pool = ctx.data::<SqlitePool>()?;
         let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
         let now = Utc::now();
@@ -192,9 +191,8 @@ impl MemoMutation {
         delete_tags(pool, memo_ids.clone(), symbols).await?;
         update_book_by_memo_id(pool, memo_ids.clone(), &now).await?;
 
-        let memos = loader.load_many(memo_ids.clone()).await?;
-        let memos = memo_ids.map(|memo_id| memos.get(&memo_id).cloned());
-        Ok(memos.collect())
+        let memos = loader.load_many(memo_ids).await?;
+        Ok(memos.into_values().collect())
     }
     async fn remove_memo(&self, ctx: &Context<'_>, ids: Vec<ID>) -> Result<Vec<ID>> {
         let pool = ctx.data::<SqlitePool>()?;
