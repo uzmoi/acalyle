@@ -6,13 +6,9 @@ import { vars } from "../theme";
 import { cx } from "./cx";
 import type { TransitionStatus } from "./use-transition-status";
 
-type ModalData<out T> = {
-    default: T;
-    render: (close: (result?: T) => void) => React.ReactNode;
-};
-
 const ModalStore = atom<{
-    contents: React.ReactNode;
+    content: React.ReactNode;
+    fullSize: boolean;
     close: () => void;
 } | null>(null);
 
@@ -30,10 +26,18 @@ onMount(ModalStore, () => {
 
 const ModalStatusStore = atom<TransitionStatus>("exited");
 
-export const openModal = <T,>(entry: ModalData<T>): Promise<T> => {
+export const openModal = <T,>({
+    default: defaultValue,
+    render,
+    fullSize = false,
+}: {
+    default: T;
+    render: (close: (result?: T) => void) => React.ReactNode;
+    fullSize?: boolean;
+}): Promise<T> => {
     return new Promise(resolve => {
         let open = true;
-        const close = (result = entry.default) => {
+        const close = (result = defaultValue) => {
             if (!open) return;
             open = false;
             resolve(result);
@@ -44,7 +48,8 @@ export const openModal = <T,>(entry: ModalData<T>): Promise<T> => {
             });
         };
         ModalStore.set({
-            contents: entry.render(close),
+            content: render(close),
+            fullSize,
             close,
         });
         ModalStatusStore.set("entering");
@@ -58,7 +63,8 @@ const transitionDuration = 200;
 
 export const ModalContainer: React.FC<{
     className?: string;
-}> = ({ className }) => {
+    renderContent?: (children: React.ReactNode) => React.ReactNode;
+}> = ({ className, renderContent }) => {
     const modal = useStore(ModalStore);
     const status = useStore(ModalStatusStore);
 
@@ -95,17 +101,29 @@ export const ModalContainer: React.FC<{
         >
             {status === "exited" || (
                 <div
-                    className={style({
-                        position: "absolute",
-                        top: "50%",
-                        left: "50%",
-                        translate: "-50% -50%",
-                        backgroundColor: vars.color.bg.layout,
-                        borderRadius: vars.radius.block,
-                        boxShadow: "0 0 2em #111",
-                    })}
+                    className={cx(
+                        style({
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            translate: "-50% -50%",
+                            maxWidth: "min(calc(100vw - 8em), 72em)",
+                            maxHeight: "calc(100dvh - 4em)",
+                            backgroundColor: vars.color.bg.layout,
+                            borderRadius: vars.radius.block,
+                            boxShadow: "0 0 2em #111",
+                        }),
+                        modal?.fullSize &&
+                            style({
+                                width: "100%",
+                                height: "100%",
+                            }),
+                    )}
                 >
-                    {modal && modal.contents}
+                    {modal &&
+                        (renderContent
+                            ? renderContent(modal.content)
+                            : modal.content)}
                 </div>
             )}
         </div>
