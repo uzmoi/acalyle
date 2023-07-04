@@ -1,7 +1,7 @@
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { timeout } from "emnorst";
-import { atom } from "nanostores";
+import { atom, onMount } from "nanostores";
 import { vars } from "../theme";
 import { cx } from "./cx";
 import type { TransitionStatus } from "./use-transition-status";
@@ -15,6 +15,18 @@ const ModalStore = atom<{
     contents: React.ReactNode;
     close: () => void;
 } | null>(null);
+
+onMount(ModalStore, () => {
+    const onKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+            ModalStore.get()?.close();
+        }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+        window.addEventListener("keydown", onKeyDown);
+    };
+});
 
 const ModalStatusStore = atom<TransitionStatus>("exited");
 
