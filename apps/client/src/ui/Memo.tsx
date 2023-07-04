@@ -13,7 +13,7 @@ import { MemoInfo } from "~/ui/MemoInfo";
 import { MemoList } from "~/ui/MemoList";
 import { MemoMenu, type MenuAction } from "~/ui/MemoMenu";
 import { MemoOverview } from "~/ui/MemoOverview";
-import { selectBook } from "~/ui/modal";
+import { confirm, selectBook } from "~/ui/modal";
 import { TagList } from "./TagList";
 
 export const Memo: React.FC<{
@@ -57,7 +57,11 @@ export const Memo: React.FC<{
                 text: "Delete memo",
                 type: "denger",
                 onClick: () => {
-                    void removeMemo(memoId);
+                    void confirm("Delete memo").then(ok => {
+                        if (ok) {
+                            void removeMemo(memoId);
+                        }
+                    });
                 },
             },
         ],
