@@ -10,9 +10,18 @@ import { BookSearchBar } from "~/ui/BookSearchBar";
 export const selectBook = () => {
     return openModal<Scalars["ID"] | null>({
         default: null,
+        fullSize: true,
         render: close => (
-            <div className={style({ padding: "1.25em" })}>
-                <BookSearchBar className={style({ marginBottom: "1em" })} />
+            <div
+                className={style({
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "1em",
+                    padding: "1.25em",
+                    height: "100%",
+                })}
+            >
+                <BookSearchBar />
                 <BookSelectForm onSubmit={close} />
             </div>
         ),
@@ -35,19 +44,26 @@ const BookSelectForm: React.FC<{
     }, [onSubmit]);
 
     return (
-        <Form onSubmit={handleSubmit}>
+        <Form
+            onSubmit={handleSubmit}
+            className={style({
+                display: "flex",
+                flexDirection: "column",
+                gap: "1em",
+                height: "100%",
+            })}
+        >
             <List
                 className={style({
-                    maxHeight: "32em",
+                    flex: "1 1 0",
                     overflowY: "auto",
-                    marginBottom: "1em",
                 })}
             >
                 {nodeIds.map(bookId => (
                     <List.Item
                         key={bookId}
                         data-selected={bookId === selectedBookId}
-                        // HACK
+                        // HACK: BookOverviewのイベントを無理やりもぎ取ってる
                         onClickCapture={e => {
                             e.stopPropagation();
                             e.preventDefault();
