@@ -8,6 +8,5 @@
         "typeRoots": [],
         "baseUrl": "./",
         "paths": { "~/*": ["./src/*"] },
-        "composite": true,
     },
 }

@@ -6,6 +6,5 @@
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "types": ["react", "react-dom"],
     "typeRoots": [],
-    "composite": true,
   },
 }

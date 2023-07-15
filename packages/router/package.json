@@ -4,9 +4,8 @@
   "type": "module",
   "sideEffects": false,
   "main": "dist/index.js",
-  "types": "src/index.ts",
   "scripts": {
-    "build": "tsup src/index.ts --format esm --minify-syntax --sourcemap --clean",
+    "build": "tsup src/index.ts --format esm --sourcemap --dts",
     "check": "tsc",
     "test": "vitest",
     "coverage": "vitest run --coverage"

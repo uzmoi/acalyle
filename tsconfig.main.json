@@ -1,9 +1,0 @@
-{
-    "extends": "@acalyle/tsconfig/tsconfig.node.json",
-    "include": ["main/src"],
-    "compilerOptions": {
-        "types": ["electron"],
-        "composite": true,
-        "preserveValueImports": false,
-    },
-}

@@ -1,8 +1,0 @@
-{
-    "extends": "@acalyle/tsconfig/tsconfig.node.json",
-    "include": ["**/*", "**/*.json", ".*"],
-    "exclude": ["**/src/**", "**/dist/**"],
-    "compilerOptions": {
-        "composite": true,
-    },
-}
