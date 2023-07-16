@@ -71,11 +71,17 @@ export type WithSearchParams<T extends string> = `${T}${"" | `?${string}`}`;
 // prettier-ignore
 export type MatchParams<in T extends string> = {
     [P in T as RemoveTail<P, Mark>]: (
-        P extends `${string}+` ? [string, ...string[]]
-        : P extends `${string}*` ? string[]
+        P extends `${string}+` ? readonly [string, ...string[]]
+        : P extends `${string}*` ? readonly string[]
         : P extends `${string}?` ? string | undefined
         : string
     );
+};
+
+export type ParamRecord = {
+    [x: string]: string | string[] | undefined;
+    [x: `${string}?`]: string | undefined;
+    [x: `${string}*` | `${string}+`]: string[];
 };
 
 // prettier-ignore
@@ -89,19 +95,19 @@ export type Link<T extends string = string> = Meta<string, `link:${T}`>;
 // prettier-ignore
 export type LinkBuilderArgs<T extends string> = (
     T extends `${string}/:${string}` | `:${string}`
-        ? [pattern: T, params: MatchParams<MatchParamKeyOf<T>>]
-        : [pattern: T]
+        ? [pattern: T, params: MatchParams<MatchParamKeyOf<T>> & ParamRecord]
+        : [pattern: T, params?: ParamRecord]
 );
 
 export type LinkBuilder = <T extends string>(
     ...args: LinkBuilderArgs<T>
-) => Link<NormalizePath<T>>;
+) => `/${NormalizePath<T>}`;
 
 export const link: LinkBuilder = (patternString, args?) => {
     const { parts, params } = parsePattern(patternString);
-    const getArg = (key: string) => {
+    const getArg = (key: string): string | string[] | undefined => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return args![key as keyof typeof args] as string[] | string | undefined;
+        return args![key as keyof typeof args];
     };
 
     const path = parts
@@ -127,6 +133,5 @@ export const link: LinkBuilder = (patternString, args?) => {
         })
         .join("&");
 
-    return (path +
-        (searchParams === "" ? "" : `?${searchParams}`)) as Link<never>;
+    return ("/" + path + (searchParams && `?${searchParams}`)) as never;
 };

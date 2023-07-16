@@ -61,15 +61,15 @@ describe("matchPart", () => {
 describe("routes", () => {
     it("空文字列キー", () => {
         const route = routes({ "": page(() => "page") });
-        expect(route.get([], {})).toBe("page");
+        expect(route.get([], {} as never)).toBe("page");
     });
     it("pattern part", () => {
         const route = routes({ page: page(() => "page") });
-        expect(route.get(["page"], {})).toBe("page");
+        expect(route.get(["page"], {} as never)).toBe("page");
     });
     it("pattern", () => {
         const route = routes({ "nest/page": page(() => "page") });
-        expect(route.get(["nest", "page"], {})).toBe("page");
+        expect(route.get(["nest", "page"], {} as never)).toBe("page");
     });
     it("複数キー", () => {
         const route = routes({
@@ -77,8 +77,8 @@ describe("routes", () => {
             ":hoge": page(() => 1),
             ":fuga/piyo": page(() => 2),
         });
-        expect(route.get([], {})).toBe(0);
-        expect(route.get(["foo"], {})).toBe(1);
-        expect(route.get(["bar", "piyo"], {})).toBe(2);
+        expect(route.get([], {} as never)).toBe(0);
+        expect(route.get(["foo"], {} as never)).toBe(1);
+        expect(route.get(["bar", "piyo"], {} as never)).toBe(2);
     });
 });

@@ -1,28 +1,28 @@
-import type { Link, MatchParams } from "./pattern";
+import type { WeakMeta } from "emnorst";
+import type { Link, NormalizePath, ParamRecord } from "./pattern";
 
-export class Route<
-    in _Path extends string,
-    out ParamKeys extends string,
-    out R = unknown,
-> {
+export type Path<T> = WeakMeta<readonly string[], { path: T }>;
+
+export type InferPath<T> = T extends Route<infer P, infer _, infer __>
+    ? NormalizePath<P>
+    : never;
+
+export class Route<in P extends string, in Params = never, out R = unknown> {
     constructor(
-        readonly get: (
-            path: readonly string[],
-            matchParams: MatchParams<ParamKeys>,
-        ) => R | null,
+        readonly get: (path: Path<P>, matchParams: Params) => R | null,
     ) {}
 }
 
 // prettier-ignore
-export const match: <Path extends string, ParamKeys extends string, R>(
-    route: Route<Path, ParamKeys, R>,
+export const match: <Path extends string, Params extends ParamRecord, R>(
+    route: Route<Path, Params, R>,
     link: Link<Path>,
-    ...args: [ParamKeys] extends [never]
-        ? [] : [params: MatchParams<ParamKeys>]
-) => R | null = <Path extends string, ParamKeys extends string, R>(
-    route: Route<Path, ParamKeys, R>,
+    ...args: [keyof Params] extends [never]
+        ? [] : [params: Params]
+) => R | null = <Path extends string, Params extends ParamRecord, R>(
+    route: Route<Path, Params, R>,
     link: Link<Path>,
-    params: MatchParams<ParamKeys> = {} as never,
+    params: Params = {} as never,
 ): R | null => {
     const path = link.split("/").filter(Boolean);
     return route.get(path, params);
