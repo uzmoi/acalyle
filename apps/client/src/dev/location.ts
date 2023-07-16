@@ -6,7 +6,7 @@ onMount(Location, () => {
         location.pathname.split("/").filter(Boolean).join("/");
     const unbind = Location.listen(path => {
         if (path === getLocation()) return;
-        history.pushState(null, "", "/" + path);
+        history.pushState(null, "", path);
     });
     Location.set(getLocation());
     const popstate = (e: PopStateEvent) => {
