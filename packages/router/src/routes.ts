@@ -66,18 +66,20 @@ type RoutesPath<T> = {
 type ParamKey<T> = T extends `:${infer U}${Mark | ""}` ? U : never;
 
 type RoutesParams<T> = {
-    [P in keyof T]: T[P] extends Route<never, infer Params, unknown>
+    [P in keyof T]: T[P] extends Route<infer _, infer Params, infer __>
         ? Omit<Params, ParamKey<P>>
         : never;
 }[keyof T];
 
-type RoutesReturn<T> = ValueOf<T> extends Route<string, string, infer R>
-    ? R
-    : never;
+type RoutesReturn<T> = T extends Route<infer _, infer __, infer R> ? R : never;
 
-type Routes<T> = Route<RoutesPath<T>, RoutesParams<T>, RoutesReturn<T>>;
+type Routes<T> = Route<
+    RoutesPath<T>,
+    RoutesParams<T>,
+    RoutesReturn<ValueOf<T>> | undefined
+>;
 
-export const routes = <const T extends { [x: string]: Route<never> }>(
+export const routes = <const T extends Record<string, Route<never>>>(
     routeRecord: T,
 ): Routes<T> => {
     const routeEntries = Object.entries(routeRecord).map(([pattern, route]) => {
@@ -100,23 +102,24 @@ export const routes = <const T extends { [x: string]: Route<never> }>(
                 }
             }
         }
-        return null as never;
+        return undefined;
     });
 };
 
-export const page = <Params, R = unknown>(
+// eslint-disable-next-line @typescript-eslint/ban-types
+export const page = <Params extends {} = {}, R = unknown>(
     page: (params: Params) => R,
-): Route<"", Params, R> => {
+): Route<"", Params, R | undefined> => {
     return new Route((path, matchParams) => {
         if (path.length !== 0) {
-            return null;
+            return;
         }
         return page(matchParams);
     });
 };
 
 export const child = <T extends string, Params extends ParamRecord, R>(
-    child: (path: Path<T>, params: Params) => R | null,
+    child: (path: Path<T>, params: Params) => R,
 ): Route<T, Params, R> => {
     return new Route(child);
 };

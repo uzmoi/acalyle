@@ -1,7 +1,6 @@
 import {
     type InferPath,
     type MatchParams,
-    type Path,
     page,
     routes,
 } from "@acalyle/router";
@@ -16,7 +15,7 @@ import { link } from "./link";
 
 export type BookPageRoute = InferPath<typeof BookPageRoute>;
 
-const BookPageRoute = routes({
+export const BookPageRoute = routes({
     "": page(({ bookId: bookHandle }: MatchParams<"bookId">) => (
         <MemoListPage bookHandle={bookHandle} />
     )),
@@ -25,12 +24,15 @@ const BookPageRoute = routes({
     ":memoId": page(({ bookId, memoId }: MatchParams<"bookId" | "memoId">) => (
         <Memo bookHandle={bookId} memoId={memoId as Scalars["ID"]} />
     )),
-});
+}).map((children, _, { bookId }) => (
+    // eslint-disable-next-line react/jsx-key
+    <BookPage bookHandle={bookId}>{children}</BookPage>
+));
 
 export const BookPage: React.FC<{
     bookHandle: string;
-    path: Path<BookPageRoute>;
-}> = ({ bookHandle, path }) => {
+    children?: React.ReactNode;
+}> = ({ bookHandle, children }) => {
     const book = useBook(bookHandle);
 
     if (book == null) {
@@ -44,9 +46,7 @@ export const BookPage: React.FC<{
                     {book.title}
                 </Link>
             </h2>
-            <Suspense>
-                {BookPageRoute.get(path, { bookId: bookHandle })}
-            </Suspense>
+            <Suspense>{children}</Suspense>
         </main>
     );
 };
