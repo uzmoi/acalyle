@@ -97,7 +97,7 @@ export const routes = <const T extends Record<string, Route<never>>>(
                     matchResult.path,
                     matchResult.matchParams as never,
                 );
-                if (result !== null) {
+                if (result !== undefined) {
                     return result as never;
                 }
             }
