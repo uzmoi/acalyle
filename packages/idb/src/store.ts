@@ -59,7 +59,10 @@ export abstract class IdbStore<
     }
 }
 
-export class IdbObjectStore<T extends IdbObjectStoreSchema>
+export class IdbObjectStore<
+        T extends IdbObjectStoreSchema,
+        out _Mode extends IDBTransactionMode,
+    >
     extends IdbStore<IDBObjectStore, T>
     implements
         IdbType<
@@ -76,22 +79,44 @@ export class IdbObjectStore<T extends IdbObjectStoreSchema>
     get indexNames(): (keyof T["indexes"])[] {
         return Array.from(this.store.indexNames) as (keyof T["indexes"])[];
     }
+    createIndex(
+        this: IdbObjectStore<T, "versionchange">,
+        name: string,
+        keyPath: string | Iterable<string>,
+        options?: IDBIndexParameters,
+    ): IdbIndex<T> {
+        return new IdbIndex(this.store.createIndex(name, keyPath, options));
+    }
+    deleteIndex(this: IdbObjectStore<T, "versionchange">, name: string): void {
+        this.store.deleteIndex(name);
+    }
     index(name: keyof T["indexes"]): IdbIndex<T> {
         return new IdbIndex(this.store.index(name as string));
     }
-    add(value: unknown, key?: IDBValidKey): Promise<IDBValidKey> {
+    add(
+        this: IdbObjectStore<T, "readwrite">,
+        value: unknown,
+        key?: IDBValidKey,
+    ): Promise<IDBValidKey> {
         const req = this.store.add(value, key);
         return requestToPromise(req);
     }
-    put(value: unknown, key?: IDBValidKey): Promise<IDBValidKey> {
+    put(
+        this: IdbObjectStore<T, "readwrite">,
+        value: unknown,
+        key?: IDBValidKey,
+    ): Promise<IDBValidKey> {
         const req = this.store.put(value, key);
         return requestToPromise(req);
     }
-    delete(query: IdbQuery): Promise<void> {
+    delete(
+        this: IdbObjectStore<T, "readwrite">,
+        query: IdbQuery,
+    ): Promise<void> {
         const req = this.store.delete(query);
         return requestToPromise(req);
     }
-    clear(): Promise<void> {
+    clear(this: IdbObjectStore<T, "readwrite">): Promise<void> {
         const req = this.store.clear();
         return requestToPromise(req);
     }

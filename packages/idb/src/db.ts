@@ -58,11 +58,14 @@ export class Idb<S extends Record<string, IdbObjectStoreSchema>>
     get objectStoreNames(): (keyof S)[] {
         return Array.from(this.db.objectStoreNames);
     }
-    transaction<StoreName extends Extract<keyof S, string>>(
+    transaction<
+        StoreName extends Extract<keyof S, string>,
+        Mode extends Exclude<IDBTransactionMode, "versionchange"> = "readonly",
+    >(
         storeNames: StoreName | Iterable<StoreName>,
-        mode?: IDBTransactionMode,
+        mode?: Mode,
         options?: IDBTransactionOptions,
-    ): IdbTransaction<Pick<S, StoreName>> {
+    ): IdbTransaction<Pick<S, StoreName>, Mode> {
         const transaction = this.db.transaction(storeNames, mode, options);
         return new IdbTransaction(transaction);
     }
