@@ -3,18 +3,13 @@ import type { IdbObjectStoreSchema, IdbType } from "./types";
 import { requestToPromise } from "./util";
 
 type IdbValue<T extends IdbObjectStoreSchema> = Normalize<
-    Record<Extract<T["keyPath"], string>, unknown>
+    Record<Extract<T["keyPath"], string>, IDBValidKey>
 >;
 
 export type IdbQuery = IDBValidKey | IDBKeyRange;
 
-type StoreType = Pick<IDBIndex, Extract<keyof IDBIndex, keyof IDBObjectStore>> &
-    Pick<IDBObjectStore, Extract<keyof IDBObjectStore, keyof IDBIndex>>;
-
-export abstract class IdbStore<
-    S extends StoreType,
-    T extends IdbObjectStoreSchema,
-> implements IdbType<StoreType, "keyPath">
+export abstract class IdbStore<S extends IDBIndex | IDBObjectStore, T>
+    implements IdbType<IDBIndex | IDBObjectStore, "keyPath">
 {
     constructor(protected readonly store: S) {}
     get name(): string {
@@ -24,13 +19,13 @@ export abstract class IdbStore<
         const req = this.store.count(query);
         return requestToPromise(req);
     }
-    get(query: IdbQuery): Promise<IdbValue<T> | undefined> {
+    get(query: IdbQuery): Promise<T | undefined> {
         const req = this.store.get(query);
-        return requestToPromise(req as IDBRequest<IdbValue<T> | undefined>);
+        return requestToPromise(req as IDBRequest<T | undefined>);
     }
-    getAll(query?: IdbQuery | null, count?: number): Promise<IdbValue<T>[]> {
+    getAll(query?: IdbQuery | null, count?: number): Promise<T[]> {
         const req = this.store.getAll(query, count);
-        return requestToPromise(req as IDBRequest<IdbValue<T>[]>);
+        return requestToPromise(req as IDBRequest<T[]>);
     }
     getAllKeys(
         query?: IdbQuery | null,
@@ -63,7 +58,7 @@ export class IdbObjectStore<
         T extends IdbObjectStoreSchema,
         out _Mode extends IDBTransactionMode,
     >
-    extends IdbStore<IDBObjectStore, T>
+    extends IdbStore<IDBObjectStore, IdbValue<T>>
     implements
         IdbType<
             IDBObjectStore,
@@ -95,7 +90,7 @@ export class IdbObjectStore<
     }
     add(
         this: IdbObjectStore<T, "readwrite">,
-        value: unknown,
+        value: IdbValue<T>,
         key?: IDBValidKey,
     ): Promise<IDBValidKey> {
         const req = this.store.add(value, key);
@@ -103,7 +98,7 @@ export class IdbObjectStore<
     }
     put(
         this: IdbObjectStore<T, "readwrite">,
-        value: unknown,
+        value: IdbValue<T>,
         key?: IDBValidKey,
     ): Promise<IDBValidKey> {
         const req = this.store.put(value, key);
@@ -123,7 +118,7 @@ export class IdbObjectStore<
 }
 
 export class IdbIndex<T extends IdbObjectStoreSchema>
-    extends IdbStore<IDBIndex, T>
+    extends IdbStore<IDBIndex, IdbValue<T>>
     implements IdbType<IDBIndex, "objectStore">
 {
     get keyPath(): string | string[] {
