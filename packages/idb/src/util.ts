@@ -1,14 +1,17 @@
 export const requestToPromise = <T>(req: IDBRequest<T>): Promise<T> =>
     new Promise((resolve, reject) => {
-        req.onsuccess = () => {
+        const onSuccess = () => {
             resolve(req.result);
             off();
         };
-        req.onerror = () => {
+        const onError = () => {
             reject(req.error);
             off();
         };
+        req.addEventListener("success", onSuccess);
+        req.addEventListener("error", onError);
         const off = () => {
-            req.onsuccess = req.onerror = null;
+            req.removeEventListener("success", onSuccess);
+            req.removeEventListener("error", onError);
         };
     });
