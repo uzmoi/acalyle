@@ -1,3 +1,4 @@
+export type { IdbCursor } from "./cursor";
 export { Idb } from "./db";
 export type { IdbIndex, IdbObjectStore, IdbQuery } from "./store";
 export type { IdbTransaction } from "./transaction";

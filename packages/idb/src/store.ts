@@ -1,4 +1,5 @@
 import type { Normalize } from "emnorst";
+import { IdbCursor } from "./cursor";
 import type { IdbObjectStoreSchema, IdbType } from "./types";
 import { requestToPromise } from "./util";
 
@@ -8,8 +9,11 @@ type IdbValue<T extends IdbObjectStoreSchema> = Normalize<
 
 export type IdbQuery = IDBValidKey | IDBKeyRange;
 
-export abstract class IdbStore<S extends IDBIndex | IDBObjectStore, T>
-    implements IdbType<IDBIndex | IDBObjectStore, "keyPath">
+export abstract class IdbStore<
+    out S extends IDBIndex | IDBObjectStore,
+    out T,
+    out Mode extends IDBTransactionMode,
+> implements IdbType<IDBIndex | IDBObjectStore, "keyPath">
 {
     constructor(protected readonly store: S) {}
     get name(): string {
@@ -41,29 +45,25 @@ export abstract class IdbStore<S extends IDBIndex | IDBObjectStore, T>
     openCursor(
         query?: IdbQuery | null,
         direction?: IDBCursorDirection,
-    ): Promise<IDBCursorWithValue | null> {
+    ): Promise<IdbCursor<T, Mode> | null> {
         const req = this.store.openCursor(query, direction);
-        return requestToPromise(req);
+        return IdbCursor.from(req as IDBRequest<IDBCursor | null>);
     }
     openKeyCursor(
         query?: IdbQuery | null,
         direction?: IDBCursorDirection,
-    ): Promise<IDBCursor | null> {
+    ): Promise<IdbCursor<void, Mode> | null> {
         const req = this.store.openKeyCursor(query, direction);
-        return requestToPromise(req);
+        return IdbCursor.from(req);
     }
 }
 
 export class IdbObjectStore<
         T extends IdbObjectStoreSchema,
-        out _Mode extends IDBTransactionMode,
+        out Mode extends IDBTransactionMode,
     >
-    extends IdbStore<IDBObjectStore, IdbValue<T>>
-    implements
-        IdbType<
-            IDBObjectStore,
-            "createIndex" | "deleteIndex" | "index" | "transaction"
-        >
+    extends IdbStore<IDBObjectStore, IdbValue<T>, Mode>
+    implements IdbType<IDBObjectStore, "index" | "transaction">
 {
     get autoIncrement(): boolean {
         return this.store.autoIncrement;
@@ -79,13 +79,13 @@ export class IdbObjectStore<
         name: string,
         keyPath: string | Iterable<string>,
         options?: IDBIndexParameters,
-    ): IdbIndex<T> {
+    ): IdbIndex<T, Mode> {
         return new IdbIndex(this.store.createIndex(name, keyPath, options));
     }
     deleteIndex(this: IdbObjectStore<T, "versionchange">, name: string): void {
         this.store.deleteIndex(name);
     }
-    index(name: keyof T["indexes"]): IdbIndex<T> {
+    index(name: keyof T["indexes"]): IdbIndex<T, Mode> {
         return new IdbIndex(this.store.index(name as string));
     }
     add(
@@ -117,8 +117,11 @@ export class IdbObjectStore<
     }
 }
 
-export class IdbIndex<T extends IdbObjectStoreSchema>
-    extends IdbStore<IDBIndex, IdbValue<T>>
+export class IdbIndex<
+        T extends IdbObjectStoreSchema,
+        out Mode extends IDBTransactionMode,
+    >
+    extends IdbStore<IDBIndex, IdbValue<T>, Mode>
     implements IdbType<IDBIndex, "objectStore">
 {
     get keyPath(): string | string[] {
