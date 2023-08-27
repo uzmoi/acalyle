@@ -1,5 +1,5 @@
 import { AcalyleMemoTag } from "@acalyle/core";
-import { vars } from "@acalyle/ui";
+import { Button, vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { useMemo, useState } from "react";
@@ -27,14 +27,6 @@ export const Memo: React.FC<{
 
     const actions = useMemo<readonly MenuAction[]>(
         () => [
-            {
-                icon: <BiEditAlt />,
-                text: "Edit contents",
-                disabled: isInEdit,
-                onClick: () => {
-                    setIsInEdit(true);
-                },
-            },
             {
                 icon: <BiClipboard />,
                 text: "Copy memo id",
@@ -66,7 +58,7 @@ export const Memo: React.FC<{
                 },
             },
         ],
-        [memoId, isInEdit],
+        [memoId],
     );
 
     if (memo == null) {
@@ -105,7 +97,43 @@ export const Memo: React.FC<{
                     <AddTagButton bookHandle={bookHandle} memoId={memoId} />
                 </div>
             </header>
-            <div className={style({ marginTop: "1em" })}>
+            <div
+                className={style({
+                    marginTop: "1em",
+                    position: "relative",
+                })}
+            >
+                <Button
+                    variant="unstyled"
+                    className={style({
+                        position: "absolute",
+                        top: 0,
+                        right: 0,
+                        translate: "50% -50%",
+                        padding: "0.25em",
+                        lineHeight: 1,
+                        borderRadius: "50%",
+                        backgroundColor: vars.color.bg.inline,
+                        zIndex: vars.zIndex.max,
+                        ":disabled": {
+                            visibility: "hidden",
+                        },
+                        transition: "opacity 125ms",
+                        opacity: 0,
+                        selectors: {
+                            ":hover > &, &:hover": {
+                                opacity: 1,
+                            },
+                        },
+                    })}
+                    onClick={() => {
+                        setIsInEdit(true);
+                    }}
+                    disabled={isInEdit}
+                    aria-label="Edit contents"
+                >
+                    <BiEditAlt className={style({ verticalAlign: "middle" })} />
+                </Button>
                 {isInEdit ? (
                     <MemoContentsEditor
                         memoId={memoId}

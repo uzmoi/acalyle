@@ -8,6 +8,7 @@ export const NoteBody: React.FC<{
         <div
             className={style({
                 padding: "0.2em 0.8em",
+                minHeight: "1em",
                 backgroundColor: vars.color.bg.block,
                 whiteSpace: "pre-wrap",
                 wordBreak: "break-all",
