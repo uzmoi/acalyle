@@ -10,12 +10,12 @@ import { memoStore, removeMemo, transferMemo } from "~/store/memo";
 import { AddTagButton } from "~/ui/AddTagButton";
 import { MemoContentsEditor } from "~/ui/MemoContentsEditor";
 import { MemoInfo } from "~/ui/MemoInfo";
-import { MemoList } from "~/ui/MemoList";
 import { MemoMenu, type MenuAction } from "~/ui/MemoMenu";
-import { MemoOverview } from "~/ui/MemoOverview";
 import { confirm, selectBook } from "~/ui/modal";
 import { TagList } from "./TagList";
 import { NoteBody } from "./note/NoteBody";
+import { NoteOverview } from "./note/NoteOverview";
+import { NoteOverviewWarpList } from "./note/NoteOverviewWarpList";
 
 export const Memo: React.FC<{
     bookHandle: string;
@@ -73,7 +73,7 @@ export const Memo: React.FC<{
         <article>
             {relateMemoId && (
                 <div className={style({ marginBottom: "0.5em" })}>
-                    <MemoOverview
+                    <NoteOverview
                         bookId={bookHandle}
                         memoId={relateMemoId as Scalars["ID"]}
                     />
@@ -146,7 +146,10 @@ export const Memo: React.FC<{
                     <NoteBody contents={memo.contents} />
                 )}
             </div>
-            <MemoList bookHandle={bookHandle} query={`@relate:${memoId}`} />
+            <NoteOverviewWarpList
+                book={bookHandle}
+                query={`@relate:${memoId}`}
+            />
         </article>
     );
 };
