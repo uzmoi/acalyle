@@ -4,9 +4,9 @@ import { useStore } from "@nanostores/react";
 import { useCallback, useDeferredValue, useState } from "react";
 import { BiBookAdd } from "react-icons/bi";
 import { bookConnection } from "~/store/book-connection";
-import { BookList } from "~/ui/BookList";
 import { BookSearchBar } from "~/ui/BookSearchBar";
 import { Link } from "~/ui/Link";
+import { BookOverviewWarpList } from "~/ui/book/BookOverviewWarpList";
 import { link } from "./link";
 
 export const BookListPage: React.FC = () => {
@@ -48,7 +48,7 @@ export const BookListPage: React.FC = () => {
                     <span className={style({ marginLeft: "0.25em" })}>New</span>
                 </Link>
             </div>
-            <BookList query={deferredQuery} />
+            <BookOverviewWarpList query={deferredQuery} />
             <Intersection
                 onIntersection={onIntersection}
                 rootMargin="25% 0px"

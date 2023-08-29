@@ -1,13 +1,19 @@
 import { List } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
+import type { Scalars } from "~/__generated__/graphql";
 import { bookConnection } from "~/store/book-connection";
 import { BookOverview } from "./BookOverview";
 
-export const BookList: React.FC<{
-    query?: string;
-}> = ({ query = "" }) => {
+const useBookOverviewList = (query = ""): readonly Scalars["ID"][] => {
     const { nodeIds } = useStore(bookConnection(query));
+    return nodeIds;
+};
+
+export const BookOverviewWarpList: React.FC<{
+    query?: string;
+}> = ({ query }) => {
+    const books = useBookOverviewList(query);
 
     return (
         <List
@@ -17,9 +23,9 @@ export const BookList: React.FC<{
                 gridTemplateColumns: "repeat(auto-fit, minmax(32em, 1fr))",
             })}
         >
-            {nodeIds.map(bookId => (
-                <List.Item key={bookId}>
-                    <BookOverview bookId={bookId} />
+            {books.map(book => (
+                <List.Item key={book}>
+                    <BookOverview bookId={book} />
                 </List.Item>
             ))}
         </List>

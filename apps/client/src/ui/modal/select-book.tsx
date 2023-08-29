@@ -4,8 +4,8 @@ import { useStore } from "@nanostores/react";
 import { useCallback, useState } from "react";
 import type { Scalars } from "~/__generated__/graphql";
 import { bookConnection } from "~/store/book-connection";
-import { BookOverview } from "~/ui/BookOverview";
 import { BookSearchBar } from "~/ui/BookSearchBar";
+import { BookOverview } from "~/ui/book/BookOverview";
 
 export const selectBook = () => {
     return openModal<Scalars["ID"] | null>({
