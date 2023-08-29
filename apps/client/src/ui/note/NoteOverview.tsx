@@ -7,6 +7,7 @@ import { link } from "~/pages/link";
 import { memoStore } from "~/store/memo";
 import { Link } from "../Link";
 import { TagList } from "../TagList";
+import { openNoteInModal } from "../modal";
 import { NoteBody } from "./NoteBody";
 
 /** @private */
@@ -18,7 +19,8 @@ export const useNoteOverview = (noteId: Scalars["ID"]) => {
 export const NoteOverview: React.FC<{
     bookId: Scalars["ID"];
     noteId: Scalars["ID"];
-}> = ({ bookId, noteId }) => {
+    clickAction?: "open-link" | "open-modal";
+}> = ({ bookId, noteId, clickAction = "open-modal" }) => {
     const note = useNoteOverview(noteId);
 
     if (note == null) return null;
@@ -42,6 +44,14 @@ export const NoteOverview: React.FC<{
             >
                 <Link
                     to={link(":bookId/:memoId", { bookId, memoId: noteId })}
+                    onClick={e => {
+                        if (clickAction === "open-modal") {
+                            // NOTE: noscript環境でなるべく正しく動くようにLinkのままpreventDefaultしている。
+                            // これが本当正しいのかはわからない。
+                            e.preventDefault();
+                            void openNoteInModal(bookId, noteId);
+                        }
+                    }}
                     className={style({
                         position: "absolute",
                         inset: 0,
