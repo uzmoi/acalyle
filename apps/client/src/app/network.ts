@@ -1,3 +1,4 @@
+import { Result } from "@acalyle/fp";
 import type { JsonValue } from "emnorst";
 import type { JsonValueable } from "../lib/types";
 
@@ -48,6 +49,11 @@ type GraphQLResult = {
     extensions?: Record<string, JsonValue>;
 };
 
+export type NetworkError =
+    | { type: "network_error"; error: Error | null }
+    | { type: "server_error"; status: number; body: string }
+    | { type: "invalid_json" };
+
 export class Network {
     private static readonly resourceBaseUrl = new URL("api/", location.origin);
     private static readonly apiBaseUrl = new URL("api/", location.origin);
@@ -58,30 +64,44 @@ export class Network {
         documentNode: import("graphql").DocumentNode,
         variables?: U,
     ): Promise<GraphQLResult & { data: T }> {
-        return this.graphql(documentNode, variables) as Promise<
-            GraphQLResult & { data: T }
-        >;
+        return this.graphql(documentNode, variables).then(result => {
+            return result.getOrThrow() as GraphQLResult & { data: T };
+        });
     }
     async graphql(
         documentNode: import("graphql").DocumentNode,
         variables?: Record<string, JsonValueable>,
-    ): Promise<GraphQLResult> {
+    ): Promise<Result<GraphQLResult, NetworkError>> {
         const query = documentNode.loc?.source.body ?? "";
 
         const res = await fetch(Network.apiBaseUrl, {
             method: "POST",
             body: graphqlBodyInit(query, variables),
+        }).catch(error => {
+            return Result.err<NetworkError>({
+                type: "network_error",
+                error: error instanceof Error ? error : null,
+            });
         });
+
+        if (res instanceof Result) {
+            return res;
+        }
 
         if (res.ok) {
             try {
                 const result = await (res.json() as Promise<JsonValue>);
-                return result as GraphQLResult;
-            } catch (error) {
-                throw new Error("invalid_json", { cause: error });
+                return Result.ok(result as GraphQLResult);
+            } catch {
+                return Result.err({ type: "invalid_json" });
             }
         } else {
-            throw new Error("server_error");
+            const errorResponceBody = await res.text();
+            return Result.err({
+                type: "server_error",
+                status: res.status,
+                body: errorResponceBody,
+            });
         }
     }
 }
