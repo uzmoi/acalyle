@@ -7,12 +7,16 @@ import { bookConnection } from "~/store/book-connection";
 import { BookList } from "~/ui/BookList";
 import { BookSearchBar } from "~/ui/BookSearchBar";
 import { Link } from "~/ui/Link";
+import type { NetworkError } from "../app/network";
 import { link } from "./link";
 
 export const BookListPage: React.FC = () => {
     const [query, setQuery] = useState("");
     const deferredQuery = useDeferredValue(query);
     const isLoading = useStore(bookConnection(deferredQuery).isLoading);
+    const error = useStore(bookConnection(deferredQuery).error) as
+        | NetworkError
+        | undefined;
 
     const onIntersection = useCallback(
         (entry: IntersectionObserverEntry) => {
@@ -76,6 +80,7 @@ export const BookListPage: React.FC = () => {
                     />
                 </div>
             )}
+            {error && <p>error: {error.type}</p>}
         </main>
     );
 };
