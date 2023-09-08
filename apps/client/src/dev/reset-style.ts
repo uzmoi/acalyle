@@ -8,3 +8,7 @@ globalStyle("*, ::before, ::after", {
 globalStyle(":root, body, #app", {
     height: "100%",
 });
+
+globalStyle("img, svg", {
+    verticalAlign: "middle",
+});
