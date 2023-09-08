@@ -1,3 +1,4 @@
+import "@acalyle/ui/dist/style.css";
 import { ModalContainer, vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { StrictMode } from "react";
