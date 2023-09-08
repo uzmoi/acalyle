@@ -1,12 +1,9 @@
-import * as Router from "@acalyle/router";
 import { ModalContainer, vars } from "@acalyle/ui";
 import { globalStyle, style } from "@macaron-css/core";
-import { useStore } from "@nanostores/react";
-import { StrictMode, Suspense } from "react";
+import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { devAppTheme } from "./dev/theme";
-import { Location } from "./store/location";
-import { BookRoute } from ".";
+import { PageRoot } from "./pages/Root";
 import "./dev/location";
 
 globalStyle("*, *::before, *::after", {
@@ -19,8 +16,6 @@ globalStyle(":root, body, #app", {
 });
 
 const DevAppRoot: React.FC = () => {
-    const location = useStore(Location);
-
     return (
         <div
             style={devAppTheme}
@@ -31,7 +26,7 @@ const DevAppRoot: React.FC = () => {
                 backgroundColor: vars.color.bg.app,
             })}
         >
-            <Suspense>{Router.match(BookRoute, location as never)}</Suspense>
+            <PageRoot />
             <ModalContainer />
         </div>
     );
