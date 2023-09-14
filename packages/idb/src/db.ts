@@ -1,10 +1,12 @@
+import type { Normalize } from "emnorst";
+import type { IdbObjectStoreSchema } from "./schema";
 import { IdbTransaction } from "./transaction";
-import type { IdbObjectStoreSchema, IdbType } from "./types";
+import type { IdbType } from "./types";
 import { requestToPromise } from "./util";
 
 const upgrade = (
     db: IDBDatabase,
-    schema: Record<string, IdbObjectStoreSchema>,
+    schema: Record<string, IdbObjectStoreSchemaObject>,
 ) => {
     for (const [name, options] of Object.entries(schema)) {
         const { keyPath, autoIncrement, indexes = {} as never } = options;
@@ -20,6 +22,19 @@ const upgrade = (
     }
 };
 
+export interface IdbObjectStoreSchemaObject extends IDBObjectStoreParameters {
+    indexes?: Record<
+        string,
+        IDBIndexParameters & {
+            keyPath: string | Iterable<string>;
+        }
+    >;
+}
+
+type IdbValue<T extends IdbObjectStoreSchemaObject> = Normalize<
+    Record<Extract<T["keyPath"], string>, IDBValidKey>
+>;
+
 export class Idb<S extends Record<string, IdbObjectStoreSchema>>
     implements
         IdbType<
@@ -29,10 +44,10 @@ export class Idb<S extends Record<string, IdbObjectStoreSchema>>
             | (`on${string}` | keyof EventTarget)
         >
 {
-    static objectStore<const S extends IdbObjectStoreSchema>(
+    static objectStore<const S extends IdbObjectStoreSchemaObject>(
         objectStore: S,
-    ): S {
-        return objectStore;
+    ): IdbObjectStoreSchema<IdbValue<S>, NonNullable<S["indexes"]>> {
+        return objectStore as never;
     }
     static async open<const S extends Record<string, IdbObjectStoreSchema>>(
         name: string,
@@ -42,7 +57,10 @@ export class Idb<S extends Record<string, IdbObjectStoreSchema>>
         const req = indexedDB.open(name, version);
 
         req.addEventListener("upgradeneeded", () => {
-            upgrade(req.result, schema);
+            upgrade(
+                req.result,
+                schema as Record<string, IdbObjectStoreSchemaObject>,
+            );
         });
 
         const db = await requestToPromise(req);
@@ -65,7 +83,7 @@ export class Idb<S extends Record<string, IdbObjectStoreSchema>>
         storeNames: StoreName | Iterable<StoreName>,
         mode?: Mode,
         options?: IDBTransactionOptions,
-    ): IdbTransaction<Pick<S, StoreName>, Mode> {
+    ): IdbTransaction<Normalize<Pick<S, StoreName>>, Mode> {
         const transaction = this.db.transaction(storeNames, mode, options);
         return new IdbTransaction(transaction);
     }

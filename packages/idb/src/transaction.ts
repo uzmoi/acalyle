@@ -1,6 +1,7 @@
 import type { NonUnion } from "emnorst";
+import type { IdbIndexes, IdbObjectStoreSchema, IdbValue } from "./schema";
 import { IdbObjectStore } from "./store";
-import type { IdbObjectStoreSchema, IdbType } from "./types";
+import type { IdbType } from "./types";
 
 export class IdbTransaction<
     S extends Record<string, IdbObjectStoreSchema>,
@@ -29,7 +30,7 @@ export class IdbTransaction<
     }
     objectStore<StoreName extends Extract<keyof S, string>>(
         name: NonUnion<StoreName>,
-    ): IdbObjectStore<S[StoreName], Mode> {
+    ): IdbObjectStore<IdbValue<S[StoreName]>, IdbIndexes<S[StoreName]>, Mode> {
         return new IdbObjectStore(this.tx.objectStore(name));
     }
 }
