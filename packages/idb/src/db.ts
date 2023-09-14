@@ -1,39 +1,8 @@
 import type { Normalize } from "emnorst";
-import type { IdbObjectStoreSchema } from "./schema";
+import { IdbObjectStoreSchema, IdbSchema, type IdbSchemaType } from "./schema";
 import { IdbTransaction } from "./transaction";
 import type { IdbType } from "./types";
 import { requestToPromise } from "./util";
-
-const upgrade = (
-    db: IDBDatabase,
-    schema: Record<string, IdbObjectStoreSchemaObject>,
-) => {
-    for (const [name, options] of Object.entries(schema)) {
-        const { keyPath, autoIncrement, indexes = {} as never } = options;
-        const store = db.createObjectStore(name, {
-            keyPath,
-            autoIncrement,
-        });
-        for (const [name, { keyPath, unique, multiEntry }] of Object.entries(
-            indexes,
-        )) {
-            store.createIndex(name, keyPath, { unique, multiEntry });
-        }
-    }
-};
-
-export interface IdbObjectStoreSchemaObject extends IDBObjectStoreParameters {
-    indexes?: Record<
-        string,
-        IDBIndexParameters & {
-            keyPath: string | Iterable<string>;
-        }
-    >;
-}
-
-type IdbValue<T extends IdbObjectStoreSchemaObject> = Normalize<
-    Record<Extract<T["keyPath"], string>, IDBValidKey>
->;
 
 export class Idb<S extends Record<string, IdbObjectStoreSchema>>
     implements
@@ -44,23 +13,13 @@ export class Idb<S extends Record<string, IdbObjectStoreSchema>>
             | (`on${string}` | keyof EventTarget)
         >
 {
-    static objectStore<const S extends IdbObjectStoreSchemaObject>(
-        objectStore: S,
-    ): IdbObjectStoreSchema<IdbValue<S>, NonNullable<S["indexes"]>> {
-        return objectStore as never;
-    }
-    static async open<const S extends Record<string, IdbObjectStoreSchema>>(
-        name: string,
-        version: number | undefined,
+    static async open<S extends IdbSchema>(
         schema: S,
-    ): Promise<Idb<S>> {
-        const req = indexedDB.open(name, version);
+    ): Promise<Idb<IdbSchemaType<S>>> {
+        const req = indexedDB.open(schema.name, schema.version);
 
         req.addEventListener("upgradeneeded", () => {
-            upgrade(
-                req.result,
-                schema as Record<string, IdbObjectStoreSchemaObject>,
-            );
+            schema.upgrade(req.result);
         });
 
         const db = await requestToPromise(req);
