@@ -5,7 +5,7 @@ import { BiExpandAlt, BiX } from "react-icons/bi";
 import type { Scalars } from "~/__generated__/graphql";
 import { link } from "~/pages/link";
 import { Link } from "../Link";
-import { Memo } from "../Memo";
+import { Note } from "../note/Note";
 
 export const openNoteInModal = (book: string, memoId: Scalars["ID"]) => {
     return openModal({
@@ -62,7 +62,7 @@ export const openNoteInModal = (book: string, memoId: Scalars["ID"]) => {
                     })}
                 >
                     <Suspense>
-                        <Memo bookHandle={book} memoId={memoId} />
+                        <Note book={book} noteId={memoId} />
                     </Suspense>
                 </div>
             </section>

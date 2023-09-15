@@ -10,7 +10,7 @@ import type { Scalars } from "~/__generated__/graphql";
 import { MemoListPage } from "~/pages/book/MemoListPage";
 import { useBook } from "~/store/hook";
 import { Link } from "~/ui/Link";
-import { Memo } from "~/ui/Memo";
+import { Note } from "~/ui/note/Note";
 import { link } from "./link";
 
 export type BookPageRoute = InferPath<typeof BookPageRoute>;
@@ -22,7 +22,7 @@ export const BookPageRoute = routes({
     resources: page(() => null),
     settings: page(() => null),
     ":memoId": page(({ bookId, memoId }: MatchParams<"bookId" | "memoId">) => (
-        <Memo bookHandle={bookId} memoId={memoId as Scalars["ID"]} />
+        <Note book={bookId} noteId={memoId as Scalars["ID"]} />
     )),
 }).map((children, _, { bookId }) => (
     // eslint-disable-next-line react/jsx-key
