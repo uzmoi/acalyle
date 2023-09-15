@@ -2,6 +2,7 @@ import type { NonUnion } from "emnorst";
 import type { IdbIndexes, IdbObjectStoreSchema, IdbValue } from "./schema";
 import { IdbObjectStore } from "./store";
 import type { IdbType } from "./types";
+import { onAll } from "./util";
 
 export class IdbTransaction<
     S extends Record<string, IdbObjectStoreSchema>,
@@ -13,6 +14,18 @@ export class IdbTransaction<
         >
 {
     constructor(private readonly tx: IDBTransaction) {}
+    private _whenComplete = new Promise<void>((resolve, reject) => {
+        const offAll = onAll(this.tx, {
+            complete() {
+                resolve();
+                offAll();
+            },
+            abort() {
+                reject(this.error);
+                offAll();
+            },
+        });
+    });
     get durability(): IDBTransactionDurability {
         return this.tx.durability;
     }
@@ -27,6 +40,9 @@ export class IdbTransaction<
     }
     commit() {
         this.tx.commit();
+    }
+    whenComplete(): Promise<void> {
+        return this._whenComplete;
     }
     objectStore<StoreName extends Extract<keyof S, string>>(
         name: NonUnion<StoreName>,
