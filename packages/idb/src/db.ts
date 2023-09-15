@@ -1,24 +1,8 @@
+import type { Normalize } from "emnorst";
+import { IdbObjectStoreSchema, IdbSchema, type IdbSchemaType } from "./schema";
 import { IdbTransaction } from "./transaction";
-import type { IdbObjectStoreSchema, IdbType } from "./types";
-import { requestToPromise } from "./util";
-
-const upgrade = (
-    db: IDBDatabase,
-    schema: Record<string, IdbObjectStoreSchema>,
-) => {
-    for (const [name, options] of Object.entries(schema)) {
-        const { keyPath, autoIncrement, indexes = {} as never } = options;
-        const store = db.createObjectStore(name, {
-            keyPath,
-            autoIncrement,
-        });
-        for (const [name, { keyPath, unique, multiEntry }] of Object.entries(
-            indexes,
-        )) {
-            store.createIndex(name, keyPath, { unique, multiEntry });
-        }
-    }
-};
+import type { IdbType } from "./types";
+import { onceAll, requestToPromise } from "./util";
 
 export class Idb<S extends Record<string, IdbObjectStoreSchema>>
     implements
@@ -29,26 +13,22 @@ export class Idb<S extends Record<string, IdbObjectStoreSchema>>
             | (`on${string}` | keyof EventTarget)
         >
 {
-    static objectStore<const S extends IdbObjectStoreSchema>(
-        objectStore: S,
-    ): S {
-        return objectStore;
-    }
-    static async open<const S extends Record<string, IdbObjectStoreSchema>>(
-        name: string,
-        version: number | undefined,
+    static async open<S extends IdbSchema>(
         schema: S,
-    ): Promise<Idb<S>> {
-        const req = indexedDB.open(name, version);
+    ): Promise<Idb<IdbSchemaType<S>>> {
+        const req = indexedDB.open(schema.name, schema.version);
 
         req.addEventListener("upgradeneeded", () => {
-            upgrade(req.result, schema);
+            schema.upgrade(req.result);
         });
 
         const db = await requestToPromise(req);
         return new Idb(db);
     }
     private constructor(private readonly db: IDBDatabase) {}
+    private _whenClose = new Promise((resolve, reject) => {
+        onceAll(this.db, { close: resolve, abort: reject });
+    });
     get name(): string {
         return this.db.name;
     }
@@ -65,11 +45,14 @@ export class Idb<S extends Record<string, IdbObjectStoreSchema>>
         storeNames: StoreName | Iterable<StoreName>,
         mode?: Mode,
         options?: IDBTransactionOptions,
-    ): IdbTransaction<Pick<S, StoreName>, Mode> {
+    ): IdbTransaction<Normalize<Pick<S, StoreName>>, Mode> {
         const transaction = this.db.transaction(storeNames, mode, options);
         return new IdbTransaction(transaction);
     }
     close(): void {
         this.db.close();
+    }
+    whenClose(): Promise<void> {
+        return this._whenClose as Promise<void>;
     }
 }

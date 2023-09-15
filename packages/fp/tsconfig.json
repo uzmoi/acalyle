@@ -1,0 +1,4 @@
+{
+    "extends": "@acalyle/tsconfig/tsconfig.base.json",
+    "include": ["src"],
+}

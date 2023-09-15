@@ -10,46 +10,46 @@ export class IdbCursor<out T, out Mode extends IDBTransactionMode>
         const cursor = await requestToPromise(request);
         return cursor && new IdbCursor(cursor);
     }
-    private constructor(private readonly cursor: IDBCursor) {}
+    private constructor(private readonly _cursor: IDBCursor) {}
     get value(): T {
-        return (this.cursor as IDBCursorWithValue).value as T;
+        return (this._cursor as IDBCursorWithValue).value as T;
     }
     get direction(): IDBCursorDirection {
-        return this.cursor.direction;
+        return this._cursor.direction;
     }
     get key(): IDBValidKey {
-        return this.cursor.key;
+        return this._cursor.key;
     }
     get primaryKey(): IDBValidKey {
-        return this.cursor.primaryKey;
+        return this._cursor.primaryKey;
     }
-    async advance(count: number): Promise<IdbCursor<T, Mode> | null> {
-        this.cursor.advance(count);
+    advance(count: number): Promise<IdbCursor<T, Mode> | null> {
+        this._cursor.advance(count);
         return IdbCursor.from(
-            this.cursor.request as IDBRequest<IDBCursor | null>,
+            this._cursor.request as IDBRequest<IDBCursor | null>,
         );
     }
-    async continue(key?: IDBValidKey): Promise<IdbCursor<T, Mode> | null> {
-        this.cursor.continue(key);
+    continue(key?: IDBValidKey): Promise<IdbCursor<T, Mode> | null> {
+        this._cursor.continue(key);
         return IdbCursor.from(
-            this.cursor.request as IDBRequest<IDBCursor | null>,
+            this._cursor.request as IDBRequest<IDBCursor | null>,
         );
     }
-    async continuePrimaryKey(
+    continuePrimaryKey(
         key: IDBValidKey,
         primaryKey: IDBValidKey,
     ): Promise<IdbCursor<T, Mode> | null> {
-        this.cursor.continuePrimaryKey(key, primaryKey);
+        this._cursor.continuePrimaryKey(key, primaryKey);
         return IdbCursor.from(
-            this.cursor.request as IDBRequest<IDBCursor | null>,
+            this._cursor.request as IDBRequest<IDBCursor | null>,
         );
     }
     delete(this: IdbCursor<T, "readwrite">): Promise<void> {
-        const req = this.cursor.delete();
+        const req = this._cursor.delete();
         return requestToPromise(req);
     }
     update(this: IdbCursor<T, "readwrite">, value: T): Promise<IDBValidKey> {
-        const req = this.cursor.update(value);
+        const req = this._cursor.update(value);
         return requestToPromise(req);
     }
 }

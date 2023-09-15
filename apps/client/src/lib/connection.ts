@@ -23,6 +23,7 @@ export type ConnectionExt = {
     loadNext: () => Promise<void>;
     refetch: () => Promise<void>;
     isLoading: ReadableAtom<boolean>;
+    error: ReadableAtom<Error | undefined>;
 };
 
 export const createConnectionAtom = <TNode extends { id: Scalars["ID"] }>(
@@ -35,22 +36,31 @@ export const createConnectionAtom = <TNode extends { id: Scalars["ID"] }>(
         endCursor: null,
     });
     const isLoading = atom(false);
+    const error = atom<Error | undefined>();
 
     connectionStore.isLoading = isLoading;
+    connectionStore.error = error;
 
     const loadNodes = async (
         getIds: (ids: readonly Scalars["ID"][]) => readonly Scalars["ID"][],
     ) => {
         isLoading.set(true);
-        const { edges, pageInfo } = await load(connectionStore);
-        const nodes = edges?.map(edge => edge?.node).filter(nonNullable) ?? [];
-        nodes.forEach(updateNode);
-        connectionStore.set({
-            nodeIds: getIds(nodes.map(node => node.id)),
-            hasNext: pageInfo.hasNextPage,
-            endCursor: (pageInfo.hasNextPage && pageInfo.endCursor) || null,
-        });
-        isLoading.set(false);
+        error.set(undefined);
+        try {
+            const { edges, pageInfo } = await load(connectionStore);
+            const nodes =
+                edges?.map(edge => edge?.node).filter(nonNullable) ?? [];
+            nodes.forEach(updateNode);
+            connectionStore.set({
+                nodeIds: getIds(nodes.map(node => node.id)),
+                hasNext: pageInfo.hasNextPage,
+                endCursor: (pageInfo.hasNextPage && pageInfo.endCursor) || null,
+            });
+        } catch (err) {
+            error.set(err as Error);
+        } finally {
+            isLoading.set(false);
+        }
     };
 
     connectionStore.loadNext = async () => {

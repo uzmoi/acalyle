@@ -1,4 +1,5 @@
 import type { IdbCursor } from "./cursor";
+import type { IdbObjectStoreSchema } from "./schema";
 import type { IdbIndex } from "./store";
 import type { IdbTransaction } from "./transaction";
 
@@ -11,7 +12,7 @@ type IDBResult<T> = T extends IDBRequest<infer U>
     : T extends IDBTransaction
     ? IdbTransaction<Record<string, IdbObjectStoreSchema>, IDBTransactionMode>
     : T extends IDBIndex
-    ? IdbIndex<IdbObjectStoreSchema, IDBTransactionMode>
+    ? IdbIndex<unknown, IDBTransactionMode>
     : T;
 
 export type IdbType<T, K> = {
@@ -19,12 +20,3 @@ export type IdbType<T, K> = {
         ? (...args: A) => IDBResult<R>
         : unknown;
 };
-
-export interface IdbObjectStoreSchema extends IDBObjectStoreParameters {
-    indexes?: Record<
-        string,
-        IDBIndexParameters & {
-            keyPath: string | Iterable<string>;
-        }
-    >;
-}
