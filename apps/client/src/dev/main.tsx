@@ -3,10 +3,10 @@ import { ModalContainer, vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { devAppTheme } from "./dev/theme";
-import { PageRoot } from "./pages/Root";
-import "./dev/location";
-import "./dev/reset-style";
+import { PageRoot } from "~/pages/Root";
+import { devAppTheme } from "./theme";
+import "./location";
+import "./reset-style";
 
 const DevAppRoot: React.FC = () => {
     return (
