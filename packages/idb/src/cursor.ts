@@ -23,19 +23,19 @@ export class IdbCursor<out T, out Mode extends IDBTransactionMode>
     get primaryKey(): IDBValidKey {
         return this._cursor.primaryKey;
     }
-    async advance(count: number): Promise<IdbCursor<T, Mode> | null> {
+    advance(count: number): Promise<IdbCursor<T, Mode> | null> {
         this._cursor.advance(count);
         return IdbCursor.from(
             this._cursor.request as IDBRequest<IDBCursor | null>,
         );
     }
-    async continue(key?: IDBValidKey): Promise<IdbCursor<T, Mode> | null> {
+    continue(key?: IDBValidKey): Promise<IdbCursor<T, Mode> | null> {
         this._cursor.continue(key);
         return IdbCursor.from(
             this._cursor.request as IDBRequest<IDBCursor | null>,
         );
     }
-    async continuePrimaryKey(
+    continuePrimaryKey(
         key: IDBValidKey,
         primaryKey: IDBValidKey,
     ): Promise<IdbCursor<T, Mode> | null> {

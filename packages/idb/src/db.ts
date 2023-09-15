@@ -2,7 +2,7 @@ import type { Normalize } from "emnorst";
 import { IdbObjectStoreSchema, IdbSchema, type IdbSchemaType } from "./schema";
 import { IdbTransaction } from "./transaction";
 import type { IdbType } from "./types";
-import { onAll, requestToPromise } from "./util";
+import { onceAll, requestToPromise } from "./util";
 
 export class Idb<S extends Record<string, IdbObjectStoreSchema>>
     implements
@@ -26,17 +26,8 @@ export class Idb<S extends Record<string, IdbObjectStoreSchema>>
         return new Idb(db);
     }
     private constructor(private readonly db: IDBDatabase) {}
-    private _whenClose = new Promise<void>((resolve, reject) => {
-        const offAll = onAll(this.db, {
-            close() {
-                resolve();
-                offAll();
-            },
-            abort() {
-                reject();
-                offAll();
-            },
-        });
+    private _whenClose = new Promise((resolve, reject) => {
+        onceAll(this.db, { close: resolve, abort: reject });
     });
     get name(): string {
         return this.db.name;
@@ -62,6 +53,6 @@ export class Idb<S extends Record<string, IdbObjectStoreSchema>>
         this.db.close();
     }
     whenClose(): Promise<void> {
-        return this._whenClose;
+        return this._whenClose as Promise<void>;
     }
 }

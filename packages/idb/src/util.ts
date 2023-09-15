@@ -1,6 +1,6 @@
 import type { Callable } from "emnorst";
 
-export const onAll = <T extends EventTarget>(
+export const onceAll = <T extends EventTarget>(
     eventTarget: T,
     handlers: {
         [P in keyof T as P extends `on${infer K}` ? K : never]?: Extract<
@@ -12,26 +12,27 @@ export const onAll = <T extends EventTarget>(
     const listeners = Object.entries<EventListenerOrEventListenerObject>(
         handlers as Record<string, EventListenerOrEventListenerObject>,
     );
-    for (const [type, listener] of listeners) {
-        eventTarget.addEventListener(type, listener);
-    }
-    return () => {
+    const offAll = () => {
         for (const [type, listener] of listeners) {
             eventTarget.removeEventListener(type, listener);
+            eventTarget.removeEventListener(type, offAll);
         }
     };
+    for (const [type, listener] of listeners) {
+        eventTarget.addEventListener(type, listener);
+        eventTarget.addEventListener(type, offAll);
+    }
+    return offAll;
 };
 
 export const requestToPromise = <T>(req: IDBRequest<T>): Promise<T> =>
     new Promise((resolve, reject) => {
-        const offAll = onAll(req, {
+        onceAll(req, {
             success() {
                 resolve(req.result);
-                offAll();
             },
             error() {
                 reject(req.error);
-                offAll();
             },
         });
     });
