@@ -5,6 +5,7 @@ import type { Scalars } from "~/__generated__/graphql";
 import { usePromiseLoader } from "~/lib/promise-loader";
 import { link } from "~/pages/link";
 import { memoStore } from "~/store/memo";
+import { bookStore } from "../../store/book";
 import { Link } from "../Link";
 import { TagList } from "../TagList";
 import { openNoteInModal } from "../modal";
@@ -21,9 +22,10 @@ export const NoteOverview: React.FC<{
     noteId: Scalars["ID"];
     clickAction?: "open-link" | "open-modal";
 }> = ({ bookId, noteId, clickAction = "open-modal" }) => {
+    const book = usePromiseLoader(useStore(bookStore(bookId)));
     const note = useNoteOverview(noteId);
 
-    if (note == null) return null;
+    if (book == null || note == null) return null;
 
     return (
         <article
@@ -43,7 +45,10 @@ export const NoteOverview: React.FC<{
                 })}
             >
                 <Link
-                    to={link(":bookId/:memoId", { bookId, memoId: noteId })}
+                    to={link(":bookId/:memoId", {
+                        bookId: book.handle ? `@${book.handle}` : book.id,
+                        memoId: noteId,
+                    })}
                     onClick={e => {
                         if (clickAction === "open-modal") {
                             // NOTE: noscript環境でなるべく正しく動くようにLinkのままpreventDefaultしている。
