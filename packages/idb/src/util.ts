@@ -1,9 +1,11 @@
+import type { Callable } from "emnorst";
+
 export const onAll = <T extends EventTarget>(
     eventTarget: T,
     handlers: {
         [P in keyof T as P extends `on${infer K}` ? K : never]?: Extract<
             T[P],
-            EventListener
+            Callable
         >;
     },
 ) => {
