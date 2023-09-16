@@ -11,7 +11,8 @@ export const Tag: React.FC<{
             data-tag-type={tag.type()}
         >
             <span>{tag.symbol}</span>
-            {tag.prop && <span>:{tag.prop}</span>}
+            {tag.prop && ":"}
+            {tag.prop && <span>{tag.prop}</span>}
         </span>
     );
 };

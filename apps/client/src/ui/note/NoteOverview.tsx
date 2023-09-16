@@ -8,8 +8,8 @@ import { link } from "~/pages/link";
 import { memoStore } from "~/store/memo";
 import { bookStore } from "../../store/book";
 import { Link } from "../Link";
-import { TagList } from "../TagList";
 import { openNoteInModal } from "../modal";
+import { TagList } from "../tag/TagList";
 import { NoteBody } from "./NoteBody";
 
 const useBook = (bookId: Scalars["ID"]) => {
