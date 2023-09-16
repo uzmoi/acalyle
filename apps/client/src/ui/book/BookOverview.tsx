@@ -23,6 +23,10 @@ export const BookOverview: React.FC<{
         return null;
     }
 
+    const bookLink = link(":bookId", {
+        bookId: book.handle ? `@${book.handle}` : book.id,
+    });
+
     return (
         <div
             className={style({
@@ -45,9 +49,7 @@ export const BookOverview: React.FC<{
                 })}
             >
                 <Link
-                    to={link(":bookId", {
-                        bookId: book.handle ? `@${book.handle}` : book.id,
-                    })}
+                    to={bookLink}
                     className={style({
                         position: "absolute",
                         inset: 0,

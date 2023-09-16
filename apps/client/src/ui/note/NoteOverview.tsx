@@ -1,6 +1,7 @@
 import { vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
+import { useCallback } from "react";
 import type { Scalars } from "~/__generated__/graphql";
 import { usePromiseLoader } from "~/lib/promise-loader";
 import { link } from "~/pages/link";
@@ -11,8 +12,12 @@ import { TagList } from "../TagList";
 import { openNoteInModal } from "../modal";
 import { NoteBody } from "./NoteBody";
 
-/** @private */
-export const useNoteOverview = (noteId: Scalars["ID"]) => {
+const useBook = (bookId: Scalars["ID"]) => {
+    const bookLoader = useStore(bookStore(bookId));
+    return usePromiseLoader(bookLoader);
+};
+
+const useNote = (noteId: Scalars["ID"]) => {
     const noteLoader = useStore(memoStore(noteId));
     return usePromiseLoader(noteLoader);
 };
@@ -22,10 +27,27 @@ export const NoteOverview: React.FC<{
     noteId: Scalars["ID"];
     clickAction?: "open-link" | "open-modal";
 }> = ({ bookId, noteId, clickAction = "open-modal" }) => {
-    const book = usePromiseLoader(useStore(bookStore(bookId)));
-    const note = useNoteOverview(noteId);
+    const book = useBook(bookId);
+    const note = useNote(noteId);
+
+    const handleClick = useCallback(
+        (e: React.MouseEvent) => {
+            if (clickAction === "open-modal") {
+                // NOTE: noscript環境でなるべく正しく動くようにLinkのままpreventDefaultしている。
+                // これが本当正しいのかはわからない。
+                e.preventDefault();
+                void openNoteInModal(bookId, noteId);
+            }
+        },
+        [bookId, noteId, clickAction],
+    );
 
     if (book == null || note == null) return null;
+
+    const memoLink = link(":bookId/:memoId", {
+        bookId: book.handle ? `@${book.handle}` : book.id,
+        memoId: noteId,
+    });
 
     return (
         <article
@@ -45,18 +67,8 @@ export const NoteOverview: React.FC<{
                 })}
             >
                 <Link
-                    to={link(":bookId/:memoId", {
-                        bookId: book.handle ? `@${book.handle}` : book.id,
-                        memoId: noteId,
-                    })}
-                    onClick={e => {
-                        if (clickAction === "open-modal") {
-                            // NOTE: noscript環境でなるべく正しく動くようにLinkのままpreventDefaultしている。
-                            // これが本当正しいのかはわからない。
-                            e.preventDefault();
-                            void openNoteInModal(bookId, noteId);
-                        }
-                    }}
+                    to={memoLink}
+                    onClick={handleClick}
                     className={style({
                         position: "absolute",
                         inset: 0,
