@@ -63,8 +63,7 @@ export const NoteContents: React.FC<{
             </Button>
             {isInEdit ? (
                 <MemoContentsEditor
-                    memoId={noteId}
-                    defaultContents={note.contents}
+                    noteId={noteId}
                     onEditEnd={() => {
                         setIsInEdit(false);
                     }}
