@@ -101,6 +101,11 @@ describe("openModal", () => {
             expect(button2?.id).toBe("2");
             expect(rootEl.dataset.status).toBe("entering");
             await vi.advanceTimersToNextTimerAsync();
+            // clearTimeoutせずにexitの中断に対応しているため、
+            // statusを"exited"にするタスク（中断されているためコールバックはnoop）
+            // statusをと"entered"にするタスクの2つタスクが存在する。
+            expect(rootEl.dataset.status).toBe("entering");
+            await vi.advanceTimersToNextTimerAsync();
             expect(rootEl.dataset.status).toBe("entered");
 
             if (button2 != null) {

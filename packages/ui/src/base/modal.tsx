@@ -1,6 +1,6 @@
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
-import { timeout } from "emnorst";
+import { noop, timeout } from "emnorst";
 import { atom, onMount } from "nanostores";
 import { vars } from "../theme";
 import { cx } from "./cx";
@@ -36,15 +36,20 @@ export const openModal = <T,>({
     fullSize?: boolean;
 }): Promise<T> => {
     return new Promise(resolve => {
-        let open = true;
+        const open = new AbortController();
         const close = (result = defaultValue) => {
-            if (!open) return;
-            open = false;
+            if (open.signal.aborted) return;
+            open.abort();
             resolve(result);
             ModalStatusStore.set("exiting");
+            // AbortControllerを使わずにstatusで判断すると、
+            // closeしてからtransitionDuration ms以内にopen -> close
+            // したときにexitedになるのが早くなるが、影響もほぼないので放置
             void timeout(transitionDuration).then(() => {
-                ModalStore.set(null);
-                ModalStatusStore.set("exited");
+                if (ModalStatusStore.get() === "exiting") {
+                    ModalStore.set(null);
+                    ModalStatusStore.set("exited");
+                }
             });
         };
         ModalStore.set({
@@ -53,9 +58,9 @@ export const openModal = <T,>({
             close,
         });
         ModalStatusStore.set("entering");
-        void timeout(transitionDuration).then(() => {
+        void timeout(transitionDuration, open).then(() => {
             ModalStatusStore.set("entered");
-        });
+        }, noop);
     });
 };
 
