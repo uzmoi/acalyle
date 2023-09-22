@@ -102,7 +102,20 @@ describe("class Modal", () => {
             expect(modal.status.get()).toBe("entered");
         });
     });
-    test.todo("entering/entered中にopenした時の挙動");
+    test("entering/entered中にopenした時の挙動", async () => {
+        const modal = Modal.create<number>();
+        const first = modal.open(1);
+        const second = modal.open(2);
+        await vi.runAllTimersAsync();
+        expect(modal.data.get()?.data).toBe(1);
+        void modal.close();
+        await vi.runAllTimersAsync();
+        expect(modal.data.get()?.data).toBe(2);
+        expect(first).resolves.any;
+        void modal.close();
+        await vi.runAllTimersAsync();
+        expect(second).resolves.any;
+    });
     test("closeは1回のみ作用する", async () => {
         const modal = Modal.create();
         void modal.open();
@@ -120,6 +133,7 @@ describe("class Modal", () => {
     test("default", async () => {
         const modal = Modal.create("defaultValue");
         const result = modal.open();
+        await vi.advanceTimersByTimeAsync(0);
         void modal.close();
         expect(await result).toBe("defaultValue");
     });

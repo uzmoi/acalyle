@@ -12,6 +12,7 @@
     "coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@acalyle/util": "*",
     "@macaron-css/core": "^1.0.0",
     "@nanostores/react": "^0.5.0",
     "emnorst": "^1.0.0-next.2",

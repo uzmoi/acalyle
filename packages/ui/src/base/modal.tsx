@@ -1,3 +1,4 @@
+import { Semaphore } from "@acalyle/util";
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { timeout } from "emnorst";
@@ -22,6 +23,7 @@ export class Modal<out Data = void, out Result = void> {
         return new Modal(defaultValue);
     }
     private constructor(private readonly _default: Result) {}
+    private readonly _mutex = Semaphore.mutex();
     private readonly _status = atom<TransitionStatus>("exited");
     private readonly $ = atom<ModalData<Data, Result> | undefined>();
     get status(): ReadableAtom<TransitionStatus> {
@@ -44,16 +46,21 @@ export class Modal<out Data = void, out Result = void> {
         }
     }
     open(data: Data): Promise<Result> {
-        const result = new Promise<Result>((resolve, reject) => {
-            this.$.set({ data, resolve, reject });
+        return this._mutex.use(() => {
+            const result = new Promise<Result>((resolve, reject) => {
+                this.$.set({ data, resolve, reject });
+            });
+            void this._trantision("enter");
+            return result;
         });
-        void this._trantision("enter");
-        return result;
     }
     async close(result: Result = this._default): Promise<void> {
         this.$.get()?.resolve(result);
         await this._trantision("exit");
-        this.$.set(undefined);
+        // _trantisionと同じく
+        if (this._status.get() === "exiting") {
+            this.$.set(undefined);
+        }
     }
 }
 
