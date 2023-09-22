@@ -1,83 +1,98 @@
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
-import { noop, timeout } from "emnorst";
-import { atom, onMount } from "nanostores";
+import { timeout } from "emnorst";
+import { type ReadableAtom, atom } from "nanostores";
+import { useEffect } from "react";
 import { vars } from "../theme";
 import { cx } from "./cx";
 import type { TransitionStatus } from "./use-transition-status";
 
-const ModalStore = atom<{
-    content: React.ReactNode;
-    fullSize: boolean;
-    close: () => void;
-} | null>(null);
+const TRANSITION_DURATION = 200;
 
-onMount(ModalStore, () => {
-    const onKeyDown = (e: KeyboardEvent) => {
-        if (e.key === "Escape") {
-            ModalStore.get()?.close();
-        }
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => {
-        window.addEventListener("keydown", onKeyDown);
-    };
-});
-
-const ModalStatusStore = atom<TransitionStatus>("exited");
-
-export const openModal = <T,>({
-    default: defaultValue,
-    render,
-    fullSize = false,
-}: {
-    default: T;
-    render: (close: (result?: T) => void) => React.ReactNode;
-    fullSize?: boolean;
-}): Promise<T> => {
-    return new Promise(resolve => {
-        const open = new AbortController();
-        const close = (result = defaultValue) => {
-            if (open.signal.aborted) return;
-            open.abort();
-            resolve(result);
-            ModalStatusStore.set("exiting");
-            // AbortControllerを使わずにstatusで判断すると、
-            // closeしてからtransitionDuration ms以内にopen -> close
-            // したときにexitedになるのが早くなるが、影響もほぼないので放置
-            void timeout(transitionDuration).then(() => {
-                if (ModalStatusStore.get() === "exiting") {
-                    ModalStore.set(null);
-                    ModalStatusStore.set("exited");
-                }
-            });
-        };
-        ModalStore.set({
-            content: render(close),
-            fullSize,
-            close,
-        });
-        ModalStatusStore.set("entering");
-        void timeout(transitionDuration, open).then(() => {
-            ModalStatusStore.set("entered");
-        }, noop);
-    });
+type ModalData<out T, out U> = {
+    data: T;
+    resolve(result: U): void;
+    reject(): void;
 };
 
-const transitionDuration = 200;
-
-export const ModalContainer: React.FC<{
-    className?: string;
-    renderContent?: (children: React.ReactNode) => React.ReactNode;
-}> = ({ className, renderContent }) => {
-    const modal = useStore(ModalStore);
-    const status = useStore(ModalStatusStore);
-
-    const onClickBackdrop = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (e.target === e.currentTarget) {
-            modal?.close();
+export class Modal<out Data = void, out Result = void> {
+    static create<T = void, R = void>(): Modal<T, R | undefined>;
+    static create<T = void, R = void>(defaultValue: R): Modal<T, R>;
+    static create(defaultValue?: unknown) {
+        return new Modal(defaultValue);
+    }
+    private constructor(private readonly _default: Result) {}
+    private readonly _status = atom<TransitionStatus>("exited");
+    private readonly $ = atom<ModalData<Data, Result> | undefined>();
+    get status(): ReadableAtom<TransitionStatus> {
+        return this._status;
+    }
+    get data(): ReadableAtom<{ data: Data } | undefined> {
+        return this.$;
+    }
+    private async _trantision(name: "enter" | "exit") {
+        if (this._status.get().startsWith(name)) return;
+        this._status.set(`${name}ing`);
+        await timeout(TRANSITION_DURATION);
+        // AbortControllerを使わずにstatusで判断すると、
+        // openしてからTRANSITION_DURATION ms以内にclose -> open
+        // もしくは
+        // closeしてからTRANSITION_DURATION ms以内にopen -> close
+        // したときにexitedになるのが早くなるが、影響もほぼないので放置
+        if (this._status.get() === `${name}ing`) {
+            this._status.set(`${name}ed`);
         }
+    }
+    open(data: Data): Promise<Result> {
+        const result = new Promise<Result>((resolve, reject) => {
+            this.$.set({ data, resolve, reject });
+        });
+        void this._trantision("enter");
+        return result;
+    }
+    async close(result: Result = this._default): Promise<void> {
+        this.$.get()?.resolve(result);
+        await this._trantision("exit");
+        this.$.set(undefined);
+    }
+}
+
+export type ModalSize = "content" | "max";
+
+export const ModalContainer: <T>(props: {
+    modal: Modal<T, unknown>;
+    render: (data: T) => React.ReactNode;
+    size?: ModalSize;
+    className?: string;
+    onClickBackdrop?: React.MouseEventHandler<HTMLDivElement>;
+}) => React.ReactElement | null = ({
+    modal,
+    render,
+    size,
+    className,
+    onClickBackdrop,
+}) => {
+    const handleClickBackdrop = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (e.target !== e.currentTarget) return;
+        onClickBackdrop?.(e);
+        if (e.defaultPrevented) return;
+        void modal.close();
     };
+
+    useEffect(() => {
+        const onKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                void modal.close();
+            }
+        };
+        window.addEventListener("keydown", onKeyDown);
+        return () => {
+            window.addEventListener("keydown", onKeyDown);
+        };
+    }, [modal]);
+
+    const data = useStore(modal.data);
+    const status = useStore(modal.status);
 
     return (
         <div
@@ -89,8 +104,8 @@ export const ModalContainer: React.FC<{
                     inset: 0,
                     zIndex: vars.zIndex.modal,
                     backgroundColor: "#0008",
-                    backdropFilter: "blur(0.125em)",
-                    transition: `opacity ${transitionDuration}ms`,
+                    backdropFilter: "blur(0.0625em)",
+                    transition: `opacity ${TRANSITION_DURATION}ms`,
                     selectors: {
                         '&[data-open="false"]': {
                             opacity: 0,
@@ -102,9 +117,9 @@ export const ModalContainer: React.FC<{
                 }),
                 className,
             )}
-            onClick={onClickBackdrop}
+            onClick={handleClickBackdrop}
         >
-            {status === "exited" || (
+            {data ? (
                 <div
                     className={cx(
                         style({
@@ -112,25 +127,22 @@ export const ModalContainer: React.FC<{
                             top: "50%",
                             left: "50%",
                             translate: "-50% -50%",
-                            maxWidth: "min(calc(100vw - 8em), 72em)",
+                            maxWidth: "min(calc(100vw - min(8em, 20%)), 72em)",
                             maxHeight: "calc(100dvh - 4em)",
                             backgroundColor: vars.color.bg.layout,
-                            borderRadius: vars.radius.block,
+                            borderRadius: vars.radius.layout,
                             boxShadow: "0 0 2em #111",
                         }),
-                        modal?.fullSize &&
-                            style({
-                                width: "100%",
-                                height: "100%",
-                            }),
+                        size === "max" &&
+                            style(
+                                { width: "100%", height: "100%" },
+                                "modal--size__max",
+                            ),
                     )}
                 >
-                    {modal &&
-                        (renderContent
-                            ? renderContent(modal.content)
-                            : modal.content)}
+                    {render(data.data)}
                 </div>
-            )}
+            ) : null}
         </div>
     );
 };
