@@ -1,4 +1,5 @@
 import { cleanup, fireEvent, render } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { Modal, ModalContainer } from "./modal";
 
@@ -21,6 +22,19 @@ describe("ModalContainer", () => {
         const promise = modal.open();
         fireEvent.click(await findByText("Ok"));
         expect(await promise).toBe(true);
+    });
+    test("esc", async () => {
+        const modal = Modal.create(false);
+        const { container } = render(
+            <ModalContainer modal={modal} render={() => null} />,
+        );
+        const user = userEvent.setup();
+
+        void modal.open();
+        await user.click(container);
+        await user.keyboard("[Escape]");
+        const rootEl = container.firstChild as HTMLElement;
+        expect(rootEl.dataset.status).toBe("exiting");
     });
 });
 
