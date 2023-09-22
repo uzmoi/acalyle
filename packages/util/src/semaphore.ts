@@ -42,7 +42,7 @@ export class Semaphore {
     async use<T>(f: () => Promise<T>): Promise<T> {
         const { release } = await this.acquire();
         try {
-            return f();
+            return await f();
         } finally {
             release();
         }
