@@ -2,16 +2,10 @@ import { cleanup, fireEvent, render } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { Modal, ModalContainer } from "./modal";
 
-beforeEach(() => {
-    vi.useFakeTimers();
-});
-afterEach(async () => {
-    await vi.runAllTimersAsync();
-    vi.restoreAllMocks();
-    cleanup();
-});
-
 describe("ModalContainer", () => {
+    afterEach(() => {
+        cleanup();
+    });
     test("confirm", async () => {
         const modal = Modal.create(false);
         const renderModal = () => (
@@ -31,6 +25,13 @@ describe("ModalContainer", () => {
 });
 
 describe("class Modal", () => {
+    beforeEach(() => {
+        vi.useFakeTimers();
+    });
+    afterEach(async () => {
+        await vi.runAllTimersAsync();
+        vi.restoreAllMocks();
+    });
     describe("status", () => {
         test("initial status is exited", () => {
             const modal = Modal.create();
