@@ -1,14 +1,34 @@
-import { Button, ControlGroup, Form, openModal, vars } from "@acalyle/ui";
+import {
+    Button,
+    ControlGroup,
+    Form,
+    Modal,
+    ModalContainer,
+    vars,
+} from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useCallback } from "react";
 import { BiError } from "react-icons/bi";
 
+const confirmModal = Modal.create<string, boolean>(false);
+
 export const confirm = (text: string) => {
-    return openModal({
-        default: false,
-        render: close => <ConfirmForm text={text} close={close} />,
-    });
+    return confirmModal.open(text);
 };
+
+export const renderConfirmModal = () => (
+    <ModalContainer
+        modal={confirmModal}
+        render={text => (
+            <ConfirmForm
+                text={text}
+                close={() => {
+                    void confirmModal.close();
+                }}
+            />
+        )}
+    />
+);
 
 const ConfirmForm: React.FC<{
     text: string;
