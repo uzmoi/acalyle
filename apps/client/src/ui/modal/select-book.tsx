@@ -1,4 +1,11 @@
-import { Button, ControlGroup, Form, List, openModal } from "@acalyle/ui";
+import {
+    Button,
+    ControlGroup,
+    Form,
+    List,
+    Modal,
+    ModalContainer,
+} from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { useCallback, useState } from "react";
@@ -7,11 +14,17 @@ import { bookConnection } from "~/store/book-connection";
 import { BookSearchBar } from "~/ui/BookSearchBar";
 import { BookOverview } from "~/ui/book/BookOverview";
 
+const modal = Modal.create<void, Scalars["ID"] | undefined>();
+
 export const selectBook = () => {
-    return openModal<Scalars["ID"] | null>({
-        default: null,
-        fullSize: true,
-        render: close => (
+    return modal.open();
+};
+
+export const renderSelectBookModal = () => (
+    <ModalContainer
+        modal={modal}
+        size="max"
+        render={() => (
             <div
                 className={style({
                     display: "flex",
@@ -22,11 +35,15 @@ export const selectBook = () => {
                 })}
             >
                 <BookSearchBar />
-                <BookSelectForm onSubmit={close} />
+                <BookSelectForm
+                    onSubmit={() => {
+                        void modal.close();
+                    }}
+                />
             </div>
-        ),
-    });
-};
+        )}
+    />
+);
 
 const BookSelectForm: React.FC<{
     query?: string;

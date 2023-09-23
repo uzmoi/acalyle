@@ -1,9 +1,10 @@
 import "@acalyle/ui/dist/style.css";
-import { ModalContainer, vars } from "@acalyle/ui";
+import { vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { PageRoot } from "~/pages/Root";
+import { renderModals } from "~/ui/modal/render-modals";
 import { devAppTheme } from "./theme";
 import "./location";
 import "./reset-style";
@@ -20,7 +21,7 @@ const DevAppRoot: React.FC = () => {
             })}
         >
             <PageRoot />
-            <ModalContainer />
+            {renderModals()}
         </div>
     );
 };
