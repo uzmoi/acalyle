@@ -1,7 +1,5 @@
 import { Button, Popover, vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
-import { cloneElement } from "react";
-import type { IconBaseProps } from "react-icons";
 import { BiDotsVertical } from "react-icons/bi";
 
 export type MenuAction = {
@@ -12,7 +10,7 @@ export type MenuAction = {
     onClick: (() => void) | undefined;
 };
 
-export const MemoMenu: React.FC<{
+export const NoteMenu: React.FC<{
     actions: readonly MenuAction[];
 }> = ({ actions }) => {
     return (
@@ -70,9 +68,7 @@ export const MemoMenu: React.FC<{
                                 },
                             })}
                         >
-                            {cloneElement<IconBaseProps>(icon, {
-                                className: style({ verticalAlign: "middle" }),
-                            })}
+                            {icon}
                             <span
                                 className={style({
                                     marginLeft: "0.5em",
