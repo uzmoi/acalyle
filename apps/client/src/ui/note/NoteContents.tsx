@@ -1,18 +1,11 @@
 import { Button, vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
-import { useStore } from "@nanostores/react";
 import { useState } from "react";
 import { BiEditAlt } from "react-icons/bi";
 import type { Scalars } from "~/__generated__/graphql";
-import { usePromiseLoader } from "~/lib/promise-loader";
-import { memoStore } from "~/store/memo";
 import { MemoContentsEditor } from "../MemoContentsEditor";
 import { NoteBody } from "./NoteBody";
-
-const useNote = (noteId: Scalars["ID"]) => {
-    const noteLoader = useStore(memoStore(noteId));
-    return usePromiseLoader(noteLoader);
-};
+import { useNote } from "./use-note";
 
 export const NoteContents: React.FC<{
     noteId: Scalars["ID"];

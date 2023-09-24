@@ -1,20 +1,14 @@
 import { style } from "@macaron-css/core";
-import { useStore } from "@nanostores/react";
 import { useMemo } from "react";
 import { BiClipboard, BiTransfer, BiTrash } from "react-icons/bi";
 import type { Scalars } from "~/__generated__/graphql";
-import { usePromiseLoader } from "~/lib/promise-loader";
-import { memoStore, removeMemo, transferMemo } from "~/store/memo";
+import { removeMemo, transferMemo } from "~/store/memo";
 import { AddTagButton } from "../AddTagButton";
 import { TimeStamp } from "../TimeStamp";
 import { confirm, selectBook } from "../modal";
 import { TagList } from "../tag/TagList";
 import { type MenuAction, NoteMenu } from "./NoteMenu";
-
-const useNote = (noteId: Scalars["ID"]) => {
-    const noteLoader = useStore(memoStore(noteId));
-    return usePromiseLoader(noteLoader);
-};
+import { useNote } from "./use-note";
 
 const noteActions = (noteId: Scalars["ID"]): readonly MenuAction[] => [
     {

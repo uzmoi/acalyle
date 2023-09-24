@@ -1,23 +1,16 @@
 import { vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
-import { useStore } from "@nanostores/react";
 import { identify } from "emnorst";
 import type { Scalars } from "~/__generated__/graphql";
-import { usePromiseLoader } from "~/lib/promise-loader";
 import { link } from "~/pages/link";
-import { bookStore } from "~/store/book";
 import { BookThumbnail } from "../BookThumbnail";
 import { Link } from "../Link";
-
-const useBookOverview = (bookId: Scalars["ID"]) => {
-    const bookLoader = useStore(bookStore(bookId));
-    return usePromiseLoader(bookLoader);
-};
+import { useBook } from "./use-book";
 
 export const BookOverview: React.FC<{
     bookId: Scalars["ID"];
 }> = ({ bookId }) => {
-    const book = useBookOverview(bookId);
+    const book = useBook(bookId);
 
     if (book == null) {
         return null;

@@ -1,26 +1,14 @@
 import { vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
-import { useStore } from "@nanostores/react";
 import { useCallback } from "react";
 import type { Scalars } from "~/__generated__/graphql";
-import { usePromiseLoader } from "~/lib/promise-loader";
 import { link } from "~/pages/link";
-import { memoStore } from "~/store/memo";
-import { bookStore } from "../../store/book";
 import { Link } from "../Link";
+import { useBook } from "../book/use-book";
 import { openNoteInModal } from "../modal";
 import { TagList } from "../tag/TagList";
 import { NoteBody } from "./NoteBody";
-
-const useBook = (bookId: Scalars["ID"]) => {
-    const bookLoader = useStore(bookStore(bookId));
-    return usePromiseLoader(bookLoader);
-};
-
-const useNote = (noteId: Scalars["ID"]) => {
-    const noteLoader = useStore(memoStore(noteId));
-    return usePromiseLoader(noteLoader);
-};
+import { useNote } from "./use-note";
 
 export const NoteOverview: React.FC<{
     bookId: Scalars["ID"];
