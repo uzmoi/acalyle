@@ -8,10 +8,8 @@ import { style } from "@macaron-css/core";
 import { Suspense } from "react";
 import type { Scalars } from "~/__generated__/graphql";
 import { MemoListPage } from "~/pages/book/MemoListPage";
-import { useBook } from "~/store/hook";
-import { Link } from "~/ui/Link";
+import { BookHeader } from "~/ui/book/BookHeader";
 import { Note } from "~/ui/note/Note";
-import { link } from "./link";
 
 export type BookPageRoute = InferPath<typeof BookPageRoute>;
 
@@ -33,19 +31,9 @@ export const BookPage: React.FC<{
     bookHandle: string;
     children?: React.ReactNode;
 }> = ({ bookHandle, children }) => {
-    const book = useBook(bookHandle);
-
-    if (book == null) {
-        return null;
-    }
-
     return (
         <main className={style({ padding: "1.25em" })}>
-            <h2 className={style({ paddingBottom: "0.5em" })}>
-                <Link to={link(":bookId", { bookId: bookHandle })}>
-                    {book.title}
-                </Link>
-            </h2>
+            <BookHeader book={bookHandle} />
             <Suspense>{children}</Suspense>
         </main>
     );
