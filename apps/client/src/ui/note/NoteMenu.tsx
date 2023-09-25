@@ -7,7 +7,7 @@ export type MenuAction = {
     text: string;
     disabled?: boolean;
     type?: "denger";
-    onClick: (() => void) | undefined;
+    onClick: (() => void | Promise<void>) | undefined;
 };
 
 export const NoteMenu: React.FC<{

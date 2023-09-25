@@ -21,24 +21,22 @@ const noteActions = (noteId: Scalars["ID"]): readonly MenuAction[] => [
     {
         icon: <BiTransfer />,
         text: "Transfer memo",
-        onClick: () => {
-            void selectBook().then(bookId => {
-                if (bookId != null) {
-                    void transferMemo(noteId, bookId);
-                }
-            });
+        onClick: async () => {
+            const bookId = await selectBook();
+            if (bookId != null) {
+                void transferMemo(noteId, bookId);
+            }
         },
     },
     {
         icon: <BiTrash />,
         text: "Delete memo",
         type: "denger",
-        onClick: () => {
-            void confirm("Delete memo").then(ok => {
-                if (ok) {
-                    void removeMemo(noteId);
-                }
-            });
+        onClick: async () => {
+            const ok = await confirm("Delete memo");
+            if (ok) {
+                void removeMemo(noteId);
+            }
         },
     },
 ];
