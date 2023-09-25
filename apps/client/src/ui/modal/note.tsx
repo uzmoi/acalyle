@@ -9,13 +9,13 @@ import { Note } from "../note/Note";
 
 type NoteModalData = {
     book: string;
-    memoId: Scalars["ID"];
+    noteId: Scalars["ID"];
 };
 
 const noteModal = Modal.create<NoteModalData, Scalars["ID"] | undefined>();
 
-export const openNoteInModal = (book: string, memoId: Scalars["ID"]) => {
-    return noteModal.open({ book, memoId });
+export const openNoteInModal = (book: string, noteId: Scalars["ID"]) => {
+    return noteModal.open({ book, noteId });
 };
 
 export const renderNoteModal = () => (
@@ -30,7 +30,7 @@ const close = () => {
     void noteModal.close();
 };
 
-const renderNoteModalContent = ({ book, memoId }: NoteModalData) => (
+const renderNoteModalContent = ({ book, noteId }: NoteModalData) => (
     <section
         className={style({
             display: "flex",
@@ -49,7 +49,17 @@ const renderNoteModalContent = ({ book, memoId }: NoteModalData) => (
                 verticalAlign: "middle",
             })}
         >
-            <p className={style({ flex: "1 1 auto" })}>Note</p>
+            <p
+                className={style({
+                    flex: "1 1 auto",
+                    whiteSpace: "pre",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                })}
+            >
+                Note /{" "}
+                <span className={style({ userSelect: "all" })}>{noteId}</span>
+            </p>
             <div
                 className={style({
                     flex: "0 0 auto",
@@ -61,7 +71,7 @@ const renderNoteModalContent = ({ book, memoId }: NoteModalData) => (
                 <Link
                     to={link(":bookId/:memoId", {
                         bookId: book,
-                        memoId,
+                        memoId: noteId,
                     })}
                     onClick={close}
                 >
@@ -81,7 +91,7 @@ const renderNoteModalContent = ({ book, memoId }: NoteModalData) => (
             })}
         >
             <Suspense>
-                <Note book={book} noteId={memoId} />
+                <Note book={book} noteId={noteId} />
             </Suspense>
         </div>
     </section>
