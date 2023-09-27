@@ -55,10 +55,10 @@ export type NetworkError =
     | { type: "invalid_json" };
 
 export class Network {
-    private static readonly resourceBaseUrl = new URL("api/", location.origin);
-    private static readonly apiBaseUrl = new URL("api/", location.origin);
+    private static readonly _resourceBaseUrl = new URL("api/", location.origin);
+    private static readonly _apiEndpointUrl = new URL("api", location.origin);
     resolveResource(path: string): URL {
-        return new URL(path, Network.resourceBaseUrl);
+        return new URL(path, Network._resourceBaseUrl);
     }
     async gql<T, U extends Record<string, JsonValueable>>(
         documentNode: import("graphql").DocumentNode,
@@ -74,7 +74,7 @@ export class Network {
     ): Promise<Result<GraphQLResult, NetworkError>> {
         const query = documentNode.loc?.source.body ?? "";
 
-        const res = await fetch(Network.apiBaseUrl, {
+        const res = await fetch(Network._apiEndpointUrl, {
             method: "POST",
             body: graphqlBodyInit(query, variables),
         }).catch(error => {
