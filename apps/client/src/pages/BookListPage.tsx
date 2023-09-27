@@ -1,8 +1,8 @@
-import { Intersection, Spinner } from "@acalyle/ui";
+import { Alert, Intersection, Spinner, vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { useCallback, useDeferredValue, useState } from "react";
-import { BiBookAdd } from "react-icons/bi";
+import { BiBookAdd, BiError } from "react-icons/bi";
 import { bookConnection } from "~/store/book-connection";
 import { BookSearchBar } from "~/ui/BookSearchBar";
 import { Link } from "~/ui/Link";
@@ -80,7 +80,24 @@ export const BookListPage: React.FC = () => {
                     />
                 </div>
             )}
-            {error && <p>error: {error.type}</p>}
+            {error && (
+                <Alert type="error">
+                    <BiError
+                        className={style({
+                            color: vars.color.denger,
+                            fontSize: "1.75em",
+                            marginRight: "0.25em",
+                        })}
+                    />
+                    <span className={style({ verticalAlign: "middle" })}>
+                        Failed to load books.
+                    </span>
+                    <p>error code: {error.type}</p>
+                    {error.type === "server_error" && (
+                        <p>status: {error.status}</p>
+                    )}
+                </Alert>
+            )}
         </main>
     );
 };
