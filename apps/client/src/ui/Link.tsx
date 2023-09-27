@@ -6,7 +6,7 @@ export const Link: React.FC<
     {
         to: string;
     } & Omit<React.ComponentPropsWithoutRef<"a">, "href">
-> = ({ to, className, ...rest }) => {
+> = ({ to, className, onClick, ...rest }) => {
     return (
         <a
             {...rest}
@@ -19,6 +19,7 @@ export const Link: React.FC<
             )}
             href={to}
             onClick={e => {
+                onClick?.(e);
                 if (e.defaultPrevented) return;
                 e.preventDefault();
                 Location.set(to);
