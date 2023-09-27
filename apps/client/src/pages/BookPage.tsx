@@ -8,10 +8,8 @@ import { style } from "@macaron-css/core";
 import { Suspense } from "react";
 import type { Scalars } from "~/__generated__/graphql";
 import { MemoListPage } from "~/pages/book/MemoListPage";
-import { useBook } from "~/store/hook";
-import { Link } from "~/ui/Link";
-import { Memo } from "~/ui/Memo";
-import { link } from "./link";
+import { BookHeader } from "~/ui/book/BookHeader";
+import { Note } from "~/ui/note/Note";
 
 export type BookPageRoute = InferPath<typeof BookPageRoute>;
 
@@ -22,7 +20,7 @@ export const BookPageRoute = routes({
     resources: page(() => null),
     settings: page(() => null),
     ":memoId": page(({ bookId, memoId }: MatchParams<"bookId" | "memoId">) => (
-        <Memo bookHandle={bookId} memoId={memoId as Scalars["ID"]} />
+        <Note book={bookId} noteId={memoId as Scalars["ID"]} />
     )),
 }).map((children, _, { bookId }) => (
     // eslint-disable-next-line react/jsx-key
@@ -33,19 +31,9 @@ export const BookPage: React.FC<{
     bookHandle: string;
     children?: React.ReactNode;
 }> = ({ bookHandle, children }) => {
-    const book = useBook(bookHandle);
-
-    if (book == null) {
-        return null;
-    }
-
     return (
         <main className={style({ padding: "1.25em" })}>
-            <h2 className={style({ paddingBottom: "0.5em" })}>
-                <Link to={link(":bookId", { bookId: bookHandle })}>
-                    {book.title}
-                </Link>
-            </h2>
+            <BookHeader book={bookHandle} />
             <Suspense>{children}</Suspense>
         </main>
     );

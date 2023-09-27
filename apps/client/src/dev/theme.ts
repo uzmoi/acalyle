@@ -13,6 +13,8 @@ export const devAppTheme = createTheme<typeof vars>("acalyle", {
             inline: "#101214",
         },
         denger: "#e44",
+        warning: "#bb4",
+        success: "#1a1",
         accent: "#a88",
         // selection: "rgba(0 128 256 / 20%)",
     },
