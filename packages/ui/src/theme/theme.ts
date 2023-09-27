@@ -14,6 +14,8 @@ export const vars = createGlobalThemeContract(
                 inline: null,
             },
             denger: null,
+            warning: null,
+            success: null,
             accent: null,
         },
         font: {
