@@ -51,7 +51,7 @@ type GraphQLResult = {
 
 export type NetworkError =
     | { type: "network_error"; error: Error | null }
-    | { type: "server_error"; status: number; body: string }
+    | { type: "http_error"; status: number; body: string }
     | { type: "invalid_json" };
 
 export class Network {
@@ -98,7 +98,7 @@ export class Network {
         } else {
             const errorResponceBody = await res.text();
             return Result.err({
-                type: "server_error",
+                type: "http_error",
                 status: res.status,
                 body: errorResponceBody,
             });

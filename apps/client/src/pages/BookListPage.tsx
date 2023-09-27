@@ -93,7 +93,7 @@ export const BookListPage: React.FC = () => {
                         Failed to load books.
                     </span>
                     <p>error code: {error.type}</p>
-                    {error.type === "server_error" && (
+                    {error.type === "http_error" && (
                         <p>status: {error.status}</p>
                     )}
                 </Alert>
