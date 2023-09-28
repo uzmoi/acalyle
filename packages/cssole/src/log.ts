@@ -39,4 +39,6 @@ export const createLogFunction =
         consoleFunction(message, ...values);
     };
 
+declare const console: { log: ConsoleFunctionType };
+
 export const log = /* #__PURE__ */ createLogFunction(console.log);
