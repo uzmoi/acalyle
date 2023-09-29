@@ -1,6 +1,10 @@
+import { has } from "emnorst";
 import type { ConsoleStyle } from "./style";
 
 export const type = Symbol();
+
+export const isCssoleElement = (value: unknown): value is CssoleElement =>
+    has(value, type);
 
 export type CssoleElement =
     | { [type]: "raw"; message: string }

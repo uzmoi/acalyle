@@ -1,3 +1,3 @@
 export * from "./cssole";
 export * from "./log";
-export type { CssoleElement } from "./log-element";
+export { type CssoleElement, isCssoleElement } from "./log-element";
