@@ -1,8 +1,8 @@
 import { assert } from "emnorst";
-import { type LogElement, type } from "./log-element";
+import { type CssoleElement, type } from "./log-element";
 import { type ConsoleStyle, printConsoleStyle } from "./style";
 
-export const logArg = (logElements: Iterable<LogElement>) => {
+export const logArg = (logElements: Iterable<CssoleElement>) => {
     let message = "";
     const values: unknown[] = [];
     const currentStyle: Partial<ConsoleStyle> = {};
@@ -34,7 +34,7 @@ export type ConsoleFunctionType = (
 
 export const createLogFunction =
     (consoleFunction: ConsoleFunctionType) =>
-    (logElements: Iterable<LogElement>) => {
+    (logElements: Iterable<CssoleElement>) => {
         const { message, values } = logArg(logElements);
         consoleFunction(message, ...values);
     };

@@ -1,5 +1,5 @@
 import {
-    type LogElement,
+    type CssoleElement,
     createStyleElement,
     createValueElement,
 } from "./log-element";
@@ -17,4 +17,4 @@ export const cssole = {
      */
     object: (value: unknown) => createValueElement("%O", value),
     style: createStyleElement,
-} satisfies Record<string, (x: never) => LogElement>;
+} satisfies Record<string, (x: never) => CssoleElement>;

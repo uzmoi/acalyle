@@ -2,12 +2,12 @@ import type { ConsoleStyle } from "./style";
 
 export const type = Symbol();
 
-export type LogElement =
+export type CssoleElement =
     | { [type]: "raw"; message: string }
     | { [type]: "value"; message: string; value: unknown }
     | { [type]: "style"; style: Partial<ConsoleStyle> };
 
-export const createMessageElement = (message: string): LogElement => ({
+export const createMessageElement = (message: string): CssoleElement => ({
     [type]: "raw",
     message,
 });
@@ -15,7 +15,7 @@ export const createMessageElement = (message: string): LogElement => ({
 export const createValueElement = (
     message: string,
     value: unknown,
-): LogElement => ({
+): CssoleElement => ({
     [type]: "value",
     message,
     value,
@@ -23,7 +23,7 @@ export const createValueElement = (
 
 export const createStyleElement = (
     style: Partial<ConsoleStyle>,
-): LogElement => ({
+): CssoleElement => ({
     [type]: "style",
     style,
 });
