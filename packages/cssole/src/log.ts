@@ -20,6 +20,12 @@ export const logArg = (logElements: Iterable<CssoleElement>) => {
                 message += "%c";
                 values.push(printConsoleStyle(currentStyle));
                 break;
+            case "group": {
+                const result = logArg(logElement.elements);
+                message += result.message;
+                values.push(...result.values);
+                break;
+            }
             default:
                 assert.unreachable<typeof logElement>();
         }
