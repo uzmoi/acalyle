@@ -25,7 +25,15 @@ export abstract class Logger<in Message, in Level, in MetaData = undefined>
     }
     transport(log: Log<Message, Level, MetaData>): void {
         for (const transport of this._transports) {
-            transport.transport(log);
+            try {
+                transport.transport(log);
+            } catch (error) {
+                console.error(
+                    "Uncaught (in transport) Error:",
+                    error,
+                    transport,
+                );
+            }
         }
     }
     protected log(
