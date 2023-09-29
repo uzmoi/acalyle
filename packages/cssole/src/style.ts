@@ -1,16 +1,29 @@
 type BackgroundStyleKey = `background${
     | ""
     | "Attachment"
+    | "BlendMode"
     | "Clip"
     | "Color"
     | "Image"
     | "Origin"
-    | "Position"
+    | `Position${"" | "X" | "Y"}`
     | "Repeat"
     | "Size"}`;
 
-type BorderStyleKey = `border${"" | "Color" | "Style" | "Width"}`;
-type OutlineStyleKey = `outline${"" | "Color" | "Style" | "Width"}`;
+type BorderRadiusStyleKey = `border${
+    | ""
+    | `${"Start" | "End"}${"Start" | "End"}`
+    | `${"Top" | "Bottom"}${"Left" | "Right"}`}Radius`;
+
+type BorderPosition =
+    | ""
+    | ("Top" | "Bottom" | "Left" | "Right")
+    | `${"Inline" | "Block"}${"" | "Start" | "End"}`;
+type BorderStyleKey =
+    | `border${BorderPosition}${"" | "Color" | "Style" | "Width"}`
+    | `borderImage${"" | "Outset" | "Repeat" | "Slice" | "Source" | "Width"}`;
+
+type OutlineStyleKey = `outline${"" | "Color" | "Style" | "Width" | "Offset"}`;
 
 type FontStyleKey =
     | `font${
@@ -20,23 +33,31 @@ type FontStyleKey =
           | "Stretch"
           | "Style"
           | "Variant"
-          | "Weight"}`
+          | "Weight"
+          | "Kerning"
+          | "Palette"
+          | "FeatureSettings"
+          | "LanguageOverride"
+          | "OpticalSizing"
+          | "SizeAdjust"
+          | "Smooth"
+          | `Synthesis${"" | "Position" | "SmallCaps" | "Style" | "Weight"}`
+          | `Variant${
+                | ""
+                | "Alternates"
+                | "Caps"
+                | "EastAsian"
+                | "Ligatures"
+                | "Numeric"
+                | "Position"}`
+          | "VariationSettings"}`
     | "lineHeight";
 
 type TextStyleKey = `text${
-    | "Align"
-    | "AlignLast"
+    | `Align${"" | "Last"}`
     | "CombineUpright"
-    | "Decoration"
-    | "DecorationColor"
-    | "DecorationLine"
-    | "DecorationSkipInk"
-    | "DecorationStyle"
-    | "DecorationThickness"
-    | "Emphasis"
-    | "EmphasisColor"
-    | "EmphasisPosition"
-    | "EmphasisStyle"
+    | `Decoration${"" | "Color" | "Line" | "SkipInk" | "Style" | "Thickness"}`
+    | `Emphasis${"" | "Color" | "Position" | "Style"}`
     | "Indent"
     | "Justify"
     | "Orientation"
@@ -44,18 +65,13 @@ type TextStyleKey = `text${
     | "Rendering"
     | "Shadow"
     | "Transform"
-    | "UnderlineOffset"
-    | "UnderlinePosition"}`;
+    | `Underline${"Offset" | "Position"}`}`;
 
 type ConsoleStyleKey =
-    | "margin"
-    | "padding"
-    | "clear"
-    | "float"
+    | (`margin${BorderPosition}` | `padding${BorderPosition}`)
+    | ("clear" | "float")
     | "display"
-    | BorderStyleKey
-    | OutlineStyleKey
-    | "borderRadius"
+    | (BorderStyleKey | OutlineStyleKey | BorderRadiusStyleKey)
     | "boxDecorationBreak"
     | "boxShadow"
     | BackgroundStyleKey
@@ -64,8 +80,7 @@ type ConsoleStyleKey =
     | FontStyleKey
     | TextStyleKey
     | "whiteSpace"
-    | "wordSpacing"
-    | "wordBreak"
+    | `word${"Spacing" | "Break"}`
     | "writingMode";
 
 /**
