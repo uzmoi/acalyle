@@ -46,13 +46,16 @@ export const typescriptStrict: Linter.FlatConfig = {
 export const typescriptCustom: Linter.FlatConfig = {
     files: [typescriptFiles],
     rules: {
+        "@typescript-eslint/ban-types": warn({
+            extendDefaults: true,
+            types: { "{}": false },
+        }),
         "@typescript-eslint/no-namespace": warn({
             allowDeclarations: true,
             allowDefinitionFiles: true,
         }),
         "@typescript-eslint/no-unused-vars": warn({
             varsIgnorePattern: "^_",
-            destructuredArrayIgnorePattern: "^_",
             argsIgnorePattern: "^_",
             caughtErrors: "all",
             caughtErrorsIgnorePattern: "^_",
@@ -65,34 +68,41 @@ export const typescriptCustom: Linter.FlatConfig = {
                 format: ["camelCase"],
                 leadingUnderscore: "allow",
             },
-            {
+            ...[false, true].map(unused => ({
                 selector: "variable",
-                modifiers: ["const"],
+                modifiers: ["const", unused && "unused"].filter(Boolean),
                 format: ["camelCase", "PascalCase", "UPPER_CASE"],
-            },
+                leadingUnderscore: unused ? "allow" : undefined,
+            })),
             {
-                selector: "variable",
-                modifiers: ["const", "unused"],
-                format: ["camelCase", "PascalCase", "UPPER_CASE"],
-                leadingUnderscore: "allow",
-            },
-            {
-                selector: "property",
+                selector: ["objectLiteralProperty", "typeProperty"],
                 format: ["camelCase", "PascalCase"],
                 leadingUnderscore: "allowDouble",
             },
             {
-                selector: "property",
+                selector: ["objectLiteralProperty", "typeProperty"],
                 modifiers: ["requiresQuotes"],
                 format: null,
             },
-            { selector: "typeLike", format: ["PascalCase"] },
-            {
-                selector: "typeLike",
-                modifiers: ["unused"],
-                format: ["PascalCase"],
+            ...["private", "protected"].map(modifier => ({
+                selector: "memberLike",
+                modifiers: [modifier],
+                format: ["camelCase"],
                 leadingUnderscore: "allow",
+            })),
+            {
+                selector: "memberLike",
+                modifiers: ["private"],
+                filter: /.{3}/.source,
+                format: ["camelCase"],
+                leadingUnderscore: "require",
             },
+            ...[false, true].map(unused => ({
+                selector: "typeLike",
+                modifiers: unused ? ["unused"] : undefined,
+                format: ["PascalCase"],
+                leadingUnderscore: unused ? "allow" : undefined,
+            })),
         ),
     },
 };
