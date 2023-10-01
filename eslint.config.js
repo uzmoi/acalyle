@@ -32,6 +32,7 @@ export default [
             "packages/eslint-config/**",
         ],
     },
+    configs.unicorn,
     configs.typescript("recommended-type-checked", "stylistic-type-checked"),
     configs.typescriptCustom,
     configs.react,

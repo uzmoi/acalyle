@@ -36,6 +36,15 @@ export const replacePluginName = (
     ]) as Linter.RulesRecord;
 };
 
+export const replaceWarn = (
+    rules: Partial<Linter.RulesRecord>,
+): Linter.RulesRecord => {
+    return mapEntries(rules, (ruleName, entry) => [
+        ruleName,
+        entry === ERROR ? WARN : entry,
+    ]) as Linter.RulesRecord;
+};
+
 const asArray = <T>(value: T | readonly T[] | null | undefined): readonly T[] =>
     Array.isArray(value) ? value : value == null ? [] : [value as T];
 
@@ -61,10 +70,7 @@ export const extendsRules = (
         }
 
         if (config.rules && warn?.(configName)) {
-            config.rules = mapEntries(config.rules, (ruleName, entry) => [
-                ruleName,
-                entry === ERROR ? WARN : entry,
-            ]);
+            config.rules = replaceWarn(config.rules);
         }
         Object.assign(rules, extendConfigs, config.rules);
     }

@@ -3,6 +3,7 @@ import { acalyleConfig } from "./acalyle";
 import { importConfig } from "./import";
 import { react } from "./react";
 import { typescript, typescriptCustom } from "./typescript";
+import { unicorn } from "./unicorn";
 
 export { acalylePlugin } from "./acalyle";
 export * from "./util";
@@ -13,6 +14,7 @@ export const configs = {
     typescript,
     typescriptCustom,
     acalyle: acalyleConfig,
+    unicorn,
 } satisfies Record<
     string,
     | Linter.FlatConfig

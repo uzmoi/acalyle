@@ -25,3 +25,10 @@ declare module "eslint-plugin-simple-import-sort" {
     const exports: ESLint.Plugin;
     export default exports;
 }
+
+declare module "eslint-plugin-unicorn" {
+    import { ESLint } from "eslint";
+
+    const exports: ESLint.Plugin;
+    export default exports;
+}
