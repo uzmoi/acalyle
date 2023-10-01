@@ -1,11 +1,13 @@
 import type { ESLint, Linter } from "eslint";
 import importPlugin from "eslint-plugin-import";
+import importAccess from "eslint-plugin-import-access";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import { ERROR, WARN, error, never, warn } from "./util";
 
 export const importConfig: Linter.FlatConfig = {
     plugins: {
         import: importPlugin,
+        "import-access": { ...importAccess } as ESLint.Plugin,
         "simple-import-sort": simpleImportSort,
     },
     settings: {
@@ -17,6 +19,7 @@ export const importConfig: Linter.FlatConfig = {
         ...(importPlugin.configs?.["react"] as ESLint.ConfigData).rules,
         "sort-imports": warn({ ignoreDeclarationSort: true }),
         "simple-import-sort/exports": WARN,
+        "import-access/jsdoc": ERROR,
         "import/no-absolute-path": ERROR,
         "import/no-self-import": WARN,
         "import/no-cycle": warn({ maxDepth: 16, ignoreExternal: true }),

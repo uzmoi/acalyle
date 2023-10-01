@@ -12,5 +12,8 @@
         "moduleResolution": "bundler",
         "noEmit": true,
         "typeRoots": ["./node_modules/@types"],
+        "plugins": [
+            { "name": "eslint-plugin-import-access" },
+        ],
     },
 }
