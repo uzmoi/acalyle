@@ -47,7 +47,19 @@ export const extendsRules = (
     const rules: Partial<Linter.RulesRecord> = {};
     for (const configName of configNames) {
         const config = { ...configs[configName] };
-        const extendConfigs = extendsRules(configs, asArray(config.extends));
+
+        const extendConfigNames = asArray(config.extends).map(name =>
+            name.replace(/^.+\//, ""),
+        );
+        const extendConfigs = extendsRules(configs, extendConfigNames);
+
+        if (config.overrides) {
+            Object.assign(
+                (config.rules ??= {}),
+                ...config.overrides.map(override => override.rules),
+            );
+        }
+
         if (config.rules && warn?.(configName)) {
             config.rules = mapEntries(config.rules, (ruleName, entry) => [
                 ruleName,
