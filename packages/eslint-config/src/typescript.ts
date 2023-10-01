@@ -3,12 +3,12 @@ import parser from "@typescript-eslint/parser";
 import type { ESLint, Linter } from "eslint";
 import { replacePluginName, warn } from "./util";
 
-export const typescriptFiles = ["**/*.{ts,tsx,mts,cts}"];
+export const typescriptFiles = "**/*.{ts,mts,cts,tsx,mtx,ctx}";
 
 export const typescript: Linter.FlatConfig = {
-    files: typescriptFiles,
+    files: [typescriptFiles],
     plugins: {
-        // TODO Rename to "ts".
+        // TODO: Rename to "ts".
         "@typescript-eslint": ts as unknown as ESLint.Plugin,
     },
     languageOptions: {
@@ -17,34 +17,34 @@ export const typescript: Linter.FlatConfig = {
 };
 
 export const typescriptRecommended: Linter.FlatConfig = {
-    files: typescriptFiles,
+    files: [typescriptFiles],
     rules: replacePluginName(
         {
             ...ts.configs["eslint-recommended"]?.overrides?.[0]?.rules,
             ...ts.configs["recommended"]?.rules,
         },
-        {}, // TODO { "@typescript-eslint": "ts" },
+        {}, // TODO: { "@typescript-eslint": "ts" },
     ),
 };
 
 export const typescriptRecommendedRequiringTypeChecking: Linter.FlatConfig = {
-    files: typescriptFiles,
+    files: [typescriptFiles],
     rules: replacePluginName(
         ts.configs["recommended-requiring-type-checking"]?.rules,
-        {}, // TODO { "@typescript-eslint": "ts" },
+        {}, // TODO: { "@typescript-eslint": "ts" },
     ),
 };
 
 export const typescriptStrict: Linter.FlatConfig = {
-    files: typescriptFiles,
+    files: [typescriptFiles],
     rules: replacePluginName(
         ts.configs["strict"]?.rules,
-        {}, // TODO { "@typescript-eslint": "ts" },
+        {}, // TODO: { "@typescript-eslint": "ts" },
     ),
 };
 
 export const typescriptCustom: Linter.FlatConfig = {
-    files: typescriptFiles,
+    files: [typescriptFiles],
     rules: {
         "@typescript-eslint/no-namespace": warn({
             allowDeclarations: true,

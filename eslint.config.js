@@ -29,7 +29,7 @@ export default [
     configs.typescriptRecommended,
     configs.typescriptRecommendedRequiringTypeChecking,
     configs.typescriptCustom,
-    ...configs.react,
+    configs.react,
     configs.import,
     {
         files: ["!**/src/**"],
