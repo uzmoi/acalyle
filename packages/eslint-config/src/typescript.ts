@@ -38,6 +38,7 @@ export const typescript = (
 export const typescriptCustom: Linter.FlatConfig = {
     files: [typescriptFiles],
     rules: {
+        "@typescript-eslint/consistent-type-definitions": warn("type"),
         "@typescript-eslint/ban-types": warn({
             extendDefaults: true,
             types: { "{}": false },
