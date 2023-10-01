@@ -143,8 +143,8 @@ export const noModuleSideEffect: Rule.RuleModule = {
         };
 
         const checkSideEffect = (node: CheckNode) => {
-            if (isPureNode(node, context.getSourceCode(), options)) return;
-            if (isInFunction(context.getAncestors())) return;
+            if (isPureNode(node, context.sourceCode, options)) return;
+            if (isInFunction(context.sourceCode.getAncestors(node))) return;
 
             const suggestions: Rule.SuggestionReportDescriptor[] = [];
             if (pureCommentSupportNodeType.has(node.type)) {
