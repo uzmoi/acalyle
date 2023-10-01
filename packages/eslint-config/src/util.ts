@@ -25,16 +25,36 @@ export const mapEntries = <T, U>(
 };
 
 export const replacePluginName = (
-    rules: Partial<Linter.RulesRecord> | undefined,
+    rules: Partial<Linter.RulesRecord>,
     plugins: Record<string, string>,
-): Linter.RulesRecord | undefined => {
+): Linter.RulesRecord => {
     const regex = new RegExp(`^${Object.keys(plugins).join("|")}\\/`);
     const resolve = (plugin: string) => `${plugins[plugin] ?? ""}/`;
-    return (
-        rules &&
-        (mapEntries(rules, (ruleName, ruleEntry) => [
-            ruleName.replace(regex, resolve),
-            ruleEntry,
-        ]) as Linter.RulesRecord | undefined)
-    );
+    return mapEntries(rules, (ruleName, ruleEntry) => [
+        ruleName.replace(regex, resolve),
+        ruleEntry,
+    ]) as Linter.RulesRecord;
+};
+
+const asArray = <T>(value: T | readonly T[] | null | undefined): readonly T[] =>
+    Array.isArray(value) ? value : value == null ? [] : [value as T];
+
+export const extendsRules = (
+    configs: Record<string, Linter.Config>,
+    configNames: readonly string[],
+    { warn }: { warn?: (configName: string) => boolean } = {},
+) => {
+    const rules: Partial<Linter.RulesRecord> = {};
+    for (const configName of configNames) {
+        const config = { ...configs[configName] };
+        const extendConfigs = extendsRules(configs, asArray(config.extends));
+        if (config.rules && warn?.(configName)) {
+            config.rules = mapEntries(config.rules, (ruleName, entry) => [
+                ruleName,
+                entry === ERROR ? WARN : entry,
+            ]);
+        }
+        Object.assign(rules, extendConfigs, config.rules);
+    }
+    return rules;
 };

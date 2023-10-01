@@ -1,11 +1,23 @@
 import ts from "@typescript-eslint/eslint-plugin";
 import parser from "@typescript-eslint/parser";
 import type { ESLint, Linter } from "eslint";
-import { replacePluginName, warn } from "./util";
+import { extendsRules, replacePluginName, warn } from "./util";
 
 export const typescriptFiles = "**/*.{ts,mts,cts,tsx,mtx,ctx}";
 
-export const typescript: Linter.FlatConfig = {
+type TypeScriptESLintConfigName =
+    | "all"
+    | "recommended"
+    | "recommended-type-checked"
+    | "strict"
+    | "strict-type-checked"
+    | "stylistic"
+    | "stylistic-type-checked"
+    | "disable-type-checked";
+
+export const typescript = (
+    ...configs: readonly TypeScriptESLintConfigName[]
+): Linter.FlatConfig => ({
     files: [typescriptFiles],
     plugins: {
         // TODO: Rename to "ts".
@@ -13,35 +25,15 @@ export const typescript: Linter.FlatConfig = {
     },
     languageOptions: {
         parser: parser as Linter.ParserModule,
+        parserOptions: { sourceType: "module" },
     },
-};
-
-export const typescriptRecommended: Linter.FlatConfig = {
-    files: [typescriptFiles],
     rules: replacePluginName(
-        {
-            ...ts.configs["eslint-recommended"]?.overrides?.[0]?.rules,
-            ...ts.configs["recommended"]?.rules,
-        },
+        extendsRules(ts.configs, configs, {
+            warn: name => name.startsWith("stylistic"),
+        }),
         {}, // TODO: { "@typescript-eslint": "ts" },
     ),
-};
-
-export const typescriptRecommendedRequiringTypeChecking: Linter.FlatConfig = {
-    files: [typescriptFiles],
-    rules: replacePluginName(
-        ts.configs["recommended-requiring-type-checking"]?.rules,
-        {}, // TODO: { "@typescript-eslint": "ts" },
-    ),
-};
-
-export const typescriptStrict: Linter.FlatConfig = {
-    files: [typescriptFiles],
-    rules: replacePluginName(
-        ts.configs["strict"]?.rules,
-        {}, // TODO: { "@typescript-eslint": "ts" },
-    ),
-};
+});
 
 export const typescriptCustom: Linter.FlatConfig = {
     files: [typescriptFiles],
