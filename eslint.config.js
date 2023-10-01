@@ -25,6 +25,13 @@ export default [
         ],
     },
     eslint.configs.recommended,
+    {
+        ...configs.acalyle,
+        ignores: [
+            ...(configs.acalyle.ignores ?? []),
+            "packages/eslint-config/**",
+        ],
+    },
     configs.typescript,
     configs.typescriptRecommended,
     configs.typescriptRecommendedRequiringTypeChecking,

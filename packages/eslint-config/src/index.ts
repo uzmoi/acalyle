@@ -1,4 +1,5 @@
 import type { Linter } from "eslint";
+import { acalyleConfig } from "./acalyle";
 import { importConfig } from "./import";
 import { react } from "./react";
 import {
@@ -9,6 +10,7 @@ import {
     typescriptStrict,
 } from "./typescript";
 
+export { acalylePlugin } from "./acalyle";
 export * from "./util";
 
 export const configs = {
@@ -19,4 +21,5 @@ export const configs = {
     typescriptRecommendedRequiringTypeChecking,
     typescriptStrict,
     typescriptCustom,
+    acalyle: acalyleConfig,
 } satisfies Record<string, Linter.FlatConfig | readonly Linter.FlatConfig[]>;

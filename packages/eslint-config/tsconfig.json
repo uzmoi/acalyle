@@ -1,4 +1,7 @@
 {
-    "extends": "@acalyle/tsconfig/tsconfig.base.json",
+    "extends": "@acalyle/tsconfig/tsconfig.node.json",
     "include": ["src"],
+    "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
+    }
 }
