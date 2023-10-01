@@ -1,0 +1,21 @@
+{
+  "private": true,
+  "name": "@acalyle/cssole",
+  "type": "module",
+  "sideEffects": false,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --minify-syntax --sourcemap --dts",
+    "check": "tsc",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "emnorst": "^1.0.0-next.2"
+  },
+  "devDependencies": {
+    "@acalyle/tsconfig": "*",
+    "tsup": "^7.1.0",
+    "vitest": "^0.30.1"
+  }
+}

@@ -6,6 +6,7 @@ import { createRoot } from "react-dom/client";
 import { PageRoot } from "~/pages/Root";
 import { renderModals } from "~/ui/modal/render-modals";
 import { devAppTheme } from "./theme";
+import "./logger";
 import "./location";
 import "./reset-style";
 
