@@ -3,6 +3,10 @@
     "[prisma]": {
         "editor.formatOnSave": true,
     },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true,
+    },
     "[typescript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "editor.formatOnSave": true,
@@ -18,4 +22,5 @@
         "source.fixAll": true,
     },
     "eslint.experimental.useFlatConfig": true,
+    "typescript.tsdk": "node_modules/typescript/lib",
 }
