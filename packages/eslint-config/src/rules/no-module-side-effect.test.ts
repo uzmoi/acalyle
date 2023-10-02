@@ -14,6 +14,11 @@ test("eslint", () => {
         valid: [
             "const x = 42;",
             "const f = () => sideEffect();",
+            `function f() { sideEffect() }`,
+            `const o = { f() { sideEffect() } };`,
+            `class Hoge { method() { sideEffect(); } }`,
+            `class Hoge { property = sideEffect(); }`,
+            `class Hoge { static { init(); } }`,
             "/* #__PURE__ */ f();",
             "new Hoge;",
             { code: "pure();", options: [{ pureFunctions: ["pure"] }] },
@@ -49,6 +54,25 @@ test("eslint", () => {
             { code: "i = 1;", errors: [{ suggestions: [] }] },
             { code: "throw error;", errors: [{ suggestions: [] }] },
             { code: "await promise;", errors: [{ suggestions: [] }] },
+            {
+                code: "class Hoge { static property = f(); }",
+                // prettier-ignore
+                errors: [{
+                    suggestions: [{
+                        output: "class Hoge { static property = /* #__PURE__ */ f(); }",
+                    }],
+                }],
+            },
+            {
+                code: "class Hoge { static { f(); } }",
+                // prettier-ignore
+                errors: [{
+                    suggestions: [{
+                        output: "class Hoge { static { /* #__PURE__ */ f(); } }",
+                    }],
+                }],
+                options: [{ allowInStaticBlock: false }],
+            },
         ],
     });
 });

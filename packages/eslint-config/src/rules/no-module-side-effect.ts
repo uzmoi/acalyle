@@ -116,11 +116,15 @@ const functionNodeType = new Set<Rule.Node["type"]>([
     "ArrowFunctionExpression",
 ]);
 
-const isInFunction = (ancestors: readonly ESTree.Node[]): boolean => {
+const isInFunction = (
+    ancestors: readonly ESTree.Node[],
+    options: RuleOptions,
+): boolean => {
     return ancestors.some(node => {
         return (
             functionNodeType.has(node.type) ||
-            (node.type === "PropertyDefinition" && !node.static)
+            (node.type === "PropertyDefinition" && !node.static) ||
+            (options.allowInStaticBlock && node.type === "StaticBlock")
         );
     });
 };
@@ -163,6 +167,7 @@ const schema = jsonSchema.object({
     allowDelete: jsonSchema.boolean(),
     allowThrow: jsonSchema.boolean(),
     allowAwait: jsonSchema.boolean(),
+    allowInStaticBlock: jsonSchema.boolean(),
 });
 
 export const noModuleSideEffect: Rule.RuleModule = {
@@ -178,12 +183,14 @@ export const noModuleSideEffect: Rule.RuleModule = {
     create(context) {
         const options: RuleOptions = {
             allowNew: true,
+            allowInStaticBlock: true,
             ...(context.options[0] as RuleOptions),
         };
 
         const checkSideEffect = (node: CheckNode) => {
             if (isPureNode(node, context.sourceCode, options)) return;
-            if (isInFunction(context.sourceCode.getAncestors(node))) return;
+            if (isInFunction(context.sourceCode.getAncestors(node), options))
+                return;
 
             const suggestions: Rule.SuggestionReportDescriptor[] = [];
             if (pureCommentSupportNodeType.has(node.type)) {
