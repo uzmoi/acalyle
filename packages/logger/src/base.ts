@@ -28,7 +28,9 @@ export abstract class Logger<in Message, in Level, in MetaData = undefined>
             try {
                 transport.transport(log);
             } catch (error) {
-                console.error(
+                type Console = { error(...data: unknown[]): void };
+                // @ts-expect-error: consoleぐらいどのランタイムにも有る
+                (console as Console).error(
                     "Uncaught (in transport) Error:",
                     error,
                     transport,
