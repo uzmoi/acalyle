@@ -2,9 +2,9 @@
 name = "acalyle"
 version = "0.0.0"
 description = "A Tauri App"
-authors = ["rizzzse"]
+authors = ["uzmoi"]
 license = ""
-repository = "https://github.com/rizzzse/acalyle"
+repository = "https://github.com/uzmoi/acalyle"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
