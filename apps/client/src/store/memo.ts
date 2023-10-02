@@ -20,7 +20,7 @@ import { createQueryStore } from "~/lib/query-store";
 import { acalyle } from "../app/main";
 import type { Memo } from "./memo-connection";
 
-const MemoQuery = gql`
+const MemoQuery = /* #__PURE__ */ gql`
     query Memo($memoId: ID!) {
         memo(id: $memoId) {
             id
@@ -32,7 +32,7 @@ const MemoQuery = gql`
     }
 `;
 
-export const memoStore = createQueryStore(
+export const memoStore = /* #__PURE__ */ createQueryStore(
     async (memoId: Scalars["ID"]): Promise<Memo | null> => {
         const { data } = await acalyle.net.gql<
             GqlMemoQuery,
@@ -42,7 +42,7 @@ export const memoStore = createQueryStore(
     },
 );
 
-const MemoTemplateQuery = gql`
+const MemoTemplateQuery = /* #__PURE__ */ gql`
     query MemoTemplate($bookId: ID!) {
         book(id: $bookId) {
             tagProps(symbol: "template")
@@ -50,7 +50,7 @@ const MemoTemplateQuery = gql`
     }
 `;
 
-export const memoTemplateStore = createQueryStore(
+export const memoTemplateStore = /* #__PURE__ */ createQueryStore(
     async (bookId: Scalars["ID"]) => {
         const { data } = await acalyle.net.gql<
             GqlMemoTemplateQuery,
@@ -60,7 +60,7 @@ export const memoTemplateStore = createQueryStore(
     },
 );
 
-const CreateMemoMutation = gql`
+const CreateMemoMutation = /* #__PURE__ */ gql`
     mutation CreateMemo($bookId: ID!, $templateName: String) {
         createMemo(bookId: $bookId, template: $templateName) {
             id
@@ -85,7 +85,7 @@ export const createMemo = async (
     return memo;
 };
 
-const RemoveMemoMutation = gql`
+const RemoveMemoMutation = /* #__PURE__ */ gql`
     mutation RemoveMemo($memoId: ID!) {
         removeMemo(ids: [$memoId])
     }
@@ -99,7 +99,7 @@ export const removeMemo = async (memoId: Scalars["ID"]) => {
     memoStore(memoId).resolve(null);
 };
 
-const UpdateMemoContentsMutation = gql`
+const UpdateMemoContentsMutation = /* #__PURE__ */ gql`
     mutation UpdateMemoContents($memoId: ID!, $contents: String!) {
         updateMemoContents(id: $memoId, contents: $contents) {
             contents
@@ -127,7 +127,7 @@ export const updateMemoContents = async (
     }
 };
 
-const AddMemoTagsMutation = gql`
+const AddMemoTagsMutation = /* #__PURE__ */ gql`
     mutation AddMemoTags($memoId: ID!, $tags: [String!]!) {
         addMemoTags(ids: [$memoId], tags: $tags) {
             id
@@ -155,7 +155,7 @@ export const addMemoTags = async (
     }
 };
 
-const TransferMemoMutation = gql`
+const TransferMemoMutation = /* #__PURE__ */ gql`
     mutation TransferMemo($memoIds: [ID!]!, $bookId: ID!) {
         transferMemo(memoIds: $memoIds, bookId: $bookId)
     }

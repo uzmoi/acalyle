@@ -68,7 +68,7 @@ export class IdbObjectStore<
         return this._store.autoIncrement;
     }
     get indexNames(): Indexes[] {
-        return Array.from(this._store.indexNames) as Indexes[];
+        return [...this._store.indexNames] as Indexes[];
     }
     createIndex(
         this: IdbObjectStore<T, Indexes, "versionchange">,

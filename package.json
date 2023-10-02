@@ -18,10 +18,10 @@
     "format": "prettier -w \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
-    "@eslint/js": "^8.38.0",
+    "@eslint/js": "^8.50.0",
     "electron": "^23.0.0",
-    "eslint": "^8.38.0",
-    "globals": "^13.20.0",
+    "eslint": "^8.50.0",
+    "globals": "^13.22.0",
     "prettier": "^2.8.7",
     "turbo": "^1.8.3",
     "typescript": "^5.0.4"

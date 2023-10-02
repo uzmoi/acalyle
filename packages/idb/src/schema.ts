@@ -40,7 +40,6 @@ export type IdbSchemaType<T extends IdbSchema> = T extends IdbSchema<infer U>
     ? U
     : never;
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export class IdbSchema<T extends Record<string, IdbObjectStoreSchema> = {}> {
     static objectStore<T>(
         options?: IDBObjectStoreParameters,

@@ -25,11 +25,18 @@ export default [
         ],
     },
     eslint.configs.recommended,
-    configs.typescript,
-    configs.typescriptRecommended,
-    configs.typescriptRecommendedRequiringTypeChecking,
+    {
+        ...configs.acalyle,
+        ignores: [
+            ...(configs.acalyle.ignores ?? []),
+            "packages/eslint-config/**",
+        ],
+    },
+    configs.unicorn,
+    configs.typescript("recommended-type-checked", "stylistic-type-checked"),
     configs.typescriptCustom,
-    ...configs.react,
+    configs.react,
+    configs.testingLibrary("react"),
     configs.import,
     {
         files: ["!**/src/**"],

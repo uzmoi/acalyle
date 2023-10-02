@@ -1,3 +1,3 @@
 import { atom } from "nanostores";
 
-export const Location = atom("");
+export const Location = /* #__PURE__ */ atom("");

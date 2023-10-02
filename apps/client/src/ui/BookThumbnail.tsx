@@ -28,7 +28,7 @@ export const BookThumbnail: React.FC<{
     );
 };
 
-const ThumbnailStyle = style({
+const ThumbnailStyle = /* #__PURE__ */ style({
     width: "6em",
     height: "6em",
 });

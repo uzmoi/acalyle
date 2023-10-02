@@ -36,28 +36,31 @@ export const createConnectionAtom = <TNode extends { id: Scalars["ID"] }>(
         endCursor: null,
     });
     const isLoading = atom(false);
-    const error = atom<Error | undefined>();
+    const $error = atom<Error | undefined>();
 
     connectionStore.isLoading = isLoading;
-    connectionStore.error = error;
+    connectionStore.error = $error;
 
     const loadNodes = async (
         getIds: (ids: readonly Scalars["ID"][]) => readonly Scalars["ID"][],
     ) => {
         isLoading.set(true);
-        error.set(undefined);
+        $error.set(undefined);
         try {
             const { edges, pageInfo } = await load(connectionStore);
             const nodes =
                 edges?.map(edge => edge?.node).filter(nonNullable) ?? [];
-            nodes.forEach(updateNode);
+            for (const node of nodes) {
+                updateNode(node);
+            }
             connectionStore.set({
                 nodeIds: getIds(nodes.map(node => node.id)),
                 hasNext: pageInfo.hasNextPage,
+                // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
                 endCursor: (pageInfo.hasNextPage && pageInfo.endCursor) || null,
             });
-        } catch (err) {
-            error.set(err as Error);
+        } catch (error) {
+            $error.set(error as Error);
         } finally {
             isLoading.set(false);
         }

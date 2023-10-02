@@ -11,63 +11,68 @@ export const TagComplementList: React.FC<{
     input: string;
     selectedIndex: number;
     onComplement?: (tag: string) => void;
-}> = forwardRef(({ bookHandle, input, selectedIndex, onComplement }, ref) => {
-    const book = useBook(bookHandle);
+}> = /* #__PURE__ */ forwardRef(
+    ({ bookHandle, input, selectedIndex, onComplement }, ref) => {
+        const book = useBook(bookHandle);
 
-    const symbols = complementTagSymbol(book?.tags ?? [], input);
+        const symbols = complementTagSymbol(book?.tags ?? [], input);
 
-    useImperativeHandle(
-        ref,
-        () => symbols[modulo(selectedIndex, symbols.length)],
-    );
+        useImperativeHandle(
+            ref,
+            () => symbols[modulo(selectedIndex, symbols.length)],
+        );
 
-    const onClick = useCallback(
-        (e: React.MouseEvent<HTMLButtonElement>) => {
-            const symbol = e.currentTarget.dataset.symbol;
-            if (symbol != null) {
-                onComplement?.(symbol);
-            }
-        },
-        [onComplement],
-    );
+        const onClick = useCallback(
+            (e: React.MouseEvent<HTMLButtonElement>) => {
+                const symbol = e.currentTarget.dataset.symbol;
+                if (symbol != null) {
+                    onComplement?.(symbol);
+                }
+            },
+            [onComplement],
+        );
 
-    if (book == null) {
-        return null;
-    }
+        if (book == null) {
+            return null;
+        }
 
-    return (
-        <List className={style({ padding: "0.5em" })}>
-            {symbols.map((symbol, i) => (
-                <List.Item
-                    key={symbol}
-                    data-selected={i === modulo(selectedIndex, symbols.length)}
-                    className={style({
-                        ":hover": {
-                            backgroundColor: "#0003",
-                        },
-                        selectors: {
-                            '&[data-selected="true"]': {
+        return (
+            <List className={style({ padding: "0.5em" })}>
+                {symbols.map((symbol, i) => (
+                    <List.Item
+                        key={symbol}
+                        data-selected={
+                            i === modulo(selectedIndex, symbols.length)
+                        }
+                        className={style({
+                            ":hover": {
                                 backgroundColor: "#0003",
                             },
-                        },
-                    })}
-                >
-                    <Button
-                        variant="unstyled"
-                        className={style({
-                            width: "100%",
-                            textAlign: "start",
-                            fontWeight: "normal",
+                            selectors: {
+                                '&[data-selected="true"]': {
+                                    backgroundColor: "#0003",
+                                },
+                            },
                         })}
-                        data-symbol={symbol}
-                        onClick={onClick}
                     >
-                        {symbol}
-                    </Button>
-                </List.Item>
-            ))}
-        </List>
-    );
-});
+                        <Button
+                            variant="unstyled"
+                            className={style({
+                                width: "100%",
+                                textAlign: "start",
+                                fontWeight: "normal",
+                            })}
+                            data-symbol={symbol}
+                            onClick={onClick}
+                        >
+                            {symbol}
+                        </Button>
+                    </List.Item>
+                ))}
+            </List>
+        );
+    },
+);
 
+// eslint-disable-next-line acalyle/no-module-side-effect
 TagComplementList.displayName = "TagComplementList";

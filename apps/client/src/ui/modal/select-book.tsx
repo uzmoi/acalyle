@@ -14,7 +14,7 @@ import { bookConnection } from "~/store/book-connection";
 import { BookSearchBar } from "~/ui/BookSearchBar";
 import { BookOverview } from "~/ui/book/BookOverview";
 
-const modal = Modal.create<void, Scalars["ID"] | undefined>();
+const modal = /* #__PURE__ */ Modal.create<void, Scalars["ID"] | undefined>();
 
 export const selectBook = () => {
     return modal.open();

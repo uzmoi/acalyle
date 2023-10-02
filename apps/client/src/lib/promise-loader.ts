@@ -12,7 +12,7 @@ export type PromiseLoaderW<T = unknown> =
 export const usePromiseLoader = <T>(loader: PromiseLoaderW<T>): T => {
     switch (loader.status) {
         case "unpending":
-            throw new Error();
+            throw new Error("Unpending");
         case "pending":
             throw loader.promise;
         case "fulfilled":
@@ -24,6 +24,7 @@ export const usePromiseLoader = <T>(loader: PromiseLoaderW<T>): T => {
 
 declare const T: unique symbol;
 
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export interface PromiseLoaderExt {
     [T]: Extract<StoreValue<this>, { status: "fulfilled" }>["value"];
     pending(

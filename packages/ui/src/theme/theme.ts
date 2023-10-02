@@ -1,6 +1,6 @@
 import { createGlobalThemeContract } from "@macaron-css/core";
 
-export const vars = createGlobalThemeContract(
+export const vars = /* #__PURE__ */ createGlobalThemeContract(
     {
         color: {
             fg: {
@@ -23,8 +23,9 @@ export const vars = createGlobalThemeContract(
             mono: null,
         },
         radius: {
-            control: null,
+            layout: null,
             block: null,
+            control: null,
         },
         zIndex: {
             toast: null,

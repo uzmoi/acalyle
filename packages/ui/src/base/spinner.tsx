@@ -1,7 +1,7 @@
 import { keyframes, style } from "@macaron-css/core";
 import { cx } from "./cx";
 
-const spin = keyframes({ to: { transform: "rotate(360deg)" } });
+const spin = /* #__PURE__ */ keyframes({ to: { transform: "rotate(360deg)" } });
 
 export const Spinner: React.FC<{
     className?: string;

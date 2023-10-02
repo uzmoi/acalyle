@@ -10,7 +10,7 @@ import { memoizeBuilder } from "~/lib/memoize-builder";
 import { memoStore } from "~/store/memo";
 import { acalyle } from "../app/main";
 
-const MemoListPagination = gql`
+const MemoListPagination = /* #__PURE__ */ gql`
     query MemoListPagination(
         $bookId: ID!
         $count: Int!
@@ -45,7 +45,7 @@ export type Memo = {
     updatedAt: string;
 };
 
-export const memoConnection = memoizeBuilder(
+export const memoConnection = /* #__PURE__ */ memoizeBuilder(
     (_, bookId: Scalars["ID"], query: string) =>
         createConnectionAtom(
             async connectionAtom => {

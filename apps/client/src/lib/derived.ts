@@ -7,7 +7,6 @@ export type PureAtom<T = unknown> = {
 
 type AtomGet = <T>(atom: PureAtom<T>) => T;
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export const derived = <T, Ext = {}>(
     derive: (get: AtomGet) => T,
 ): ReadableAtom<T> & Ext => {

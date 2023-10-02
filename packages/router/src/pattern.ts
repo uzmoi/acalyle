@@ -6,16 +6,16 @@ export type Mark = "+" | "*" | "?";
 export type PatternPart = string | { key: string; mark: Mark | "" };
 
 const parsePatternPart = (part: string): PatternPart => {
-    const match = /^:(\w*)([+*?]?)/.exec(part);
+    const match = /^:(\w*)([*+?]?)/.exec(part);
     return match == null
         ? part
-        : { key: match[1] as string, mark: match[2] as Mark | "" };
+        : { key: match[1]!, mark: match[2] as Mark | "" };
 };
 
-export interface Pattern {
+export type Pattern = {
     parts: PatternPart[];
     params: string[];
-}
+};
 
 export const parsePattern = (pattern: string): Pattern => {
     const partStrings = pattern.split("/").filter(Boolean);
@@ -106,7 +106,6 @@ export type LinkBuilder = <T extends string>(
 export const link: LinkBuilder = (patternString, args?) => {
     const { parts, params } = parsePattern(patternString);
     const getArg = (key: string): string | string[] | undefined => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         return args![key as keyof typeof args];
     };
 
@@ -124,7 +123,7 @@ export const link: LinkBuilder = (patternString, args?) => {
         .flatMap(param => {
             const arg = getArg(param);
             if (isArray(arg)) {
-                return `${param}=${arg.join()}`;
+                return `${param}=${arg.join(",")}`;
             }
             if (typeof arg === "string") {
                 return `${param}=${arg}`;

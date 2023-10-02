@@ -1,4 +1,5 @@
-import { cleanup, fireEvent, render } from "@testing-library/react";
+// eslint-disable-next-line testing-library/no-manual-cleanup
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { Modal, ModalContainer } from "./modal";
@@ -15,12 +16,10 @@ describe("ModalContainer", () => {
                 <button onClick={() => void modal.close(true)}>Ok</button>
             </div>
         );
-        const { findByText } = render(
-            <ModalContainer modal={modal} render={renderModal} />,
-        );
+        render(<ModalContainer modal={modal} render={renderModal} />);
 
         const promise = modal.open();
-        fireEvent.click(await findByText("Ok"));
+        fireEvent.click(await screen.findByText("Ok"));
         expect(await promise).toBe(true);
     });
     test("esc", async () => {
@@ -33,6 +32,7 @@ describe("ModalContainer", () => {
         void modal.open();
         await user.click(container);
         await user.keyboard("[Escape]");
+        // eslint-disable-next-line testing-library/no-node-access
         const rootEl = container.firstChild as HTMLElement;
         expect(rootEl.dataset.status).toBe("exiting");
     });

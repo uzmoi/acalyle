@@ -69,12 +69,12 @@ export const CreateBookForm: React.FC<{
     );
 };
 
-const DTStyle = style({
+const DTStyle = /* #__PURE__ */ style({
     marginTop: "1em",
     marginBottom: "0.25em",
 });
 
-const LabelStyle = style({
+const LabelStyle = /* #__PURE__ */ style({
     fontSize: "0.9em",
     fontWeight: "bold",
 });

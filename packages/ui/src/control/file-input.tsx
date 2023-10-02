@@ -60,7 +60,7 @@ export const FileInput: React.FC<
     // eslint-disable-next-line @typescript-eslint/naming-convention
 > = ({ onChange, onFileChange, multiple, className, _ref, ...restProps }) => {
     const handleChange =
-        (onChange || onFileChange) &&
+        (onChange ?? onFileChange) &&
         ((e: React.ChangeEvent<HTMLInputElement>) => {
             onChange?.(e);
             const files = e.target.files;
