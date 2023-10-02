@@ -1,9 +1,11 @@
 import { onMount } from "nanostores";
 import { Location } from "../store/location";
 
+const getLocation = () =>
+    location.pathname.split("/").filter(Boolean).join("/");
+
+// eslint-disable-next-line acalyle/no-module-side-effect
 onMount(Location, () => {
-    const getLocation = () =>
-        location.pathname.split("/").filter(Boolean).join("/");
     const unbind = Location.listen(path => {
         if (path === getLocation()) return;
         history.pushState(null, "", path);

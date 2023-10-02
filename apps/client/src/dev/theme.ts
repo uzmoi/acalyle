@@ -1,6 +1,6 @@
 import { createTheme, type vars } from "@acalyle/ui";
 
-export const devAppTheme = createTheme<typeof vars>("acalyle", {
+export const devAppTheme = /* #__PURE__ */ createTheme<typeof vars>("acalyle", {
     color: {
         fg: {
             __: "#e0e0e0",
@@ -23,8 +23,9 @@ export const devAppTheme = createTheme<typeof vars>("acalyle", {
         mono: "'Roboto Mono', monospace",
     },
     radius: {
-        control: "4px",
+        layout: "0.5em",
         block: "0.25em",
+        control: "4px",
     },
     zIndex: {
         toast: 100,

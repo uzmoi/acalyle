@@ -14,6 +14,7 @@ export class IdbTransaction<
         >
 {
     constructor(private readonly tx: IDBTransaction) {}
+    // eslint-disable-next-line unicorn/consistent-function-scoping
     private _whenComplete = new Promise((resolve, reject) => {
         onceAll(this.tx, {
             complete: resolve,
@@ -29,7 +30,7 @@ export class IdbTransaction<
         return this.tx.mode as Mode;
     }
     get objectStoreNames(): (keyof S)[] {
-        return Array.from(this.tx.objectStoreNames);
+        return [...this.tx.objectStoreNames];
     }
     abort() {
         this.tx.abort();

@@ -14,9 +14,9 @@ export const importConfig: Linter.FlatConfig = {
         "import/resolver": "typescript",
     },
     rules: {
-        ...(importPlugin.configs?.["recommended"] as ESLint.ConfigData).rules,
-        ...(importPlugin.configs?.["typescript"] as ESLint.ConfigData).rules,
-        ...(importPlugin.configs?.["react"] as ESLint.ConfigData).rules,
+        ...(importPlugin.configs?.recommended as ESLint.ConfigData).rules,
+        ...(importPlugin.configs?.typescript as ESLint.ConfigData).rules,
+        ...(importPlugin.configs?.react as ESLint.ConfigData).rules,
         "sort-imports": warn({ ignoreDeclarationSort: true }),
         "simple-import-sort/exports": WARN,
         "import-access/jsdoc": ERROR,

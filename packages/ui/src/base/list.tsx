@@ -22,7 +22,7 @@ export const List: React.FC<
     );
 };
 
-const variants = styleVariants({
+const variants = /* #__PURE__ */ styleVariants({
     default: [],
     unstyled: {
         paddingLeft: 0,
@@ -31,10 +31,12 @@ const variants = styleVariants({
 });
 
 type ListItemComponent = React.FC<React.ComponentPropsWithoutRef<"li">>;
+// eslint-disable-next-line acalyle/no-module-side-effect
 List.Item = ({ ...restProps }) => {
     return <li {...restProps} />;
 };
 
 if (process.env.NODE_ENV === "development") {
+    // eslint-disable-next-line acalyle/no-module-side-effect
     List.Item.displayName = "List.Item";
 }

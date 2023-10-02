@@ -3,7 +3,7 @@ import { cx } from "../base/cx";
 import { vars } from "../theme";
 import { type ControlPartVariant, control } from "./base";
 
-const ZeroWidthSpace = "\u200b";
+const ZeroWidthSpace = "\u200B";
 
 export const TextArea: React.FC<
     {

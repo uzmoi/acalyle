@@ -1,6 +1,6 @@
 import { identify } from "emnorst";
 
-const none = Symbol();
+const none = /* #__PURE__ */ Symbol();
 
 type ValueOrGetter<T> = Exclude<T, () => unknown> | (() => T);
 

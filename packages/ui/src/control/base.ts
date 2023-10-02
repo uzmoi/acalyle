@@ -6,7 +6,7 @@ export type ControlPartVariant = Exclude<
     "reset" | "base"
 >;
 
-export const control = styleVariants({
+export const control = /* #__PURE__ */ styleVariants({
     reset: {
         padding: 0,
         font: "inherit",

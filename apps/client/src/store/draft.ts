@@ -2,7 +2,7 @@ import { Idb, IdbSchema } from "@acalyle/idb";
 import type { Scalars } from "~/__generated__/graphql";
 
 const draftDBSchema = new IdbSchema("draft", 1, {
-    "note-draft": IdbSchema.objectStore<NoteDraft>({
+    "note-draft": /* #__PURE__ */ IdbSchema.objectStore<NoteDraft>({
         keyPath: "noteId",
     }),
 });

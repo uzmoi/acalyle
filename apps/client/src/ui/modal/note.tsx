@@ -12,7 +12,10 @@ type NoteModalData = {
     noteId: Scalars["ID"];
 };
 
-const noteModal = Modal.create<NoteModalData, Scalars["ID"] | undefined>();
+const noteModal = /* #__PURE__ */ Modal.create<
+    NoteModalData,
+    Scalars["ID"] | undefined
+>();
 
 export const openNoteInModal = (book: string, noteId: Scalars["ID"]) => {
     return noteModal.open({ book, noteId });

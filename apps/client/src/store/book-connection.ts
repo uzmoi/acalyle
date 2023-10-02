@@ -9,7 +9,7 @@ import { memoizeBuilder } from "~/lib/memoize-builder";
 import { bookStore } from "~/store/book";
 import { acalyle } from "../app/main";
 
-const BookListPagination = gql`
+const BookListPagination = /* #__PURE__ */ gql`
     query BookListPagination($count: Int!, $cursor: String, $query: String!) {
         books(first: $count, after: $cursor, query: $query) {
             edges {
@@ -39,24 +39,25 @@ export type Book = {
     tags: readonly string[];
 };
 
-export const bookConnection = memoizeBuilder((_id, query: string) =>
-    createConnectionAtom(
-        async connectionAtom => {
-            const { data } = await acalyle.net.gql<
-                GqlBookListPaginationQuery,
-                GqlBookListPaginationQueryVariables
-            >(BookListPagination, {
-                count: 32,
-                cursor: connectionAtom.get().endCursor,
-                query, // `orderby:updated order:desc ${query}`
-            });
-            return data.books;
-        },
-        book => {
-            bookStore(book.id).resolve({
-                ...book,
-                handle: book.handle ?? null,
-            });
-        },
-    ),
+export const bookConnection = /* #__PURE__ */ memoizeBuilder(
+    (_id, query: string) =>
+        createConnectionAtom(
+            async connectionAtom => {
+                const { data } = await acalyle.net.gql<
+                    GqlBookListPaginationQuery,
+                    GqlBookListPaginationQueryVariables
+                >(BookListPagination, {
+                    count: 32,
+                    cursor: connectionAtom.get().endCursor,
+                    query, // `orderby:updated order:desc ${query}`
+                });
+                return data.books;
+            },
+            book => {
+                bookStore(book.id).resolve({
+                    ...book,
+                    handle: book.handle ?? null,
+                });
+            },
+        ),
 );

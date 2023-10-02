@@ -72,7 +72,7 @@ export const NoteOverview: React.FC<{
     );
 };
 
-const visuallyHidden = style(
+const visuallyHidden = /* #__PURE__ */ style(
     {
         position: "fixed",
         padding: 0,

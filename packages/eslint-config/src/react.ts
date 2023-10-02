@@ -19,9 +19,9 @@ export const react: Linter.FlatConfig = {
         "react-hooks": reactHooks,
     },
     rules: {
-        ...(reactPlugin.configs?.["recommended"] as ESLint.ConfigData).rules,
+        ...(reactPlugin.configs?.recommended as ESLint.ConfigData).rules,
         ...(reactPlugin.configs?.["jsx-runtime"] as ESLint.ConfigData).rules,
-        ...(reactHooks.configs?.["recommended"] as ESLint.ConfigData).rules,
+        ...(reactHooks.configs?.recommended as ESLint.ConfigData).rules,
         "react/prop-types": "off",
     },
 };

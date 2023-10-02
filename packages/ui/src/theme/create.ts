@@ -20,7 +20,6 @@ export const createTheme = <T extends ThemeSource>(
     for (const [key, value] of Object.entries(themeSource)) {
         const name = (key === "__" ? prefix : `${prefix}-${key}`).toLowerCase();
         if (isObject(value)) {
-            // eslint-disable-next-line @typescript-eslint/ban-types
             Object.assign(themeStyle, createTheme<{}>(name, value));
         } else {
             themeStyle[`--${name}`] = String(value);

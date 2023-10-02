@@ -13,7 +13,7 @@ import { createQueryStore } from "~/lib/query-store";
 import { acalyle } from "../app/main";
 import type { Book } from "./book-connection";
 
-const BookQuery = gql`
+const BookQuery = /* #__PURE__ */ gql`
     query Book($bookId: ID, $handle: String) {
         book(id: $bookId, handle: $handle) {
             id
@@ -27,7 +27,7 @@ const BookQuery = gql`
     }
 `;
 
-export const bookStore = createQueryStore(
+export const bookStore = /* #__PURE__ */ createQueryStore(
     async (bookId: Scalars["ID"]): Promise<Book | null> => {
         const { data } = await acalyle.net.gql<
             GqlBookQuery,
@@ -47,7 +47,7 @@ export const bookStore = createQueryStore(
     },
 );
 
-export const bookHandleStore = createQueryStore(
+export const bookHandleStore = /* #__PURE__ */ createQueryStore(
     async (handle: string): Promise<Scalars["ID"] | null> => {
         if (handle === "") {
             return null;
@@ -65,19 +65,23 @@ export const bookHandleStore = createQueryStore(
     },
 );
 
-export const handleBookStore = memoizeBuilder((_, handle: string) =>
-    derived((get): PromiseLoaderW<Book | null> => {
-        const bookIdLoader = get(bookHandleStore(handle));
-        if (bookIdLoader.status !== "fulfilled" || bookIdLoader.value == null) {
-            return bookIdLoader as
-                | Exclude<typeof bookIdLoader, { status: "fulfilled" }>
-                | { status: "fulfilled"; value: null };
-        }
-        return get(bookStore(bookIdLoader.value));
-    }),
+export const handleBookStore = /* #__PURE__ */ memoizeBuilder(
+    (_, handle: string) =>
+        derived((get): PromiseLoaderW<Book | null> => {
+            const bookIdLoader = get(bookHandleStore(handle));
+            if (
+                bookIdLoader.status !== "fulfilled" ||
+                bookIdLoader.value == null
+            ) {
+                return bookIdLoader as
+                    | Exclude<typeof bookIdLoader, { status: "fulfilled" }>
+                    | { status: "fulfilled"; value: null };
+            }
+            return get(bookStore(bookIdLoader.value));
+        }),
 );
 
-const CreateBookMutation = gql`
+const CreateBookMutation = /* #__PURE__ */ gql`
     mutation CreateBook(
         $title: String!
         $description: String!

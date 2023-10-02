@@ -13,7 +13,6 @@ type Hack<T extends (...args: never[]) => unknown> = T &
 
 export class Route<
     in P extends string,
-    // eslint-disable-next-line @typescript-eslint/ban-types
     in Params extends {} = never,
     out R = unknown,
 > {
@@ -21,22 +20,17 @@ export class Route<
     // HACK: Paramsの変性のチェックを誤魔化す。
     default<R2>(
         f: Hack<(path: Path<P>, matchParams: Params) => R2>,
-        // eslint-disable-next-line @typescript-eslint/ban-types
     ): Route<P, Params, (R & ({} | null)) | R2> {
         return new Route((path, matchParams) => {
             const result = this.get(path, matchParams);
+            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
             return result === undefined ? f(path, matchParams) : result;
         });
     }
     // HACK: Paramsの変性のチェックを誤魔化す。
     map<R2>(
         f: Hack<
-            (
-                // eslint-disable-next-line @typescript-eslint/ban-types
-                result: R & ({} | null),
-                path: Path<P>,
-                matchParams: Params,
-            ) => R2
+            (result: R & ({} | null), path: Path<P>, matchParams: Params) => R2
         >,
     ): Route<P, Params, R2 | (R & undefined)> {
         return new Route((path, matchParams) => {

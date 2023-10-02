@@ -20,7 +20,7 @@ export const Select: React.FC<
     ...restProps
 }) => {
     const handleChange =
-        (onChange || onValueChange) &&
+        (onChange ?? onValueChange) &&
         ((e: React.ChangeEvent<HTMLSelectElement>) => {
             onChange?.(e);
             onValueChange?.(e.target.value);
@@ -45,15 +45,18 @@ export const Select: React.FC<
 type SelectOptionGroupComponent = React.FC<
     React.ComponentPropsWithoutRef<"optgroup">
 >;
+// eslint-disable-next-line acalyle/no-module-side-effect
 Select.Group = ({ ...restProps }) => {
     return <optgroup {...restProps} />;
 };
 
 if (process.env.NODE_ENV === "development") {
+    // eslint-disable-next-line acalyle/no-module-side-effect
     Select.Group.displayName = "Select.Group";
 }
 
 type SelectOptionComponent = React.FC<React.ComponentPropsWithoutRef<"option">>;
+// eslint-disable-next-line acalyle/no-module-side-effect
 Select.Option = ({ className, ...restProps }) => {
     return (
         <option
@@ -67,5 +70,6 @@ Select.Option = ({ className, ...restProps }) => {
 };
 
 if (process.env.NODE_ENV === "development") {
+    // eslint-disable-next-line acalyle/no-module-side-effect
     Select.Option.displayName = "Select.Option";
 }

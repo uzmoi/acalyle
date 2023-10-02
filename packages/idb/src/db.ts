@@ -26,6 +26,7 @@ export class Idb<S extends Record<string, IdbObjectStoreSchema>>
         return new Idb(db);
     }
     private constructor(private readonly db: IDBDatabase) {}
+    // eslint-disable-next-line unicorn/consistent-function-scoping
     private _whenClose = new Promise((resolve, reject) => {
         onceAll(this.db, { close: resolve, abort: reject });
     });
@@ -36,7 +37,7 @@ export class Idb<S extends Record<string, IdbObjectStoreSchema>>
         return this.db.version;
     }
     get objectStoreNames(): (keyof S)[] {
-        return Array.from(this.db.objectStoreNames);
+        return [...this.db.objectStoreNames];
     }
     transaction<
         StoreName extends Extract<keyof S, string>,

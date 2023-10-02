@@ -7,10 +7,10 @@ import { memoize } from "../util";
 
 // https://github.com/rollup/rollup/pull/5024
 const _isPureFunctionComment = (comment: ESTree.Comment): boolean =>
-    /[@#]__NO_SIDE_EFFECTS__/.test(comment.value);
+    /[#@]__NO_SIDE_EFFECTS__/.test(comment.value);
 
 const isPureComment = (comment: ESTree.Comment): boolean =>
-    /[@#]__PURE__/.test(comment.value);
+    /[#@]__PURE__/.test(comment.value);
 
 const parsePattern = memoize((filter: string) => {
     const ancestryAttributes: string[] = [];
@@ -88,18 +88,18 @@ const isPureNode = (
             return !!options.allowThrow;
         case "NewExpression":
             return (
-                options.allowNew ||
+                !!options.allowNew ||
                 source.getCommentsBefore(node).some(isPureComment)
             );
         case "TaggedTemplateExpression":
             return (
-                (options.allowTaggedTemplate ?? options.allowCall) ||
+                !!(options.allowTaggedTemplate ?? options.allowCall) ||
                 source.getCommentsBefore(node).some(isPureComment) ||
                 isPureFunction(node.tag, options.pureFunctions)
             );
         case "CallExpression":
             return (
-                options.allowCall ||
+                !!options.allowCall ||
                 source.getCommentsBefore(node).some(isPureComment) ||
                 node.callee.type === "Super" ||
                 isPureFunction(node.callee, options.pureFunctions)
@@ -125,7 +125,7 @@ const isInFunction = (ancestors: readonly ESTree.Node[]): boolean => {
     });
 };
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-interface, @typescript-eslint/consistent-type-definitions
 interface JSONSchema<out _ = unknown> extends JSONSchema4 {}
 
 const jsonSchema = {
