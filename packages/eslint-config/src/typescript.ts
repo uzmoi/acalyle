@@ -1,7 +1,7 @@
 import ts from "@typescript-eslint/eslint-plugin";
 import parser from "@typescript-eslint/parser";
 import type { ESLint, Linter } from "eslint";
-import { extendsRules, replacePluginName, warn } from "./util";
+import { OFF, extendsRules, replacePluginName, warn } from "./util";
 
 export const typescriptFiles = "**/*.{ts,mts,cts,tsx,mtx,ctx}";
 
@@ -38,6 +38,7 @@ export const typescript = (
 export const typescriptCustom: Linter.FlatConfig = {
     files: [typescriptFiles],
     rules: {
+        "@typescript-eslint/prefer-for-of": OFF,
         "@typescript-eslint/consistent-type-definitions": warn("type"),
         "@typescript-eslint/ban-types": warn({
             extendDefaults: true,
@@ -51,7 +52,6 @@ export const typescriptCustom: Linter.FlatConfig = {
             varsIgnorePattern: "^_",
             argsIgnorePattern: "^_",
             caughtErrors: "all",
-            caughtErrorsIgnorePattern: "^_",
         }),
         "@typescript-eslint/naming-convention": warn(
             { selector: "default", format: ["camelCase"] },
