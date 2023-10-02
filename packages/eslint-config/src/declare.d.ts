@@ -32,3 +32,10 @@ declare module "eslint-plugin-unicorn" {
     const exports: ESLint.Plugin;
     export default exports;
 }
+
+declare module "eslint-plugin-testing-library" {
+    import { ESLint } from "eslint";
+
+    const exports: ESLint.Plugin;
+    export default exports;
+}

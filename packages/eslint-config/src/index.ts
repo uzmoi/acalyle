@@ -2,6 +2,7 @@ import type { Linter } from "eslint";
 import { acalyleConfig } from "./acalyle";
 import { importConfig } from "./import";
 import { react } from "./react";
+import { testingLibrary } from "./testing-library";
 import { typescript, typescriptCustom } from "./typescript";
 import { unicorn } from "./unicorn";
 
@@ -15,9 +16,10 @@ export const configs = {
     typescriptCustom,
     acalyle: acalyleConfig,
     unicorn,
+    testingLibrary,
 } satisfies Record<
     string,
     | Linter.FlatConfig
     | readonly Linter.FlatConfig[]
-    | (() => Linter.FlatConfig | readonly Linter.FlatConfig[])
+    | ((...args: never) => Linter.FlatConfig | readonly Linter.FlatConfig[])
 >;
