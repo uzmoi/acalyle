@@ -17,6 +17,16 @@ test("eslint", () => {
             "/* #__PURE__ */ f();",
             "new Hoge;",
             { code: "pure();", options: [{ pureFunctions: ["pure"] }] },
+            { code: "x.y.pure();", options: [{ pureFunctions: ["*.pure"] }] },
+            { code: "x.f();", options: [{ pureFunctions: ["x.*"] }] },
+            {
+                code: "import.meta.pure();",
+                options: [{ pureFunctions: ["import.meta.pure"] }],
+            },
+            {
+                code: "obj.import.meta.pure();",
+                options: [{ pureFunctions: ["obj.import.meta.pure"] }],
+            },
         ],
         invalid: [
             {

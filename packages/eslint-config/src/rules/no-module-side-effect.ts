@@ -1,9 +1,10 @@
 import { assert } from "emnorst";
 import type { Rule, SourceCode } from "eslint";
+import esquery from "esquery"; // cspell:word esquery
 import type * as ESTree from "estree"; // cspell:word estree
 import type { JSONSchema4 } from "json-schema";
+import { memoize } from "../util";
 
-// TODO: Support __NO_SIDE_EFFECTS__.
 // https://github.com/rollup/rollup/pull/5024
 const _isPureFunctionComment = (comment: ESTree.Comment): boolean =>
     /[@#]__NO_SIDE_EFFECTS__/.test(comment.value);
@@ -11,16 +12,43 @@ const _isPureFunctionComment = (comment: ESTree.Comment): boolean =>
 const isPureComment = (comment: ESTree.Comment): boolean =>
     /[@#]__PURE__/.test(comment.value);
 
+const parsePattern = memoize((filter: string) => {
+    const ancestryAttributes: string[] = [];
+    let selector = "";
+    const xs = filter.split(".").reverse();
+    for (const [i, name] of xs.entries()) {
+        const ancestryAttribute = [
+            ...ancestryAttributes,
+            i === xs.length - 1
+                ? name === "*"
+                    ? "type"
+                    : "name"
+                : "property.name",
+        ].join(".");
+        const nameRe = name.replace(/\*/g, ".+");
+        selector += `[${ancestryAttribute}=/^${nameRe}$/]`;
+        const isMetaProperty =
+            filter.startsWith("import.") && i === xs.length - 2;
+        ancestryAttributes.push(isMetaProperty ? "meta" : "object");
+    }
+
+    return esquery.parse(selector);
+});
+
+// TODO: Support __NO_SIDE_EFFECTS__.
 const isPureFunction = (
     node: ESTree.Expression,
     pureFunctions: readonly string[] = [],
 ): boolean => {
-    // isPureFunctionComment
-
-    // TODO: Identifier以外でもpureFunctionsにマッチさせる。
-    if (node.type === "Identifier" && pureFunctions.includes(node.name)) {
+    if (
+        pureFunctions.some(pattern =>
+            esquery.matches(node, parsePattern(pattern)),
+        )
+    ) {
         return true;
     }
+
+    // isPureFunctionComment
     return false;
 };
 
@@ -109,14 +137,25 @@ const jsonSchema = {
         items,
     }),
     boolean: (): JSONSchema<boolean> => ({ type: "boolean" }),
-    string: (): JSONSchema<string> => ({ type: "string" }),
+    string: (schema?: {
+        maxLength?: number;
+        minLength?: number;
+        pattern?: string;
+    }): JSONSchema<string> => ({
+        type: "string",
+        ...schema,
+    }),
 };
 
 type RuleOptions = Partial<
     typeof schema extends JSONSchema<infer T> ? T : never
 >;
 const schema = jsonSchema.object({
-    pureFunctions: jsonSchema.array(jsonSchema.string()),
+    pureFunctions: jsonSchema.array(
+        jsonSchema.string({
+            pattern: "^(\\*|[$\\w]+)(\\.(\\*|[$\\w]+))*$",
+        }),
+    ),
     allowCall: jsonSchema.boolean(),
     allowTaggedTemplate: jsonSchema.boolean(),
     allowNew: jsonSchema.boolean(),

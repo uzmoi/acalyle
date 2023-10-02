@@ -15,6 +15,16 @@ export const error = (...options: unknown[]): Linter.RuleEntry => [
     ...options,
 ];
 
+export const memoize = <T, U>(f: (arg: T) => U) => {
+    const cache = new Map<T, U>();
+    return (arg: T): U => {
+        if (!cache.has(arg)) {
+            cache.set(arg, f(arg));
+        }
+        return cache.get(arg)!;
+    };
+};
+
 export const mapEntries = <T, U>(
     object: Record<string, T>,
     mapfn: (key: string, value: T) => readonly [string, U],

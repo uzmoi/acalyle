@@ -1,7 +1,7 @@
 import { ESLint, Linter } from "eslint";
 import { rules } from "./rules";
 import { typescriptFiles } from "./typescript";
-import { WARN } from "./util";
+import { warn } from "./util";
 
 export const acalylePlugin: ESLint.Plugin = { rules };
 
@@ -14,6 +14,8 @@ export const acalyleConfig: Linter.FlatConfig = {
     ],
     plugins: { acalyle: acalylePlugin },
     rules: {
-        "acalyle/no-module-side-effect": WARN,
+        "acalyle/no-module-side-effect": warn({
+            pureFunctions: ["import.meta.hot.*"],
+        }),
     },
 };
