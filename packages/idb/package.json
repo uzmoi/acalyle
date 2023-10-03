@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsup",
     "check": "tsc",
-    "test": "vitest",
+    "test": "vitest --passWithNoTests",
     "coverage": "vitest run --coverage"
   },
   "dependencies": {
