@@ -4,9 +4,8 @@
   "type": "module",
   "sideEffects": false,
   "main": "dist/index.js",
-  "types": "src/index.ts",
   "scripts": {
-    "build": "tsup src/index.ts --format esm",
+    "build": "tsup src/index.ts --format esm --dts",
     "check": "tsc",
     "test": "vitest"
   },

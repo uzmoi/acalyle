@@ -10,8 +10,8 @@ import { derived } from "~/lib/derived";
 import { memoizeBuilder } from "~/lib/memoize-builder";
 import type { PromiseLoaderW } from "~/lib/promise-loader";
 import { createQueryStore } from "~/lib/query-store";
+import { acalyle } from "../app/main";
 import type { Book } from "./book-connection";
-import { net } from "./net";
 
 const BookQuery = gql`
     query Book($bookId: ID, $handle: String) {
@@ -29,12 +29,10 @@ const BookQuery = gql`
 
 export const bookStore = createQueryStore(
     async (bookId: Scalars["ID"]): Promise<Book | null> => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const { graphql } = net.get()!;
-        const { data } = await graphql<GqlBookQuery, GqlBookQueryVariables>(
-            BookQuery,
-            { bookId },
-        );
+        const { data } = await acalyle.net.gql<
+            GqlBookQuery,
+            GqlBookQueryVariables
+        >(BookQuery, { bookId });
         if (data.book == null) {
             return null;
         }
@@ -54,12 +52,10 @@ export const bookHandleStore = createQueryStore(
         if (handle === "") {
             return null;
         }
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const { graphql } = net.get()!;
-        const { data } = await graphql<GqlBookQuery, GqlBookQueryVariables>(
-            BookQuery,
-            { handle },
-        );
+        const { data } = await acalyle.net.gql<
+            GqlBookQuery,
+            GqlBookQueryVariables
+        >(BookQuery, { handle });
         if (data.book == null) {
             return null;
         }
@@ -103,9 +99,7 @@ const CreateBookMutation = gql`
 `;
 
 export const createBook = async (title: string, description: string) => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const { graphql } = net.get()!;
-    const { data } = await graphql<
+    const { data } = await acalyle.net.gql<
         GqlCreateBookMutation,
         GqlCreateBookMutationVariables
     >(

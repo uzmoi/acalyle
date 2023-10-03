@@ -1,8 +1,0 @@
-{
-    "extends": "@acalyle/tsconfig/tsconfig.base.json",
-    "include": ["preload/src"],
-    "compilerOptions": {
-        "types": ["electron"],
-        "composite": true,
-    },
-}

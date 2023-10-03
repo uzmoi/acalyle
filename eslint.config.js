@@ -5,7 +5,7 @@ import globals from "globals";
 import { OFF, configs } from "@acalyle/eslint-config";
 
 const typescriptProject = [
-    "tsconfig.*.json",
+    "tsconfig.json",
     "apps/*/tsconfig.json",
     "packages/*/tsconfig.json",
 ];

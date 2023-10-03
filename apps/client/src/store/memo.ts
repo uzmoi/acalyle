@@ -17,8 +17,8 @@ import type {
     Scalars,
 } from "~/__generated__/graphql";
 import { createQueryStore } from "~/lib/query-store";
+import { acalyle } from "../app/main";
 import type { Memo } from "./memo-connection";
-import { net } from "./net";
 
 const MemoQuery = gql`
     query Memo($memoId: ID!) {
@@ -34,12 +34,10 @@ const MemoQuery = gql`
 
 export const memoStore = createQueryStore(
     async (memoId: Scalars["ID"]): Promise<Memo | null> => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const { graphql } = net.get()!;
-        const { data } = await graphql<GqlMemoQuery, GqlMemoQueryVariables>(
-            MemoQuery,
-            { memoId },
-        );
+        const { data } = await acalyle.net.gql<
+            GqlMemoQuery,
+            GqlMemoQueryVariables
+        >(MemoQuery, { memoId });
         return data.memo ?? null;
     },
 );
@@ -54,9 +52,7 @@ const MemoTemplateQuery = gql`
 
 export const memoTemplateStore = createQueryStore(
     async (bookId: Scalars["ID"]) => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const { graphql } = net.get()!;
-        const { data } = await graphql<
+        const { data } = await acalyle.net.gql<
             GqlMemoTemplateQuery,
             GqlMemoTemplateQueryVariables
         >(MemoTemplateQuery, { bookId });
@@ -80,9 +76,7 @@ export const createMemo = async (
     bookId: Scalars["ID"],
     templateName?: string,
 ) => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const { graphql } = net.get()!;
-    const { data } = await graphql<
+    const { data } = await acalyle.net.gql<
         GqlCreateMemoMutation,
         GqlCreateMemoMutationVariables
     >(CreateMemoMutation, { bookId, templateName });
@@ -98,9 +92,7 @@ const RemoveMemoMutation = gql`
 `;
 
 export const removeMemo = async (memoId: Scalars["ID"]) => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const { graphql } = net.get()!;
-    const { data: _ } = await graphql<
+    const { data: _ } = await acalyle.net.gql<
         GqlRemoveMemoMutation,
         GqlRemoveMemoMutationVariables
     >(RemoveMemoMutation, { memoId });
@@ -122,9 +114,7 @@ export const updateMemoContents = async (
     memoId: Scalars["ID"],
     contents: string,
 ): Promise<void> => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const { graphql } = net.get()!;
-    const { data } = await graphql<
+    const { data } = await acalyle.net.gql<
         GqlUpdateMemoContentsMutation,
         GqlUpdateMemoContentsMutationVariables
     >(UpdateMemoContentsMutation, { memoId, contents });
@@ -153,9 +143,7 @@ export const addMemoTags = async (
     memoId: Scalars["ID"],
     tags: readonly string[],
 ) => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const { graphql } = net.get()!;
-    const { data } = await graphql<
+    const { data } = await acalyle.net.gql<
         GqlAddMemoTagsMutation,
         GqlAddMemoTagsMutationVariables
     >(AddMemoTagsMutation, { memoId, tags });
@@ -177,9 +165,7 @@ export const transferMemo = async (
     memoId: Scalars["ID"],
     bookId: Scalars["ID"],
 ) => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const { graphql } = net.get()!;
-    const { data: _ } = await graphql<
+    const { data: _ } = await acalyle.net.gql<
         GqlTransferMemoMutation,
         GqlTransferMemoMutationVariables
     >(TransferMemoMutation, { memoIds: [memoId], bookId });

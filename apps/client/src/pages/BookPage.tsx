@@ -1,51 +1,40 @@
-import * as Router from "@acalyle/router";
+import {
+    type InferPath,
+    type MatchParams,
+    page,
+    routes,
+} from "@acalyle/router";
 import { style } from "@macaron-css/core";
 import { Suspense } from "react";
 import type { Scalars } from "~/__generated__/graphql";
 import { MemoListPage } from "~/pages/book/MemoListPage";
-import { useBook } from "~/store/hook";
-import { Link } from "~/ui/Link";
-import { Memo } from "~/ui/Memo";
-import { link } from "./link";
+import { BookHeader } from "~/ui/book/BookHeader";
+import { Note } from "~/ui/note/Note";
 
-export type BookPageRoute = Router.Routes<{
-    "": Router.Page<"bookId">;
-    ":memoId": Router.Page;
-    resources: Router.Page;
-    settings: Router.Page;
-}>;
+export type BookPageRoute = InferPath<typeof BookPageRoute>;
 
-const BookPageRoute = Router.routes<BookPageRoute, JSX.Element | null>({
-    "": Router.page(({ bookId: bookHandle }) => (
+export const BookPageRoute = routes({
+    "": page(({ bookId: bookHandle }: MatchParams<"bookId">) => (
         <MemoListPage bookHandle={bookHandle} />
     )),
-    resources: Router.page(() => null),
-    settings: Router.page(() => null),
-    ":memoId": Router.page(({ bookId: bookHandle, memoId }) => (
-        <Memo bookHandle={bookHandle} memoId={memoId as Scalars["ID"]} />
+    resources: page(() => null),
+    settings: page(() => null),
+    ":memoId": page(({ bookId, memoId }: MatchParams<"bookId" | "memoId">) => (
+        <Note book={bookId} noteId={memoId as Scalars["ID"]} />
     )),
-});
+}).map((children, _, { bookId }) => (
+    // eslint-disable-next-line react/jsx-key
+    <BookPage bookHandle={bookId}>{children}</BookPage>
+));
 
 export const BookPage: React.FC<{
     bookHandle: string;
-    path: readonly string[];
-}> = ({ bookHandle, path }) => {
-    const book = useBook(bookHandle);
-
-    if (book == null) {
-        return null;
-    }
-
+    children?: React.ReactNode;
+}> = ({ bookHandle, children }) => {
     return (
         <main className={style({ padding: "1.25em" })}>
-            <h2 className={style({ paddingBottom: "0.5em" })}>
-                <Link to={link(":bookId", { bookId: bookHandle })}>
-                    {book.title}
-                </Link>
-            </h2>
-            <Suspense>
-                {BookPageRoute.get(path, { bookId: bookHandle })}
-            </Suspense>
+            <BookHeader book={bookHandle} />
+            <Suspense>{children}</Suspense>
         </main>
     );
 };

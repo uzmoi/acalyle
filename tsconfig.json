@@ -1,15 +1,5 @@
 {
-    "files": [],
-    "references": [
-        { "path": "./tsconfig.config.json" },
-        { "path": "./tsconfig.main.json" },
-        { "path": "./tsconfig.preload.json" },
-        { "path": "./tsconfig.renderer.json" },
-        { "path": "./apps/tauri/tsconfig.json" },
-        { "path": "./apps/client/tsconfig.json" },
-        { "path": "./packages/router/tsconfig.json" },
-        { "path": "./packages/core/tsconfig.json" },
-        { "path": "./packages/ui/tsconfig.json" },
-        { "path": "./packages/eslint-config/tsconfig.json" },
-    ],
+    "extends": "@acalyle/tsconfig/tsconfig.node.json",
+    "include": ["**/*", "**/*.json", ".*"],
+    "exclude": ["**/src/**", "**/dist/**"],
 }

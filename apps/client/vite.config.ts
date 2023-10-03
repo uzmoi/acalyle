@@ -1,14 +1,8 @@
 import { macaronVitePlugin } from "@macaron-css/vite";
-import react from "@vitejs/plugin-react";
+import react from "@vitejs/plugin-react-swc";
 import dts from "vite-plugin-dts";
 import graphqlCodegen from "vite-plugin-graphql-codegen";
-import restart from "vite-plugin-restart";
 import { defineConfig } from "vitest/config";
-import { dependencies } from "./package.json";
-
-const monorepoPackages = Object.keys(dependencies)
-    .filter(dep => dep.startsWith("@acalyle/"))
-    .map(dep => dep.replace("@acalyle/", ""));
 
 export default defineConfig({
     plugins: [
@@ -20,11 +14,6 @@ export default defineConfig({
         }),
         graphqlCodegen({
             configFilePathOverride: `${process.cwd()}/codegen.ts`,
-        }),
-        restart({
-            restart: [
-                `../../packages/{${monorepoPackages.join(",")}}/dist/**/*.js`,
-            ],
         }),
     ],
     resolve: {

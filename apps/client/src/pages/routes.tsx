@@ -1,18 +1,14 @@
-import * as Router from "@acalyle/router";
+import { type InferPath, page, routes } from "@acalyle/router";
 import { BookListPage } from "./BookListPage";
-import { BookPage, type BookPageRoute } from "./BookPage";
+import { BookPageRoute } from "./BookPage";
 import { NewBookPage } from "./NewBookPage";
 
-export type BookRoute = Router.Routes<{
-    books: Router.Page;
-    new: Router.Page;
-    ":bookId": BookPageRoute;
-}>;
+export type BookRoute = InferPath<typeof BookRoute>;
 
-export const BookRoute = Router.routes<BookRoute, JSX.Element>({
-    books: Router.page(() => <BookListPage />),
-    new: Router.page(() => <NewBookPage />),
-    ":bookId": Router.child((path, params) => (
-        <BookPage bookHandle={params.bookId} path={path} />
-    )),
-});
+export const BookRoute = routes({
+    books: page(() => <BookListPage />),
+    new: page(() => <NewBookPage />),
+    ":bookId": BookPageRoute,
+}).default(path => (
+    <div>Page not found (path: &quot;/{path.join("/")}&quot;)</div>
+));
