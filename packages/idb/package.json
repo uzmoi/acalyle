@@ -7,8 +7,8 @@
   "scripts": {
     "build": "tsup",
     "check": "tsc",
-    "test": "vitest --passWithNoTests",
-    "coverage": "vitest run --coverage"
+    "test": "vitest",
+    "coverage": "vitest run --coverage --passWithNoTests"
   },
   "dependencies": {
     "emnorst": "^1.0.0-next.2"

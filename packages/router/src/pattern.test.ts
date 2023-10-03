@@ -54,12 +54,12 @@ describe("parsePattern", () => {
 
 describe("link", () => {
     it("変換なし", () => {
-        expect(link("")).toBe("");
-        expect(link("hoge")).toBe("hoge");
-        expect(link("hoge/fuga")).toBe("hoge/fuga");
+        expect(link("")).toBe("/");
+        expect(link("hoge")).toBe("/hoge");
+        expect(link("hoge/fuga")).toBe("/hoge/fuga");
     });
     it("normalize path", () => {
-        expect(link("/hoge///fuga/")).toBe("hoge/fuga");
+        expect(link("/hoge///fuga/")).toBe("/hoge/fuga");
     });
     it("params埋め込み", () => {
         expect(
@@ -68,6 +68,6 @@ describe("link", () => {
                 option: undefined,
                 many: ["foo", "bar"],
             }),
-        ).toBe("normal/any/foo/bar");
+        ).toBe("/normal/any/foo/bar");
     });
 });

@@ -8,8 +8,8 @@
   "scripts": {
     "build": "tsup src/index.ts --format esm --minify-syntax --sourcemap --dts",
     "check": "tsc",
-    "test": "vitest --passWithNoTests",
-    "coverage": "vitest run --coverage"
+    "test": "vitest",
+    "coverage": "vitest run --coverage --passWithNoTests"
   },
   "devDependencies": {
     "@acalyle/tsconfig": "*",
