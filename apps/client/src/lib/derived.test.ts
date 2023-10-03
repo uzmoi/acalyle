@@ -1,6 +1,6 @@
 import { atom, keepMount } from "nanostores";
 import { expect, test, vi } from "vitest";
-import { derived } from "~/lib/derived";
+import { derived } from "./derived";
 
 test("derive", () => {
     const store = derived(get => get({ get: () => 1 }));

@@ -7,7 +7,9 @@ import { OFF, configs } from "@acalyle/eslint-config";
 const typescriptProject = [
     "tsconfig.json",
     "apps/*/tsconfig.json",
+    "apps/*/tsconfig.*.json",
     "packages/*/tsconfig.json",
+    "packages/*/tsconfig.*.json",
 ];
 
 /** @type {import("eslint").Linter.FlatConfig[]} */

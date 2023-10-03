@@ -1,13 +1,9 @@
 {
     "extends": "@acalyle/tsconfig/tsconfig.web.json",
-    "include": ["src"],
-    "exclude": ["**/*.test.ts"],
+    "include": ["**/*.test.ts"],
     "compilerOptions": {
         "jsx": "react-jsx",
         "lib": ["DOM", "DOM.Iterable", "ESNext"],
         "types": ["react", "react-dom"],
-        "typeRoots": [],
-        "baseUrl": "./",
-        "paths": { "~/*": ["./src/*"] },
     },
 }

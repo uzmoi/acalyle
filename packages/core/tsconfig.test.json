@@ -1,5 +1,4 @@
 {
     "extends": "@acalyle/tsconfig/tsconfig.base.json",
-    "include": ["src"],
-    "exclude": ["**/*.test.ts"],
+    "include": ["**/*.test.ts"],
 }
