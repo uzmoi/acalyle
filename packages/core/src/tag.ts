@@ -41,7 +41,10 @@ export class AcalyleMemoTag {
         }
         return new AcalyleMemoTag(`${head}${name}`, prop || null);
     }
-    constructor(readonly symbol: TagSymbol, readonly prop: string | null) {}
+    constructor(
+        readonly symbol: TagSymbol,
+        readonly prop: string | null,
+    ) {}
     toString(this: this): string {
         return this.symbol + (this.prop ? ":" + this.prop : "");
     }
