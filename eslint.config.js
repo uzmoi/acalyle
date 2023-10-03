@@ -16,14 +16,15 @@ const typescriptProject = [
 export default [
     {
         ignores: [
-            "app/**",
+            "main/**",
+            "renderer/**",
+            "scripts/**",
             "apps/tauri/src-tauri/**",
             "**/dist/**",
             "**/coverage/**",
             "**/__generated__/**",
             "**/__*",
             "**/*.d.ts",
-            "renderer/**",
         ],
     },
     eslint.configs.recommended,

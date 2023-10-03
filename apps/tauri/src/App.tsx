@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/no-abusive-eslint-disable */
+/* eslint-disable */
 import "@acalyle/client/dist/style.css";
 
 import { BookRoute, Location, net } from "@acalyle/client";
