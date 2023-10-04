@@ -78,4 +78,5 @@ jobs:
       - uses: Swatinem/rust-cache@v2
 
       - run: npm run build -- --filter='./packages/*'
+      - run: npm run codegen -ws
       - run: npm run lint
