@@ -1,0 +1,39 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "npm",
+            "script": "dev",
+            "path": "apps/client",
+            "problemMatcher": [],
+            "isBackground": true,
+            "label": "npm: client-dev",
+            "detail": "npm run dev -w @acalyle/client"
+        },
+        {
+            "type": "cargo",
+            "command": "run",
+            "args": [
+                "-p",
+                "acalyle-server",
+                "--bin",
+                "serve"
+            ],
+            "problemMatcher": [
+                "$rustc-watch"
+            ],
+            "isBackground": true,
+            "label": "rust: server-serve",
+            "detail": "cargo run -p acalyle-server --bin serve"
+        },
+        {
+            "label": "dev",
+            "dependsOn": [
+                "npm: client-dev",
+                "rust: server-serve"
+            ],
+            "type": "shell",
+            "problemMatcher": []
+        }
+    ]
+}
