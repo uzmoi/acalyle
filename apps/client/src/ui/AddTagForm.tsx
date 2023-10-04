@@ -53,7 +53,7 @@ export const AddTagForm: React.FC<{
             setCaretIndex(
                 (el.selectionDirection === "backward"
                     ? el.selectionStart
-                    : el.selectionEnd) || 0,
+                    : el.selectionEnd) ?? 0,
             );
             setSelectedIndex(0);
         },

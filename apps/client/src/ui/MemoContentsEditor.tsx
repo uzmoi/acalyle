@@ -15,7 +15,7 @@ import { debounce } from "../lib/debounce";
 import { usePromiseLoader } from "../lib/promise-loader";
 import { NoteBody } from "./note/NoteBody";
 
-const $noteDraft = createQueryStore(
+const $noteDraft = /* #__PURE__ */ createQueryStore(
     (noteId: Scalars["ID"]): Promise<NoteDraft | undefined> =>
         loadNoteDraft(noteId),
 );
@@ -38,7 +38,6 @@ export const useNoteDraft = (
 
     const note = useNote(noteId);
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const initContents = noteDraft?.contents ?? note!.contents;
 
     const conflict = useMemo(() => {

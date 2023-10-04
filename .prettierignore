@@ -1,11 +1,9 @@
-__generated__/
+*.yml
 
-*.json
-*.js
-*.html
+package.json
+package-lock.json
+tsconfig.json
+tsconfig.*.json
 
-/app
-/data/schema.graphql
-
-_*
-*.local
+/.vscode
+/turbo.json

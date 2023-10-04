@@ -59,7 +59,7 @@ export const TextInput: React.FC<
     ...restProps
 }) => {
     const handleChange =
-        (onChange || onValueChange) &&
+        (onChange ?? onValueChange) &&
         ((e: React.ChangeEvent<HTMLInputElement>) => {
             onChange?.(e);
             onValueChange?.(e.target.value);

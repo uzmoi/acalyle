@@ -1,14 +1,14 @@
-export interface Log<out M, out L, out MetaData = undefined> {
+export type Log<out M, out L, out MetaData = undefined> = {
     name: string;
     level: L;
     timeStamp: number;
     message: M;
     meta: MetaData | undefined;
-}
+};
 
-export interface Transport<in M, in L, in MetaData = undefined> {
+export type Transport<in M, in L, in MetaData = undefined> = {
     transport(log: Log<M, L, MetaData>): void;
-}
+};
 
 export abstract class Logger<in Message, in Level, in MetaData = undefined>
     implements Transport<Message, Level, MetaData>
@@ -28,7 +28,9 @@ export abstract class Logger<in Message, in Level, in MetaData = undefined>
             try {
                 transport.transport(log);
             } catch (error) {
-                console.error(
+                type Console = { error(...data: unknown[]): void };
+                // @ts-expect-error: consoleぐらいどのランタイムにも有る
+                (console as Console).error(
                     "Uncaught (in transport) Error:",
                     error,
                     transport,

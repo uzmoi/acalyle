@@ -6,7 +6,7 @@ test("transportがエラー吐いても継続する", () => {
     const logger = new BasicLogger("root");
     const consoleError = vi.spyOn(console, "error").mockImplementation(noop);
     const transport = vi.fn().mockImplementationOnce(() => {
-        throw new Error();
+        throw new Error("Some error.");
     });
     logger.attachTransport({ transport });
     logger.attachTransport({ transport });

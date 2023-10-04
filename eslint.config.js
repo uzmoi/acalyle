@@ -7,29 +7,39 @@ import { OFF, configs } from "@acalyle/eslint-config";
 const typescriptProject = [
     "tsconfig.json",
     "apps/*/tsconfig.json",
+    "apps/*/tsconfig.*.json",
     "packages/*/tsconfig.json",
+    "packages/*/tsconfig.*.json",
 ];
 
 /** @type {import("eslint").Linter.FlatConfig[]} */
 export default [
     {
         ignores: [
-            "app/**",
+            "main/**",
+            "renderer/**",
+            "scripts/**",
             "apps/tauri/src-tauri/**",
             "**/dist/**",
             "**/coverage/**",
             "**/__generated__/**",
             "**/__*",
             "**/*.d.ts",
-            "renderer/**",
         ],
     },
     eslint.configs.recommended,
-    configs.typescript,
-    configs.typescriptRecommended,
-    configs.typescriptRecommendedRequiringTypeChecking,
+    {
+        ...configs.acalyle,
+        ignores: [
+            ...(configs.acalyle.ignores ?? []),
+            "packages/eslint-config/**",
+        ],
+    },
+    configs.unicorn,
+    configs.typescript("recommended-type-checked", "stylistic-type-checked"),
     configs.typescriptCustom,
-    ...configs.react,
+    configs.react,
+    configs.testingLibrary("react"),
     configs.import,
     {
         files: ["!**/src/**"],

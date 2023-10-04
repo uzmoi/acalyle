@@ -8,12 +8,13 @@ import { vars } from "../theme/theme";
 import { cx } from "./cx";
 import { useTransitionStatus } from "./use-transition-status";
 
-const PopoverStore = atom<string | null>(null);
+const PopoverStore = /* #__PURE__ */ atom<string | null>(null);
 
 export const closePopover = () => {
     PopoverStore.set(null);
 };
 
+// eslint-disable-next-line acalyle/no-module-side-effect
 onMount(PopoverStore, () => {
     window.addEventListener("click", closePopover);
     return () => {
@@ -21,7 +22,9 @@ onMount(PopoverStore, () => {
     };
 });
 
-const PopoverIdContext = createContext<string | undefined>(undefined);
+const PopoverIdContext = /* #__PURE__ */ createContext<string | undefined>(
+    undefined,
+);
 
 export const Popover: React.FC<React.ComponentPropsWithoutRef<"div">> & {
     Button: typeof PopoverButton;
@@ -74,8 +77,10 @@ const PopoverButton: React.FC<
     );
 };
 
+// eslint-disable-next-line acalyle/no-module-side-effect
 Popover.Button = PopoverButton;
 if (process.env.NODE_ENV === "development") {
+    // eslint-disable-next-line acalyle/no-module-side-effect
     Popover.Button.displayName = "Popover.Button";
 }
 
@@ -131,7 +136,9 @@ const PopoverContent: React.FC<
     );
 };
 
+// eslint-disable-next-line acalyle/no-module-side-effect
 Popover.Content = PopoverContent;
 if (process.env.NODE_ENV === "development") {
+    // eslint-disable-next-line acalyle/no-module-side-effect
     Popover.Content.displayName = "Popover.Content";
 }

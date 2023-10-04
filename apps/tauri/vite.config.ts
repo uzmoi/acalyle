@@ -1,5 +1,5 @@
 import { macaronVitePlugin } from "@macaron-css/vite";
-import react from "@vitejs/plugin-react";
+import react from "@vitejs/plugin-react-swc";
 import { defineConfig, splitVendorChunkPlugin } from "vite";
 
 // const mobile =

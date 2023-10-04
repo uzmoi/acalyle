@@ -5,6 +5,7 @@ type DoResultRunner<B, E> = (perform: PerformResult<E>) => Result<B, E>;
 
 export class Result<out A, out E> {
     static do<A, E>(runner: DoResultRunner<A, E>): Result<A, E> {
+        // eslint-disable-next-line unicorn/consistent-function-scoping
         const perform: PerformResult<unknown> = result => {
             // getOrThrowのthrowするのをresultにしただけ
             if (result.isOk()) {

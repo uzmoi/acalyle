@@ -4,8 +4,6 @@
   "type": "module",
   "version": "0.1.0",
   "workspaces": [
-    "renderer",
-    "main",
     "apps/*",
     "packages/*"
   ],
@@ -17,15 +15,14 @@
     "lint": "eslint .",
     "test": "turbo run test",
     "coverage": "turbo run coverage",
-    "format": "prettier -w \"**/*.{ts,tsx,md}\""
+    "format": "prettier -c ."
   },
   "devDependencies": {
-    "@eslint/js": "^8.38.0",
-    "electron": "^23.0.0",
-    "eslint": "^8.38.0",
-    "globals": "^13.20.0",
-    "prettier": "^2.8.7",
-    "turbo": "^1.8.3",
-    "typescript": "^5.0.4"
+    "@eslint/js": "^8.50.0",
+    "eslint": "^8.50.0",
+    "globals": "^13.22.0",
+    "prettier": "^3.0.3",
+    "turbo": "^1.10.14",
+    "typescript": "^5.2.2"
   }
 }

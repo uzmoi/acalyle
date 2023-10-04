@@ -1,6 +1,7 @@
 {
   "extends": "@acalyle/tsconfig/tsconfig.web.json",
   "include": ["src"],
+  "exclude": ["**/*.test.ts"],
   "compilerOptions": {
     "jsx": "react-jsx",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],

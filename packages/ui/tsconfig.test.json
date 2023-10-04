@@ -1,0 +1,7 @@
+{
+    "extends": "@acalyle/tsconfig/tsconfig.web.json",
+    "include": ["**/*.test.ts"],
+    "compilerOptions": {
+        "jsx": "react-jsx",
+    },
+}

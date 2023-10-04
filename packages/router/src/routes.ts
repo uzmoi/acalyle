@@ -12,7 +12,7 @@ type MatchResult<T extends string> =
     | { path: Path<string>; matchParams: MatchParams<T> }
     | undefined;
 
-/** @private */
+/** @package */
 export const matchPart = <T extends string>(
     part: PatternPart,
     path: Path<string>,
@@ -35,12 +35,11 @@ export const matchPart = <T extends string>(
                 path: [],
                 matchParams: { ...matchParams, [part.key]: path },
             };
-        } else {
-            return {
-                path: path.slice(1),
-                matchParams: { ...matchParams, [part.key]: path[0] },
-            };
         }
+        return {
+            path: path.slice(1),
+            matchParams: { ...matchParams, [part.key]: path[0] },
+        };
     }
 };
 
@@ -102,16 +101,15 @@ export const routes = <const T extends Record<string, Route<never>>>(
                 }
             }
         }
-        return undefined;
+        return;
     });
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export const page = <Params extends {} = {}, R = unknown>(
     page: (params: Params) => R,
 ): Route<"", Params, R | undefined> => {
     return new Route((path, matchParams) => {
-        if (path.length !== 0) {
+        if (path.length > 0) {
             return;
         }
         return page(matchParams);

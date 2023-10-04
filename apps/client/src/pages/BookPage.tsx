@@ -13,6 +13,7 @@ import { Note } from "~/ui/note/Note";
 
 export type BookPageRoute = InferPath<typeof BookPageRoute>;
 
+/* eslint-disable acalyle/no-module-side-effect */
 export const BookPageRoute = routes({
     "": page(({ bookId: bookHandle }: MatchParams<"bookId">) => (
         <MemoListPage bookHandle={bookHandle} />
@@ -26,6 +27,7 @@ export const BookPageRoute = routes({
     // eslint-disable-next-line react/jsx-key
     <BookPage bookHandle={bookId}>{children}</BookPage>
 ));
+/* eslint-enable acalyle/no-module-side-effect */
 
 export const BookPage: React.FC<{
     bookHandle: string;
