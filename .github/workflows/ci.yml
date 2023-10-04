@@ -1,25 +1,50 @@
 name: CI
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
     branches: [ main ]
   workflow_dispatch:
 
 jobs:
-  test:
+  prepare:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
-          cache: npm
+          node-version: 18.x
+      - uses: actions/cache@v3
+        id: npm-cache
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+      - id: pre-install
+        run: echo "hash=${{ hashFiles('**/package-lock.json') }}" >> $GITHUB_OUTPUT
+      - if: steps.npm-cache.outputs.cache-hit != 'true'
+        run: npm install
+      - if: steps.pre-install.outputs.hash != hashFiles('**/package-lock.json')
+        run: exit 1
+  test:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - uses: actions/cache/restore@v3
+        id: npm-cache
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
 
-      - run: npm ci
       - run: npm run coverage
 
       - id: coverage_files
@@ -32,13 +57,19 @@ jobs:
         with:
           files: ${{ steps.coverage_files.outputs.files }}
   lint:
+    needs: prepare
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v3
+
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
-          cache: npm
+          node-version: 18.x
+      - uses: actions/cache/restore@v3
+        id: npm-cache
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
 
-      - run: npm ci
       - run: npm run lint
