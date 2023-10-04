@@ -52,6 +52,8 @@ jobs:
           files=$(ls {apps,packages}/*/coverage/coverage-final.json | paste -sd ",")
           echo "files=$files" >> $GITHUB_OUTPUT
 
+      - name: Create codecov.yml
+        run: node scripts/create-codecov_yml.js
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:

@@ -9,6 +9,8 @@ _*
 *.local
 *.tsbuildinfo
 
+/codecov.yml
+
 /app
 /data
 
