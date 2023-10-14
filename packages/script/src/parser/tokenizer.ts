@@ -161,6 +161,11 @@ export class Tokenizer {
             this.next(undefined);
         }
 
+        if (this._stack.length > 0) {
+            const stack = (this._stack as []).join(", ");
+            assert.unreachable(`Stack is not empty. stack: [${stack}]`);
+        }
+
         return this.tokens;
     }
 }
