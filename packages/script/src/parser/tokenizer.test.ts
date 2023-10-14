@@ -31,6 +31,12 @@ describe("ident", () => {
     });
 });
 
+describe("number", () => {
+    test("number", () => {
+        expect(tokenize("42")).toEqual(tokens(["Number", "42"]));
+    });
+});
+
 describe("string", () => {
     test("string", () => {
         expect(tokenize('"hoge"')).toEqual(tokens(["String", '"hoge"']));

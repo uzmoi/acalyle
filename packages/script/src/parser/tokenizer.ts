@@ -1,7 +1,12 @@
 import { assert } from "emnorst";
 import type { Stack } from "../types";
 
-export type TokenType = "Ident" | "Keyword" | "String" | "Whitespace";
+export type TokenType =
+    | "Ident"
+    | "Keyword"
+    | "Number"
+    | "String"
+    | "Whitespace";
 
 export type Token = {
     type: TokenType;
@@ -23,6 +28,7 @@ const enum TokenizeState {
     Root,
     Escape,
     Ident,
+    Number,
     String,
     Whitespace,
     /* eslint-enable @typescript-eslint/naming-convention */
@@ -61,6 +67,10 @@ export class Tokenizer {
                         this._stack.push(TokenizeState.Ident);
                         break;
                     }
+                    case /\d/.test(char) && char: {
+                        this._stack.push(TokenizeState.Number);
+                        break;
+                    }
                     case '"': {
                         this._stack.push(TokenizeState.String);
                         break;
@@ -95,6 +105,14 @@ export class Tokenizer {
                         this._current as Keyword,
                     );
                     this._nextToken(isKeyword ? "Keyword" : "Ident", char);
+                }
+                break;
+            }
+            case TokenizeState.Number: {
+                if (char !== undefined && /[\d_]/.test(char)) {
+                    this._current += char;
+                } else {
+                    this._nextToken("Number", char);
                 }
                 break;
             }
