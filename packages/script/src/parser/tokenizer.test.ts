@@ -49,6 +49,9 @@ describe("string", () => {
             tokens(["String", '"$'], ["Ident", "hoge"], ["String", '"']),
         );
     });
+    test("empty ident", () => {
+        expect(tokenize('"$"')).toEqual(tokens(["String", '"$"']));
+    });
     test.todo("{expr}", () => {
         expect(tokenize('"{hoge}"')).toEqual(
             tokens(["String", '"{'], ["Ident", "hoge"], ["String", '}"']),
