@@ -1,0 +1,7 @@
+{
+    "extends": "@acalyle/tsconfig/tsconfig.base.json",
+    "include": ["src"],
+    "compilerOptions": {
+        "lib": ["ESNext"]
+    }
+}
