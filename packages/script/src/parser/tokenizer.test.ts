@@ -38,13 +38,15 @@ describe("string", () => {
     test("escape", () => {
         expect(tokenize('"\\\\"')).toEqual(tokens(["String", '"\\\\"']));
     });
-    test.todo("$ident", () => {
+    test("$ident", () => {
         expect(tokenize('"$hoge"')).toEqual(
             tokens(["String", '"$'], ["Ident", "hoge"], ["String", '"']),
         );
     });
     test.todo("{expr}", () => {
-        expect(tokenize('"{hoge}"')).toEqual(tokens(["String", '"hoge"']));
+        expect(tokenize('"{hoge}"')).toEqual(
+            tokens(["String", '"{'], ["Ident", "hoge"], ["String", '}"']),
+        );
     });
 });
 

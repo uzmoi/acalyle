@@ -103,11 +103,21 @@ export class Tokenizer {
                     throw new SyntaxError("Unexpected end of input.");
                 }
                 this._current += char;
-                if (char === "\\") {
-                    this._stack.push(TokenizeState.Escape);
-                } else if (char === '"') {
-                    this._stack.pop();
-                    this._pushToken("String");
+                switch (char) {
+                    case "\\": {
+                        this._stack.push(TokenizeState.Escape);
+                        break;
+                    }
+                    case "$": {
+                        this._pushToken("String");
+                        this._stack.push(TokenizeState.Ident);
+                        break;
+                    }
+                    case '"': {
+                        this._stack.pop();
+                        this._pushToken("String");
+                        break;
+                    }
                 }
                 break;
             }
