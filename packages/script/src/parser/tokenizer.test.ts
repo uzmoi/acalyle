@@ -23,10 +23,10 @@ describe("ident", () => {
     test("ident", () => {
         expect(tokenize("hoge")).toEqual(tokens(["Ident", "hoge"]));
     });
-    test.todo("escape", () => {
+    test("escape", () => {
         expect(tokenize("hoge\\\\")).toEqual(tokens(["Ident", "hoge\\\\"]));
     });
-    test.todo("escape keyword", () => {
+    test("escape keyword", () => {
         expect(tokenize("\\if")).toEqual(tokens(["Ident", "\\if"]));
     });
 });
@@ -35,7 +35,7 @@ describe("string", () => {
     test("string", () => {
         expect(tokenize('"hoge"')).toEqual(tokens(["String", '"hoge"']));
     });
-    test.todo("escape", () => {
+    test("escape", () => {
         expect(tokenize('"\\\\"')).toEqual(tokens(["String", '"\\\\"']));
     });
     test.todo("$ident", () => {

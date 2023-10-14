@@ -1,5 +1,5 @@
 export type Stack<T> = {
-    push(value: T): void;
+    push(...values: T[]): void;
     pop(): T | undefined;
     at(index: number): T | undefined;
     length: number;

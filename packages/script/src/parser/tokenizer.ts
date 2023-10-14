@@ -21,6 +21,7 @@ const isWhitespace = (char: string) => /\s/.test(char);
 const enum TokenizeState {
     /* eslint-disable @typescript-eslint/naming-convention */
     Root,
+    Escape,
     Ident,
     String,
     Whitespace,
@@ -49,6 +50,13 @@ export class Tokenizer {
             case TokenizeState.Root: {
                 if (char === undefined) return;
                 switch (char) {
+                    case "\\": {
+                        this._stack.push(
+                            TokenizeState.Ident,
+                            TokenizeState.Escape,
+                        );
+                        break;
+                    }
                     case /[a-z]/i.test(char) && char: {
                         this._stack.push(TokenizeState.Ident);
                         break;
@@ -67,8 +75,20 @@ export class Tokenizer {
                 this._current += char;
                 break;
             }
+            case TokenizeState.Escape: {
+                if (char === undefined) {
+                    throw new SyntaxError("Unexpected end of input.");
+                } else {
+                    this._current += char;
+                    this._stack.pop();
+                }
+                break;
+            }
             case TokenizeState.Ident: {
-                if (char !== undefined && /[\da-z]/i.test(char)) {
+                if (char === "\\") {
+                    this._stack.push(TokenizeState.Escape);
+                    this._current += char;
+                } else if (char !== undefined && /[\da-z]/i.test(char)) {
                     this._current += char;
                 } else {
                     const isKeyword = keywords.includes(
@@ -83,7 +103,9 @@ export class Tokenizer {
                     throw new SyntaxError("Unexpected end of input.");
                 }
                 this._current += char;
-                if (char === '"') {
+                if (char === "\\") {
+                    this._stack.push(TokenizeState.Escape);
+                } else if (char === '"') {
                     this._stack.pop();
                     this._pushToken("String");
                 }
