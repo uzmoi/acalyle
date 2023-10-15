@@ -4,6 +4,7 @@ import type { Stack } from "../types";
 export type TokenType =
     | "Ident"
     | "Keyword"
+    | "Delimiter"
     | "Punctuator"
     | "Number"
     | "String"
@@ -18,7 +19,14 @@ export type Keyword = (typeof keywords)[number];
 
 const keywords = ["fn", "return", "true", "false", "if", "else"] as const;
 
-export type PunctuatorChar = (typeof punctuatorChars)[number];
+export type Delimiter = (typeof delimiters)[number];
+
+const delimiters = ["(", ")", "[", "]", "{", "}"] as const;
+
+export type PunctuatorChar = Exclude<
+    (typeof punctuatorChars)[number],
+    Delimiter
+>;
 
 const punctuatorChars = [
     "!",
@@ -42,6 +50,7 @@ const punctuatorChars = [
     "^",
     "|",
     "~",
+    ...delimiters,
 ] as const;
 
 // TODO: JSの正規表現の\sに頼らずに定義したい
@@ -145,7 +154,9 @@ export class Tokenizer {
                 break;
             }
             case TokenizeState.Punctuator: {
-                if (punctuatorChars.includes(char as PunctuatorChar)) {
+                if (delimiters.includes(this._current as Delimiter)) {
+                    this._pushTokenAndNext("Delimiter", char);
+                } else if (punctuatorChars.includes(char as PunctuatorChar)) {
                     this._current += char;
                 } else {
                     this._pushTokenAndNext("Punctuator", char);

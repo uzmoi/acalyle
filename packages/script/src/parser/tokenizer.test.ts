@@ -37,6 +37,12 @@ describe("punctuator", () => {
     });
 });
 
+test("delimiter", () => {
+    expect(tokenize("()")).toEqual(
+        tokens(["Delimiter", "("], ["Delimiter", ")"]),
+    );
+});
+
 describe("number", () => {
     test("number", () => {
         expect(tokenize("42")).toEqual(tokens(["Number", "42"]));
