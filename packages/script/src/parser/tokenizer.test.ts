@@ -15,11 +15,11 @@ test("empty", () => {
     expect(tokenize("")).toEqual([]);
 });
 
-test("keyword", () => {
+test("Keyword", () => {
     expect(tokenize("if")).toEqual(tokens(["Keyword", "if"]));
 });
 
-describe("ident", () => {
+describe("Ident", () => {
     test("ident", () => {
         expect(tokenize("hoge")).toEqual(tokens(["Ident", "hoge"]));
     });
@@ -31,25 +31,27 @@ describe("ident", () => {
     });
 });
 
-describe("punctuator", () => {
+describe("Punctuator", () => {
     test("punctuator", () => {
         expect(tokenize("++")).toEqual(tokens(["Punctuator", "++"]));
     });
 });
 
-test("delimiter", () => {
-    expect(tokenize("()")).toEqual(
-        tokens(["Delimiter", "("], ["Delimiter", ")"]),
-    );
+describe("Delimiter", () => {
+    test("delimiter", () => {
+        expect(tokenize("()")).toEqual(
+            tokens(["Delimiter", "("], ["Delimiter", ")"]),
+        );
+    });
 });
 
-describe("number", () => {
+describe("Number", () => {
     test("number", () => {
         expect(tokenize("42")).toEqual(tokens(["Number", "42"]));
     });
 });
 
-describe("string", () => {
+describe("String", () => {
     test("string", () => {
         expect(tokenize('"hoge"')).toEqual(tokens(["String", '"hoge"']));
     });
@@ -71,6 +73,6 @@ describe("string", () => {
     });
 });
 
-test("whitespace", () => {
+test("Whitespace", () => {
     expect(tokenize(" ")).toEqual(tokens(["Whitespace", " "]));
 });
