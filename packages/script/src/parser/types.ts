@@ -8,6 +8,17 @@ export type BoolExpression = {
     value: boolean;
 };
 
+export type NumberExpression = {
+    type: "Number";
+    value: string;
+};
+
+export type StringExpression = {
+    type: "String";
+    strings: string[];
+    values: Expression[];
+};
+
 export type TupleExpression = {
     type: "Tuple";
     elements: Expression[];
@@ -29,6 +40,8 @@ export type FnExpression = {
 export type Expression =
     | IdentExpression
     | BoolExpression
+    | NumberExpression
+    | StringExpression
     | TupleExpression
     | IfExpression
     | FnExpression;

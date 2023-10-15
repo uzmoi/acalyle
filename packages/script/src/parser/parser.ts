@@ -13,10 +13,11 @@ const token = <T extends TokenType, U extends string>(type: T, value?: U) =>
 
 const keyword = (word: Keyword) => token("Keyword", word);
 const delimiter = (delimiter: Delimiter) => token("Delimiter", delimiter);
-const punctuator = (punctuator: string) => token("Punctuator", punctuator);
+const punctuator = <T extends string>(punctuator: T) =>
+    token("Punctuator", punctuator);
 
 export const expression: P.Parser<Expression> = /* #__PURE__ */ P.lazy(() =>
-    P.choice([Ident, Bool, Tuple, If, Fn]).label("expression"),
+    P.choice([Ident, Bool, Number, String, Tuple, If, Fn]).label("expression"),
 );
 
 const Ident = /* #__PURE__ */ token("Ident").map(token => {
@@ -30,6 +31,33 @@ const Bool = /* #__PURE__ */ P.choice([
     /* #__PURE__ */ keyword("true").return(true),
     /* #__PURE__ */ keyword("false").return(false),
 ]).map((value): Expression => ({ type: "Bool", value }));
+
+const Number = /* #__PURE__ */ P.qo((perform): Expression => {
+    const sign =
+        perform(punctuator("+").option()) ?? perform(punctuator("-").option());
+    const number = perform(token("Number"));
+    return {
+        type: "Number",
+        value: `${sign?.value ?? ""}${number.value}`,
+    };
+});
+
+const String = /* #__PURE__ */ P.qo((perform): Expression => {
+    const stringToken = token("String");
+    const first = perform(stringToken);
+    if (!first.value.startsWith('"')) {
+        perform(P.fail());
+    }
+    const strings: string[] = [first.value.replace(/^"|["$]$/g, "")];
+    const values: Expression[] = [];
+    let last = first;
+    while (last.value.endsWith("$")) {
+        values.push(perform(Ident));
+        last = perform(stringToken);
+        strings.push(last.value.replace(/["$]$/, ""));
+    }
+    return { type: "String", strings, values };
+});
 
 const Tuple = /* #__PURE__ */ P.qo((perform): Expression => {
     perform(delimiter("("));

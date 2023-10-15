@@ -16,6 +16,12 @@ const parseExpr = (source: string) => {
 
 const ident = (name: string): IdentExpression => ({ type: "Ident", name });
 const bool = (value: boolean): Expression => ({ type: "Bool", value });
+const number = (value: string): Expression => ({ type: "Number", value });
+const string = (strings: string[], values: Expression[] = []): Expression => ({
+    type: "String",
+    strings,
+    values,
+});
 const tuple = (elements: Expression[] = []): Expression => ({
     type: "Tuple",
     elements,
@@ -41,6 +47,27 @@ describe("Expression", () => {
         });
         test("false", () => {
             expect(parseExpr("false")).toEqual(bool(false));
+        });
+    });
+    describe("Number", () => {
+        test("number", () => {
+            expect(parseExpr("0")).toEqual(number("0"));
+        });
+        test("plus", () => {
+            expect(parseExpr("+1")).toEqual(number("+1"));
+        });
+        test("minus", () => {
+            expect(parseExpr("-1")).toEqual(number("-1"));
+        });
+    });
+    describe("String", () => {
+        test("string", () => {
+            expect(parseExpr('"hoge"')).toEqual(string(["hoge"]));
+        });
+        test("$ident", () => {
+            expect(parseExpr('"Hello $name!"')).toEqual(
+                string(["Hello ", "!"], [ident("name")]),
+            );
         });
     });
     describe("Tuple", () => {
