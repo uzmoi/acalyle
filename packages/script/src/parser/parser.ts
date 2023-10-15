@@ -1,4 +1,5 @@
 import * as P from "parsea";
+import { error } from "parsea/internal";
 import type { Delimiter, Keyword, Token, TokenType } from "./tokenizer";
 import type { Expression } from "./types";
 
@@ -7,6 +8,7 @@ const token = <T extends TokenType, U extends string>(type: T, value?: U) =>
         token =>
             (token as Token).type === type &&
             (!value || (token as Token).value === value),
+        { error: error.expected(value ? `${type}("${value}")` : type) },
     );
 
 const keyword = (word: Keyword) => token("Keyword", word);
@@ -14,7 +16,7 @@ const delimiter = (delimiter: Delimiter) => token("Delimiter", delimiter);
 const punctuator = (punctuator: string) => token("Punctuator", punctuator);
 
 export const expression: P.Parser<Expression> = /* #__PURE__ */ P.lazy(() =>
-    P.choice([Ident, Bool, Tuple, If, Fn]),
+    P.choice([Ident, Bool, Tuple, If, Fn]).label("expression"),
 );
 
 const Ident = /* #__PURE__ */ token("Ident").map(token => {

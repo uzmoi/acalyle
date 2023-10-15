@@ -1,14 +1,17 @@
+import { EOI } from "parsea";
 import { describe, expect, test } from "vitest";
 import { expression } from "./parser";
 import { Tokenizer } from "./tokenizer";
 import type { Expression, IdentExpression } from "./types";
 
 const parseExpr = (source: string) => {
-    const tokens = new Tokenizer(source).tokenize();
-    const result = expression.parse(
-        tokens.filter(token => token.type !== "Whitespace"),
-    );
-    return result.success ? result.value : result.errors;
+    const tokens = new Tokenizer(source)
+        .tokenize()
+        .filter(token => token.type !== "Whitespace");
+    const result = expression.skip(EOI).parse(tokens);
+    return result.success
+        ? result.value
+        : [result.errors, tokens[result.index]];
 };
 
 const ident = (name: string): IdentExpression => ({ type: "Ident", name });
