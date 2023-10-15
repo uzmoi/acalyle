@@ -18,12 +18,6 @@ const punctuator = <T extends string>(punctuator: T) =>
 
 export const statement: P.Parser<Statement> = /* #__PURE__ */ P.choice([]);
 
-export const expression: P.Parser<Expression> = /* #__PURE__ */ P.lazy(() =>
-    P.choice([Ident, Bool, Number, String, Tuple, Block, If, Fn]).label(
-        "expression",
-    ),
-);
-
 const Ident = /* #__PURE__ */ token("Ident").map(token => {
     return {
         type: "Ident",
@@ -113,3 +107,9 @@ const Fn = /* #__PURE__ */ P.qo((perform): Expression => {
         body,
     };
 });
+
+export const expression: P.Parser<Expression> =
+    /* #__PURE__ */
+    P.choice([Ident, Bool, Number, String, Tuple, Block, If, Fn]).label(
+        "expression",
+    );
