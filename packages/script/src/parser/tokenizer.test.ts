@@ -31,6 +31,12 @@ describe("ident", () => {
     });
 });
 
+describe("punctuator", () => {
+    test("punctuator", () => {
+        expect(tokenize("++")).toEqual(tokens(["Punctuator", "++"]));
+    });
+});
+
 describe("number", () => {
     test("number", () => {
         expect(tokenize("42")).toEqual(tokens(["Number", "42"]));

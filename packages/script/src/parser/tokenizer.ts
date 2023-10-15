@@ -4,6 +4,7 @@ import type { Stack } from "../types";
 export type TokenType =
     | "Ident"
     | "Keyword"
+    | "Punctuator"
     | "Number"
     | "String"
     | "Whitespace";
@@ -17,6 +18,32 @@ export type Keyword = (typeof keywords)[number];
 
 const keywords = ["fn", "return", "true", "false", "if", "else"] as const;
 
+export type PunctuatorChar = (typeof punctuatorChars)[number];
+
+const punctuatorChars = [
+    "!",
+    "#",
+    "$",
+    "%",
+    "&",
+    "*",
+    "+",
+    ",",
+    "-",
+    ".",
+    "/",
+    ":",
+    ";",
+    "<",
+    "=",
+    ">",
+    "?",
+    "@",
+    "^",
+    "|",
+    "~",
+] as const;
+
 // TODO: JSの正規表現の\sに頼らずに定義したい
 // https://tc39.es/ecma262/multipage/text-processing.html#sec-compiletocharset
 // https://tc39.es/ecma262/multipage/ecmascript-language-lexical-grammar.html#prod-WhiteSpace
@@ -28,6 +55,7 @@ const enum TokenizeState {
     Root,
     Escape,
     Ident,
+    Punctuator,
     Number,
     String,
     Whitespace,
@@ -65,6 +93,11 @@ export class Tokenizer {
                     }
                     case /[a-z]/i.test(char) && char: {
                         this._stack.push(TokenizeState.Ident);
+                        break;
+                    }
+                    case punctuatorChars.includes(char as PunctuatorChar) &&
+                        char: {
+                        this._stack.push(TokenizeState.Punctuator);
                         break;
                     }
                     case /\d/.test(char) && char: {
@@ -108,6 +141,14 @@ export class Tokenizer {
                         isKeyword ? "Keyword" : "Ident",
                         char,
                     );
+                }
+                break;
+            }
+            case TokenizeState.Punctuator: {
+                if (punctuatorChars.includes(char as PunctuatorChar)) {
+                    this._current += char;
+                } else {
+                    this._pushTokenAndNext("Punctuator", char);
                 }
                 break;
             }
