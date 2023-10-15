@@ -1,7 +1,7 @@
 import * as P from "parsea";
 import { error } from "parsea/internal";
 import type { Delimiter, Keyword, Token, TokenType } from "./tokenizer";
-import type { Expression } from "./types";
+import type { Expression, Statement } from "./types";
 
 const token = <T extends TokenType, U extends string>(type: T, value?: U) =>
     P.satisfy<Token & { type: T; value: U }>(
@@ -16,8 +16,12 @@ const delimiter = (delimiter: Delimiter) => token("Delimiter", delimiter);
 const punctuator = <T extends string>(punctuator: T) =>
     token("Punctuator", punctuator);
 
+export const statement: P.Parser<Statement> = /* #__PURE__ */ P.choice([]);
+
 export const expression: P.Parser<Expression> = /* #__PURE__ */ P.lazy(() =>
-    P.choice([Ident, Bool, Number, String, Tuple, If, Fn]).label("expression"),
+    P.choice([Ident, Bool, Number, String, Tuple, Block, If, Fn]).label(
+        "expression",
+    ),
 );
 
 const Ident = /* #__PURE__ */ token("Ident").map(token => {
@@ -71,6 +75,14 @@ const Tuple = /* #__PURE__ */ P.qo((perform): Expression => {
     }, true);
     perform(delimiter(")"));
     return { type: "Tuple", elements };
+});
+
+const Block = /* #__PURE__ */ P.qo((perform): Expression => {
+    perform(delimiter("{"));
+    const stmts = perform(statement.apply(P.many));
+    const last = perform(expression.option(null));
+    perform(delimiter("}"));
+    return { type: "Block", stmts, last };
 });
 
 const If = /* #__PURE__ */ P.qo((perform): Expression => {

@@ -1,3 +1,5 @@
+export type Statement = never;
+
 export type IdentExpression = {
     type: "Ident";
     name: string;
@@ -24,6 +26,12 @@ export type TupleExpression = {
     elements: Expression[];
 };
 
+export type BlockExpression = {
+    type: "Block";
+    stmts: Statement[];
+    last: Expression | null;
+};
+
 export type IfExpression = {
     type: "If";
     cond: Expression;
@@ -43,5 +51,6 @@ export type Expression =
     | NumberExpression
     | StringExpression
     | TupleExpression
+    | BlockExpression
     | IfExpression
     | FnExpression;

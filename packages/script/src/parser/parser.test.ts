@@ -2,7 +2,7 @@ import { EOI } from "parsea";
 import { describe, expect, test } from "vitest";
 import { expression } from "./parser";
 import { Tokenizer } from "./tokenizer";
-import type { Expression, IdentExpression } from "./types";
+import type { Expression, IdentExpression, Statement } from "./types";
 
 const parseExpr = (source: string) => {
     const tokens = new Tokenizer(source)
@@ -25,6 +25,14 @@ const string = (strings: string[], values: Expression[] = []): Expression => ({
 const tuple = (elements: Expression[] = []): Expression => ({
     type: "Tuple",
     elements,
+});
+const block = (
+    stmts: Statement[] = [],
+    last: Expression | null = null,
+): Expression => ({
+    type: "Block",
+    stmts,
+    last,
 });
 const $if = (
     cond: Expression,
@@ -81,6 +89,14 @@ describe("Expression", () => {
             expect(parseExpr("(true, )")).toEqual(tuple([bool(true)]));
         });
     });
+    describe("Block", () => {
+        test("empty", () => {
+            expect(parseExpr("{}")).toEqual(block());
+        });
+        test("{ expr }", () => {
+            expect(parseExpr("{ () }")).toEqual(block([], tuple()));
+        });
+    });
     describe("If", () => {
         test("if-then-else", () => {
             expect(parseExpr("if (cond) true else false")).toEqual(
@@ -98,7 +114,7 @@ describe("Expression", () => {
             expect(parseExpr("fn true")).toEqual(fn([], bool(true)));
         });
         test("empty params", () => {
-            expect(parseExpr("fn () x")).toEqual(fn([], ident("x")));
+            expect(parseExpr("fn () {}")).toEqual(fn([], block()));
         });
         test("identify", () => {
             expect(parseExpr("fn (x) x")).toEqual(fn([ident("x")], ident("x")));
