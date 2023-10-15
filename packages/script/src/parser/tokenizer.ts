@@ -43,7 +43,7 @@ export class Tokenizer {
         this.tokens.push({ type, value: this._current });
         this._current = "";
     }
-    private _nextToken(type: TokenType, char: string | undefined) {
+    private _pushTokenAndNext(type: TokenType, char: string | undefined) {
         this._pushToken(type);
         this._stack.pop();
         if (char !== undefined) {
@@ -104,7 +104,10 @@ export class Tokenizer {
                     const isKeyword = keywords.includes(
                         this._current as Keyword,
                     );
-                    this._nextToken(isKeyword ? "Keyword" : "Ident", char);
+                    this._pushTokenAndNext(
+                        isKeyword ? "Keyword" : "Ident",
+                        char,
+                    );
                 }
                 break;
             }
@@ -112,7 +115,7 @@ export class Tokenizer {
                 if (char !== undefined && /[\d_]/.test(char)) {
                     this._current += char;
                 } else {
-                    this._nextToken("Number", char);
+                    this._pushTokenAndNext("Number", char);
                 }
                 break;
             }
@@ -143,7 +146,7 @@ export class Tokenizer {
                 if (char !== undefined && isWhitespace(char)) {
                     this._current += char;
                 } else {
-                    this._nextToken("Whitespace", char);
+                    this._pushTokenAndNext("Whitespace", char);
                 }
                 break;
             }
