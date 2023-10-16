@@ -1,7 +1,7 @@
 import * as P from "parsea";
 import { error } from "parsea/internal";
 import type { Delimiter, Keyword, Token, TokenType } from "./tokenizer";
-import type { Expression, Statement } from "./types";
+import type { Expression, IdentExpression, Statement } from "./types";
 
 const token = <T extends TokenType, U extends string>(type: T, value?: U) =>
     P.satisfy<Token & { type: T; value: U }>(
@@ -60,15 +60,21 @@ const String = /* #__PURE__ */ P.qo((perform): Expression => {
 const Tuple = /* #__PURE__ */ P.qo((perform): Expression => {
     perform(delimiter("("));
     const elements: Expression[] = [];
+    const properties: [IdentExpression, Expression][] = [];
     perform.try(() => {
         for (;;) {
+            const label = perform(Ident.skip(punctuator("=")).option());
             const element = perform(expression);
-            elements.push(element);
+            if (label == null) {
+                elements.push(element);
+            } else {
+                properties.push([label, element]);
+            }
             perform(punctuator(","));
         }
     }, true);
     perform(delimiter(")"));
-    return { type: "Tuple", elements };
+    return { type: "Tuple", elements, properties };
 });
 
 const Block = /* #__PURE__ */ P.qo((perform): Expression => {

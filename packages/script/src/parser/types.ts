@@ -24,6 +24,7 @@ export type StringExpression = {
 export type TupleExpression = {
     type: "Tuple";
     elements: Expression[];
+    properties: [IdentExpression, Expression][];
 };
 
 export type BlockExpression = {

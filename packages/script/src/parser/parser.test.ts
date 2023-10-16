@@ -22,9 +22,13 @@ const string = (strings: string[], values: Expression[] = []): Expression => ({
     strings,
     values,
 });
-const tuple = (elements: Expression[] = []): Expression => ({
+const tuple = (
+    elements: Expression[] = [],
+    properties: [IdentExpression, Expression][] = [],
+): Expression => ({
     type: "Tuple",
     elements,
+    properties,
 });
 const block = (
     stmts: Statement[] = [],
@@ -87,6 +91,11 @@ describe("Expression", () => {
         });
         test("allow trailing comma", () => {
             expect(parseExpr("(true, )")).toEqual(tuple([bool(true)]));
+        });
+        test("named property", () => {
+            expect(parseExpr("(hoge = false)")).toEqual(
+                tuple([], [[ident("hoge"), bool(false)]]),
+            );
         });
     });
     describe("Block", () => {
