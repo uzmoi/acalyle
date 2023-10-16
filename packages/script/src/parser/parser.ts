@@ -16,8 +16,6 @@ const delimiter = (delimiter: Delimiter) => token("Delimiter", delimiter);
 const punctuator = <T extends string>(punctuator: T) =>
     token("Punctuator", punctuator);
 
-export const statement: P.Parser<Statement> = /* #__PURE__ */ P.choice([]);
-
 const Ident = /* #__PURE__ */ token("Ident").map(token => {
     return {
         type: "Ident",
@@ -114,3 +112,9 @@ export const expression: P.Parser<Expression> =
     P.choice([Ident, Bool, Number, String, Tuple, Block, If, Fn]).label(
         "expression",
     );
+
+export const statement: P.Parser<Statement> = /* #__PURE__ */ P.choice([
+    /* #__PURE__ */ expression
+        .skip(/* #__PURE__ */ punctuator(";"))
+        .map((expr): Statement => ({ type: "Expression", expr })),
+]).label("statement");

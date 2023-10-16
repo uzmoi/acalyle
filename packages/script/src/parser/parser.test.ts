@@ -1,17 +1,25 @@
-import { EOI } from "parsea";
+import { EOI, Parser } from "parsea";
 import { describe, expect, test } from "vitest";
-import { expression } from "./parser";
+import { expression, statement } from "./parser";
 import { Tokenizer } from "./tokenizer";
 import type { Expression, IdentExpression, Statement } from "./types";
 
-const parseExpr = (source: string) => {
+const parse = <T>(parser: Parser<T>, source: string) => {
     const tokens = new Tokenizer(source)
         .tokenize()
         .filter(token => token.type !== "Whitespace");
-    const result = expression.skip(EOI).parse(tokens);
+    const result = parser.skip(EOI).parse(tokens);
     return result.success
         ? result.value
         : [result.errors, tokens[result.index]];
+};
+
+const parseExpr = (source: string) => {
+    return parse(expression, source);
+};
+
+const parseStmt = (source: string) => {
+    return parse(statement, source);
 };
 
 const ident = (name: string): IdentExpression => ({ type: "Ident", name });
@@ -105,6 +113,11 @@ describe("Expression", () => {
         test("{ expr }", () => {
             expect(parseExpr("{ () }")).toEqual(block([], tuple()));
         });
+        test("{ stmt; }", () => {
+            expect(parseExpr("{ hoge; () }")).toEqual(
+                block([expr(ident("hoge"))], tuple()),
+            );
+        });
     });
     describe("If", () => {
         test("if-then-else", () => {
@@ -128,5 +141,13 @@ describe("Expression", () => {
         test("identify", () => {
             expect(parseExpr("fn (x) x")).toEqual(fn([ident("x")], ident("x")));
         });
+    });
+});
+
+const expr = (expr: Expression): Statement => ({ type: "Expression", expr });
+
+describe("Statement", () => {
+    test("Expression", () => {
+        expect(parseStmt("hoge;")).toEqual(expr(ident("hoge")));
     });
 });

@@ -1,5 +1,3 @@
-export type Statement = never;
-
 export type IdentExpression = {
     type: "Ident";
     name: string;
@@ -55,3 +53,10 @@ export type Expression =
     | BlockExpression
     | IfExpression
     | FnExpression;
+
+export type ExpressionStatement = {
+    type: "Expression";
+    expr: Expression;
+};
+
+export type Statement = ExpressionStatement;
