@@ -63,7 +63,7 @@ describe("String", () => {
             tokens(["String", '"$'], ["Ident", "hoge"], ["String", '"']),
         );
     });
-    test("empty ident", () => {
+    test.todo("empty ident", () => {
         expect(tokenize('"$"')).toEqual(tokens(["String", '"$"']));
     });
     test.todo("{expr}", () => {

@@ -43,6 +43,7 @@ const Number = /* #__PURE__ */ P.qo((perform): Expression => {
 const String = /* #__PURE__ */ P.qo((perform): Expression => {
     const stringToken = token("String");
     const first = perform(stringToken);
+    /* c8 ignore next 3 */
     if (!first.value.startsWith('"')) {
         perform(P.fail());
     }

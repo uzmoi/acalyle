@@ -203,6 +203,7 @@ export class Tokenizer {
                 break;
             }
             default:
+                /* c8 ignore next */
                 assert.unreachable<typeof state>();
         }
     }
@@ -216,6 +217,7 @@ export class Tokenizer {
             this.next(undefined);
         }
 
+        /* c8 ignore next 4 */
         if (this._stack.length > 0) {
             const stack = (this._stack as []).join(", ");
             assert.unreachable(`Stack is not empty. stack: [${stack}]`);
