@@ -85,21 +85,15 @@ const If = /* #__PURE__ */ P.qo((perform): Expression => {
     const cond = perform(expression);
     perform(delimiter(")"));
     const thenBody = perform(expression);
-    const elseBody = perform.try(() => {
-        perform(keyword("else"));
-        return perform(expression);
-    });
+    const elseBody = perform(keyword("else").then(expression).option(null));
     return { type: "If", cond, thenBody, elseBody };
 });
 
 const Fn = /* #__PURE__ */ P.qo((perform): Expression => {
     perform(keyword("fn"));
-    const params = perform.try(() => {
-        perform(delimiter("("));
-        const params = perform(Ident.apply(P.many));
-        perform(delimiter(")"));
-        return params;
-    });
+    const params = perform(
+        Ident.apply(P.many).between(delimiter("("), delimiter(")")).option(),
+    );
     const body = perform(expression);
     return {
         type: "Fn",
