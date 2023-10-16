@@ -44,6 +44,11 @@ export type FnExpression = {
     body: Expression;
 };
 
+export type ReturnExpression = {
+    type: "Return";
+    body: Expression | null;
+};
+
 export type Expression =
     | IdentExpression
     | BoolExpression
@@ -52,7 +57,8 @@ export type Expression =
     | TupleExpression
     | BlockExpression
     | IfExpression
-    | FnExpression;
+    | FnExpression
+    | ReturnExpression;
 
 export type ExpressionStatement = {
     type: "Expression";

@@ -56,6 +56,10 @@ const fn = (params: IdentExpression[], body: Expression): Expression => ({
     params,
     body,
 });
+const ret = (body: Expression | null = null): Expression => ({
+    type: "Return",
+    body,
+});
 
 describe("Expression", () => {
     test("Ident", () => {
@@ -140,6 +144,14 @@ describe("Expression", () => {
         });
         test("identify", () => {
             expect(parseExpr("fn (x) x")).toEqual(fn([ident("x")], ident("x")));
+        });
+    });
+    describe("Return", () => {
+        test("return", () => {
+            expect(parseExpr("return")).toEqual(ret());
+        });
+        test("return with value", () => {
+            expect(parseExpr("return result")).toEqual(ret(ident("result")));
         });
     });
 });

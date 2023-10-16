@@ -107,9 +107,15 @@ const Fn = /* #__PURE__ */ P.qo((perform): Expression => {
     };
 });
 
+const Return = /* #__PURE__ */ P.lazy(() =>
+    keyword("return")
+        .then(expression.option(null))
+        .map((body): Expression => ({ type: "Return", body })),
+);
+
 export const expression: P.Parser<Expression> =
     /* #__PURE__ */
-    P.choice([Ident, Bool, Number, String, Tuple, Block, If, Fn]).label(
+    P.choice([Ident, Bool, Number, String, Tuple, Block, If, Fn, Return]).label(
         "expression",
     );
 
