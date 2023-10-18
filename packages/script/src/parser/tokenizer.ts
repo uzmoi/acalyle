@@ -21,7 +21,7 @@ const keywords = ["fn", "return", "true", "false", "if", "else"] as const;
 
 export type Delimiter = (typeof delimiters)[number];
 
-const delimiters = ["(", ")", "[", "]", "{", "}"] as const;
+const delimiters = ["(", ")", "[", "]", "{", "}", ";", ",", "."] as const;
 
 export type PunctuatorChar = Exclude<
     (typeof punctuatorChars)[number],
@@ -36,12 +36,9 @@ const punctuatorChars = [
     "&",
     "*",
     "+",
-    ",",
     "-",
-    ".",
     "/",
     ":",
-    ";",
     "<",
     "=",
     ">",

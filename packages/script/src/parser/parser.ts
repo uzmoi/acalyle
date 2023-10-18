@@ -69,7 +69,7 @@ const Tuple = /* #__PURE__ */ P.qo((perform): Expression => {
             } else {
                 properties.push([label, element]);
             }
-            perform(punctuator(","));
+            perform(delimiter(","));
         }
     }, true);
     perform(delimiter(")"));
@@ -121,6 +121,6 @@ export const expression: P.Parser<Expression> =
 
 export const statement: P.Parser<Statement> = /* #__PURE__ */ P.choice([
     /* #__PURE__ */ expression
-        .skip(/* #__PURE__ */ punctuator(";"))
+        .skip(/* #__PURE__ */ delimiter(";"))
         .map((expr): Statement => ({ type: "Expression", expr })),
 ]).label("statement");
