@@ -13,7 +13,7 @@ const token = <T extends TokenType, U extends string>(type: T, value?: U) =>
 
 const keyword = (word: Keyword) => token("Keyword", word);
 const delimiter = (delimiter: Delimiter) => token("Delimiter", delimiter);
-const punctuator = <T extends string>(punctuator: T) =>
+const punctuator = <T extends string>(punctuator?: T) =>
     token("Punctuator", punctuator);
 
 const Ident = /* #__PURE__ */ token("Ident").map(token => {
@@ -115,9 +115,45 @@ const Return = /* #__PURE__ */ P.lazy(() =>
 
 export const expression: P.Parser<Expression> =
     /* #__PURE__ */
-    P.choice([Ident, Bool, Number, String, Tuple, Block, If, Fn, Return]).label(
-        "expression",
-    );
+    P.choice([Ident, Bool, Number, String, Tuple, Block, If, Fn, Return])
+        .flatMap(expr => {
+            return ExpressionTail.map(expressionTails => {
+                return expressionTails.reduce((lhs, rhs) => rhs(lhs), expr);
+            });
+        })
+        .label("expression");
+
+const ExpressionTail = /* #__PURE__ */ P.choice([
+    /* #__PURE__ */ Tuple.map(
+        tuple =>
+            (callee: Expression): Expression => ({
+                type: "Apply",
+                callee,
+                args: (tuple as typeof tuple & { type: "Tuple" }).elements,
+            }),
+    ),
+    /* #__PURE__ */ delimiter(".")
+        // eslint-disable-next-line unicorn/prefer-top-level-await
+        .then(Ident)
+        .map(
+            ident =>
+                (target: Expression): Expression => ({
+                    type: "Property",
+                    target,
+                    property: ident,
+                }),
+        ),
+    /* #__PURE__ */ punctuator().andMap(
+        expression,
+        (op, rhs) =>
+            (lhs: Expression): Expression => ({
+                type: "Operator",
+                op: op.value,
+                lhs,
+                rhs,
+            }),
+    ),
+]).apply(P.many);
 
 export const statement: P.Parser<Statement> = /* #__PURE__ */ P.choice([
     /* #__PURE__ */ expression

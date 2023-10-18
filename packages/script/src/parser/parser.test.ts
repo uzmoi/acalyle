@@ -61,6 +61,30 @@ const ret = (body: Expression | null = null): Expression => ({
     body,
 });
 
+const apply = (callee: Expression, args: Expression[] = []): Expression => ({
+    type: "Apply",
+    callee,
+    args,
+});
+const property = (
+    target: Expression,
+    property: IdentExpression,
+): Expression => ({
+    type: "Property",
+    target,
+    property,
+});
+const operator = (
+    op: string,
+    lhs: Expression,
+    rhs: Expression,
+): Expression => ({
+    type: "Operator",
+    op,
+    lhs,
+    rhs,
+});
+
 describe("Expression", () => {
     test("Ident", () => {
         expect(parseExpr("hoge")).toEqual(ident("hoge"));
@@ -152,6 +176,32 @@ describe("Expression", () => {
         });
         test("return with value", () => {
             expect(parseExpr("return result")).toEqual(ret(ident("result")));
+        });
+    });
+    describe("tails", () => {
+        test("left join", () => {
+            expect(parseExpr("hoge.fuga.piyo")).toEqual(
+                property(property(ident("hoge"), ident("fuga")), ident("piyo")),
+            );
+        });
+        describe("Apply", () => {
+            test("hoge()", () => {
+                expect(parseExpr("hoge()")).toEqual(apply(ident("hoge")));
+            });
+        });
+        describe("property", () => {
+            test("hoge.fuga", () => {
+                expect(parseExpr("hoge.fuga")).toEqual(
+                    property(ident("hoge"), ident("fuga")),
+                );
+            });
+        });
+        describe("Operator", () => {
+            test("1 + 1", () => {
+                expect(parseExpr("1 + 1")).toEqual(
+                    operator("+", number("1"), number("1")),
+                );
+            });
         });
     });
 });

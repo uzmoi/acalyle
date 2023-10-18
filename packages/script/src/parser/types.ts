@@ -49,6 +49,25 @@ export type ReturnExpression = {
     body: Expression | null;
 };
 
+export type ApplyExpression = {
+    type: "Apply";
+    callee: Expression;
+    args: Expression[];
+};
+
+export type PropertyExpression = {
+    type: "Property";
+    target: Expression;
+    property: IdentExpression;
+};
+
+export type OperatorExpression = {
+    type: "Operator";
+    op: string;
+    lhs: Expression;
+    rhs: Expression;
+};
+
 export type Expression =
     | IdentExpression
     | BoolExpression
@@ -58,7 +77,10 @@ export type Expression =
     | BlockExpression
     | IfExpression
     | FnExpression
-    | ReturnExpression;
+    | ReturnExpression
+    | ApplyExpression
+    | PropertyExpression
+    | OperatorExpression;
 
 export type ExpressionStatement = {
     type: "Expression";
