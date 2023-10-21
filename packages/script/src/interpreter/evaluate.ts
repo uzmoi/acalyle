@@ -11,10 +11,10 @@ import {
 } from "./value/builtin";
 import type { Value } from "./value/types";
 
-export const evaluateExpression = (
+export function* evaluateExpression(
     expr: Expression,
     scope: Scope<Value>,
-): Value | undefined => {
+): Generator<void, Value | undefined> {
     switch (expr.type) {
         case "Ident": {
             return scope.get(expr.name).getOrThrow();
@@ -30,7 +30,10 @@ export const evaluateExpression = (
             let string = "";
             string += expr.strings[0]!;
             for (let i = 0; i < expr.values.length; i++) {
-                const node = evaluateExpression(expr.values[i]!, scope);
+                const node: Value | undefined = yield* evaluateExpression(
+                    expr.values[i]!,
+                    scope,
+                );
                 assert.nonNullable(node);
                 assertInstance(node, StringValue);
                 string += node.value;
@@ -41,13 +44,13 @@ export const evaluateExpression = (
         case "Tuple": {
             const elements: Value[] = [];
             for (const element of expr.elements) {
-                const value = evaluateExpression(element, scope);
+                const value = yield* evaluateExpression(element, scope);
                 assert.nonNullable(value);
                 elements.push(value);
             }
             const properties: Record<string, Value> = {};
             for (const [key, property] of expr.properties) {
-                const value = evaluateExpression(property, scope);
+                const value = yield* evaluateExpression(property, scope);
                 assert.nonNullable(value);
                 properties[key.name] = value;
             }
@@ -59,13 +62,13 @@ export const evaluateExpression = (
                 evaluateStatement(stmt, blockScope);
             }
             if (expr.last == null) return;
-            return evaluateExpression(expr.last, blockScope);
+            return yield* evaluateExpression(expr.last, blockScope);
         }
         case "If": {
-            const cond = evaluateExpression(expr.cond, scope);
+            const cond = yield* evaluateExpression(expr.cond, scope);
             assert.nonNullable(cond);
             assertInstance(cond, BoolValue);
-            return cond.value
+            return yield* cond.value
                 ? evaluateExpression(expr.thenBody, scope)
                 : evaluateExpression(expr.elseBody!, scope);
         }
@@ -74,24 +77,24 @@ export const evaluateExpression = (
         }
         case "Return": {
             if (expr.body != null) {
-                const value = evaluateExpression(expr.body, scope);
+                const value = yield* evaluateExpression(expr.body, scope);
                 throw { type: "return", value };
             }
             throw { type: "return" };
         }
         case "Apply": {
-            const fn = evaluateExpression(expr.callee, scope);
+            const fn = yield* evaluateExpression(expr.callee, scope);
             assert.nonNullable(fn);
             assertInstance(fn, FnValue);
             const args: Value[] = [];
             for (const arg of expr.args) {
-                const value = evaluateExpression(arg, scope);
+                const value = yield* evaluateExpression(arg, scope);
                 assert.nonNullable(value);
                 args.push(value);
             }
             const fnScope = fn.initFnScope(args);
             try {
-                return evaluateExpression(fn.body, fnScope);
+                return yield* evaluateExpression(fn.body, fnScope);
             } catch (error) {
                 if (
                     (error as { type: "return"; value?: Value })?.type ===
@@ -103,15 +106,15 @@ export const evaluateExpression = (
             }
         }
         case "Property": {
-            const target = evaluateExpression(expr.target, scope);
+            const target = yield* evaluateExpression(expr.target, scope);
             assert.nonNullable(target);
             assertInstance(target, TupleValue);
             return target.get(expr.property.name);
         }
         case "Operator": {
-            const lhs = evaluateExpression(expr.lhs, scope);
+            const lhs = yield* evaluateExpression(expr.lhs, scope);
             assert.nonNullable(lhs);
-            const rhs = evaluateExpression(expr.rhs, scope);
+            const rhs = yield* evaluateExpression(expr.rhs, scope);
             assert.nonNullable(rhs);
             // expr.op
             // TODO: implementation
@@ -120,19 +123,19 @@ export const evaluateExpression = (
         default:
             assert.unreachable<typeof expr>();
     }
-};
+}
 
-export const evaluateStatement = (
+export function* evaluateStatement(
     stmt: Statement,
     scope: Scope<Value>,
-): void => {
+): Generator<void, void> {
     switch (stmt.type) {
         case "Expression": {
-            evaluateExpression(stmt.expr, scope);
+            yield* evaluateExpression(stmt.expr, scope);
             break;
         }
         default:
             // @ts-expect-error unionじゃないとswitch文のdefault:ではneverにならないらしい
             assert.unreachable<typeof stmt>();
     }
-};
+}

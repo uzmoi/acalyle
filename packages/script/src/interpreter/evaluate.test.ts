@@ -12,15 +12,24 @@ import {
 } from "./value/builtin";
 import type { Value } from "./value/types";
 
+const getIteratorReturn = <R>(iterator: Iterator<unknown, R>): R => {
+    let result: IteratorResult<unknown, R>;
+    while (!(result = iterator.next()).done);
+    return result.value;
+};
+
 const run = (source: string) => {
     const tokens = new Tokenizer(source)
         .tokenize()
         .filter(token => token.type !== "Whitespace");
     const result = expression.skip(EOI).parse(tokens);
     const scope = Scope.create<Value>();
-    return result.success
-        ? evaluateExpression(result.value, scope)
-        : ([result.errors, tokens[result.index]] as const);
+    if (result.success) {
+        const steps = evaluateExpression(result.value, scope);
+        return getIteratorReturn(steps);
+    } else {
+        return [result.errors, tokens[result.index]] as const;
+    }
 };
 
 describe("Expression", () => {
