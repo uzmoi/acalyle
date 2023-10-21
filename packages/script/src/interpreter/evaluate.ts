@@ -134,8 +134,13 @@ export function* evaluateStatement(
             yield* evaluateExpression(stmt.expr, scope);
             break;
         }
+        case "Let": {
+            const value = yield* evaluateExpression(stmt.init, scope);
+            assert.nonNullable(value);
+            scope.define(stmt.dest.name, { value, writable: false });
+            break;
+        }
         default:
-            // @ts-expect-error unionじゃないとswitch文のdefault:ではneverにならないらしい
             assert.unreachable<typeof stmt>();
     }
 }

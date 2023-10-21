@@ -87,4 +87,10 @@ export type ExpressionStatement = {
     expr: Expression;
 };
 
-export type Statement = ExpressionStatement;
+export type LetStatement = {
+    type: "Let";
+    dest: IdentExpression;
+    init: Expression;
+};
+
+export type Statement = ExpressionStatement | LetStatement;

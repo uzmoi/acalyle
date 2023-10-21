@@ -155,7 +155,17 @@ const ExpressionTail = /* #__PURE__ */ P.choice([
     ),
 ]).apply(P.many);
 
+const Let = /* #__PURE__ */ P.qo((perform): Statement => {
+    perform(keyword("let"));
+    const dest = perform(Ident);
+    perform(punctuator("="));
+    const init = perform(expression);
+    perform(delimiter(";"));
+    return { type: "Let", dest, init };
+});
+
 export const statement: P.Parser<Statement> = /* #__PURE__ */ P.choice([
+    Let,
     /* #__PURE__ */ expression
         .skip(/* #__PURE__ */ delimiter(";"))
         .map((expr): Statement => ({ type: "Expression", expr })),

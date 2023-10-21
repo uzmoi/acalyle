@@ -207,9 +207,19 @@ describe("Expression", () => {
 });
 
 const expr = (expr: Expression): Statement => ({ type: "Expression", expr });
+const $let = (dest: IdentExpression, init: Expression): Statement => ({
+    type: "Let",
+    dest,
+    init,
+});
 
 describe("Statement", () => {
     test("Expression", () => {
         expect(parseStmt("hoge;")).toEqual(expr(ident("hoge")));
+    });
+    test("Let", () => {
+        expect(parseStmt("let hoge = 0;")).toEqual(
+            $let(ident("hoge"), number("0")),
+        );
     });
 });

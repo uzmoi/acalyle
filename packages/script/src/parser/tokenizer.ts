@@ -17,7 +17,15 @@ export type Token = {
 
 export type Keyword = (typeof keywords)[number];
 
-const keywords = ["fn", "return", "true", "false", "if", "else"] as const;
+const keywords = [
+    "fn",
+    "return",
+    "true",
+    "false",
+    "if",
+    "else",
+    "let",
+] as const;
 
 export type Delimiter = (typeof delimiters)[number];
 
