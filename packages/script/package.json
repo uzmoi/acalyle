@@ -7,7 +7,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsup src/index.ts --format esm --minify-syntax --sourcemap --dts",
-    "check": "tsc",
+    "check": "tsc && vitest typecheck --run",
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },

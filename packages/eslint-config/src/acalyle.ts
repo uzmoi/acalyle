@@ -9,6 +9,7 @@ export const acalyleConfig: Linter.FlatConfig = {
     files: [typescriptFiles],
     ignores: [
         "**/*[-.]{test,spec,config}.*",
+        "**/*[-.]{test,spec}-d.*",
         "**/{test,spec}?(s)/**",
         "**/__{test,spec}?(s)__/**",
     ],
