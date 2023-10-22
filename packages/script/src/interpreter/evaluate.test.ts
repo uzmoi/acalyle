@@ -67,8 +67,15 @@ describe("Expression", () => {
             expect(runExpr("{}")).toBeUndefined();
         });
     });
-    test("if", () => {
-        expect(runExpr("if (true) 1 else 0")).toStrictEqual(new IntValue(1));
+    describe("if", () => {
+        test("if", () => {
+            expect(runExpr("if (true) 1 else 0")).toStrictEqual(
+                new IntValue(1),
+            );
+        });
+        test("error location", () => {
+            expect(() => runExpr("if (0) {}")).toThrow("4");
+        });
     });
     describe("fn", () => {
         test("fn", () => {

@@ -30,13 +30,16 @@ export function* evaluateExpression(
             let string = "";
             string += expr.strings[0]!;
             for (let i = 0; i < expr.values.length; i++) {
-                const node: Value | undefined = yield* evaluateExpression(
-                    expr.values[i]!,
+                // NOTE: TypeScriptのバグなのか何なのか、型推論をしてくれないので
+                // 明示的にアノテーションを書かないといけない。
+                const node: Expression = expr.values[i]!;
+                const value: Value | undefined = yield* evaluateExpression(
+                    node,
                     scope,
                 );
-                assert.nonNullable(node);
-                assertInstance(node, StringValue);
-                string += node.value;
+                assert.nonNullable(value);
+                assertInstance(value, StringValue, node);
+                string += value.value;
                 string += expr.strings[i + 1]!;
             }
             return new StringValue(string);
@@ -67,7 +70,7 @@ export function* evaluateExpression(
         case "If": {
             const cond = yield* evaluateExpression(expr.cond, scope);
             assert.nonNullable(cond);
-            assertInstance(cond, BoolValue);
+            assertInstance(cond, BoolValue, expr.cond);
             return yield* cond.value
                 ? evaluateExpression(expr.thenBody, scope)
                 : evaluateExpression(expr.elseBody!, scope);
@@ -85,7 +88,7 @@ export function* evaluateExpression(
         case "Apply": {
             const fn = yield* evaluateExpression(expr.callee, scope);
             assert.nonNullable(fn);
-            assertInstance(fn, FnValue);
+            assertInstance(fn, FnValue, expr);
             const args: Value[] = [];
             for (const arg of expr.args) {
                 const value = yield* evaluateExpression(arg, scope);
@@ -108,7 +111,7 @@ export function* evaluateExpression(
         case "Property": {
             const target = yield* evaluateExpression(expr.target, scope);
             assert.nonNullable(target);
-            assertInstance(target, TupleValue);
+            assertInstance(target, TupleValue, expr.target);
             return target.get(expr.property.name);
         }
         case "Operator": {
