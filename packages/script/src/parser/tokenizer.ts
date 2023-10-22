@@ -9,7 +9,8 @@ export type TokenType =
     | "Punctuator"
     | "Number"
     | "String"
-    | "Whitespace";
+    | "Whitespace"
+    | "Comment";
 
 export type Token = {
     type: TokenType;
@@ -75,6 +76,8 @@ const enum TokenizeState {
     Number,
     String,
     Whitespace,
+    SingleLineComment,
+    MultiLineComment,
     /* eslint-enable @typescript-eslint/naming-convention */
 }
 
@@ -104,12 +107,22 @@ export class Tokenizer {
             this.next(char);
         }
     }
+    private _commentNestLevel = 0;
     next(char: string | undefined) {
         const state = this._stack.at(-1) ?? TokenizeState.Root;
         switch (state) {
             case TokenizeState.Root: {
                 if (char === undefined) return;
                 switch (char) {
+                    // NOTE: "/"がPunctuatorCharなのでそれより先に配置する
+                    case this.source.startsWith("//", this._index) && char: {
+                        this._stack.push(TokenizeState.SingleLineComment);
+                        break;
+                    }
+                    case this.source.startsWith("/*", this._index) && char: {
+                        this._stack.push(TokenizeState.MultiLineComment);
+                        break;
+                    }
                     case "\\": {
                         this._stack.push(
                             TokenizeState.Ident,
@@ -216,6 +229,31 @@ export class Tokenizer {
                     this.appendCurrent(char);
                 } else {
                     this._pushTokenAndNext("Whitespace", char);
+                }
+                break;
+            }
+            case TokenizeState.SingleLineComment: {
+                if (char === undefined || char === "\n") {
+                    this._pushTokenAndNext("Comment", char);
+                } else {
+                    this.appendCurrent(char);
+                }
+                break;
+            }
+            case TokenizeState.MultiLineComment: {
+                if (char === undefined) {
+                    throw new SyntaxError("Unexpected end of input.");
+                }
+                this.appendCurrent(char);
+                if (this.source.endsWith("*/", this._index)) {
+                    if (this._commentNestLevel === 0) {
+                        this._stack.pop();
+                        this._pushToken("Comment");
+                    } else {
+                        this._commentNestLevel--;
+                    }
+                } else if (this.source.startsWith("/*", this._index)) {
+                    this._commentNestLevel++;
                 }
                 break;
             }

@@ -77,3 +77,26 @@ describe("String", () => {
 test("Whitespace", () => {
     expect(tokenize(" ")).toEqual(tokens(["Whitespace", " "]));
 });
+
+describe("Comment", () => {
+    test("singleline comment", () => {
+        expect(tokenize("// comment\n")).toEqual(
+            tokens(["Comment", "// comment"], ["Whitespace", "\n"]),
+        );
+    });
+    test("multiline comment", () => {
+        expect(tokenize("/* comment */")).toEqual(
+            tokens(["Comment", "/* comment */"]),
+        );
+    });
+    test("nested multiline comment", () => {
+        expect(tokenize("/* /* comment */ */")).toEqual(
+            tokens(["Comment", "/* /* comment */ */"]),
+        );
+    });
+    test("mlc+mlc", () => {
+        expect(tokenize("/**//**/")).toEqual(
+            tokens(["Comment", "/**/"], ["Comment", "/**/"]),
+        );
+    });
+});
