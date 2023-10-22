@@ -1,5 +1,6 @@
 import * as P from "parsea";
 import { error } from "parsea/internal";
+import { loc } from "./location";
 import type { Delimiter, Keyword, Token, TokenType } from "./tokenizer";
 import type { Expression, IdentExpression, Statement } from "./types";
 
@@ -20,13 +21,20 @@ const Ident = /* #__PURE__ */ token("Ident").map(token => {
     return {
         type: "Ident",
         name: token.value.replace(/\\(.)/gu, "$1"),
+        loc: token.loc,
     } satisfies Expression;
 });
 
 const Bool = /* #__PURE__ */ P.choice([
-    /* #__PURE__ */ keyword("true").return(true),
-    /* #__PURE__ */ keyword("false").return(false),
-]).map((value): Expression => ({ type: "Bool", value }));
+    /* #__PURE__ */ keyword("true"),
+    /* #__PURE__ */ keyword("false"),
+]).map(
+    (token): Expression => ({
+        type: "Bool",
+        value: token.value === "true",
+        loc: token.loc,
+    }),
+);
 
 const Number = /* #__PURE__ */ P.qo((perform): Expression => {
     const sign =
@@ -35,6 +43,7 @@ const Number = /* #__PURE__ */ P.qo((perform): Expression => {
     return {
         type: "Number",
         value: `${sign?.value ?? ""}${number.value}`,
+        loc: loc(sign ?? number, number),
     };
 });
 
@@ -53,11 +62,11 @@ const String = /* #__PURE__ */ P.qo((perform): Expression => {
         last = perform(stringToken);
         strings.push(last.value.replace(/["$]$/, ""));
     }
-    return { type: "String", strings, values };
+    return { type: "String", strings, values, loc: loc(first, last) };
 });
 
 const Tuple = /* #__PURE__ */ P.qo((perform): Expression => {
-    perform(delimiter("("));
+    const start = perform(delimiter("("));
     const elements: Expression[] = [];
     const properties: [IdentExpression, Expression][] = [];
     perform.try(() => {
@@ -72,30 +81,36 @@ const Tuple = /* #__PURE__ */ P.qo((perform): Expression => {
             perform(delimiter(","));
         }
     }, true);
-    perform(delimiter(")"));
-    return { type: "Tuple", elements, properties };
+    const end = perform(delimiter(")"));
+    return { type: "Tuple", elements, properties, loc: loc(start, end) };
 });
 
 const Block = /* #__PURE__ */ P.qo((perform): Expression => {
-    perform(delimiter("{"));
+    const start = perform(delimiter("{"));
     const stmts = perform(statement.apply(P.many));
     const last = perform(expression.option(null));
-    perform(delimiter("}"));
-    return { type: "Block", stmts, last };
+    const end = perform(delimiter("}"));
+    return { type: "Block", stmts, last, loc: loc(start, end) };
 });
 
 const If = /* #__PURE__ */ P.qo((perform): Expression => {
-    perform(keyword("if"));
+    const start = perform(keyword("if"));
     perform(delimiter("("));
     const cond = perform(expression);
     perform(delimiter(")"));
     const thenBody = perform(expression);
     const elseBody = perform(keyword("else").then(expression).option(null));
-    return { type: "If", cond, thenBody, elseBody };
+    return {
+        type: "If",
+        cond,
+        thenBody,
+        elseBody,
+        loc: loc(start, elseBody ?? thenBody),
+    };
 });
 
 const Fn = /* #__PURE__ */ P.qo((perform): Expression => {
-    perform(keyword("fn"));
+    const start = perform(keyword("fn"));
     const params = perform(
         Ident.apply(P.many).between(delimiter("("), delimiter(")")).option(),
     );
@@ -104,13 +119,19 @@ const Fn = /* #__PURE__ */ P.qo((perform): Expression => {
         type: "Fn",
         params: params ?? [],
         body,
+        loc: loc(start, body),
     };
 });
 
 const Return = /* #__PURE__ */ P.lazy(() =>
-    keyword("return")
-        .then(expression.option(null))
-        .map((body): Expression => ({ type: "Return", body })),
+    keyword("return").andMap(
+        expression.option(null),
+        (start, body): Expression => ({
+            type: "Return",
+            body,
+            loc: loc(start, body ?? start),
+        }),
+    ),
 );
 
 export const expression: P.Parser<Expression> =
@@ -130,6 +151,7 @@ const ExpressionTail = /* #__PURE__ */ P.choice([
                 type: "Apply",
                 callee,
                 args: (tuple as typeof tuple & { type: "Tuple" }).elements,
+                loc: loc(callee, tuple),
             }),
     ),
     /* #__PURE__ */ delimiter(".")
@@ -141,6 +163,7 @@ const ExpressionTail = /* #__PURE__ */ P.choice([
                     type: "Property",
                     target,
                     property: ident,
+                    loc: loc(target, ident),
                 }),
         ),
     /* #__PURE__ */ punctuator().andMap(
@@ -151,22 +174,28 @@ const ExpressionTail = /* #__PURE__ */ P.choice([
                 op: op.value,
                 lhs,
                 rhs,
+                loc: loc(lhs, rhs),
             }),
     ),
 ]).apply(P.many);
 
 const Let = /* #__PURE__ */ P.qo((perform): Statement => {
-    perform(keyword("let"));
+    const start = perform(keyword("let"));
     const dest = perform(Ident);
     perform(punctuator("="));
     const init = perform(expression);
-    perform(delimiter(";"));
-    return { type: "Let", dest, init };
+    const end = perform(delimiter(";"));
+    return { type: "Let", dest, init, loc: loc(start, end) };
 });
 
 export const statement: P.Parser<Statement> = /* #__PURE__ */ P.choice([
     Let,
-    /* #__PURE__ */ expression
-        .skip(/* #__PURE__ */ delimiter(";"))
-        .map((expr): Statement => ({ type: "Expression", expr })),
+    /* #__PURE__ */ expression.andMap(
+        /* #__PURE__ */ delimiter(";"),
+        (expr, end): Statement => ({
+            type: "Expression",
+            expr,
+            loc: loc(expr, end),
+        }),
+    ),
 ]).label("statement");

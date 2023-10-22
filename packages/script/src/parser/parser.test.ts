@@ -1,5 +1,6 @@
 import { EOI, Parser } from "parsea";
 import { describe, expect, test } from "vitest";
+import { SourceLocation } from "./location";
 import { expression, statement } from "./parser";
 import { Tokenizer } from "./tokenizer";
 import type { Expression, IdentExpression, Statement } from "./types";
@@ -22,68 +23,57 @@ const parseStmt = (source: string) => {
     return parse(statement, source);
 };
 
-const ident = (name: string): IdentExpression => ({ type: "Ident", name });
-const bool = (value: boolean): Expression => ({ type: "Bool", value });
-const number = (value: string): Expression => ({ type: "Number", value });
+const loc: SourceLocation = [expect.any(Number), expect.any(Number)];
+
+const ident = (name: string): IdentExpression => ({ type: "Ident", name, loc });
+const bool = (value: boolean): Expression => ({ type: "Bool", value, loc });
+const number = (value: string): Expression => ({ type: "Number", value, loc });
 const string = (strings: string[], values: Expression[] = []): Expression => ({
     type: "String",
     strings,
     values,
+    loc,
 });
 const tuple = (
     elements: Expression[] = [],
     properties: [IdentExpression, Expression][] = [],
-): Expression => ({
-    type: "Tuple",
-    elements,
-    properties,
-});
+): Expression => ({ type: "Tuple", elements, properties, loc });
 const block = (
     stmts: Statement[] = [],
     last: Expression | null = null,
-): Expression => ({
-    type: "Block",
-    stmts,
-    last,
-});
+): Expression => ({ type: "Block", stmts, last, loc });
 const $if = (
     cond: Expression,
     thenBody: Expression,
     elseBody: Expression | null = null,
-): Expression => ({ type: "If", cond, thenBody, elseBody });
+): Expression => ({ type: "If", cond, thenBody, elseBody, loc });
 const fn = (params: IdentExpression[], body: Expression): Expression => ({
     type: "Fn",
     params,
     body,
+    loc,
 });
 const ret = (body: Expression | null = null): Expression => ({
     type: "Return",
     body,
+    loc,
 });
 
 const apply = (callee: Expression, args: Expression[] = []): Expression => ({
     type: "Apply",
     callee,
     args,
+    loc,
 });
 const property = (
     target: Expression,
     property: IdentExpression,
-): Expression => ({
-    type: "Property",
-    target,
-    property,
-});
+): Expression => ({ type: "Property", target, property, loc });
 const operator = (
     op: string,
     lhs: Expression,
     rhs: Expression,
-): Expression => ({
-    type: "Operator",
-    op,
-    lhs,
-    rhs,
-});
+): Expression => ({ type: "Operator", op, lhs, rhs, loc });
 
 describe("Expression", () => {
     test("Ident", () => {
@@ -206,11 +196,16 @@ describe("Expression", () => {
     });
 });
 
-const expr = (expr: Expression): Statement => ({ type: "Expression", expr });
+const expr = (expr: Expression): Statement => ({
+    type: "Expression",
+    expr,
+    loc,
+});
 const $let = (dest: IdentExpression, init: Expression): Statement => ({
     type: "Let",
     dest,
     init,
+    loc,
 });
 
 describe("Statement", () => {

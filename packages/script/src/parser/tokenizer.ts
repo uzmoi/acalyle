@@ -1,5 +1,6 @@
 import { assert } from "emnorst";
 import type { Stack } from "../types";
+import type { SourceLocation } from "./location";
 
 export type TokenType =
     | "Ident"
@@ -13,6 +14,7 @@ export type TokenType =
 export type Token = {
     type: TokenType;
     value: string;
+    loc: SourceLocation;
 };
 
 export type Keyword = (typeof keywords)[number];
@@ -80,9 +82,19 @@ export class Tokenizer {
     constructor(readonly source: string) {}
     private _stack: Stack<TokenizeState> = [];
     private _current = "";
+    private _index = 0;
+    appendCurrent(char: string) {
+        this._current += char;
+        this._index += char.length;
+    }
     tokens: Token[] = [];
+    private _prevTokenEndIndex = this._index;
     private _pushToken(type: TokenType) {
-        this.tokens.push({ type, value: this._current });
+        const loc = [
+            this._prevTokenEndIndex,
+            (this._prevTokenEndIndex = this._index),
+        ] as const;
+        this.tokens.push({ type, value: this._current, loc });
         this._current = "";
     }
     private _pushTokenAndNext(type: TokenType, char: string | undefined) {
@@ -129,14 +141,14 @@ export class Tokenizer {
                     default:
                         throw new SyntaxError(`Unknown charactor: "${char}"`);
                 }
-                this._current += char;
+                this.appendCurrent(char);
                 break;
             }
             case TokenizeState.Escape: {
                 if (char === undefined) {
                     throw new SyntaxError("Unexpected end of input.");
                 } else {
-                    this._current += char;
+                    this.appendCurrent(char);
                     this._stack.pop();
                 }
                 break;
@@ -144,9 +156,9 @@ export class Tokenizer {
             case TokenizeState.Ident: {
                 if (char === "\\") {
                     this._stack.push(TokenizeState.Escape);
-                    this._current += char;
+                    this.appendCurrent(char);
                 } else if (char !== undefined && /[\da-z]/i.test(char)) {
-                    this._current += char;
+                    this.appendCurrent(char);
                 } else {
                     const isKeyword = keywords.includes(
                         this._current as Keyword,
@@ -162,7 +174,7 @@ export class Tokenizer {
                 if (delimiters.includes(this._current as Delimiter)) {
                     this._pushTokenAndNext("Delimiter", char);
                 } else if (punctuatorChars.includes(char as PunctuatorChar)) {
-                    this._current += char;
+                    this.appendCurrent(char!);
                 } else {
                     this._pushTokenAndNext("Punctuator", char);
                 }
@@ -170,7 +182,7 @@ export class Tokenizer {
             }
             case TokenizeState.Number: {
                 if (char !== undefined && /[\d_]/.test(char)) {
-                    this._current += char;
+                    this.appendCurrent(char);
                 } else {
                     this._pushTokenAndNext("Number", char);
                 }
@@ -180,7 +192,7 @@ export class Tokenizer {
                 if (char === undefined) {
                     throw new SyntaxError("Unexpected end of input.");
                 }
-                this._current += char;
+                this.appendCurrent(char);
                 switch (char) {
                     case "\\": {
                         this._stack.push(TokenizeState.Escape);
@@ -201,7 +213,7 @@ export class Tokenizer {
             }
             case TokenizeState.Whitespace: {
                 if (char !== undefined && isWhitespace(char)) {
-                    this._current += char;
+                    this.appendCurrent(char);
                 } else {
                     this._pushTokenAndNext("Whitespace", char);
                 }

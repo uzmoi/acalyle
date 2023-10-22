@@ -12,3 +12,7 @@ test("type not duplicated", () => {
         : never;
     expectTypeOf<DuplicatedTypeOf<Expression | Statement>>().toBeNever();
 });
+
+test("has loc property", () => {
+    expectTypeOf<Expression | Statement>().toHaveProperty("loc");
+});

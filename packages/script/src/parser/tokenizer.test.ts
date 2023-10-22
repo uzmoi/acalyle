@@ -6,8 +6,9 @@ const tokenize = (source: string): Token[] => {
 };
 
 const tokens = (...tokens: [type: TokenType, value: string][]): Token[] => {
-    return tokens.map(([type, value]) => {
-        return { type, value };
+    let i = 0;
+    return tokens.map(([type, value]): Token => {
+        return { type, value, loc: [i, (i += value.length)] };
     });
 };
 
