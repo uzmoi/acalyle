@@ -1,4 +1,5 @@
 import { Value } from "../types";
+import { UnitValue } from "./unit";
 
 export class TupleValue extends Value {
     constructor(
@@ -7,9 +8,11 @@ export class TupleValue extends Value {
     ) {
         super();
     }
-    get(name: string): Value | undefined {
-        return /\D/.test(name)
-            ? this.properties[name]
-            : this.elements[Number(name)];
+    get(name: string): Value {
+        return (
+            (/\D/.test(name)
+                ? this.properties[name]
+                : this.elements[Number(name)]) ?? new UnitValue()
+        );
     }
 }
