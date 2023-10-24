@@ -6,9 +6,9 @@ export class TypeError extends RuntimeError {
     constructor(
         readonly message: string,
         readonly actualType: string,
-        readonly loc: SourceLocation,
+        loc: SourceLocation,
     ) {
-        super();
+        super(loc);
     }
 }
 

@@ -1,11 +1,13 @@
+import type { SourceLocation } from "../parser";
 import { RuntimeError } from "./meta-value";
 
 export class ScopeError extends RuntimeError {
     constructor(
         readonly type: "defined" | "not-defined" | "readonly",
         readonly identName: string,
+        loc: SourceLocation,
     ) {
-        super();
+        super(loc);
     }
 }
 
@@ -23,29 +25,33 @@ export class Scope<T> {
     child(): Scope<T> {
         return new Scope(this);
     }
-    define(name: string, entry: ScopeEntry<T>): undefined | ScopeError {
+    define(
+        name: string,
+        entry: ScopeEntry<T>,
+        loc: SourceLocation,
+    ): undefined | ScopeError {
         if (this._entries.has(name)) {
-            return new ScopeError("defined", name);
+            return new ScopeError("defined", name, loc);
         }
         this._entries.set(name, entry);
     }
-    get(name: string): T | ScopeError {
+    get(name: string, loc: SourceLocation): T | ScopeError {
         const entry = this._entries.get(name);
         if (entry != null) {
             return entry.value;
         }
         if (this._parent != null) {
-            return this._parent.get(name);
+            return this._parent.get(name, loc);
         }
-        return new ScopeError("not-defined", name);
+        return new ScopeError("not-defined", name, loc);
     }
-    set(name: string, value: T): undefined | ScopeError {
+    set(name: string, value: T, loc: SourceLocation): undefined | ScopeError {
         const entry = this._entries.get(name);
         if (entry == null) {
-            return new ScopeError("not-defined", name);
+            return new ScopeError("not-defined", name, loc);
         }
         if (!entry.writable) {
-            return new ScopeError("readonly", name);
+            return new ScopeError("readonly", name, loc);
         }
         entry.value = value;
     }

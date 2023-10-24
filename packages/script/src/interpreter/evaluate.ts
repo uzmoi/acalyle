@@ -31,7 +31,7 @@ export function* evaluateExpression(
 ): Generator<void, Value | MetaValue> {
     switch (expr.type) {
         case "Ident": {
-            return scope.get(expr.name);
+            return scope.get(expr.name, expr.loc);
         }
         case "Bool": {
             return new BoolValue(expr.value);
@@ -145,7 +145,7 @@ export function* evaluateExpression(
             const fnScope = fn.initFnScope(args);
             const result = yield* evaluateExpression(fn.body, fnScope);
             if (result instanceof BreakControl) {
-                return new RuntimeError();
+                return new RuntimeError(fn.body.loc);
             }
             if (result instanceof ReturnControl) {
                 return result.value;
@@ -185,7 +185,11 @@ export function* evaluateStatement(
         case "Let": {
             const value = yield* evaluateExpression(stmt.init, scope);
             if (value instanceof MetaValue) return value;
-            scope.define(stmt.dest.name, { value, writable: false });
+            scope.define(
+                stmt.dest.name,
+                { value, writable: false },
+                stmt.dest.loc,
+            );
             break;
         }
         default:
