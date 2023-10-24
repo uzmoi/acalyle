@@ -1,4 +1,13 @@
-import { Result } from "@acalyle/fp";
+import { RuntimeError } from "./meta-value";
+
+export class ScopeError extends RuntimeError {
+    constructor(
+        readonly type: "defined" | "not-defined" | "readonly",
+        readonly identName: string,
+    ) {
+        super();
+    }
+}
 
 export type ScopeEntry<T> = {
     value: T;
@@ -14,40 +23,30 @@ export class Scope<T> {
     child(): Scope<T> {
         return new Scope(this);
     }
-    define(
-        name: string,
-        entry: ScopeEntry<T>,
-    ): Result<void, { type: "defined"; name: string }> {
+    define(name: string, entry: ScopeEntry<T>): undefined | ScopeError {
         if (this._entries.has(name)) {
-            return Result.err({ type: "defined", name });
+            return new ScopeError("defined", name);
         }
         this._entries.set(name, entry);
-        // eslint-disable-next-line unicorn/no-useless-undefined
-        return Result.ok(undefined);
     }
-    get(name: string): Result<T, { type: "not-defined"; name: string }> {
+    get(name: string): T | ScopeError {
         const entry = this._entries.get(name);
         if (entry != null) {
-            return Result.ok(entry.value);
+            return entry.value;
         }
         if (this._parent != null) {
             return this._parent.get(name);
         }
-        return Result.err({ type: "not-defined", name });
+        return new ScopeError("not-defined", name);
     }
-    set(
-        name: string,
-        value: T,
-    ): Result<void, { type: "not-defined" | "readonly"; name: string }> {
+    set(name: string, value: T): undefined | ScopeError {
         const entry = this._entries.get(name);
         if (entry == null) {
-            return Result.err({ type: "not-defined", name });
+            return new ScopeError("not-defined", name);
         }
         if (!entry.writable) {
-            return Result.err({ type: "readonly", name });
+            return new ScopeError("readonly", name);
         }
         entry.value = value;
-        // eslint-disable-next-line unicorn/no-useless-undefined
-        return Result.ok(undefined);
     }
 }

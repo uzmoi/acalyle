@@ -1,16 +1,22 @@
 import { typeOf } from "emnorst";
 import type { SourceLocation } from "../parser";
+import { MetaValue, RuntimeError } from "./meta-value";
 
-export const assertInstance: <A extends {}, T extends A>(
+export class TypeError extends RuntimeError {
+    constructor(
+        readonly message: string,
+        readonly actualType: string,
+        readonly loc: SourceLocation,
+    ) {
+        super();
+    }
+}
+
+export const checkInstance = <A extends {}, T extends A>(
     value: A,
     type: new (...args: never) => T,
     node: { loc: SourceLocation },
-) => asserts value is T = (value, type, node) => {
-    if (!(value instanceof type)) {
-        throw new TypeError(
-            `expected instanceof ${type.name}, but unexpected ${typeOf(
-                value,
-            )} (at index ${node.loc[0]})`,
-        );
-    }
+): T | MetaValue => {
+    if (value instanceof MetaValue || value instanceof type) return value;
+    return new TypeError(type.name, typeOf(value), node.loc);
 };

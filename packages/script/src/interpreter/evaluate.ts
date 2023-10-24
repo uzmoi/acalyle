@@ -1,7 +1,8 @@
 import { assert } from "emnorst";
 import type { Expression, Statement } from "../parser";
+import { MetaValue } from "./meta-value";
 import type { Scope } from "./scope";
-import { assertInstance } from "./util";
+import { checkInstance } from "./util";
 import {
     BoolValue,
     FnValue,
@@ -12,13 +13,19 @@ import {
 } from "./value/builtin";
 import type { Value } from "./value/types";
 
+export class ReturnControl extends MetaValue {
+    constructor(readonly value: Value) {
+        super();
+    }
+}
+
 export function* evaluateExpression(
     expr: Expression,
     scope: Scope<Value>,
-): Generator<void, Value> {
+): Generator<void, Value | MetaValue> {
     switch (expr.type) {
         case "Ident": {
-            return scope.get(expr.name).getOrThrow();
+            return scope.get(expr.name);
         }
         case "Bool": {
             return new BoolValue(expr.value);
@@ -34,11 +41,12 @@ export function* evaluateExpression(
                 // NOTE: TypeScriptのバグなのか何なのか、型推論をしてくれないので
                 // 明示的にアノテーションを書かないといけない。
                 const node: Expression = expr.values[i]!;
-                const value: Value | undefined = yield* evaluateExpression(
+                const value: StringValue | MetaValue = checkInstance(
+                    yield* evaluateExpression(node, scope),
+                    StringValue,
                     node,
-                    scope,
                 );
-                assertInstance(value, StringValue, node);
+                if (value instanceof MetaValue) return value;
                 string += value.value;
                 string += expr.strings[i + 1]!;
             }
@@ -48,11 +56,13 @@ export function* evaluateExpression(
             const elements: Value[] = [];
             for (const element of expr.elements) {
                 const value = yield* evaluateExpression(element, scope);
+                if (value instanceof MetaValue) return value;
                 elements.push(value);
             }
             const properties: Record<string, Value> = {};
             for (const [key, property] of expr.properties) {
                 const value = yield* evaluateExpression(property, scope);
+                if (value instanceof MetaValue) return value;
                 properties[key.name] = value;
             }
             return new TupleValue(elements, properties);
@@ -68,8 +78,12 @@ export function* evaluateExpression(
             return yield* evaluateExpression(expr.last, blockScope);
         }
         case "If": {
-            const cond = yield* evaluateExpression(expr.cond, scope);
-            assertInstance(cond, BoolValue, expr.cond);
+            const cond = checkInstance(
+                yield* evaluateExpression(expr.cond, scope),
+                BoolValue,
+                expr.cond,
+            );
+            if (cond instanceof MetaValue) return cond;
             return yield* cond.value
                 ? evaluateExpression(expr.thenBody, scope)
                 : evaluateExpression(expr.elseBody!, scope);
@@ -78,36 +92,43 @@ export function* evaluateExpression(
             return new FnValue(expr.params, expr.body, scope);
         }
         case "Return": {
-            if (expr.body != null) {
+            let result: Value;
+            if (expr.body == null) {
+                result = new UnitValue();
+            } else {
                 const value = yield* evaluateExpression(expr.body, scope);
-                throw { type: "return", value };
+                if (value instanceof MetaValue) return value;
+                result = value;
             }
-            throw { type: "return", value: new UnitValue() };
+            return new ReturnControl(result);
         }
         case "Apply": {
-            const fn = yield* evaluateExpression(expr.callee, scope);
-            assertInstance(fn, FnValue, expr);
+            const fn = checkInstance(
+                yield* evaluateExpression(expr.callee, scope),
+                FnValue,
+                expr.callee,
+            );
+            if (fn instanceof MetaValue) return fn;
             const args: Value[] = [];
             for (const arg of expr.args) {
                 const value = yield* evaluateExpression(arg, scope);
+                if (value instanceof MetaValue) return value;
                 args.push(value);
             }
             const fnScope = fn.initFnScope(args);
-            try {
-                return yield* evaluateExpression(fn.body, fnScope);
-            } catch (error) {
-                if (
-                    (error as { type: "return"; value: Value })?.type ===
-                    "return"
-                ) {
-                    return (error as { type: "return"; value: Value }).value;
-                }
-                throw error;
+            const result = yield* evaluateExpression(fn.body, fnScope);
+            if (result instanceof ReturnControl) {
+                return result.value;
             }
+            return result;
         }
         case "Property": {
-            const target = yield* evaluateExpression(expr.target, scope);
-            assertInstance(target, TupleValue, expr.target);
+            const target = checkInstance(
+                yield* evaluateExpression(expr.target, scope),
+                TupleValue,
+                expr.target,
+            );
+            if (target instanceof MetaValue) return target;
             return target.get(expr.property.name);
         }
         case "Operator": {
@@ -125,7 +146,7 @@ export function* evaluateExpression(
 export function* evaluateStatement(
     stmt: Statement,
     scope: Scope<Value>,
-): Generator<void, void> {
+): Generator<void, MetaValue | undefined> {
     switch (stmt.type) {
         case "Expression": {
             yield* evaluateExpression(stmt.expr, scope);
@@ -133,6 +154,7 @@ export function* evaluateStatement(
         }
         case "Let": {
             const value = yield* evaluateExpression(stmt.init, scope);
+            if (value instanceof MetaValue) return value;
             scope.define(stmt.dest.name, { value, writable: false });
             break;
         }

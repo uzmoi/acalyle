@@ -1,14 +1,21 @@
 import { EOI, type Parser } from "parsea";
 import { describe, expect, test } from "vitest";
 import { Tokenizer, expression, statement } from "../parser";
-import { evaluateExpression, evaluateStatement } from "./evaluate";
+import {
+    ReturnControl,
+    evaluateExpression,
+    evaluateStatement,
+} from "./evaluate";
+import { RuntimeError } from "./meta-value";
 import { Scope } from "./scope";
+import { TypeError } from "./util";
 import {
     BoolValue,
     FnValue,
     IntValue,
     StringValue,
     TupleValue,
+    UnitValue,
 } from "./value/builtin";
 import type { Value } from "./value/types";
 
@@ -64,7 +71,7 @@ describe("Expression", () => {
             expect(runExpr("{ 1 }")).toStrictEqual(new IntValue(1));
         });
         test("empty", () => {
-            expect(runExpr("{}")).toBeUndefined();
+            expect(runExpr("{}")).toStrictEqual(new UnitValue());
         });
     });
     describe("if", () => {
@@ -73,22 +80,29 @@ describe("Expression", () => {
                 new IntValue(1),
             );
         });
-        test("error location", () => {
-            expect(() => runExpr("if (0) {}")).toThrow("4");
+        test("cond type error", () => {
+            expect(runExpr("if (0) {}")).toStrictEqual(
+                new TypeError("BoolValue", "IntValue", [4, 5]),
+            );
         });
     });
     describe("fn", () => {
         test("fn", () => {
             expect(runExpr("fn {}")).toBeInstanceOf(FnValue);
         });
-        test("return in outside of function", () => {
-            expect(() => runExpr("return")).toThrow();
+        test("return outside a function", () => {
+            expect(runExpr("return")).toBeInstanceOf(ReturnControl);
+        });
+        test.todo("return outside a function", () => {
+            expect(runExpr("return")).toBeInstanceOf(RuntimeError);
         });
         test("apply non function", () => {
-            expect(() => runExpr("0()")).toThrow(TypeError);
+            expect(runExpr("0()")).toStrictEqual(
+                new TypeError("FnValue", "IntValue", [0, 1]),
+            );
         });
         test("apply function", () => {
-            expect(runExpr("{ fn {} }()")).toBeUndefined();
+            expect(runExpr("{ fn {} }()")).toStrictEqual(new UnitValue());
         });
     });
     test("property", () => {
@@ -101,6 +115,6 @@ describe("Statement", () => {
     test("let", () => {
         const scope = Scope.create<Value>();
         runStmt("let hoge = 0;", scope);
-        expect(scope.get("hoge").getUnion()).toStrictEqual(new IntValue(0));
+        expect(scope.get("hoge")).toStrictEqual(new IntValue(0));
     });
 });
