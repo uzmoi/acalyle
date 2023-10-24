@@ -19,10 +19,17 @@ import {
 } from "./value/builtin";
 import type { Value } from "./value/types";
 
-const getIteratorReturn = <R>(iterator: Iterator<unknown, R>): R => {
-    let result: IteratorResult<unknown, R>;
-    while (!(result = iterator.next()).done);
-    return result.value;
+const getIteratorReturn = <R>(
+    iterator: Iterator<unknown, R>,
+    limit = 1000,
+): R => {
+    for (let i = 0; i < limit; i++) {
+        const result = iterator.next();
+        if (result.done) {
+            return result.value;
+        }
+    }
+    throw new Error("inf loop");
 };
 
 const run = <T, U>(
@@ -84,6 +91,11 @@ describe("Expression", () => {
             expect(runExpr("if (0) {}")).toStrictEqual(
                 new TypeError("BoolValue", "IntValue", [4, 5]),
             );
+        });
+    });
+    describe("loop", () => {
+        test("break", () => {
+            expect(runExpr("loop break")).toStrictEqual(new UnitValue());
         });
     });
     describe("fn", () => {

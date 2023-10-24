@@ -47,6 +47,12 @@ const $if = (
     thenBody: Expression,
     elseBody: Expression | null = null,
 ): Expression => ({ type: "If", cond, thenBody, elseBody, loc });
+const loop = (body: Expression): Expression => ({ type: "Loop", body, loc });
+const $break = (body: Expression | null = null): Expression => ({
+    type: "Break",
+    body,
+    loc,
+});
 const fn = (params: IdentExpression[], body: Expression): Expression => ({
     type: "Fn",
     params,
@@ -147,6 +153,19 @@ describe("Expression", () => {
             expect(parseExpr("if (cond) true")).toEqual(
                 $if(ident("cond"), bool(true)),
             );
+        });
+    });
+    describe("Loop", () => {
+        test("loop", () => {
+            expect(parseExpr("loop {}")).toEqual(loop(block()));
+        });
+    });
+    describe("Break", () => {
+        test("break", () => {
+            expect(parseExpr("break")).toEqual($break());
+        });
+        test("break with value", () => {
+            expect(parseExpr("break result")).toEqual($break(ident("result")));
         });
     });
     describe("Fn", () => {

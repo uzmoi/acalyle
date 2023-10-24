@@ -1,6 +1,6 @@
 import { assert } from "emnorst";
 import type { Expression, Statement } from "../parser";
-import { MetaValue } from "./meta-value";
+import { MetaValue, RuntimeError } from "./meta-value";
 import type { Scope } from "./scope";
 import { checkInstance } from "./util";
 import {
@@ -14,6 +14,12 @@ import {
 import type { Value } from "./value/types";
 
 export class ReturnControl extends MetaValue {
+    constructor(readonly value: Value) {
+        super();
+    }
+}
+
+export class BreakControl extends MetaValue {
     constructor(readonly value: Value) {
         super();
     }
@@ -88,6 +94,27 @@ export function* evaluateExpression(
                 ? evaluateExpression(expr.thenBody, scope)
                 : evaluateExpression(expr.elseBody!, scope);
         }
+        case "Loop": {
+            while (true) {
+                const value = yield* evaluateExpression(expr.body, scope);
+                if (value instanceof BreakControl) {
+                    return value.value;
+                }
+                if (value instanceof MetaValue) return value;
+                yield;
+            }
+        }
+        case "Break": {
+            let result: Value;
+            if (expr.body == null) {
+                result = new UnitValue();
+            } else {
+                const value = yield* evaluateExpression(expr.body, scope);
+                if (value instanceof MetaValue) return value;
+                result = value;
+            }
+            return new BreakControl(result);
+        }
         case "Fn": {
             return new FnValue(expr.params, expr.body, scope);
         }
@@ -117,6 +144,9 @@ export function* evaluateExpression(
             }
             const fnScope = fn.initFnScope(args);
             const result = yield* evaluateExpression(fn.body, fnScope);
+            if (result instanceof BreakControl) {
+                return new RuntimeError();
+            }
             if (result instanceof ReturnControl) {
                 return result.value;
             }

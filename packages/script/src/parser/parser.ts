@@ -109,6 +109,27 @@ const If = /* #__PURE__ */ P.qo((perform): Expression => {
     };
 });
 
+const Loop = /* #__PURE__ */ P.qo((perform): Expression => {
+    const start = perform(keyword("loop"));
+    const body = perform(expression);
+    return {
+        type: "Loop",
+        body,
+        loc: loc(start, body),
+    };
+});
+
+const Break = /* #__PURE__ */ P.lazy(() =>
+    keyword("break").andMap(
+        expression.option(null),
+        (start, body): Expression => ({
+            type: "Break",
+            body,
+            loc: loc(start, body ?? start),
+        }),
+    ),
+);
+
 const Fn = /* #__PURE__ */ P.qo((perform): Expression => {
     const start = perform(keyword("fn"));
     const params = perform(
@@ -136,7 +157,19 @@ const Return = /* #__PURE__ */ P.lazy(() =>
 
 export const expression: P.Parser<Expression> =
     /* #__PURE__ */
-    P.choice([Ident, Bool, Number, String, Tuple, Block, If, Fn, Return])
+    P.choice([
+        Ident,
+        Bool,
+        Number,
+        String,
+        Tuple,
+        Block,
+        If,
+        Loop,
+        Break,
+        Fn,
+        Return,
+    ])
         .flatMap(expr => {
             return ExpressionTail.map(expressionTails => {
                 return expressionTails.reduce((lhs, rhs) => rhs(lhs), expr);

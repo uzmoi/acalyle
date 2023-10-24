@@ -27,6 +27,8 @@ const keywords = [
     "false",
     "if",
     "else",
+    "loop",
+    "break",
     "let",
 ] as const;
 

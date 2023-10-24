@@ -42,6 +42,16 @@ export type IfExpression = {
     elseBody: Expression | null;
 } & Loc;
 
+export type LoopExpression = {
+    type: "Loop";
+    body: Expression;
+} & Loc;
+
+export type BreakExpression = {
+    type: "Break";
+    body: Expression | null;
+} & Loc;
+
 export type FnExpression = {
     type: "Fn";
     params: IdentExpression[];
@@ -80,6 +90,8 @@ export type Expression =
     | TupleExpression
     | BlockExpression
     | IfExpression
+    | LoopExpression
+    | BreakExpression
     | FnExpression
     | ReturnExpression
     | ApplyExpression
