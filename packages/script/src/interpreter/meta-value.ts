@@ -4,8 +4,11 @@ export abstract class MetaValue {
     declare ["__?phantom"]: "MetaValue";
 }
 
-export class RuntimeError extends MetaValue {
-    constructor(readonly loc: SourceLocation) {
+export class RuntimeError<T extends string> extends MetaValue {
+    constructor(
+        readonly type: T,
+        readonly loc: SourceLocation,
+    ) {
         super();
     }
 }

@@ -1,13 +1,15 @@
 import type { SourceLocation } from "../parser";
 import { RuntimeError } from "./meta-value";
 
-export class ScopeError extends RuntimeError {
+type ScopeErrorType = "defined" | "not-defined" | "readonly";
+
+export class ScopeError extends RuntimeError<ScopeErrorType> {
     constructor(
-        readonly type: "defined" | "not-defined" | "readonly",
+        type: ScopeErrorType,
         readonly identName: string,
         loc: SourceLocation,
     ) {
-        super(loc);
+        super(type, loc);
     }
 }
 

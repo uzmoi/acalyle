@@ -139,10 +139,10 @@ export function* evaluateExpression(
             if (fn instanceof MetaValue) return fn;
             const fnScope = fn.scope.child();
             if (fn.params.length > expr.args.length) {
-                return new RuntimeError(expr.loc);
+                return new RuntimeError("missing-arguments", expr.loc);
             }
             if (fn.params.length < expr.args.length) {
-                return new RuntimeError(expr.loc);
+                return new RuntimeError("surplus-arguments", expr.loc);
             }
             for (const [param, arg] of zip([fn.params, expr.args])) {
                 const value = yield* evaluateExpression(arg, scope);
@@ -155,7 +155,7 @@ export function* evaluateExpression(
             }
             const result = yield* evaluateExpression(fn.body, fnScope);
             if (result instanceof BreakControl) {
-                return new RuntimeError(fn.body.loc);
+                return new RuntimeError("invalid-break", fn.body.loc);
             }
             if (result instanceof ReturnControl) {
                 return result.value;
