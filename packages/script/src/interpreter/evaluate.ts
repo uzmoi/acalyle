@@ -1,3 +1,4 @@
+import { zip } from "@acalyle/util";
 import { assert } from "emnorst";
 import type { Expression, Statement } from "../parser";
 import { MetaValue, RuntimeError } from "./meta-value";
@@ -136,13 +137,22 @@ export function* evaluateExpression(
                 expr.callee,
             );
             if (fn instanceof MetaValue) return fn;
-            const args: Value[] = [];
-            for (const arg of expr.args) {
+            const fnScope = fn.scope.child();
+            if (fn.params.length > expr.args.length) {
+                return new RuntimeError(expr.loc);
+            }
+            if (fn.params.length < expr.args.length) {
+                return new RuntimeError(expr.loc);
+            }
+            for (const [param, arg] of zip([fn.params, expr.args])) {
                 const value = yield* evaluateExpression(arg, scope);
                 if (value instanceof MetaValue) return value;
-                args.push(value);
+                fnScope.define(
+                    param.name,
+                    { value, writable: false },
+                    param.loc,
+                );
             }
-            const fnScope = fn.initFnScope(args);
             const result = yield* evaluateExpression(fn.body, fnScope);
             if (result instanceof BreakControl) {
                 return new RuntimeError(fn.body.loc);
