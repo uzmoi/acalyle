@@ -1,11 +1,9 @@
 import type { SourceLocation } from "../parser";
 import { RuntimeError } from "./meta-value";
 
-type ScopeErrorType = "defined" | "not-defined" | "readonly";
-
-export class ScopeError extends RuntimeError<ScopeErrorType> {
+export class ScopeError extends RuntimeError {
     constructor(
-        type: ScopeErrorType,
+        type: "defined" | "not-defined" | "readonly",
         readonly identName: string,
         loc: SourceLocation,
     ) {

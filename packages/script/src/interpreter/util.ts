@@ -2,7 +2,7 @@ import { typeOf } from "emnorst";
 import type { SourceLocation } from "../parser";
 import { MetaValue, RuntimeError } from "./meta-value";
 
-export class TypeError extends RuntimeError<"type-mismatch"> {
+export class TypeError extends RuntimeError {
     constructor(
         readonly expectType: string,
         readonly actualType: string,
