@@ -1,14 +1,14 @@
 import type { SourceLocation } from "../parser";
 
 export abstract class MetaValue {
-    declare ["__?phantom"]: "MetaValue";
+    constructor(readonly loc: SourceLocation) {}
 }
 
 export class RuntimeError extends MetaValue {
     constructor(
-        readonly type: T,
-        readonly loc: SourceLocation,
+        readonly type: string,
+        loc: SourceLocation,
     ) {
-        super();
+        super(loc);
     }
 }

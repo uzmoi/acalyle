@@ -1,6 +1,6 @@
 import { zip } from "@acalyle/util";
 import { assert } from "emnorst";
-import type { Expression, Statement } from "../parser";
+import type { Expression, SourceLocation, Statement } from "../parser";
 import { MetaValue, RuntimeError } from "./meta-value";
 import type { Scope } from "./scope";
 import { checkInstance } from "./util";
@@ -15,14 +15,20 @@ import {
 import type { Value } from "./value/types";
 
 export class ReturnControl extends MetaValue {
-    constructor(readonly value: Value) {
-        super();
+    constructor(
+        readonly value: Value,
+        loc: SourceLocation,
+    ) {
+        super(loc);
     }
 }
 
 export class BreakControl extends MetaValue {
-    constructor(readonly value: Value) {
-        super();
+    constructor(
+        readonly value: Value,
+        loc: SourceLocation,
+    ) {
+        super(loc);
     }
 }
 
@@ -129,7 +135,7 @@ export function* evaluateExpression(
                 result = value;
             }
             yield step("break");
-            return new BreakControl(result);
+            return new BreakControl(result, expr.loc);
         }
         case "Fn": {
             return new FnValue(expr.params, expr.body, scope);
@@ -144,7 +150,7 @@ export function* evaluateExpression(
                 result = value;
             }
             yield step("return");
-            return new ReturnControl(result);
+            return new ReturnControl(result, expr.loc);
         }
         case "Apply": {
             const fn = checkInstance(
