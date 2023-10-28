@@ -110,7 +110,10 @@ export function* evaluateExpression(
             while (true) {
                 yield step("loop");
                 const value = yield* evaluateExpression(expr.body, scope);
-                if (value instanceof BreakControl) {
+                if (
+                    value instanceof BreakControl ||
+                    value instanceof ReturnControl
+                ) {
                     return value.value;
                 }
                 if (value instanceof MetaValue) return value;
