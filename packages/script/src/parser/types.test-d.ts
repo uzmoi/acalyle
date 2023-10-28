@@ -1,9 +1,12 @@
 import type { IfUnion } from "emnorst";
 import { expectTypeOf, test } from "vitest";
+import type { SourceLocation } from "./location";
 import type { Expression, Statement } from "./types";
 
 test("has type property", () => {
-    expectTypeOf<Expression | Statement>().toHaveProperty("type");
+    const type = expectTypeOf<Expression | Statement>().toHaveProperty("type");
+    type.toBeString();
+    type.not.toEqualTypeOf<string>();
 });
 
 test("type not duplicated", () => {
@@ -14,5 +17,7 @@ test("type not duplicated", () => {
 });
 
 test("has loc property", () => {
-    expectTypeOf<Expression | Statement>().toHaveProperty("loc");
+    expectTypeOf<Expression | Statement>()
+        .toHaveProperty("loc")
+        .toEqualTypeOf<SourceLocation>();
 });
