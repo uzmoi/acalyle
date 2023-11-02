@@ -233,18 +233,18 @@ const Let = /* #__PURE__ */ P.qo((perform): Statement => {
     const dest = perform(Ident);
     perform(punctuator("="));
     const init = perform(expression);
-    const end = perform(semicolon);
-    return { type: "Let", dest, init, loc: loc(start, end) };
+    return { type: "Let", dest, init, loc: loc(start, init) };
 });
 
 export const statement: P.Parser<Statement> = /* #__PURE__ */ P.choice([
     Let,
-    /* #__PURE__ */ expression.andMap(
-        /* #__PURE__ */ semicolon,
-        (expr, end): Statement => ({
+    /* #__PURE__ */ expression.skip(semicolon).map(
+        (expr): Statement => ({
             type: "Expression",
             expr,
-            loc: loc(expr, end),
+            loc: expr.loc,
         }),
     ),
-]).label("statement");
+])
+    .skip(/* #__PURE__ */ semicolon.apply(P.many))
+    .label("statement");
