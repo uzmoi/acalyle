@@ -13,7 +13,22 @@ const token = <T extends TokenType, U extends string>(type: T, value?: U) =>
     );
 
 const keyword = (word: Keyword) => token("Keyword", word);
+
 const delimiter = (delimiter: Delimiter) => token("Delimiter", delimiter);
+// parenthesis
+const parenStart = /* #__PURE__ */ delimiter("(");
+const parenEnd = /* #__PURE__ */ delimiter(")");
+// square bracket
+const _bracketStart = /* #__PURE__ */ delimiter("[");
+const _bracketEnd = /* #__PURE__ */ delimiter("]");
+// curly brace
+const curlyBraceStart = /* #__PURE__ */ delimiter("{");
+const curlyBraceEnd = /* #__PURE__ */ delimiter("}");
+// other delimiter
+const semicolon = /* #__PURE__ */ delimiter(";");
+const comma = /* #__PURE__ */ delimiter(",");
+const dot = /* #__PURE__ */ delimiter(".");
+
 const punctuator = <T extends string>(punctuator?: T) =>
     token("Punctuator", punctuator);
 
@@ -66,11 +81,12 @@ const String = /* #__PURE__ */ P.qo((perform): Expression => {
 });
 
 const Tuple = /* #__PURE__ */ P.qo((perform): Expression => {
-    const start = perform(delimiter("("));
+    const start = perform(parenStart);
     const elements: Expression[] = [];
     const properties: [IdentExpression, Expression][] = [];
     perform.try(() => {
         for (;;) {
+            // FIXME: "(ident = )"が通ってしまう
             const label = perform(Ident.skip(punctuator("=")).option());
             const element = perform(expression);
             if (label == null) {
@@ -78,26 +94,26 @@ const Tuple = /* #__PURE__ */ P.qo((perform): Expression => {
             } else {
                 properties.push([label, element]);
             }
-            perform(delimiter(","));
+            perform(comma);
         }
     }, true);
-    const end = perform(delimiter(")"));
+    const end = perform(parenEnd);
     return { type: "Tuple", elements, properties, loc: loc(start, end) };
 });
 
 const Block = /* #__PURE__ */ P.qo((perform): Expression => {
-    const start = perform(delimiter("{"));
+    const start = perform(curlyBraceStart);
     const stmts = perform(statement.apply(P.many));
     const last = perform(expression.option(null));
-    const end = perform(delimiter("}"));
+    const end = perform(curlyBraceEnd);
     return { type: "Block", stmts, last, loc: loc(start, end) };
 });
 
 const If = /* #__PURE__ */ P.qo((perform): Expression => {
     const start = perform(keyword("if"));
-    perform(delimiter("("));
+    perform(parenStart);
     const cond = perform(expression);
-    perform(delimiter(")"));
+    perform(parenEnd);
     const thenBody = perform(expression);
     const elseBody = perform(keyword("else").then(expression).option(null));
     return {
@@ -133,7 +149,7 @@ const Break = /* #__PURE__ */ P.lazy(() =>
 const Fn = /* #__PURE__ */ P.qo((perform): Expression => {
     const start = perform(keyword("fn"));
     const params = perform(
-        Ident.apply(P.many).between(delimiter("("), delimiter(")")).option(),
+        Ident.apply(P.many).between(parenStart, parenEnd).option(),
     );
     const body = perform(expression);
     return {
@@ -187,7 +203,7 @@ const ExpressionTail = /* #__PURE__ */ P.choice([
                 loc: loc(callee, tuple),
             }),
     ),
-    /* #__PURE__ */ delimiter(".")
+    /* #__PURE__ */ dot
         // eslint-disable-next-line unicorn/prefer-top-level-await
         .then(Ident)
         .map(
@@ -217,14 +233,14 @@ const Let = /* #__PURE__ */ P.qo((perform): Statement => {
     const dest = perform(Ident);
     perform(punctuator("="));
     const init = perform(expression);
-    const end = perform(delimiter(";"));
+    const end = perform(semicolon);
     return { type: "Let", dest, init, loc: loc(start, end) };
 });
 
 export const statement: P.Parser<Statement> = /* #__PURE__ */ P.choice([
     Let,
     /* #__PURE__ */ expression.andMap(
-        /* #__PURE__ */ delimiter(";"),
+        /* #__PURE__ */ semicolon,
         (expr, end): Statement => ({
             type: "Expression",
             expr,
