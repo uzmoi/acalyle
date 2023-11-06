@@ -127,6 +127,6 @@ describe("Statement", () => {
     test("let", () => {
         const scope = Scope.create<Value>();
         runStmt("let hoge = 0;", scope);
-        expect(scope.get("hoge")).toStrictEqual(new IntValue(0));
+        expect(scope.get("hoge", [0, 0])).toStrictEqual(new IntValue(0));
     });
 });

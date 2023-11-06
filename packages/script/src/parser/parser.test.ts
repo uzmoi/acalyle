@@ -1,6 +1,6 @@
 import { EOI, Parser } from "parsea";
 import { describe, expect, test } from "vitest";
-import { SourceLocation } from "./location";
+import type { SourceLocation } from "./location";
 import { expression, statement } from "./parser";
 import { Tokenizer } from "./tokenizer";
 import type { Expression, IdentExpression, Statement } from "./types";
