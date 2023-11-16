@@ -36,10 +36,16 @@ type EvaluateStepType = "if" | "loop" | "break" | "apply" | "return" | "let";
 
 export type EvaluateStep = {
     type: EvaluateStepType;
+    loc: SourceLocation;
+    scope: Scope<Value>;
 };
 
-const step = (type: EvaluateStepType): EvaluateStep => {
-    return { type };
+const step = (
+    type: EvaluateStepType,
+    loc: SourceLocation,
+    scope: Scope<Value>,
+): EvaluateStep => {
+    return { type, loc, scope };
 };
 
 export function* evaluateExpression(
@@ -107,14 +113,14 @@ export function* evaluateExpression(
                 expr.cond,
             );
             if (cond instanceof MetaValue) return cond;
-            yield step("if");
+            yield step("if", expr.loc, scope);
             return yield* cond.value
                 ? evaluateExpression(expr.thenBody, scope)
                 : evaluateExpression(expr.elseBody!, scope);
         }
         case "Loop": {
             while (true) {
-                yield step("loop");
+                yield step("loop", expr.loc, scope);
                 const value = yield* evaluateExpression(expr.body, scope);
                 if (
                     value instanceof BreakControl ||
@@ -134,7 +140,7 @@ export function* evaluateExpression(
                 if (value instanceof MetaValue) return value;
                 result = value;
             }
-            yield step("break");
+            yield step("break", expr.loc, scope);
             return new BreakControl(result, expr.loc);
         }
         case "Fn": {
@@ -149,7 +155,7 @@ export function* evaluateExpression(
                 if (value instanceof MetaValue) return value;
                 result = value;
             }
-            yield step("return");
+            yield step("return", expr.loc, scope);
             return new ReturnControl(result, expr.loc);
         }
         case "Apply": {
@@ -175,7 +181,7 @@ export function* evaluateExpression(
                     param.loc,
                 );
             }
-            yield step("apply");
+            yield step("apply", expr.loc, scope);
             const result = yield* evaluateExpression(fn.body, fnScope);
             if (result instanceof BreakControl) {
                 return new RuntimeError("invalid-break", fn.body.loc);
@@ -223,7 +229,7 @@ export function* evaluateStatement(
                 { value, writable: false },
                 stmt.dest.loc,
             );
-            yield step("let");
+            yield step("let", stmt.loc, scope);
             break;
         }
         default:
