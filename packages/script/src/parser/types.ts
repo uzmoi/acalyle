@@ -1,112 +1,108 @@
-import type { SourceLocation } from "./location";
-
-type Loc = { loc: SourceLocation };
-
-export type IdentExpression = {
+export type IdentExpression<T> = {
     type: "Ident";
     name: string;
-} & Loc;
+} & T;
 
-export type BoolExpression = {
+export type BoolExpression<T> = {
     type: "Bool";
     value: boolean;
-} & Loc;
+} & T;
 
-export type NumberExpression = {
+export type NumberExpression<T> = {
     type: "Number";
     value: string;
-} & Loc;
+} & T;
 
-export type StringExpression = {
+export type StringExpression<T> = {
     type: "String";
     strings: string[];
-    values: Expression[];
-} & Loc;
+    values: Expression<T>[];
+} & T;
 
-export type TupleExpression = {
+export type TupleExpression<T> = {
     type: "Tuple";
-    elements: Expression[];
-    properties: [IdentExpression, Expression][];
-} & Loc;
+    elements: Expression<T>[];
+    properties: [IdentExpression<T>, Expression<T>][];
+} & T;
 
-export type BlockExpression = {
+export type BlockExpression<T> = {
     type: "Block";
-    stmts: Statement[];
-    last: Expression | null;
-} & Loc;
+    stmts: Statement<T>[];
+    last: Expression<T> | null;
+} & T;
 
-export type IfExpression = {
+export type IfExpression<T> = {
     type: "If";
-    cond: Expression;
-    thenBody: Expression;
-    elseBody: Expression | null;
-} & Loc;
+    cond: Expression<T>;
+    thenBody: Expression<T>;
+    elseBody: Expression<T> | null;
+} & T;
 
-export type LoopExpression = {
+export type LoopExpression<T> = {
     type: "Loop";
-    body: Expression;
-} & Loc;
+    body: Expression<T>;
+} & T;
 
-export type BreakExpression = {
+export type BreakExpression<T> = {
     type: "Break";
-    body: Expression | null;
-} & Loc;
+    body: Expression<T> | null;
+} & T;
 
-export type FnExpression = {
+export type FnExpression<T> = {
     type: "Fn";
-    params: IdentExpression[];
-    body: Expression;
-} & Loc;
+    params: IdentExpression<T>[];
+    body: Expression<T>;
+} & T;
 
-export type ReturnExpression = {
+export type ReturnExpression<T> = {
     type: "Return";
-    body: Expression | null;
-} & Loc;
+    body: Expression<T> | null;
+} & T;
 
-export type ApplyExpression = {
+export type ApplyExpression<T> = {
     type: "Apply";
-    callee: Expression;
-    args: Expression[];
-} & Loc;
+    callee: Expression<T>;
+    args: Expression<T>[];
+} & T;
 
-export type PropertyExpression = {
+export type PropertyExpression<T> = {
     type: "Property";
-    target: Expression;
-    property: IdentExpression;
-} & Loc;
+    target: Expression<T>;
+    property: IdentExpression<T>;
+} & T;
 
-export type OperatorExpression = {
+export type OperatorExpression<T> = {
     type: "Operator";
     op: string;
-    lhs: Expression;
-    rhs: Expression;
-} & Loc;
+    lhs: Expression<T>;
+    rhs: Expression<T>;
+} & T;
 
-export type Expression =
-    | IdentExpression
-    | BoolExpression
-    | NumberExpression
-    | StringExpression
-    | TupleExpression
-    | BlockExpression
-    | IfExpression
-    | LoopExpression
-    | BreakExpression
-    | FnExpression
-    | ReturnExpression
-    | ApplyExpression
-    | PropertyExpression
-    | OperatorExpression;
+export type Expression<T> =
+    | IdentExpression<T>
+    | BoolExpression<T>
+    | NumberExpression<T>
+    | StringExpression<T>
+    | TupleExpression<T>
+    | BlockExpression<T>
+    | IfExpression<T>
+    | LoopExpression<T>
+    | BreakExpression<T>
+    | FnExpression<T>
+    | ReturnExpression<T>
+    | ApplyExpression<T>
+    | PropertyExpression<T>
+    | OperatorExpression<T>;
 
-export type ExpressionStatement = {
+export type ExpressionStatement<T> = {
     type: "Expression";
-    expr: Expression;
-} & Loc;
+    expr: Expression<T>;
+} & T;
 
-export type LetStatement = {
+export type LetStatement<T> = {
     type: "Let";
-    dest: IdentExpression;
-    init: Expression;
-} & Loc;
+    dest: IdentExpression<T>;
+    init: Expression<T>;
+} & T;
 
-export type Statement = ExpressionStatement | LetStatement;
+export type Statement<T> = ExpressionStatement<T> | LetStatement<T>;

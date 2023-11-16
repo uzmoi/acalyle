@@ -1,9 +1,9 @@
 import { EOI, Parser } from "parsea";
 import { describe, expect, test } from "vitest";
-import type { SourceLocation } from "./location";
+import type { Loc, SourceLocation } from "./location";
 import { expression, statement } from "./parser";
 import { Tokenizer } from "./tokenizer";
-import type { Expression, IdentExpression, Statement } from "./types";
+import type * as types from "./types";
 
 const parse = <T>(parser: Parser<T>, source: string) => {
     const tokens = new Tokenizer(source)
@@ -24,6 +24,10 @@ const parseStmt = (source: string) => {
 };
 
 const loc: SourceLocation = [expect.any(Number), expect.any(Number)];
+
+type Expression = types.Expression<Loc>;
+type IdentExpression = types.IdentExpression<Loc>;
+type Statement = types.Statement<Loc>;
 
 const ident = (name: string): IdentExpression => ({ type: "Ident", name, loc });
 const bool = (value: boolean): Expression => ({ type: "Bool", value, loc });

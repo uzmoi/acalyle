@@ -1,8 +1,11 @@
 import * as P from "parsea";
 import { error } from "parsea/internal";
-import { loc } from "./location";
+import { type Loc, loc } from "./location";
 import type { Delimiter, Keyword, Token, TokenType } from "./tokenizer";
-import type { Expression, IdentExpression, Statement } from "./types";
+import type * as types from "./types";
+
+type Expression = types.Expression<Loc>;
+type Statement = types.Statement<Loc>;
 
 const token = <T extends TokenType, U extends string>(type: T, value?: U) =>
     P.satisfy<Token & { type: T; value: U }>(
@@ -83,7 +86,7 @@ const String = /* #__PURE__ */ P.qo((perform): Expression => {
 const Tuple = /* #__PURE__ */ P.qo((perform): Expression => {
     const start = perform(parenStart);
     const elements: Expression[] = [];
-    const properties: [IdentExpression, Expression][] = [];
+    const properties: [types.IdentExpression<Loc>, Expression][] = [];
     perform.try(() => {
         for (;;) {
             // FIXME: "(ident = )"が通ってしまう

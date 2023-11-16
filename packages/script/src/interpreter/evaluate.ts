@@ -1,6 +1,6 @@
 import { zip } from "@acalyle/util";
 import { assert } from "emnorst";
-import type { Expression, SourceLocation, Statement } from "../parser";
+import type { Expression, Loc, SourceLocation, Statement } from "../parser";
 import { MetaValue, RuntimeError } from "./meta-value";
 import type { Scope } from "./scope";
 import { checkInstance } from "./util";
@@ -49,7 +49,7 @@ const step = (
 };
 
 export function* evaluateExpression(
-    expr: Expression,
+    expr: Expression<Loc>,
     scope: Scope<Value>,
 ): Generator<EvaluateStep, Value | MetaValue> {
     switch (expr.type) {
@@ -69,7 +69,7 @@ export function* evaluateExpression(
             for (let i = 0; i < expr.values.length; i++) {
                 // NOTE: TypeScriptのバグなのか何なのか、型推論をしてくれないので
                 // 明示的にアノテーションを書かないといけない。
-                const node: Expression = expr.values[i]!;
+                const node: Expression<Loc> = expr.values[i]!;
                 const value: StringValue | MetaValue = checkInstance(
                     yield* evaluateExpression(node, scope),
                     StringValue,
@@ -213,7 +213,7 @@ export function* evaluateExpression(
 }
 
 export function* evaluateStatement(
-    stmt: Statement,
+    stmt: Statement<Loc>,
     scope: Scope<Value>,
 ): Generator<EvaluateStep, MetaValue | undefined> {
     switch (stmt.type) {
