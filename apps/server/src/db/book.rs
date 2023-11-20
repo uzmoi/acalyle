@@ -240,6 +240,19 @@ pub(crate) async fn update_book_title(
     Ok(())
 }
 
+pub(crate) async fn update_book_handle(
+    executor: impl SqliteExecutor<'_>,
+    book_id: &BookId,
+    handle: String,
+) -> sqlx::Result<()> {
+    sqlx::query("UPDATE Book SET handle = ? WHERE id = ?")
+        .bind(handle)
+        .bind(book_id)
+        .execute(executor)
+        .await?;
+    Ok(())
+}
+
 pub(crate) async fn delete_book(
     executor: impl SqliteExecutor<'_>,
     book_ids: &[BookId],
