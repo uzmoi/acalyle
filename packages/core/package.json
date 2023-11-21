@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@acalyle/tsconfig": "*",
-    "tsup": "^7.2.0",
+    "tsup": "^8.0.0",
     "vitest": "^0.34.6"
   }
 }

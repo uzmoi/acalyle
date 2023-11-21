@@ -31,7 +31,7 @@
     "@acalyle/tsconfig": "*",
     "@types/eslint": "^8.44.3",
     "@types/esquery": "^1.5.1",
-    "tsup": "^7.2.0",
+    "tsup": "^8.0.0",
     "vitest": "^0.34.6"
   }
 }
