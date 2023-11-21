@@ -25,10 +25,10 @@ export const unicorn: Linter.FlatConfig = {
         "unicorn/prefer-at": OFF,
         "unicorn/prefer-code-point": OFF,
         "unicorn/prefer-module": OFF,
+        "unicorn/prefer-number-properties": warn({ checkInfinity: false }),
         "unicorn/prefer-query-selector": OFF,
         "unicorn/prefer-string-replace-all": OFF,
         "unicorn/prevent-abbreviations": OFF,
-        "unicorn/switch-case-braces": OFF,
         "unicorn/template-indent": warn({
             indent: 4,
             tags: [],

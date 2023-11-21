@@ -51,7 +51,10 @@ export const replaceWarn = (
 ): Linter.RulesRecord => {
     return mapEntries(rules, (ruleName, entry) => [
         ruleName,
-        entry === ERROR ? WARN : entry,
+        Array.isArray(entry) && entry[0] === ERROR ?
+            [WARN, ...(entry as unknown[]).slice(1)]
+        : entry === ERROR ? WARN
+        : entry,
     ]) as Linter.RulesRecord;
 };
 

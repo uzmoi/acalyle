@@ -77,35 +77,43 @@ const isPureNode = (
     options: RuleOptions,
 ): boolean => {
     switch (node.type) {
-        case "AwaitExpression":
+        case "AwaitExpression": {
             return !!options.allowAwait;
+        }
         case "UpdateExpression":
-        case "AssignmentExpression":
+        case "AssignmentExpression": {
             return !!options.allowAssign;
-        case "UnaryExpression":
+        }
+        case "UnaryExpression": {
             return !!options.allowDelete || node.operator !== "delete";
-        case "ThrowStatement":
+        }
+        case "ThrowStatement": {
             return !!options.allowThrow;
-        case "NewExpression":
+        }
+        case "NewExpression": {
             return (
                 !!options.allowNew ||
                 source.getCommentsBefore(node).some(isPureComment)
             );
-        case "TaggedTemplateExpression":
+        }
+        case "TaggedTemplateExpression": {
             return (
                 !!(options.allowTaggedTemplate ?? options.allowCall) ||
                 source.getCommentsBefore(node).some(isPureComment) ||
                 isPureFunction(node.tag, options.pureFunctions)
             );
-        case "CallExpression":
+        }
+        case "CallExpression": {
             return (
                 !!options.allowCall ||
                 source.getCommentsBefore(node).some(isPureComment) ||
                 node.callee.type === "Super" ||
                 isPureFunction(node.callee, options.pureFunctions)
             );
-        default:
+        }
+        default: {
             assert.unreachable<typeof node>();
+        }
     }
 };
 

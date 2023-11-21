@@ -41,6 +41,7 @@ export default [
     configs.react,
     configs.testingLibrary("react"),
     configs.import,
+    configs.perfectionist,
     {
         files: ["!**/src/**"],
         languageOptions: {
