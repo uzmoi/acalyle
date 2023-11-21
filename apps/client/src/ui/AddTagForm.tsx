@@ -51,9 +51,9 @@ export const AddTagForm: React.FC<{
         (e: React.SyntheticEvent<HTMLInputElement>) => {
             const el = e.currentTarget;
             setCaretIndex(
-                (el.selectionDirection === "backward"
-                    ? el.selectionStart
-                    : el.selectionEnd) ?? 0,
+                (el.selectionDirection === "backward" ?
+                    el.selectionStart
+                :   el.selectionEnd) ?? 0,
             );
             setSelectedIndex(0);
         },

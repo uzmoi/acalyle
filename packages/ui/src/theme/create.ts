@@ -1,13 +1,10 @@
 import { type Primitive, isObject } from "emnorst";
 
-// @vanilla-extract/dynamic
-
 type MapLeafNodes<Obj, LeafType> = {
-    [Prop in keyof Obj]: Obj[Prop] extends Primitive
-        ? LeafType
-        : Obj[Prop] extends Record<string | number, unknown>
-        ? MapLeafNodes<Obj[Prop], LeafType>
-        : never;
+    [Prop in keyof Obj]: Obj[Prop] extends Primitive ? LeafType
+    : Obj[Prop] extends Record<string | number, unknown> ?
+        MapLeafNodes<Obj[Prop], LeafType>
+    :   never;
 };
 
 type ThemeSource = string | { [_ in string]: ThemeSource };

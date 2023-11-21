@@ -19,11 +19,11 @@ const parsePattern = memoize((filter: string) => {
     for (const [i, name] of xs.entries()) {
         const ancestryAttribute = [
             ...ancestryAttributes,
-            i === xs.length - 1
-                ? name === "*"
-                    ? "type"
-                    : "name"
-                : "property.name",
+            i === xs.length - 1 ?
+                name === "*" ?
+                    "type"
+                :   "name"
+            :   "property.name",
         ].join(".");
         const nameRe = name.replace(/\*/g, ".+");
         selector += `[${ancestryAttribute}=/^${nameRe}$/]`;

@@ -126,7 +126,7 @@ export const ModalContainer: <T>(props: {
             )}
             onClick={handleClickBackdrop}
         >
-            {data ? (
+            {data ?
                 <div
                     className={cx(
                         style({
@@ -149,7 +149,7 @@ export const ModalContainer: <T>(props: {
                 >
                     {render(data.data)}
                 </div>
-            ) : null}
+            :   null}
         </div>
     );
 };

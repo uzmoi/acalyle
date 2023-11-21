@@ -7,9 +7,9 @@ export type PatternPart = string | { key: string; mark: Mark | "" };
 
 const parsePatternPart = (part: string): PatternPart => {
     const match = /^:(\w*)([*+?]?)/.exec(part);
-    return match == null
-        ? part
-        : { key: match[1]!, mark: match[2] as Mark | "" };
+    return match == null ? part : (
+            { key: match[1]!, mark: match[2] as Mark | "" }
+        );
 };
 
 export type Pattern = {
@@ -68,14 +68,12 @@ export type MatchParamKeyOf<Pattern extends string> = (
 
 export type WithSearchParams<T extends string> = `${T}${"" | `?${string}`}`;
 
-// prettier-ignore
 export type MatchParams<in T extends string> = {
-    [P in T as RemoveTail<P, Mark>]: (
-        P extends `${string}+` ? readonly [string, ...string[]]
-        : P extends `${string}*` ? readonly string[]
-        : P extends `${string}?` ? string | undefined
-        : string
-    );
+    [P in T as RemoveTail<P, Mark>]: P extends `${string}+` ?
+        readonly [string, ...string[]]
+    : P extends `${string}*` ? readonly string[]
+    : P extends `${string}?` ? string | undefined
+    : string;
 };
 
 export type ParamRecord = {
@@ -84,7 +82,6 @@ export type ParamRecord = {
     [x: `${string}*` | `${string}+`]: string[];
 };
 
-// prettier-ignore
 export type NormalizePath<T extends string> =
     T extends `${infer Pre}//${infer Post}` ? NormalizePath<`${Pre}/${Post}`>
     : T extends `/${infer U}` | `${infer U}/` ? NormalizePath<U>
@@ -92,12 +89,10 @@ export type NormalizePath<T extends string> =
 
 export type Link<T extends string = string> = Meta<string, `link:${T}`>;
 
-// prettier-ignore
-export type LinkBuilderArgs<T extends string> = (
-    T extends `${string}/:${string}` | `:${string}`
-        ? [pattern: T, params: MatchParams<MatchParamKeyOf<T>> & ParamRecord]
-        : [pattern: T, params?: ParamRecord]
-);
+export type LinkBuilderArgs<T extends string> =
+    T extends `${string}/:${string}` | `:${string}` ?
+        [pattern: T, params: MatchParams<MatchParamKeyOf<T>> & ParamRecord]
+    :   [pattern: T, params?: ParamRecord];
 
 export type LinkBuilder = <T extends string>(
     ...args: LinkBuilderArgs<T>

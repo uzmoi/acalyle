@@ -3,9 +3,8 @@ import type { Link, NormalizePath, ParamRecord } from "./pattern";
 
 export type Path<T> = WeakMeta<readonly string[], { path: T }>;
 
-export type InferPath<T> = T extends Route<infer P, infer _, infer __>
-    ? NormalizePath<P>
-    : never;
+export type InferPath<T> =
+    T extends Route<infer P, infer _, infer __> ? NormalizePath<P> : never;
 
 // HACK: 同じ関数の交差型で何故か、メソッドの引数の変性のチェックを誤魔化せる。
 type Hack<T extends (...args: never[]) => unknown> = T &
@@ -41,17 +40,15 @@ export class Route<
     }
 }
 
-// prettier-ignore
 export const match: <Path extends string, Params extends ParamRecord, R>(
     route: Route<Path, Params, R>,
     link: Link<Path>,
-    ...args: [keyof Params] extends [never]
-        ? [] : [params: Params]
+    ...args: [keyof Params] extends [never] ? [] : [params: Params]
 ) => R = <Path extends string, Params extends ParamRecord, R>(
     route: Route<Path, Params, R>,
     link: Link<Path>,
     params: Params = {} as never,
-): R  => {
+): R => {
     const path = link.split("/").filter(Boolean);
     return route.get(path, params);
 };

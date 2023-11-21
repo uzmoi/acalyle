@@ -58,7 +58,9 @@ export const replaceWarn = (
 const asArray = <T>(
     value: T | readonly T[] | null | undefined,
 ): readonly T[] =>
-    Array.isArray(value) ? value : value == null ? [] : [value as T];
+    Array.isArray(value) ? value
+    : value == null ? []
+    : [value as T];
 
 export const extendsRules = (
     configs: Record<string, Linter.Config>,
