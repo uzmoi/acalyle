@@ -1,1 +1,0 @@
-export { MemoTagsForm } from "./tags";
