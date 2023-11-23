@@ -67,6 +67,14 @@ export const typescriptCustom: Linter.FlatConfig = {
                 format: ["camelCase", "PascalCase", "UPPER_CASE"],
                 leadingUnderscore: unused ? "allow" : undefined,
             })),
+            ...[false, true].map(unused => ({
+                // NOTE: selectorは配列でなくとも良いはずだが、
+                // typescript-eslint@6.12.0ではスキーマが非対応なのかエラーが出る
+                selector: ["import"],
+                modifiers: unused ? ["unused"] : undefined,
+                format: ["camelCase", "PascalCase"],
+                leadingUnderscore: unused ? "allow" : undefined,
+            })),
             {
                 selector: ["objectLiteralProperty", "typeProperty"],
                 format: ["camelCase", "PascalCase"],
