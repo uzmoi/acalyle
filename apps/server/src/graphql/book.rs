@@ -290,7 +290,7 @@ impl BookMutation {
         &self,
         ctx: &Context<'_>,
         id: ID,
-        handle: String,
+        handle: Option<String>,
     ) -> Result<Option<Book>> {
         let pool = ctx.data::<SqlitePool>()?;
         let now = Utc::now();

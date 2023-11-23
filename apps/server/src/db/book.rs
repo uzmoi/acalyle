@@ -243,7 +243,7 @@ pub(crate) async fn update_book_title(
 pub(crate) async fn update_book_handle(
     executor: impl SqliteExecutor<'_>,
     book_id: &BookId,
-    handle: String,
+    handle: Option<String>,
 ) -> sqlx::Result<()> {
     sqlx::query("UPDATE Book SET handle = ? WHERE id = ?")
         .bind(handle)
