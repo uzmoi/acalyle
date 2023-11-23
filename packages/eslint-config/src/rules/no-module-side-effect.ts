@@ -2,8 +2,7 @@ import { assert } from "emnorst";
 import type { Rule, SourceCode } from "eslint";
 import esquery from "esquery"; // cspell:word esquery
 import type * as ESTree from "estree"; // cspell:word estree
-import type { JSONSchema4 } from "json-schema";
-import { memoize } from "../util";
+import { RuleOptions, jsonSchema, memoize } from "../util";
 
 // https://github.com/rollup/rollup/pull/5024
 const _isPureFunctionComment = (comment: ESTree.Comment): boolean =>
@@ -74,7 +73,7 @@ type CheckNode = Extract<Rule.Node, { type: (typeof checkNodeType)[number] }>;
 const isPureNode = (
     node: CheckNode,
     source: SourceCode,
-    options: RuleOptions,
+    options: RuleOptions<typeof schema>,
 ): boolean => {
     switch (node.type) {
         case "AwaitExpression": {
@@ -126,7 +125,7 @@ const functionNodeType = new Set<Rule.Node["type"]>([
 
 const isInFunction = (
     ancestors: readonly ESTree.Node[],
-    options: RuleOptions,
+    options: RuleOptions<typeof schema>,
 ): boolean => {
     return ancestors.some(node => {
         return (
@@ -137,31 +136,6 @@ const isInFunction = (
     });
 };
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface, @typescript-eslint/consistent-type-definitions
-interface JSONSchema<out _ = unknown> extends JSONSchema4 {}
-
-const jsonSchema = {
-    object: <T>(properties: {
-        [P in keyof T]: JSONSchema<T[P]>;
-    }): JSONSchema<T> => ({ type: "object", properties }),
-    array: <T>(items: JSONSchema<T>): JSONSchema<T[]> => ({
-        type: "array",
-        items,
-    }),
-    boolean: (): JSONSchema<boolean> => ({ type: "boolean" }),
-    string: (schema?: {
-        maxLength?: number;
-        minLength?: number;
-        pattern?: string;
-    }): JSONSchema<string> => ({
-        type: "string",
-        ...schema,
-    }),
-};
-
-type RuleOptions = Partial<
-    typeof schema extends JSONSchema<infer T> ? T : never
->;
 const schema = jsonSchema.object({
     pureFunctions: jsonSchema.array(
         jsonSchema.string({
@@ -189,10 +163,10 @@ export const noModuleSideEffect: Rule.RuleModule = {
         schema: [schema],
     },
     create(context) {
-        const options: RuleOptions = {
+        const options: RuleOptions<typeof schema> = {
             allowNew: true,
             allowInStaticBlock: true,
-            ...(context.options[0] as RuleOptions),
+            ...(context.options[0] as RuleOptions<typeof schema>),
         };
 
         const checkSideEffect = (node: CheckNode) => {

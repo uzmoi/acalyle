@@ -1,4 +1,6 @@
+import { JSONSchema4 } from "@typescript-eslint/utils/json-schema";
 import { ClassicConfig } from "@typescript-eslint/utils/ts-eslint";
+import { WeakMeta } from "emnorst";
 import type { Linter } from "eslint";
 
 export const always = "always";
@@ -98,4 +100,28 @@ export const extendsRules = (
         Object.assign(rules, extendConfigs, config.rules);
     }
     return rules;
+};
+
+// TODO: emnorstのWeakMetaを直す
+export type JSONSchema<T = unknown> = WeakMeta<JSONSchema4, T> & { __?: T };
+
+export type RuleOptions<T> = T extends JSONSchema<infer U> ? U : never;
+
+export const jsonSchema = {
+    object: <T>(properties: {
+        [P in keyof T]: JSONSchema<T[P]>;
+    }): JSONSchema<Partial<T>> => ({ type: "object", properties }),
+    array: <T>(items: JSONSchema<T>): JSONSchema<T[]> => ({
+        type: "array",
+        items,
+    }),
+    boolean: (): JSONSchema<boolean> => ({ type: "boolean" }),
+    string: (schema?: {
+        maxLength?: number;
+        minLength?: number;
+        pattern?: string;
+    }): JSONSchema<string> => ({
+        type: "string",
+        ...schema,
+    }),
 };
