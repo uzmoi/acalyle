@@ -140,11 +140,17 @@ export const changeBookTitle = async (bookId: Scalars["ID"], title: string) => {
         GqlChangeBookTitleMutation,
         GqlChangeBookTitleMutationVariables
     >(ChangeBookTitleMutation, { bookId, title });
-    const book: Book = {
-        ...data.updateBookTitle,
-        handle: data.updateBookTitle.handle ?? null,
-        tags: [],
-    };
-    bookStore(book.id).resolve(book);
-    return book;
+
+    const store = bookStore(bookId);
+
+    if (data.updateBookTitle) {
+        const book: Book = {
+            ...data.updateBookTitle,
+            handle: data.updateBookTitle.handle ?? null,
+            tags: [],
+        };
+        store.resolve(book);
+    } else {
+        store.resolve(null);
+    }
 };
