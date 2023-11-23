@@ -1,14 +1,17 @@
 import { ESLint, Linter } from "eslint";
 import unicornPlugin from "eslint-plugin-unicorn";
 import { typescriptFiles } from "./typescript";
-import { ERROR, OFF, WARN, replaceWarn, warn } from "./util";
+import { ERROR, OFF, WARN, replaceWarn, unPartial, warn } from "./util";
 
 export const unicorn: Linter.FlatConfig = {
     files: [typescriptFiles],
     plugins: { unicorn: unicornPlugin },
     rules: {
         ...replaceWarn(
-            (unicornPlugin.configs?.recommended as ESLint.ConfigData).rules!,
+            unPartial(
+                (unicornPlugin.configs?.recommended as ESLint.ConfigData)
+                    .rules!,
+            ),
         ),
         "unicorn/filename-case": warn({
             cases: { kebabCase: true, pascalCase: true },
