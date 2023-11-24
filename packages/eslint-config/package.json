@@ -7,21 +7,22 @@
   "scripts": {
     "build": "tsup src/index.ts --format esm --dts",
     "check": "tsc",
-    "test": "vitest"
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^6.7.3",
-    "@typescript-eslint/parser": "^6.7.3",
-    "@typescript-eslint/utils": "^6.7.3",
+    "@typescript-eslint/eslint-plugin": "^6.12.0",
+    "@typescript-eslint/parser": "^6.12.0",
+    "@typescript-eslint/utils": "^6.12.0",
     "emnorst": "^1.0.0-next.2",
     "eslint-import-resolver-typescript": "^3.6.1",
-    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-import": "^2.29.0",
     "eslint-plugin-import-access": "^2.1.1",
+    "eslint-plugin-perfectionist": "^2.4.0",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-simple-import-sort": "^10.0.0",
-    "eslint-plugin-testing-library": "^6.0.2",
-    "eslint-plugin-unicorn": "^48.0.1",
+    "eslint-plugin-testing-library": "^6.2.0",
+    "eslint-plugin-unicorn": "^49.0.0",
     "esquery": "^1.5.0"
   },
   "peerDependencies": {
@@ -31,7 +32,7 @@
     "@acalyle/tsconfig": "*",
     "@types/eslint": "^8.44.3",
     "@types/esquery": "^1.5.1",
-    "tsup": "^7.2.0",
+    "tsup": "^8.0.0",
     "vitest": "^0.34.6"
   }
 }

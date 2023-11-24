@@ -23,20 +23,23 @@ export const AddTagForm: React.FC<{
     const onKeyDown = useCallback(
         (e: React.KeyboardEvent<HTMLInputElement>) => {
             switch (e.key) {
-                case "Tab":
+                case "Tab": {
                     e.preventDefault();
                     if (complementTagRef.current) {
                         onComplement(complementTagRef.current);
                     }
                     break;
-                case "ArrowUp":
+                }
+                case "ArrowUp": {
                     e.preventDefault();
                     setSelectedIndex(index => index - 1);
                     break;
-                case "ArrowDown":
+                }
+                case "ArrowDown": {
                     e.preventDefault();
                     setSelectedIndex(index => index + 1);
                     break;
+                }
             }
         },
         [onComplement],
@@ -51,9 +54,9 @@ export const AddTagForm: React.FC<{
         (e: React.SyntheticEvent<HTMLInputElement>) => {
             const el = e.currentTarget;
             setCaretIndex(
-                (el.selectionDirection === "backward"
-                    ? el.selectionStart
-                    : el.selectionEnd) ?? 0,
+                (el.selectionDirection === "backward" ?
+                    el.selectionStart
+                :   el.selectionEnd) ?? 0,
             );
             setSelectedIndex(0);
         },

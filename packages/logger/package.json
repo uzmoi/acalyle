@@ -8,14 +8,15 @@
   "scripts": {
     "build": "tsup src/index.ts --format esm --minify-syntax --sourcemap --dts",
     "check": "tsc",
-    "test": "vitest"
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "dependencies": {
     "emnorst": "^1.0.0-next.2"
   },
   "devDependencies": {
     "@acalyle/tsconfig": "*",
-    "tsup": "^7.2.0",
+    "tsup": "^8.0.0",
     "vitest": "^0.34.6"
   }
 }

@@ -18,9 +18,9 @@ export const useBookId = (bookHandle: string) => {
 export const useBook = (bookHandle: string) => {
     return usePromiseLoader(
         useStore(
-            bookHandle.startsWith("@")
-                ? handleBookStore(bookHandle.slice(1))
-                : bookStore(bookHandle as Scalars["ID"]),
+            bookHandle.startsWith("@") ?
+                handleBookStore(bookHandle.slice(1))
+            :   bookStore(bookHandle as Scalars["ID"]),
         ),
     );
 };

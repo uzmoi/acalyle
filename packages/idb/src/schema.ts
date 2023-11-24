@@ -36,9 +36,8 @@ export class IdbObjectStoreSchema<
     }
 }
 
-export type IdbSchemaType<T extends IdbSchema> = T extends IdbSchema<infer U>
-    ? U
-    : never;
+export type IdbSchemaType<T extends IdbSchema> =
+    T extends IdbSchema<infer U> ? U : never;
 
 export class IdbSchema<T extends Record<string, IdbObjectStoreSchema> = {}> {
     static objectStore<T>(

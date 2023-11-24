@@ -8,26 +8,30 @@ export const logArg = (logElements: Iterable<CssoleElement>) => {
     const currentStyle: Partial<ConsoleStyle> = {};
     for (const logElement of logElements) {
         switch (logElement[type]) {
-            case "raw":
+            case "raw": {
                 message += logElement.message;
                 break;
-            case "value":
+            }
+            case "value": {
                 message += logElement.message;
                 values.push(logElement.value);
                 break;
-            case "style":
+            }
+            case "style": {
                 Object.assign(currentStyle, logElement.style);
                 message += "%c";
                 values.push(printConsoleStyle(currentStyle));
                 break;
+            }
             case "group": {
                 const result = logArg(logElement.elements);
                 message += result.message;
                 values.push(...result.values);
                 break;
             }
-            default:
+            default: {
                 assert.unreachable<typeof logElement>();
+            }
         }
     }
     return { message, values };

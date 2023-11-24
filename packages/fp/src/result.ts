@@ -66,23 +66,23 @@ export class Result<out A, out E> {
         return this.isOk() ? whenOk(this._value) : whenErr(this._value as E);
     }
     map<B>(fn: (value: A) => B): Result<B, E> {
-        return this.isOk()
-            ? Result.ok(fn(this._value))
-            : (this as Result<unknown, E> as Result<never, E>);
+        return this.isOk() ?
+                Result.ok(fn(this._value))
+            :   (this as Result<unknown, E> as Result<never, E>);
     }
     flatMap<B>(fn: (value: A) => Result<B, E>): Result<B, E> {
-        return this.isOk()
-            ? fn(this._value)
-            : (this as Result<unknown, E> as Result<never, E>);
+        return this.isOk() ?
+                fn(this._value)
+            :   (this as Result<unknown, E> as Result<never, E>);
     }
     mapE<B>(fn: (value: E) => B): Result<A, B> {
-        return this.isErr()
-            ? Result.err(fn(this._value))
-            : (this as Result<A, unknown> as Result<A, never>);
+        return this.isErr() ?
+                Result.err(fn(this._value))
+            :   (this as Result<A, unknown> as Result<A, never>);
     }
     flatMapE<B>(fn: (value: E) => Result<A, B>): Result<A, B> {
-        return this.isErr()
-            ? fn(this._value)
-            : (this as Result<A, unknown> as Result<A, never>);
+        return this.isErr() ?
+                fn(this._value)
+            :   (this as Result<A, unknown> as Result<A, never>);
     }
 }

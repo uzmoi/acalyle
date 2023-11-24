@@ -54,16 +54,14 @@ export const NoteContents: React.FC<{
             >
                 <BiEditAlt />
             </Button>
-            {isInEdit ? (
+            {isInEdit ?
                 <MemoContentsEditor
                     noteId={noteId}
                     onEditEnd={() => {
                         setIsInEdit(false);
                     }}
                 />
-            ) : (
-                <NoteBody contents={note.contents} />
-            )}
+            :   <NoteBody contents={note.contents} />}
         </div>
     );
 };
