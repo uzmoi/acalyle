@@ -290,6 +290,7 @@ impl BookMutation {
         &self,
         ctx: &Context<'_>,
         id: ID,
+        #[graphql(validator(min_length = 1, max_length = 255, regex = "^[[:word:]-]+$"))]
         handle: Option<String>,
     ) -> Result<Option<Book>> {
         let pool = ctx.data::<SqlitePool>()?;
