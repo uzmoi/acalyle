@@ -2,6 +2,12 @@ import { gql } from "graphql-tag";
 import type {
     GqlBookQuery,
     GqlBookQueryVariables,
+    GqlChangeBookDescriptionMutation,
+    GqlChangeBookDescriptionMutationVariables,
+    GqlChangeBookHandleMutation,
+    GqlChangeBookHandleMutationVariables,
+    GqlChangeBookTitleMutation,
+    GqlChangeBookTitleMutationVariables,
     GqlCreateBookMutation,
     GqlCreateBookMutationVariables,
     Scalars,
@@ -118,4 +124,109 @@ export const createBook = async (title: string, description: string) => {
     };
     bookStore(book.id).resolve(book);
     return book;
+};
+
+const ChangeBookTitleMutation = /* #__PURE__ */ gql`
+    mutation ChangeBookTitle($bookId: ID!, $title: String!) {
+        updateBookTitle(id: $bookId, title: $title) {
+            id
+            handle
+            title
+            description
+            thumbnail
+            createdAt
+        }
+    }
+`;
+
+export const changeBookTitle = async (bookId: Scalars["ID"], title: string) => {
+    const { data } = await acalyle.net.gql<
+        GqlChangeBookTitleMutation,
+        GqlChangeBookTitleMutationVariables
+    >(ChangeBookTitleMutation, { bookId, title });
+
+    const store = bookStore(bookId);
+
+    if (data.updateBookTitle) {
+        const book: Book = {
+            ...data.updateBookTitle,
+            handle: data.updateBookTitle.handle ?? null,
+            tags: [],
+        };
+        store.resolve(book);
+    } else {
+        store.resolve(null);
+    }
+};
+
+const ChangeBookHandleMutation = /* #__PURE__ */ gql`
+    mutation ChangeBookHandle($bookId: ID!, $handle: String) {
+        updateBookHandle(id: $bookId, handle: $handle) {
+            id
+            handle
+            title
+            description
+            thumbnail
+            createdAt
+        }
+    }
+`;
+
+export const changeBookHandle = async (
+    bookId: Scalars["ID"],
+    handle: string | null,
+) => {
+    const { data } = await acalyle.net.gql<
+        GqlChangeBookHandleMutation,
+        GqlChangeBookHandleMutationVariables
+    >(ChangeBookHandleMutation, { bookId, handle });
+
+    const store = bookStore(bookId);
+
+    if (data.updateBookHandle) {
+        const book: Book = {
+            ...data.updateBookHandle,
+            handle: data.updateBookHandle.handle ?? null,
+            tags: [],
+        };
+        store.resolve(book);
+    } else {
+        store.resolve(null);
+    }
+};
+
+const ChangeBookDescriptionMutation = /* #__PURE__ */ gql`
+    mutation ChangeBookDescription($bookId: ID!, $description: String!) {
+        updateBookDescription(id: $bookId, description: $description) {
+            id
+            handle
+            title
+            description
+            thumbnail
+            createdAt
+        }
+    }
+`;
+
+export const changeBookDescription = async (
+    bookId: Scalars["ID"],
+    description: string,
+) => {
+    const { data } = await acalyle.net.gql<
+        GqlChangeBookDescriptionMutation,
+        GqlChangeBookDescriptionMutationVariables
+    >(ChangeBookDescriptionMutation, { bookId, description });
+
+    const store = bookStore(bookId);
+
+    if (data.updateBookDescription) {
+        const book: Book = {
+            ...data.updateBookDescription,
+            handle: data.updateBookDescription.handle ?? null,
+            tags: [],
+        };
+        store.resolve(book);
+    } else {
+        store.resolve(null);
+    }
 };

@@ -5,8 +5,9 @@ use super::{
 use crate::{
     db::{
         book::{
-            count_books, delete_book, fetch_books, insert_book, Book, BookHandle, BookId,
-            BookSortOrderBy, BookTag,
+            count_books, delete_book, fetch_books, insert_book, update_book,
+            update_book_description, update_book_handle, update_book_title, Book, BookHandle,
+            BookId, BookSortOrderBy, BookTag,
         },
         loader::{SqliteLoader, SqliteTagLoader},
         memo::{count_memos, fetch_memos, Memo, MemoId, MemoSortOrderBy},
@@ -214,6 +215,21 @@ impl BookSetting {
     }
 }
 
+async fn get_book(ctx: &Context<'_>, id: BookId) -> Result<Option<Book>> {
+    let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
+    Ok(loader.load_one(BookHandle::Id(id.0)).await?)
+}
+
+async fn write_upload_resource(
+    book_id: &BookId,
+    file_name: String,
+    mut file: impl Read,
+) -> Result<String> {
+    let mut buffer = Vec::new();
+    file.read_to_end(&mut buffer)?;
+    Ok(write_resource(book_id, file_name, buffer).await?)
+}
+
 #[derive(Default)]
 pub(super) struct BookMutation;
 
@@ -247,19 +263,60 @@ impl BookMutation {
         };
 
         if let Some(thumbnail) = thumbnail {
-            let mut buffer = Vec::new();
-            thumbnail.value(ctx)?.into_read().read_to_end(&mut buffer)?;
             let file_name = String::from("thumbnail.png");
-            write_resource(&book.id, file_name, buffer).await?;
+            let file = thumbnail.value(ctx)?.into_read();
+            write_upload_resource(&book.id, file_name, file).await?;
         }
 
         insert_book(pool, [book.clone()]).await?;
 
         Ok(book)
     }
-    #[allow(unreachable_code)]
-    async fn update_book_title(&self, _id: ID, _title: String) -> Book {
-        todo!()
+    async fn update_book_title(
+        &self,
+        ctx: &Context<'_>,
+        id: ID,
+        title: String,
+    ) -> Result<Option<Book>> {
+        let pool = ctx.data::<SqlitePool>()?;
+        let now = Utc::now();
+
+        let book_id = BookId(id.0);
+        update_book_title(pool, &book_id, title).await?;
+        update_book(pool, &book_id, &now).await?;
+
+        get_book(ctx, book_id).await
+    }
+    async fn update_book_handle(
+        &self,
+        ctx: &Context<'_>,
+        id: ID,
+        #[graphql(validator(min_length = 1, max_length = 255, regex = "^[[:word:]-]+$"))]
+        handle: Option<String>,
+    ) -> Result<Option<Book>> {
+        let pool = ctx.data::<SqlitePool>()?;
+        let now = Utc::now();
+
+        let book_id = BookId(id.0);
+        update_book_handle(pool, &book_id, handle).await?;
+        update_book(pool, &book_id, &now).await?;
+
+        get_book(ctx, book_id).await
+    }
+    async fn update_book_description(
+        &self,
+        ctx: &Context<'_>,
+        id: ID,
+        description: String,
+    ) -> Result<Option<Book>> {
+        let pool = ctx.data::<SqlitePool>()?;
+        let now = Utc::now();
+
+        let book_id = BookId(id.0);
+        update_book_description(pool, &book_id, description).await?;
+        update_book(pool, &book_id, &now).await?;
+
+        get_book(ctx, book_id).await
     }
     async fn update_book_thumbnail(
         &self,
@@ -267,18 +324,11 @@ impl BookMutation {
         id: ID,
         thumbnail: Upload,
     ) -> Result<Option<Book>> {
-        let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
-        let book = loader.load_one(BookHandle::Id(id.to_string())).await?;
-        if book.is_none() {
-            return Ok(None);
-        }
-
-        let mut buffer = Vec::new();
-        thumbnail.value(ctx)?.into_read().read_to_end(&mut buffer)?;
+        let book_id = BookId(id.0);
         let file_name = String::from("thumbnail.png");
-        write_resource(&BookId(id.0), file_name, buffer).await?;
-
-        Ok(book)
+        let file = thumbnail.value(ctx)?.into_read();
+        write_upload_resource(&book_id, file_name, file).await?;
+        get_book(ctx, book_id).await
     }
     async fn upload_resource(
         &self,
@@ -287,15 +337,14 @@ impl BookMutation {
         file_name: String,
         file: Upload,
     ) -> Result<Option<String>> {
-        let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
-        let book = loader.load_one(BookHandle::Id(book_id.to_string())).await?;
+        let book_id = BookId(book_id.0);
+        let book = get_book(ctx, book_id.clone()).await?;
         if book.is_none() {
             return Ok(None);
         }
 
-        let mut buffer = Vec::new();
-        file.value(ctx)?.into_read().read_to_end(&mut buffer)?;
-        let resource_ref = write_resource(&BookId(book_id.0), file_name, buffer).await?;
+        let file = file.value(ctx)?.into_read();
+        let resource_ref = write_upload_resource(&book_id, file_name, file).await?;
 
         Ok(Some(resource_ref))
     }

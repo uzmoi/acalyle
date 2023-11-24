@@ -227,6 +227,45 @@ pub(crate) async fn update_book_by_memo_id(
     Ok(())
 }
 
+pub(crate) async fn update_book_title(
+    executor: impl SqliteExecutor<'_>,
+    book_id: &BookId,
+    title: String,
+) -> sqlx::Result<()> {
+    sqlx::query("UPDATE Book SET title = ? WHERE id = ?")
+        .bind(title)
+        .bind(book_id)
+        .execute(executor)
+        .await?;
+    Ok(())
+}
+
+pub(crate) async fn update_book_handle(
+    executor: impl SqliteExecutor<'_>,
+    book_id: &BookId,
+    handle: Option<String>,
+) -> sqlx::Result<()> {
+    sqlx::query("UPDATE Book SET handle = ? WHERE id = ?")
+        .bind(handle)
+        .bind(book_id)
+        .execute(executor)
+        .await?;
+    Ok(())
+}
+
+pub(crate) async fn update_book_description(
+    executor: impl SqliteExecutor<'_>,
+    book_id: &BookId,
+    description: String,
+) -> sqlx::Result<()> {
+    sqlx::query("UPDATE Book SET description = ? WHERE id = ?")
+        .bind(description)
+        .bind(book_id)
+        .execute(executor)
+        .await?;
+    Ok(())
+}
+
 pub(crate) async fn delete_book(
     executor: impl SqliteExecutor<'_>,
     book_ids: &[BookId],

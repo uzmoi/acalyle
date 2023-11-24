@@ -1,3 +1,4 @@
+import { vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { link } from "~/pages/link";
 import { useBook } from "~/store/hook";
@@ -10,13 +11,34 @@ export const BookHeader: React.FC<{
 
     if (book == null) return null;
 
+    const tabs = [
+        [link(":bookId", { bookId: bookHandle }), "Notes"],
+        [link(":bookId/settings", { bookId: bookHandle }), "Settings"],
+    ] as const;
+
     return (
         <div>
-            <h2 className={style({ paddingBottom: "0.5em" })}>
-                <Link to={link(":bookId", { bookId: bookHandle })}>
-                    {book.title}
-                </Link>
-            </h2>
+            <h2>{book.title}</h2>
+            <div className={style({ marginTop: "0.5em" })}>
+                {tabs.map(([link, text]) => (
+                    <div
+                        key={link}
+                        className={style({
+                            display: "inline-block",
+                            padding: "0.25em 0.5em",
+                        })}
+                    >
+                        <Link
+                            to={link}
+                            className={style({
+                                borderBottom: `1px solid ${vars.color.fg.mute}`,
+                            })}
+                        >
+                            {text}
+                        </Link>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };
