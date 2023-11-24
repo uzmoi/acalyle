@@ -20,7 +20,7 @@ export const preferStringLiteral: Rule.RuleModule = {
                     fix(fixer) {
                         const contents = raw
                             .replace(/"/g, '\\"')
-                            .replace(/\\`/, "`");
+                            .replace(/\\`/g, "`");
                         return fixer.replaceText(node, `"${contents}"`);
                     },
                 });
