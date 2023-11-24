@@ -1,8 +1,8 @@
+import { vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { link } from "~/pages/link";
 import { useBook } from "~/store/hook";
 import { Link } from "../Link";
-import { vars } from "@acalyle/ui";
 
 export const BookHeader: React.FC<{
     book: string;
