@@ -2,6 +2,8 @@ import { gql } from "graphql-tag";
 import type {
     GqlBookQuery,
     GqlBookQueryVariables,
+    GqlChangeBookDescriptionMutation,
+    GqlChangeBookDescriptionMutationVariables,
     GqlChangeBookHandleMutation,
     GqlChangeBookHandleMutationVariables,
     GqlChangeBookTitleMutation,
@@ -185,6 +187,42 @@ export const changeBookHandle = async (
         const book: Book = {
             ...data.updateBookHandle,
             handle: data.updateBookHandle.handle ?? null,
+            tags: [],
+        };
+        store.resolve(book);
+    } else {
+        store.resolve(null);
+    }
+};
+
+const ChangeBookDescriptionMutation = /* #__PURE__ */ gql`
+    mutation ChangeBookDescription($bookId: ID!, $description: String!) {
+        updateBookDescription(id: $bookId, description: $description) {
+            id
+            handle
+            title
+            description
+            thumbnail
+            createdAt
+        }
+    }
+`;
+
+export const changeBookDescription = async (
+    bookId: Scalars["ID"],
+    description: string,
+) => {
+    const { data } = await acalyle.net.gql<
+        GqlChangeBookDescriptionMutation,
+        GqlChangeBookDescriptionMutationVariables
+    >(ChangeBookDescriptionMutation, { bookId, description });
+
+    const store = bookStore(bookId);
+
+    if (data.updateBookDescription) {
+        const book: Book = {
+            ...data.updateBookDescription,
+            handle: data.updateBookDescription.handle ?? null,
             tags: [],
         };
         store.resolve(book);

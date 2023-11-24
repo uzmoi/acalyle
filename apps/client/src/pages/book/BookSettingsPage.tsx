@@ -5,6 +5,7 @@ import { useId, useState } from "react";
 import type { Scalars } from "~/__generated__/graphql";
 import {
     bookHandleStore,
+    changeBookDescription,
     changeBookHandle,
     changeBookTitle,
 } from "~/store/book";
@@ -101,6 +102,37 @@ const BookHandleForm: React.FC<{
     );
 };
 
+const BookDescriptionForm: React.FC<{
+    bookId: Scalars["ID"];
+    currentDescription: string;
+}> = ({ bookId, currentDescription }) => {
+    const id = useId();
+    const [description, setDescription] = useState(currentDescription);
+    const onSubmit = () => {
+        void changeBookDescription(bookId, description);
+    };
+
+    return (
+        <Form onSubmit={onSubmit}>
+            <label
+                htmlFor={id}
+                className={style({ fontSize: "0.75em", fontWeight: "bold" })}
+            >
+                Description
+            </label>
+            <br />
+            <ControlGroup>
+                <TextInput
+                    id={id}
+                    value={description}
+                    onValueChange={setDescription}
+                />
+                <Button type="submit">Change</Button>
+            </ControlGroup>
+        </Form>
+    );
+};
+
 /** @package */
 export const BookSettingsPage: React.FC<{
     book: string;
@@ -113,6 +145,10 @@ export const BookSettingsPage: React.FC<{
         <div>
             <BookTitleForm bookId={book.id} currentTitle={book.title} />
             <BookHandleForm bookId={book.id} currentHandle={book.handle} />
+            <BookDescriptionForm
+                bookId={book.id}
+                currentDescription={book.description}
+            />
         </div>
     );
 };

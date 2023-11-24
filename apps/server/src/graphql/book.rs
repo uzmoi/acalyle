@@ -5,8 +5,9 @@ use super::{
 use crate::{
     db::{
         book::{
-            count_books, delete_book, fetch_books, insert_book, update_book, update_book_handle,
-            update_book_title, Book, BookHandle, BookId, BookSortOrderBy, BookTag,
+            count_books, delete_book, fetch_books, insert_book, update_book,
+            update_book_description, update_book_handle, update_book_title, Book, BookHandle,
+            BookId, BookSortOrderBy, BookTag,
         },
         loader::{SqliteLoader, SqliteTagLoader},
         memo::{count_memos, fetch_memos, Memo, MemoId, MemoSortOrderBy},
@@ -298,6 +299,21 @@ impl BookMutation {
 
         let book_id = BookId(id.0);
         update_book_handle(pool, &book_id, handle).await?;
+        update_book(pool, &book_id, &now).await?;
+
+        get_book(ctx, book_id).await
+    }
+    async fn update_book_description(
+        &self,
+        ctx: &Context<'_>,
+        id: ID,
+        description: String,
+    ) -> Result<Option<Book>> {
+        let pool = ctx.data::<SqlitePool>()?;
+        let now = Utc::now();
+
+        let book_id = BookId(id.0);
+        update_book_description(pool, &book_id, description).await?;
         update_book(pool, &book_id, &now).await?;
 
         get_book(ctx, book_id).await
