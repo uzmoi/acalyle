@@ -38,28 +38,44 @@ const BookTitleForm: React.FC<{
     );
 };
 
+const isValidBookHandle = (handle: string): boolean => {
+    const length = handle.length;
+    return 0 < length && length < 256 && /^[\w-]+$/.test(handle);
+};
+
+const useBookHandleForm = (currentHandle: string | null) => {
+    const [handle, setHandle] = useState(currentHandle ?? "");
+    const handleLoader = useStore(bookHandleStore(handle));
+
+    const isAvailable =
+        isValidBookHandle(handle) &&
+        handleLoader.status === "fulfilled" &&
+        handleLoader.value == null;
+
+    const isChanged = handle !== (currentHandle ?? "");
+
+    return {
+        handle,
+        setHandle,
+        isAvailable,
+        isChanged,
+    };
+};
+
 const BookHandleForm: React.FC<{
     bookId: Scalars["ID"];
     currentHandle: string | null;
 }> = ({ bookId, currentHandle }) => {
     const id = useId();
-    const [handle, setHandle] = useState(currentHandle ?? "");
-    const handleLoader = useStore(bookHandleStore(handle));
+    const { handle, setHandle, isAvailable, isChanged } =
+        useBookHandleForm(currentHandle);
+
     const onSubmit = async () => {
         const action = handle === "" ? "削除" : `「${handle}」に変更`;
         if (await confirm(`book handleを${action}しますわ。よろしくて？`)) {
             void changeBookHandle(bookId, handle === "" ? null : handle);
         }
     };
-
-    const isValid =
-        handle.length > 256 &&
-        /^[\w-]+$/.test(handle) &&
-        (handle === "" ||
-            (handleLoader.status === "fulfilled" &&
-                (handle === currentHandle || handleLoader.value == null)));
-    const isChanged =
-        handleLoader.status === "fulfilled" && handle !== (currentHandle ?? "");
 
     return (
         <Form onSubmit={() => void onSubmit()}>
@@ -75,7 +91,7 @@ const BookHandleForm: React.FC<{
                     id={id}
                     value={handle}
                     onValueChange={setHandle}
-                    aria-invalid={!isValid}
+                    aria-invalid={!(handle === "" || isAvailable) && isChanged}
                 />
                 <Button type="submit" disabled={!isChanged}>
                     Change
