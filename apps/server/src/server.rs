@@ -26,7 +26,7 @@ struct Endpoint {
 
 // cspell:word graphiql
 async fn graphiql_handler(req: Query<Endpoint>) -> impl response::IntoResponse {
-    let endpoint = format!("/x/../{}", req.0.endpoint.as_deref().unwrap_or(""));
+    let endpoint = req.0.endpoint.as_deref().unwrap_or("/");
     response::Html(GraphiQLSource::build().endpoint(&endpoint).finish())
 }
 
