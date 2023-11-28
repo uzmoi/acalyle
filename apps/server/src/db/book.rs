@@ -33,7 +33,7 @@ pub(crate) struct Book {
     pub settings: Vec<u8>,
 }
 
-#[derive(strum::Display)]
+#[derive(Clone, Copy, strum::Display)]
 pub(crate) enum BookSortOrderBy {
     #[strum(serialize = "title")]
     Title,

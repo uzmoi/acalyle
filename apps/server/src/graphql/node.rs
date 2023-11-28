@@ -40,8 +40,8 @@ pub(super) enum Node {
     Memo(Memo),
 }
 
-pub(super) trait NodeType {
-    fn id(&self) -> String;
+pub(super) trait NodeType<O> {
+    fn cursor(&self, order_by: O) -> Cursor;
 }
 
 pub(super) fn connection_args(
@@ -62,11 +62,12 @@ pub(super) fn connection_args(
     )
 }
 
-pub(super) fn connection<Node: ObjectType + NodeType, ConnectionFields: ObjectType>(
+pub(super) fn connection<O: Copy, Node: ObjectType + NodeType<O>, ConnectionFields: ObjectType>(
     nodes: Vec<Node>,
     limit: usize,
     first: Option<usize>,
     last: Option<usize>,
+    order_by: O,
     additional_fields: ConnectionFields,
 ) -> Connection<Cursor, Node, ConnectionFields> {
     let has_previous_page = last.map_or(false, |last| last < nodes.len());
@@ -76,7 +77,7 @@ pub(super) fn connection<Node: ObjectType + NodeType, ConnectionFields: ObjectTy
     let edges = nodes
         .into_iter()
         .take(limit)
-        .map(|node| Edge::new(Cursor(node.id()), node));
+        .map(|node| Edge::new(node.cursor(order_by), node));
     connection.edges.extend(edges);
     connection
 }

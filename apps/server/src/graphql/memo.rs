@@ -3,7 +3,7 @@ use crate::db::{
     loader::{SqliteLoader, SqliteTagLoader},
     memo::{
         delete_memo, delete_tags, insert_memos, insert_tags, transfer_memo, update_memo_contents,
-        Memo, MemoId, MemoTag,
+        Memo, MemoId, MemoSortOrderBy, MemoTag,
     },
 };
 use async_graphql::{dataloader::DataLoader, Context, InputObject, Object, Result, ID};
@@ -11,7 +11,7 @@ use chrono::{DateTime, Utc};
 use sqlx::SqlitePool;
 use uuid::Uuid;
 
-use super::node::NodeType;
+use super::{cursor::Cursor, node::NodeType};
 
 #[derive(Default)]
 pub(super) struct MemoQuery;
@@ -24,9 +24,9 @@ impl MemoQuery {
     }
 }
 
-impl NodeType for Memo {
-    fn id(&self) -> String {
-        self.id.0.clone()
+impl NodeType<MemoSortOrderBy> for Memo {
+    fn cursor(&self, _order_by: MemoSortOrderBy) -> Cursor {
+        Cursor(self.id.0.clone())
     }
 }
 

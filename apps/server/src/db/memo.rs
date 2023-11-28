@@ -27,7 +27,7 @@ pub(crate) struct Memo {
     pub book_id: BookId,
 }
 
-#[derive(strum::Display)]
+#[derive(Clone, Copy, strum::Display)]
 pub(crate) enum MemoSortOrderBy {
     #[strum(serialize = "createdAt")]
     Created,

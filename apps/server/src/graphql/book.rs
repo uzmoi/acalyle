@@ -79,10 +79,17 @@ impl BookQuery {
                     limit: (limit + 1) as i32,
                 };
                 let filter = query.filter.clone();
+                let order_by = query.order_by;
                 let books = fetch_books(pool, query).await?;
 
-                let connection =
-                    connection(books, limit, first, last, BookConnectionExtend { filter });
+                let connection = connection(
+                    books,
+                    limit,
+                    first,
+                    last,
+                    order_by,
+                    BookConnectionExtend { filter },
+                );
                 Ok::<_, async_graphql::Error>(connection)
             },
         )
@@ -103,9 +110,9 @@ impl BookConnectionExtend {
     }
 }
 
-impl NodeType for Book {
-    fn id(&self) -> String {
-        self.id.0.clone()
+impl NodeType<BookSortOrderBy> for Book {
+    fn cursor(&self, _order_by: BookSortOrderBy) -> Cursor {
+        Cursor(self.id.0.clone())
     }
 }
 
@@ -167,10 +174,17 @@ impl Book {
                     limit: (limit + 1) as i32,
                 };
                 let filter = query.filter.clone();
+                let order_by = query.order_by;
                 let memos = fetch_memos(pool, query).await?;
 
-                let connection =
-                    connection(memos, limit, first, last, MemoConnectionExtend { filter });
+                let connection = connection(
+                    memos,
+                    limit,
+                    first,
+                    last,
+                    order_by,
+                    MemoConnectionExtend { filter },
+                );
                 Ok::<_, async_graphql::Error>(connection)
             },
         )
