@@ -4,7 +4,9 @@ use super::{
     util::QueryBuilderExt,
 };
 use crate::query::NodeListQuery;
-use async_graphql::{async_trait::async_trait, dataloader::Loader, Result};
+use async_graphql::{
+    async_trait::async_trait, dataloader::Loader, futures_util::TryStreamExt, Result,
+};
 use chrono::{DateTime, Utc};
 use sqlx::SqliteExecutor;
 use std::{collections::HashMap, sync::Arc};
@@ -13,33 +15,14 @@ use std::{collections::HashMap, sync::Arc};
 #[sqlx(transparent)]
 pub(crate) struct BookId(pub String);
 
-#[derive(Clone, PartialEq, Eq, Hash)]
-pub(crate) enum BookHandle {
-    Id(String),
-    Handle(String),
-}
-
-impl BookHandle {
-    fn id(&self) -> Option<&String> {
-        if let BookHandle::Id(id) = self {
-            Some(id)
-        } else {
-            None
-        }
-    }
-    fn handle(&self) -> Option<&String> {
-        if let BookHandle::Handle(id) = self {
-            Some(id)
-        } else {
-            None
-        }
-    }
-}
+#[derive(Clone, PartialEq, Eq, Hash, sqlx::Type)]
+#[sqlx(transparent)]
+pub(crate) struct BookHandle(pub String);
 
 #[derive(sqlx::FromRow, Clone)]
 pub(crate) struct Book {
     pub id: BookId,
-    pub handle: Option<String>,
+    pub handle: Option<BookHandle>,
     pub title: String,
     pub description: String,
     pub thumbnail: String,
@@ -126,6 +109,29 @@ pub(crate) async fn count_books(executor: impl SqliteExecutor<'_>, filter: Strin
     Ok(query.fetch_one(executor).await?.0)
 }
 
+const SELECT_BOOK_QUERY: &str = {
+    "SELECT id, handle, thumbnail, title, description, createdAt, updatedAt, settings FROM Book"
+};
+
+#[async_trait]
+impl Loader<BookId> for SqliteLoader {
+    type Value = Book;
+    type Error = Arc<sqlx::Error>;
+
+    async fn load(&self, keys: &[BookId]) -> Result<HashMap<BookId, Self::Value>, Self::Error> {
+        let mut query_builder = sqlx::QueryBuilder::new(SELECT_BOOK_QUERY);
+        query_builder.push(" WHERE id IN ");
+        query_builder.push_bind_values(keys);
+        let query = query_builder.build_query_as::<Book>();
+
+        Ok(query
+            .fetch(&self.pool)
+            .map_ok(|book| (book.id.clone(), book))
+            .try_collect()
+            .await?)
+    }
+}
+
 #[async_trait]
 impl Loader<BookHandle> for SqliteLoader {
     type Value = Book;
@@ -135,37 +141,19 @@ impl Loader<BookHandle> for SqliteLoader {
         &self,
         keys: &[BookHandle],
     ) -> Result<HashMap<BookHandle, Self::Value>, Self::Error> {
-        let mut query_builder = sqlx::QueryBuilder::new(
-            "SELECT id
-                , handle
-                , thumbnail
-                , title
-                , description
-                , createdAt
-                , updatedAt
-                , settings
-            FROM Book WHERE id IN",
-        );
-        let ids = keys.iter().filter_map(BookHandle::id);
-        query_builder.push_bind_values(ids);
-        query_builder.push("OR handle IN");
-        let handles = keys.iter().filter_map(BookHandle::handle);
-        query_builder.push_bind_values(handles);
+        let mut query_builder = sqlx::QueryBuilder::new(SELECT_BOOK_QUERY);
+        query_builder.push(" WHERE handle IN ");
+        query_builder.push_bind_values(keys);
         let query = query_builder.build_query_as::<Book>();
 
         Ok(query
-            .fetch_all(&self.pool)
-            .await?
-            .iter()
-            .fold(HashMap::new(), |mut accum, book| {
-                let id = BookHandle::Id(book.id.0.clone());
-                accum.entry(id).or_insert(book.clone());
-                if let Some(handle) = &book.handle {
-                    let handle = BookHandle::Handle(handle.clone());
-                    accum.entry(handle).or_insert(book.clone());
-                }
-                accum
-            }))
+            .fetch(&self.pool)
+            .map_ok(|book| {
+                let handle = book.handle.clone().unwrap();
+                (handle, book)
+            })
+            .try_collect()
+            .await?)
     }
 }
 

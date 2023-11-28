@@ -38,11 +38,17 @@ impl BookQuery {
         handle: Option<String>,
     ) -> Result<Option<Book>> {
         let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
-        let handle = id
-            .map(|id| BookHandle::Id(id.0))
-            .or_else(|| handle.map(BookHandle::Handle))
-            .ok_or_else(|| async_graphql::Error::new("id or handle is required"))?;
-        Ok(loader.load_one(handle).await?)
+        match (id, handle) {
+            (Some(id), _) => {
+                let id = BookId(id.0);
+                Ok(loader.load_one(id).await?)
+            }
+            (None, Some(handle)) => {
+                let handle = BookHandle(handle);
+                Ok(loader.load_one(handle).await?)
+            }
+            _ => Err(async_graphql::Error::new("id or handle is required")),
+        }
     }
     async fn books(
         &self,
@@ -109,7 +115,7 @@ impl Book {
         ID(self.id.0.clone())
     }
     async fn handle(&self) -> Option<&String> {
-        self.handle.as_ref()
+        self.handle.as_ref().map(|handle| &handle.0)
     }
     async fn title(&self) -> &str {
         &self.title
@@ -217,7 +223,7 @@ impl BookSetting {
 
 async fn get_book(ctx: &Context<'_>, id: BookId) -> Result<Option<Book>> {
     let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
-    Ok(loader.load_one(BookHandle::Id(id.0)).await?)
+    Ok(loader.load_one(id).await?)
 }
 
 async fn write_upload_resource(

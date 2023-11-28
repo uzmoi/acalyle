@@ -1,5 +1,5 @@
 use crate::db::{
-    book::{Book, BookHandle},
+    book::{Book, BookId},
     loader::SqliteLoader,
     memo::{Memo, MemoId},
 };
@@ -27,7 +27,7 @@ impl NodeQuery {
             return Ok(memo.map(Node::Memo));
         }
 
-        let book_id = BookHandle::Id(id.0);
+        let book_id = BookId(id.0);
         let book = loader.load_one(book_id).await?;
         Ok(book.map(Node::Book))
     }

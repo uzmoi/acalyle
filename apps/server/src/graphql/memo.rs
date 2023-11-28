@@ -1,5 +1,5 @@
 use crate::db::{
-    book::{update_book, update_book_by_memo_id, Book, BookHandle, BookId},
+    book::{update_book, update_book_by_memo_id, Book, BookId},
     loader::{SqliteLoader, SqliteTagLoader},
     memo::{
         delete_memo, delete_tags, insert_memos, insert_tags, transfer_memo, update_memo_contents,
@@ -51,9 +51,7 @@ impl Memo {
     }
     async fn book(&self, ctx: &Context<'_>) -> Result<Book> {
         let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
-        let book = loader
-            .load_one(BookHandle::Id(self.book_id.0.clone()))
-            .await?;
+        let book = loader.load_one(self.book_id.clone()).await?;
         book.ok_or_else(|| async_graphql::Error::new("book not found"))
     }
 }
