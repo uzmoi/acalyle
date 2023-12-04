@@ -111,7 +111,6 @@ impl Loader<MemoId> for SqliteLoader {
         Ok(query
             .fetch(&self.pool)
             .map_ok(|memo| (memo.id.clone(), memo))
-            .map_err(Arc::new)
             .try_collect()
             .await?)
     }
