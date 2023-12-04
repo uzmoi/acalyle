@@ -1,14 +1,15 @@
 use super::{
     book::BookId,
     loader::{SqliteLoader, SqliteTagLoader},
+    query::{push_cursor_query, push_ending_query},
     util::QueryBuilderExt,
 };
-use crate::query::NodeListQuery;
+use crate::query::{NodeListQuery, OrdOp};
 use async_graphql::{
     async_trait::async_trait, dataloader::Loader, futures_util::TryStreamExt, Result,
 };
 use chrono::{DateTime, Utc};
-use sqlx::SqliteExecutor;
+use sqlx::{QueryBuilder, Sqlite, SqliteExecutor};
 use std::{collections::HashMap, sync::Arc};
 
 #[derive(Clone, PartialEq, Eq, Hash, sqlx::Type)]
@@ -35,6 +36,20 @@ pub(crate) enum MemoSortOrderBy {
     Updated,
 }
 
+fn push_memo_filter_query(
+    query_builder: &mut QueryBuilder<'_, Sqlite>,
+    (book_id, filter): (BookId, String),
+) {
+    query_builder.push("(");
+
+    query_builder.push("bookId = ").push_bind(book_id.0);
+    query_builder.push(" AND ");
+    let filter = format!("%{}%", filter);
+    query_builder.push("contents LIKE ").push_bind(filter);
+
+    query_builder.push(") ");
+}
+
 pub(crate) async fn fetch_memos(
     executor: impl SqliteExecutor<'_>,
     query: NodeListQuery<(BookId, String), MemoSortOrderBy>,
@@ -43,41 +58,25 @@ pub(crate) async fn fetch_memos(
         "SELECT id, contents, createdAt, updatedAt, bookId FROM Memo WHERE ",
     );
 
-    // cursor
+    let order_column = &query.order_by.to_string();
+
     if let Some((lt_cursor, eq)) = query.lt_cursor {
-        query_builder.push(&query.order_by);
-        query_builder.push(if eq { " <=" } else { " <" });
-        query_builder.push(" (SELECT ");
-        query_builder.push(&query.order_by);
-        query_builder.push(" FROM Memo WHERE id = ");
-        query_builder.push_bind(lt_cursor);
-        query_builder.push(") AND ");
+        push_cursor_query(&mut query_builder, order_column, OrdOp::lt(eq), &lt_cursor);
+        query_builder.push(" AND ");
     }
     if let Some((gt_cursor, eq)) = query.gt_cursor {
-        query_builder.push(&query.order_by);
-        query_builder.push(if eq { " >=" } else { " >" });
-        query_builder.push(" (SELECT ");
-        query_builder.push(&query.order_by);
-        query_builder.push(" FROM Memo WHERE id = ");
-        query_builder.push_bind(gt_cursor);
-        query_builder.push(") AND ");
+        push_cursor_query(&mut query_builder, order_column, OrdOp::gt(eq), &gt_cursor);
+        query_builder.push(" AND ");
     }
-    // filter
-    let filter = format!("%{}%", query.filter.1);
-    query_builder.push("(contents LIKE ");
-    query_builder.push_bind(&filter);
-    query_builder.push(") AND bookId = ");
-    query_builder.push_bind(query.filter.0 .0);
-    query_builder.push(" ");
 
-    let mut separated = query_builder.separated(" ");
-    separated.push("ORDER BY");
-    separated.push(query.order_by);
-    separated.push(query.order);
-    separated.push("LIMIT");
-    separated.push_bind(query.limit);
-    separated.push("OFFSET");
-    separated.push_bind(query.offset);
+    push_memo_filter_query(&mut query_builder, query.filter);
+
+    push_ending_query(
+        &mut query_builder,
+        &[(order_column, query.order)],
+        query.limit,
+        query.offset,
+    );
 
     let query = query_builder.build_query_as::<Memo>();
 
@@ -90,12 +89,7 @@ pub(crate) async fn count_memos(
 ) -> Result<i32> {
     let mut query_builder = sqlx::QueryBuilder::new("SELECT COUNT(*) FROM Memo WHERE ");
 
-    // filter
-    let contents_filter = format!("%{}%", filter.1);
-    query_builder.push("(contents LIKE ");
-    query_builder.push_bind(&contents_filter);
-    query_builder.push(") AND bookId = ");
-    query_builder.push_bind(filter.0 .0);
+    push_memo_filter_query(&mut query_builder, filter);
 
     let query = query_builder.build_query_as::<(i32,)>();
 

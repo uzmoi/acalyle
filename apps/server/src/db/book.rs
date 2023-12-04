@@ -1,14 +1,15 @@
 use super::{
     loader::{SqliteLoader, SqliteTagLoader},
     memo::MemoId,
+    query::{push_cursor_query, push_ending_query},
     util::QueryBuilderExt,
 };
-use crate::query::NodeListQuery;
+use crate::query::{NodeListQuery, OrdOp};
 use async_graphql::{
     async_trait::async_trait, dataloader::Loader, futures_util::TryStreamExt, Result,
 };
 use chrono::{DateTime, Utc};
-use sqlx::SqliteExecutor;
+use sqlx::{QueryBuilder, Sqlite, SqliteExecutor};
 use std::{collections::HashMap, sync::Arc};
 
 #[derive(Clone, PartialEq, Eq, Hash, sqlx::Type)]
@@ -43,50 +44,44 @@ pub(crate) enum BookSortOrderBy {
     Updated,
 }
 
+fn push_book_filter_query(query_builder: &mut QueryBuilder<'_, Sqlite>, filter: String) {
+    query_builder.push("(");
+
+    let filter = format!("%{}%", filter);
+
+    query_builder.push("title LIKE ").push_bind(filter.clone());
+    query_builder.push(" OR ");
+    query_builder.push("description LIKE ").push_bind(filter);
+
+    query_builder.push(") ");
+}
+
 pub(crate) async fn fetch_books(
     executor: impl SqliteExecutor<'_>,
     query: NodeListQuery<String, BookSortOrderBy>,
 ) -> Result<Vec<Book>> {
-    let mut query_builder = sqlx::QueryBuilder::new(
-        "SELECT id, handle, thumbnail, title, description, createdAt, updatedAt, settings
-        FROM Book WHERE ",
-    );
+    let mut query_builder = sqlx::QueryBuilder::new(SELECT_BOOK_QUERY);
+    query_builder.push(" WHERE ");
 
-    // cursor
+    let order_column = &query.order_by.to_string();
+
     if let Some((lt_cursor, eq)) = query.lt_cursor {
-        query_builder.push(&query.order_by);
-        query_builder.push(if eq { " <=" } else { " <" });
-        query_builder.push(" (SELECT ");
-        query_builder.push(&query.order_by);
-        query_builder.push(" FROM Book WHERE id = ");
-        query_builder.push_bind(lt_cursor);
-        query_builder.push(") AND ");
+        push_cursor_query(&mut query_builder, order_column, OrdOp::lt(eq), &lt_cursor);
+        query_builder.push(" AND ");
     }
     if let Some((gt_cursor, eq)) = query.gt_cursor {
-        query_builder.push(&query.order_by);
-        query_builder.push(if eq { " >=" } else { " >" });
-        query_builder.push(" (SELECT ");
-        query_builder.push(&query.order_by);
-        query_builder.push(" FROM Book WHERE id = ");
-        query_builder.push_bind(gt_cursor);
-        query_builder.push(") AND ");
+        push_cursor_query(&mut query_builder, order_column, OrdOp::gt(eq), &gt_cursor);
+        query_builder.push(" AND ");
     }
-    // filter
-    let filter = format!("%{}%", query.filter);
-    query_builder.push("(title LIKE ");
-    query_builder.push_bind(&filter);
-    query_builder.push(" OR description LIKE ");
-    query_builder.push_bind(&filter);
-    query_builder.push(") ");
 
-    let mut separated = query_builder.separated(" ");
-    separated.push("ORDER BY");
-    separated.push(query.order_by);
-    separated.push(query.order);
-    separated.push("LIMIT");
-    separated.push_bind(query.limit);
-    separated.push("OFFSET");
-    separated.push_bind(query.offset);
+    push_book_filter_query(&mut query_builder, query.filter);
+
+    push_ending_query(
+        &mut query_builder,
+        &[(order_column, query.order)],
+        query.limit,
+        query.offset,
+    );
 
     let query = query_builder.build_query_as::<Book>();
 
@@ -96,13 +91,7 @@ pub(crate) async fn fetch_books(
 pub(crate) async fn count_books(executor: impl SqliteExecutor<'_>, filter: String) -> Result<i32> {
     let mut query_builder = sqlx::QueryBuilder::new("SELECT COUNT(*) FROM Book WHERE ");
 
-    // filter
-    let filter = format!("%{}%", filter);
-    query_builder.push("(title LIKE ");
-    query_builder.push_bind(&filter);
-    query_builder.push(" OR description LIKE ");
-    query_builder.push_bind(&filter);
-    query_builder.push(") ");
+    push_book_filter_query(&mut query_builder, filter);
 
     let query = query_builder.build_query_as::<(i32,)>();
 

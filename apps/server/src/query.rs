@@ -1,4 +1,33 @@
 #[derive(strum::Display)]
+pub(crate) enum OrdOp {
+    #[strum(serialize = ">")]
+    GreaterThan,
+    #[strum(serialize = ">=")]
+    GreaterThanOrEqual,
+    #[strum(serialize = "<")]
+    LessThan,
+    #[strum(serialize = "<=")]
+    LessThanOrEqual,
+}
+
+impl OrdOp {
+    pub fn gt(eq: bool) -> OrdOp {
+        if eq {
+            OrdOp::GreaterThanOrEqual
+        } else {
+            OrdOp::GreaterThan
+        }
+    }
+    pub fn lt(eq: bool) -> OrdOp {
+        if eq {
+            OrdOp::LessThanOrEqual
+        } else {
+            OrdOp::LessThan
+        }
+    }
+}
+
+#[derive(strum::Display)]
 #[strum(serialize_all = "UPPERCASE")]
 pub(crate) enum SortOrder {
     Asc,
