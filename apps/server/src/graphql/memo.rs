@@ -9,7 +9,6 @@ use crate::db::{
 use async_graphql::{dataloader::DataLoader, Context, InputObject, Object, Result, ID};
 use chrono::{DateTime, Utc};
 use sqlx::SqlitePool;
-use uuid::Uuid;
 
 use super::{cursor::Cursor, node::NodeType};
 
@@ -20,20 +19,21 @@ pub(super) struct MemoQuery;
 impl MemoQuery {
     async fn memo(&self, ctx: &Context<'_>, id: ID) -> Result<Option<Memo>> {
         let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
-        Ok(loader.load_one(MemoId(id.0)).await?)
+        let memo_id = MemoId::try_from(id)?;
+        Ok(loader.load_one(memo_id).await?)
     }
 }
 
 impl NodeType<MemoSortOrderBy> for Memo {
     fn cursor(&self, _order_by: MemoSortOrderBy) -> Cursor {
-        Cursor(self.id.0.clone())
+        Cursor(self.id.to_string())
     }
 }
 
 #[Object]
 impl Memo {
     pub(super) async fn id(&self) -> ID {
-        ID(self.id.0.clone())
+        self.id.to_id()
     }
     async fn contents(&self) -> &str {
         &self.contents
@@ -69,16 +69,15 @@ impl MemoMutation {
         _template: Option<String>,
     ) -> Result<Memo> {
         let pool = ctx.data::<SqlitePool>()?;
-        let id = Uuid::new_v4();
-        let contents = "";
+        let book_id = BookId::try_from(book_id)?;
         let now = Utc::now();
 
         let memo = Memo {
-            id: MemoId(id.to_string()),
-            contents: contents.to_string(),
+            id: MemoId::new(),
+            contents: "".to_string(),
             created_at: now,
             updated_at: now,
-            book_id: BookId(book_id.to_string()),
+            book_id,
         };
 
         insert_memos(pool, [memo.clone()]).await?;
@@ -93,36 +92,35 @@ impl MemoMutation {
         memos: Vec<MemoInput>,
     ) -> Result<bool> {
         let pool = ctx.data::<SqlitePool>()?;
+        let book_id = BookId::try_from(book_id)?;
         let now = Utc::now();
 
-        insert_memos(
-            pool,
-            memos.iter().map(|memo| Memo {
-                id: MemoId(memo.id.to_string()),
-                contents: memo.contents.clone(),
-                created_at: memo.created_at,
-                updated_at: memo.updated_at,
-                book_id: BookId(book_id.to_string()),
-            }),
-        )
-        .await?;
+        let mut tags = Vec::new();
 
-        fn memo_tags<'a>(memos: &'a [MemoInput]) -> impl IntoIterator<Item = MemoTag> + 'a {
-            memos.iter().flat_map(|memo| {
-                memo.tags.iter().filter_map(|tag| {
-                    // cspell:ignore splitn
-                    let mut tag = tag.splitn(2, ':');
-                    Some(MemoTag::new(
-                        MemoId(memo.id.to_string()),
-                        tag.next()?.to_string(),
-                        tag.next().map(|prop| prop.to_string()),
-                    ))
+        let memos = memos
+            .into_iter()
+            .map(|memo| -> Result<Memo, String> {
+                let memo_id = MemoId::try_from(memo.id)?;
+                tags.extend(
+                    memo.tags
+                        .iter()
+                        .filter_map(|tag| MemoTag::parse(memo_id.clone(), tag)),
+                );
+                Ok(Memo {
+                    id: memo_id,
+                    contents: memo.contents.clone(),
+                    created_at: memo.created_at,
+                    updated_at: memo.updated_at,
+                    book_id: book_id.clone(),
                 })
             })
-        }
-        insert_tags(pool, memo_tags(&memos)).await?;
+            .collect::<Result<Vec<_>, _>>()?;
 
-        update_book(pool, &BookId(book_id.0), &now).await?;
+        insert_memos(pool, memos).await?;
+
+        insert_tags(pool, tags).await?;
+
+        update_book(pool, &book_id, &now).await?;
 
         Ok(true)
     }
@@ -135,7 +133,7 @@ impl MemoMutation {
         let pool = ctx.data::<SqlitePool>()?;
         let now = Utc::now();
 
-        let id = MemoId(id.0);
+        let id = MemoId::try_from(id)?;
         update_memo_contents(pool, &id, contents, &now).await?;
 
         let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
@@ -156,20 +154,17 @@ impl MemoMutation {
         let pool = ctx.data::<SqlitePool>()?;
         let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
         let now = Utc::now();
-        let memo_ids = ids.into_iter().map(|memo_id| MemoId(memo_id.0));
+        let memo_ids = ids
+            .into_iter()
+            .map(MemoId::try_from)
+            .collect::<Result<Vec<_>, _>>()?;
 
-        let tags = memo_ids.clone().flat_map(|memo_id| {
-            tags.clone().into_iter().filter_map(move |tag| {
-                // cspell:ignore splitn
-                let mut tag = tag.splitn(2, ':');
-                Some(MemoTag::new(
-                    memo_id.clone(),
-                    tag.next()?.to_string(),
-                    tag.next().map(|prop| prop.to_string()),
-                ))
-            })
+        let memo_tags = memo_ids.iter().flat_map(|memo_id| {
+            tags.clone()
+                .into_iter()
+                .filter_map(move |tag| MemoTag::parse(memo_id.clone(), &tag))
         });
-        insert_tags(pool, tags).await?;
+        insert_tags(pool, memo_tags).await?;
         update_book_by_memo_id(pool, memo_ids.clone(), &now).await?;
 
         let memos = loader.load_many(memo_ids).await?;
@@ -184,7 +179,10 @@ impl MemoMutation {
         let pool = ctx.data::<SqlitePool>()?;
         let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
         let now = Utc::now();
-        let memo_ids = ids.into_iter().map(|memo_id| MemoId(memo_id.0));
+        let memo_ids = ids
+            .into_iter()
+            .map(MemoId::try_from)
+            .collect::<Result<Vec<_>, _>>()?;
 
         delete_tags(pool, memo_ids.clone(), symbols).await?;
         update_book_by_memo_id(pool, memo_ids.clone(), &now).await?;
@@ -195,7 +193,11 @@ impl MemoMutation {
     async fn remove_memo(&self, ctx: &Context<'_>, ids: Vec<ID>) -> Result<Vec<ID>> {
         let pool = ctx.data::<SqlitePool>()?;
         let now = Utc::now();
-        let memo_ids = ids.clone().into_iter().map(|memo_id| MemoId(memo_id.0));
+        let memo_ids = ids
+            .clone()
+            .into_iter()
+            .map(MemoId::try_from)
+            .collect::<Result<Vec<_>, _>>()?;
 
         delete_memo(pool, memo_ids.clone()).await?;
         update_book_by_memo_id(pool, memo_ids, &now).await?;
@@ -208,9 +210,13 @@ impl MemoMutation {
         book_id: ID,
     ) -> Result<bool> {
         let pool = ctx.data::<SqlitePool>()?;
-        let memo_ids = memo_ids.into_iter().map(|memo_id| MemoId(memo_id.0));
+        let book_id = BookId::try_from(book_id)?;
+        let memo_ids = memo_ids
+            .into_iter()
+            .map(MemoId::try_from)
+            .collect::<Result<Vec<_>, _>>()?;
 
-        transfer_memo(pool, memo_ids, &BookId(book_id.0)).await?;
+        transfer_memo(pool, memo_ids, &book_id).await?;
         Ok(true)
     }
 }

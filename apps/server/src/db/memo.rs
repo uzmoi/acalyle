@@ -6,15 +6,52 @@ use super::{
 };
 use crate::query::{NodeListQuery, OrdOp};
 use async_graphql::{
-    async_trait::async_trait, dataloader::Loader, futures_util::TryStreamExt, Result,
+    async_trait::async_trait, dataloader::Loader, futures_util::TryStreamExt, Result, ID,
 };
 use chrono::{DateTime, Utc};
 use sqlx::{QueryBuilder, Sqlite, SqliteExecutor};
-use std::{collections::HashMap, sync::Arc};
+use std::{collections::HashMap, fmt, sync::Arc};
+use uuid::Uuid;
 
 #[derive(Clone, PartialEq, Eq, Hash, sqlx::Type)]
 #[sqlx(transparent)]
-pub(crate) struct MemoId(pub String);
+pub(crate) struct MemoId(String);
+
+impl MemoId {
+    pub fn new() -> MemoId {
+        let id = Uuid::new_v4();
+        MemoId(id.to_string())
+    }
+    pub fn to_id(&self) -> ID {
+        let mut id = String::with_capacity(self.0.len() + 1);
+        id.push('N');
+        id.push_str(&self.0);
+        ID(id)
+    }
+}
+
+impl fmt::Display for MemoId {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.0)
+    }
+}
+
+impl TryFrom<ID> for MemoId {
+    type Error = String;
+
+    fn try_from(value: ID) -> Result<Self, Self::Error> {
+        if value.len() == 0 {
+            return Err("invalid id".to_string());
+        }
+        let first = value.as_bytes()[0] as char;
+        if first == 'N' {
+            let id = value[1..].to_string();
+            Ok(MemoId(id))
+        } else {
+            Err("invalid id".to_string())
+        }
+    }
+}
 
 #[derive(sqlx::FromRow, Clone)]
 pub(crate) struct Memo {
@@ -42,7 +79,7 @@ fn push_memo_filter_query(
 ) {
     query_builder.push("(");
 
-    query_builder.push("bookId = ").push_bind(book_id.0);
+    query_builder.push("bookId = ").push_bind(book_id);
     query_builder.push(" AND ");
     let filter = format!("%{}%", filter);
     query_builder.push("contents LIKE ").push_bind(filter);
@@ -188,12 +225,14 @@ pub(crate) struct MemoTag {
 }
 
 impl MemoTag {
-    pub(crate) fn new(memo_id: MemoId, symbol: String, prop: Option<String>) -> MemoTag {
-        MemoTag {
+    pub(crate) fn parse(memo_id: MemoId, tag: &str) -> Option<MemoTag> {
+        // cspell:ignore splitn
+        let mut tag = tag.splitn(2, ':');
+        Some(MemoTag {
             memo_id,
-            symbol,
-            prop,
-        }
+            symbol: tag.next()?.to_string(),
+            prop: tag.next().map(|prop| prop.to_string()),
+        })
     }
 }
 

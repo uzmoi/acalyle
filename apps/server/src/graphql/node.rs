@@ -14,22 +14,21 @@ use super::cursor::Cursor;
 #[derive(Default)]
 pub(super) struct NodeQuery;
 
-#[allow(unreachable_code)]
 #[Object]
 impl NodeQuery {
-    // OPTIMIZE idにプレフィックスとしてbとかmとか付けて、load回数を1回で済むようにしたほうが良さそう。
     async fn node(&self, ctx: &Context<'_>, id: ID) -> Result<Option<Node>> {
         let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
 
-        let memo_id = MemoId(id.0.clone());
-        let memo = loader.load_one(memo_id).await?;
-        if memo.is_some() {
+        if let Ok(memo_id) = MemoId::try_from(id.clone()) {
+            let memo = loader.load_one(memo_id).await?;
             return Ok(memo.map(Node::Memo));
         }
+        if let Ok(book_id) = BookId::try_from(id) {
+            let book = loader.load_one(book_id).await?;
+            return Ok(book.map(Node::Book));
+        }
 
-        let book_id = BookId(id.0);
-        let book = loader.load_one(book_id).await?;
-        Ok(book.map(Node::Book))
+        Ok(None)
     }
 }
 

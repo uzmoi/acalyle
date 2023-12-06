@@ -23,7 +23,6 @@ use async_graphql::{
 use chrono::{DateTime, Utc};
 use sqlx::SqlitePool;
 use std::io::Read;
-use uuid::Uuid;
 
 #[derive(Default)]
 pub(super) struct BookQuery;
@@ -40,7 +39,7 @@ impl BookQuery {
         let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
         match (id, handle) {
             (Some(id), _) => {
-                let id = BookId(id.0);
+                let id = BookId::try_from(id)?;
                 Ok(loader.load_one(id).await?)
             }
             (None, Some(handle)) => {
@@ -112,14 +111,14 @@ impl BookConnectionExtend {
 
 impl NodeType<BookSortOrderBy> for Book {
     fn cursor(&self, _order_by: BookSortOrderBy) -> Cursor {
-        Cursor(self.id.0.clone())
+        Cursor(self.id.to_string())
     }
 }
 
 #[Object]
 impl Book {
     pub(super) async fn id(&self) -> ID {
-        ID(self.id.0.clone())
+        self.id.to_id()
     }
     async fn handle(&self) -> Option<&String> {
         self.handle.as_ref().map(|handle| &handle.0)
@@ -132,7 +131,7 @@ impl Book {
     }
     async fn thumbnail(&self) -> String {
         if self.thumbnail == "#image" {
-            format!("{}/thumbnail.png", self.id.0)
+            format!("{}/thumbnail.png", self.id)
         } else {
             self.thumbnail.clone()
         }
@@ -142,7 +141,8 @@ impl Book {
     }
     async fn memo(&self, ctx: &Context<'_>, id: ID) -> Result<Option<Memo>> {
         let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
-        let memo = loader.load_one(MemoId(id.0)).await?;
+        let memo_id = MemoId::try_from(id)?;
+        let memo = loader.load_one(memo_id).await?;
         Ok(memo.filter(|memo| memo.book_id == self.id))
     }
     async fn memos(
@@ -263,11 +263,10 @@ impl BookMutation {
         thumbnail: Option<Upload>,
     ) -> Result<Book> {
         let pool = ctx.data::<SqlitePool>()?;
-        let id = Uuid::new_v4();
         let now = Utc::now();
 
         let book = Book {
-            id: BookId(id.to_string()),
+            id: BookId::new(),
             handle: None,
             title,
             description: description.unwrap_or_default(),
@@ -299,9 +298,9 @@ impl BookMutation {
         title: String,
     ) -> Result<Option<Book>> {
         let pool = ctx.data::<SqlitePool>()?;
+        let book_id = BookId::try_from(id)?;
         let now = Utc::now();
 
-        let book_id = BookId(id.0);
         update_book_title(pool, &book_id, title).await?;
         update_book(pool, &book_id, &now).await?;
 
@@ -315,9 +314,9 @@ impl BookMutation {
         handle: Option<String>,
     ) -> Result<Option<Book>> {
         let pool = ctx.data::<SqlitePool>()?;
+        let book_id = BookId::try_from(id)?;
         let now = Utc::now();
 
-        let book_id = BookId(id.0);
         update_book_handle(pool, &book_id, handle).await?;
         update_book(pool, &book_id, &now).await?;
 
@@ -330,9 +329,9 @@ impl BookMutation {
         description: String,
     ) -> Result<Option<Book>> {
         let pool = ctx.data::<SqlitePool>()?;
+        let book_id = BookId::try_from(id)?;
         let now = Utc::now();
 
-        let book_id = BookId(id.0);
         update_book_description(pool, &book_id, description).await?;
         update_book(pool, &book_id, &now).await?;
 
@@ -344,7 +343,7 @@ impl BookMutation {
         id: ID,
         thumbnail: Upload,
     ) -> Result<Option<Book>> {
-        let book_id = BookId(id.0);
+        let book_id = BookId::try_from(id)?;
         let file_name = String::from("thumbnail.png");
         let file = thumbnail.value(ctx)?.into_read();
         write_upload_resource(&book_id, file_name, file).await?;
@@ -357,7 +356,7 @@ impl BookMutation {
         file_name: String,
         file: Upload,
     ) -> Result<Option<String>> {
-        let book_id = BookId(book_id.0);
+        let book_id = BookId::try_from(book_id)?;
         let book = get_book(ctx, book_id.clone()).await?;
         if book.is_none() {
             return Ok(None);
@@ -374,7 +373,8 @@ impl BookMutation {
     }
     async fn delete_book(&self, ctx: &Context<'_>, id: ID) -> Result<ID> {
         let pool = ctx.data::<SqlitePool>()?;
-        delete_book(pool, &[BookId(id.to_string())]).await?;
+        let book_id = BookId::try_from(id.clone())?;
+        delete_book(pool, &[book_id]).await?;
         Ok(id)
     }
 }

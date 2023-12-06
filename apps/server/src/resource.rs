@@ -19,7 +19,7 @@ pub(crate) async fn write_resource(
     file_name: String,
     contents: impl AsRef<[u8]>,
 ) -> io::Result<String> {
-    write(resolve_resource(&id.0, &file_name), contents).await?;
+    write(resolve_resource(&id.to_string(), &file_name), contents).await?;
 
-    Ok(format!("{}/{}", id.0, file_name))
+    Ok(format!("{}/{}", id.to_string(), file_name))
 }

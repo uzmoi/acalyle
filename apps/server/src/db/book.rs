@@ -6,15 +6,52 @@ use super::{
 };
 use crate::query::{NodeListQuery, OrdOp};
 use async_graphql::{
-    async_trait::async_trait, dataloader::Loader, futures_util::TryStreamExt, Result,
+    async_trait::async_trait, dataloader::Loader, futures_util::TryStreamExt, Result, ID,
 };
 use chrono::{DateTime, Utc};
 use sqlx::{QueryBuilder, Sqlite, SqliteExecutor};
-use std::{collections::HashMap, sync::Arc};
+use std::{collections::HashMap, fmt, sync::Arc};
+use uuid::Uuid;
 
 #[derive(Clone, PartialEq, Eq, Hash, sqlx::Type)]
 #[sqlx(transparent)]
-pub(crate) struct BookId(pub String);
+pub(crate) struct BookId(String);
+
+impl BookId {
+    pub fn new() -> BookId {
+        let id = Uuid::new_v4();
+        BookId(id.to_string())
+    }
+    pub fn to_id(&self) -> ID {
+        let mut id = String::with_capacity(self.0.len() + 1);
+        id.push('B');
+        id.push_str(&self.0);
+        ID(id)
+    }
+}
+
+impl fmt::Display for BookId {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.0)
+    }
+}
+
+impl TryFrom<ID> for BookId {
+    type Error = String;
+
+    fn try_from(value: ID) -> Result<Self, Self::Error> {
+        if value.len() == 0 {
+            return Err("invalid id".to_string());
+        }
+        let first = value.as_bytes()[0] as char;
+        if first == 'B' {
+            let id = value[1..].to_string();
+            Ok(BookId(id))
+        } else {
+            Err("invalid id".to_string())
+        }
+    }
+}
 
 #[derive(Clone, PartialEq, Eq, Hash, sqlx::Type)]
 #[sqlx(transparent)]
