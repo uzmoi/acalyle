@@ -71,14 +71,7 @@ impl MemoMutation {
         let pool = ctx.data::<SqlitePool>()?;
         let book_id = BookId::try_from(book_id)?;
         let now = Utc::now();
-
-        let memo = Memo {
-            id: MemoId::new(),
-            contents: "".to_string(),
-            created_at: now,
-            updated_at: now,
-            book_id,
-        };
+        let memo = Memo::new(book_id, now);
 
         insert_memos(pool, [memo.clone()]).await?;
         update_book(pool, &memo.book_id, &now).await?;

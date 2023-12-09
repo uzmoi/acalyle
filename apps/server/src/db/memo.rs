@@ -65,6 +65,18 @@ pub(crate) struct Memo {
     pub book_id: BookId,
 }
 
+impl Memo {
+    pub fn new(book_id: BookId, created_at: DateTime<Utc>) -> Memo {
+        Memo {
+            id: MemoId::new(),
+            contents: String::new(),
+            created_at,
+            updated_at: created_at,
+            book_id,
+        }
+    }
+}
+
 #[derive(Clone, Copy, strum::Display)]
 pub(crate) enum MemoSortOrderBy {
     #[strum(serialize = "createdAt")]
