@@ -1,5 +1,6 @@
 use acalyle_server::{
     db::init::{create_tables, foreign_keys},
+    graphql,
     server::serve,
 };
 use sqlx::SqlitePool;
@@ -34,7 +35,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     foreign_keys(&pool).await?;
 
-    serve(&([127, 0, 0, 1], 4323).into(), pool).await;
+    let graphql_schema = graphql::graphql_schema(pool);
+
+    serve(&([127, 0, 0, 1], 4323).into(), graphql_schema).await;
 
     Ok(())
 }

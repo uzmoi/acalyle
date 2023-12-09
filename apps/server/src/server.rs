@@ -1,7 +1,4 @@
-use crate::{
-    graphql::{graphql_schema, GraphQLSchema},
-    resource::read_resource,
-};
+use crate::{graphql::GraphQLSchema, resource::read_resource};
 use async_graphql::http::GraphiQLSource;
 use async_graphql_axum::{GraphQLRequest, GraphQLResponse};
 use axum::{
@@ -11,7 +8,6 @@ use axum::{
     response, routing, Extension, Router,
 };
 use serde::Deserialize;
-use sqlx::SqlitePool;
 use std::net::SocketAddr;
 use tokio_util::io::ReaderStream;
 
@@ -47,16 +43,13 @@ async fn resource_handler(
     Ok(body)
 }
 
-pub async fn serve(addr: &SocketAddr, pool: SqlitePool) {
-    let schema = graphql_schema(pool);
-
+pub async fn serve(addr: &SocketAddr, schema: GraphQLSchema) -> Result<(), axum::BoxError> {
     let app = Router::new()
         .route("/", routing::get(graphiql_handler).post(graphql_handler))
         .route("/:id/:file", routing::get(resource_handler))
         .layer(Extension(schema));
 
-    axum::Server::bind(addr)
+    Ok(axum::Server::bind(addr)
         .serve(app.into_make_service())
-        .await
-        .unwrap();
+        .await?)
 }
