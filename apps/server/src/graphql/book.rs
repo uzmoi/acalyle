@@ -258,8 +258,8 @@ impl BookMutation {
     async fn create_book(
         &self,
         ctx: &Context<'_>,
-        title: String,
-        #[graphql(default)] description: String,
+        #[graphql(validator(min_length = 1, max_length = 256))] title: String,
+        #[graphql(default, validator(max_length = 1024))] description: String,
         thumbnail: Option<Upload>,
     ) -> Result<Book> {
         let pool = ctx.data::<SqlitePool>()?;
@@ -295,7 +295,7 @@ impl BookMutation {
         &self,
         ctx: &Context<'_>,
         id: ID,
-        title: String,
+        #[graphql(validator(min_length = 1, max_length = 256))] title: String,
     ) -> Result<Option<Book>> {
         let pool = ctx.data::<SqlitePool>()?;
         let book_id = BookId::try_from(id)?;
@@ -326,7 +326,7 @@ impl BookMutation {
         &self,
         ctx: &Context<'_>,
         id: ID,
-        description: String,
+        #[graphql(validator(max_length = 1024))] description: String,
     ) -> Result<Option<Book>> {
         let pool = ctx.data::<SqlitePool>()?;
         let book_id = BookId::try_from(id)?;
