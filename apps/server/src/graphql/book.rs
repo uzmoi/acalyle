@@ -56,7 +56,7 @@ impl BookQuery {
         before: Option<String>,
         first: Option<i32>,
         last: Option<i32>,
-        query: Option<String>,
+        #[graphql(default)] query: String,
     ) -> Result<Connection<Cursor, Book, BookConnectionExtend>> {
         let pool = ctx.data::<SqlitePool>()?;
 
@@ -69,7 +69,7 @@ impl BookQuery {
                 let (limit, lt_cursor, gt_cursor) = connection_args(after, before, first, last);
 
                 let query = NodeListQuery {
-                    filter: query.unwrap_or_default(),
+                    filter: query,
                     order: SortOrder::Desc,
                     order_by: BookSortOrderBy::Updated,
                     lt_cursor,
@@ -152,7 +152,7 @@ impl Book {
         before: Option<String>,
         first: Option<i32>,
         last: Option<i32>,
-        query: Option<String>,
+        #[graphql(default)] query: String,
     ) -> Result<Connection<Cursor, Memo, MemoConnectionExtend>> {
         let pool = ctx.data::<SqlitePool>()?;
 
@@ -165,7 +165,7 @@ impl Book {
                 let (limit, lt_cursor, gt_cursor) = connection_args(after, before, first, last);
 
                 let query = NodeListQuery {
-                    filter: (self.id.clone(), query.unwrap_or_default()),
+                    filter: (self.id.clone(), query),
                     order: SortOrder::Desc,
                     order_by: MemoSortOrderBy::Updated,
                     lt_cursor,
@@ -259,7 +259,7 @@ impl BookMutation {
         &self,
         ctx: &Context<'_>,
         title: String,
-        description: Option<String>,
+        #[graphql(default)] description: String,
         thumbnail: Option<Upload>,
     ) -> Result<Book> {
         let pool = ctx.data::<SqlitePool>()?;
@@ -269,7 +269,7 @@ impl BookMutation {
             id: BookId::new(),
             handle: None,
             title,
-            description: description.unwrap_or_default(),
+            description,
             thumbnail: if thumbnail.is_some() {
                 String::from("#image")
             } else {

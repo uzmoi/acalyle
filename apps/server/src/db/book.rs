@@ -322,7 +322,7 @@ impl Loader<BookId> for SqliteTagLoader {
             .fold(HashMap::new(), |mut accum, tag| {
                 accum
                     .entry(tag.book_id.clone())
-                    .or_insert_with(Vec::new)
+                    .or_default()
                     .push(tag.symbol.clone());
                 accum
             }))
@@ -365,7 +365,7 @@ impl Loader<BookTag> for SqliteTagLoader {
                         book_id: tag.book_id.clone(),
                         symbol: tag.symbol.clone(),
                     })
-                    .or_insert_with(Vec::new)
+                    .or_default()
                     .push(tag.prop.clone());
                 accum
             }))
