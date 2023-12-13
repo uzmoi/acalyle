@@ -4,13 +4,13 @@ use super::{
     query::{push_cursor_query, push_ending_query},
     util::QueryBuilderExt,
 };
-use crate::query::{NodeListQuery, OrdOp};
+use crate::query::{NodeListQuery, OrdOp, QueryToken};
 use async_graphql::{
     async_trait::async_trait, dataloader::Loader, futures_util::TryStreamExt, Result, ID,
 };
 use chrono::{DateTime, Utc};
 use sqlx::{QueryBuilder, Sqlite, SqliteExecutor};
-use std::{collections::HashMap, fmt, sync::Arc};
+use std::{collections::HashMap, fmt, str::FromStr, sync::Arc};
 use uuid::Uuid;
 
 #[derive(Clone, PartialEq, Eq, Hash, sqlx::Type)]
@@ -71,31 +71,91 @@ pub(crate) struct Book {
     pub settings: Vec<u8>,
 }
 
-#[derive(Clone, Copy, strum::Display)]
+pub(crate) struct BookQuery {
+    pub filter: BookFilter,
+    pub meta: HashMap<String, Vec<String>>,
+}
+
+impl BookQuery {
+    pub fn new(query: &str) -> BookQuery {
+        let mut meta: HashMap<String, Vec<String>> = HashMap::new();
+        let mut filter = BookFilter::new();
+        for qt in QueryToken::parse(query) {
+            match qt.key {
+                Some(key) => {
+                    if qt.negate { &mut meta } else { &mut meta }
+                        .entry(key.to_string())
+                        .or_default()
+                        .push(qt.value.to_string());
+                }
+                None if qt.negate => {
+                    filter.negate_contents.push(qt.value.to_string());
+                }
+                None => {
+                    filter.contents.push(qt.value.to_string());
+                }
+            }
+        }
+        BookQuery { filter, meta }
+    }
+}
+
+#[derive(Clone, Copy, Default, strum::Display)]
 pub(crate) enum BookSortOrderBy {
     #[strum(serialize = "title")]
     Title,
     #[strum(serialize = "createdAt")]
     Created,
     #[strum(serialize = "updatedAt")]
+    #[default]
     Updated,
 }
 
-fn push_book_filter_query(query_builder: &mut QueryBuilder<'_, Sqlite>, filter: String) {
+impl FromStr for BookSortOrderBy {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "title" => Ok(BookSortOrderBy::Title),
+            "created" => Ok(BookSortOrderBy::Created),
+            "updated" => Ok(BookSortOrderBy::Updated),
+            _ => Err("invalid book order".to_string()),
+        }
+    }
+}
+
+#[derive(Default, Clone)]
+pub struct BookFilter {
+    contents: Vec<String>,
+    negate_contents: Vec<String>,
+}
+
+impl BookFilter {
+    fn new() -> BookFilter {
+        BookFilter::default()
+    }
+}
+
+fn push_book_filter_query(query_builder: &mut QueryBuilder<'_, Sqlite>, filter: BookFilter) {
     query_builder.push("(");
 
-    let filter = format!("%{}%", filter);
+    for filter in filter.contents {
+        let filter = format!("%{}%", filter);
+        query_builder.push("(");
+        query_builder.push("title LIKE ").push_bind(filter.clone());
+        query_builder.push(" OR ");
+        query_builder.push("description LIKE ").push_bind(filter);
+        query_builder.push(")");
+        query_builder.push(" AND ");
+    }
 
-    query_builder.push("title LIKE ").push_bind(filter.clone());
-    query_builder.push(" OR ");
-    query_builder.push("description LIKE ").push_bind(filter);
-
+    query_builder.push("1=1");
     query_builder.push(") ");
 }
 
 pub(crate) async fn fetch_books(
     executor: impl SqliteExecutor<'_>,
-    query: NodeListQuery<String, BookSortOrderBy>,
+    query: NodeListQuery<BookFilter, BookSortOrderBy>,
 ) -> Result<Vec<Book>> {
     let mut query_builder = sqlx::QueryBuilder::new(SELECT_BOOK_QUERY);
     query_builder.push(" WHERE ");
@@ -137,7 +197,10 @@ pub(crate) async fn fetch_books(
     Ok(query.fetch_all(executor).await?)
 }
 
-pub(crate) async fn count_books(executor: impl SqliteExecutor<'_>, filter: String) -> Result<i32> {
+pub(crate) async fn count_books(
+    executor: impl SqliteExecutor<'_>,
+    filter: BookFilter,
+) -> Result<i32> {
     let mut query_builder = sqlx::QueryBuilder::new("SELECT COUNT(*) FROM Book WHERE ");
 
     push_book_filter_query(&mut query_builder, filter);

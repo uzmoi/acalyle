@@ -5,9 +5,9 @@ use super::{
 use crate::{
     db::{
         book::{
-            count_books, delete_book, fetch_books, insert_book, update_book,
-            update_book_description, update_book_handle, update_book_title, Book, BookHandle,
-            BookId, BookSortOrderBy, BookTag,
+            self, count_books, delete_book, fetch_books, insert_book, update_book,
+            update_book_description, update_book_handle, update_book_title, Book, BookFilter,
+            BookHandle, BookId, BookSortOrderBy, BookTag,
         },
         loader::{SqliteLoader, SqliteTagLoader},
         memo::{count_memos, fetch_memos, Memo, MemoFilter, MemoId, MemoQuery},
@@ -68,17 +68,22 @@ impl BookQuery {
             |after, before, first, last| async move {
                 let (limit, lt_cursor, gt_cursor) = connection_args(after, before, first, last);
 
+                let query = book::BookQuery::new(&query);
+                let filter = query.filter.clone();
+                let order_by = query
+                    .meta
+                    .get("order")
+                    .and_then(|orders| orders.last()?.parse().ok())
+                    .unwrap_or_default();
                 let query = NodeListQuery {
-                    filter: query,
+                    filter: query.filter,
                     order: SortOrder::Desc,
-                    order_by: BookSortOrderBy::Updated,
+                    order_by,
                     lt_cursor,
                     gt_cursor,
                     offset: 0,
                     limit: (limit + 1) as i32,
                 };
-                let filter = query.filter.clone();
-                let order_by = query.order_by;
                 let books = fetch_books(pool, query).await?;
 
                 let connection = connection(
@@ -97,7 +102,7 @@ impl BookQuery {
 }
 
 struct BookConnectionExtend {
-    filter: String,
+    filter: BookFilter,
 }
 
 #[Object]
