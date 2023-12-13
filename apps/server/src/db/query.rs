@@ -6,16 +6,15 @@ pub(crate) fn push_cursor_query(
     order_column_name: &str,
     op: OrdOp,
     cursor: &str,
+    table_name: &str,
 ) {
     query_builder.push(order_column_name);
     query_builder.push(" ").push(op).push(" ");
     query_builder.push("(");
-    query_builder
-        .separated(" ")
-        .push("SELECT")
-        .push(order_column_name)
-        .push("FROM Book WHERE id =")
-        .push_bind(cursor.to_string());
+    let separated = &mut query_builder.separated(" ");
+    separated.push("SELECT").push(order_column_name);
+    separated.push("FROM").push(table_name);
+    separated.push("WHERE id =").push_bind(cursor.to_string());
     query_builder.push(")");
 }
 

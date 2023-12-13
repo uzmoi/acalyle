@@ -5,12 +5,12 @@ use super::{
 use crate::{
     db::{
         book::{
-            count_books, delete_book, fetch_books, insert_book, update_book,
-            update_book_description, update_book_handle, update_book_title, Book, BookHandle,
-            BookId, BookSortOrderBy, BookTag,
+            self, count_books, delete_book, fetch_books, insert_book, update_book,
+            update_book_description, update_book_handle, update_book_title, Book, BookFilter,
+            BookHandle, BookId, BookSortOrderBy, BookTag,
         },
         loader::{SqliteLoader, SqliteTagLoader},
-        memo::{count_memos, fetch_memos, Memo, MemoId, MemoSortOrderBy},
+        memo::{count_memos, fetch_memos, Memo, MemoFilter, MemoId, MemoQuery},
     },
     query::{NodeListQuery, SortOrder},
     resource::write_resource,
@@ -68,17 +68,23 @@ impl BookQuery {
             |after, before, first, last| async move {
                 let (limit, lt_cursor, gt_cursor) = connection_args(after, before, first, last);
 
+                let query = book::BookQuery::new(&query);
+                let filter = query.filter.clone();
+                let order_by = query
+                    .meta
+                    .get("order")
+                    // TODO: 値が複数あった場合とnegatedな時の仕様の再考
+                    .and_then(|orders| orders.last()?.value.parse().ok())
+                    .unwrap_or_default();
                 let query = NodeListQuery {
-                    filter: query,
+                    filter: query.filter,
                     order: SortOrder::Desc,
-                    order_by: BookSortOrderBy::Updated,
+                    order_by,
                     lt_cursor,
                     gt_cursor,
                     offset: 0,
                     limit: (limit + 1) as i32,
                 };
-                let filter = query.filter.clone();
-                let order_by = query.order_by;
                 let books = fetch_books(pool, query).await?;
 
                 let connection = connection(
@@ -97,7 +103,7 @@ impl BookQuery {
 }
 
 struct BookConnectionExtend {
-    filter: String,
+    filter: BookFilter,
 }
 
 #[Object]
@@ -164,17 +170,23 @@ impl Book {
             |after, before, first, last| async move {
                 let (limit, lt_cursor, gt_cursor) = connection_args(after, before, first, last);
 
+                let query = MemoQuery::new(self.id.clone(), &query);
+                let filter = query.filter.clone();
+                let order_by = query
+                    .meta
+                    .get("order")
+                    // TODO: 値が複数あった場合とnegatedな時の仕様の再考
+                    .and_then(|orders| orders.last()?.value.parse().ok())
+                    .unwrap_or_default();
                 let query = NodeListQuery {
-                    filter: (self.id.clone(), query),
+                    filter: query.filter,
                     order: SortOrder::Desc,
-                    order_by: MemoSortOrderBy::Updated,
+                    order_by,
                     lt_cursor,
                     gt_cursor,
                     offset: 0,
                     limit: (limit + 1) as i32,
                 };
-                let filter = query.filter.clone();
-                let order_by = query.order_by;
                 let memos = fetch_memos(pool, query).await?;
 
                 let connection = connection(
@@ -213,7 +225,7 @@ impl Book {
 }
 
 struct MemoConnectionExtend {
-    filter: (BookId, String),
+    filter: MemoFilter,
 }
 
 #[Object]
