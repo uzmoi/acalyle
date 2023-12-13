@@ -4,7 +4,7 @@ use super::{
     query::{push_cursor_query, push_ending_query},
     util::QueryBuilderExt,
 };
-use crate::query::{NodeListQuery, OrdOp, QueryToken};
+use crate::query::{Filter, NodeListQuery, OrdOp, QueryToken};
 use async_graphql::{
     async_trait::async_trait, dataloader::Loader, futures_util::TryStreamExt, Result, ID,
 };
@@ -73,27 +73,22 @@ pub(crate) struct Book {
 
 pub(crate) struct BookQuery {
     pub filter: BookFilter,
-    pub meta: HashMap<String, Vec<String>>,
+    pub meta: HashMap<String, Vec<Filter<String>>>,
 }
 
 impl BookQuery {
     pub fn new(query: &str) -> BookQuery {
-        let mut meta: HashMap<String, Vec<String>> = HashMap::new();
+        let mut meta: HashMap<String, Vec<Filter<String>>> = HashMap::new();
         let mut filter = BookFilter::new();
         for qt in QueryToken::parse(query) {
-            match qt.key {
-                Some(key) => {
-                    if qt.negate { &mut meta } else { &mut meta }
-                        .entry(key.to_string())
-                        .or_default()
-                        .push(qt.value.to_string());
-                }
-                None if qt.negate => {
-                    filter.negate_contents.push(qt.value.to_string());
-                }
-                None => {
-                    filter.contents.push(qt.value.to_string());
-                }
+            let value = Filter {
+                negate: qt.negate,
+                value: qt.value.to_string(),
+            };
+            if let Some(key) = qt.key {
+                meta.entry(key.to_string()).or_default().push(value);
+            } else {
+                filter.0.push(value);
             }
         }
         BookQuery { filter, meta }
@@ -125,10 +120,7 @@ impl FromStr for BookSortOrderBy {
 }
 
 #[derive(Default, Clone)]
-pub struct BookFilter {
-    contents: Vec<String>,
-    negate_contents: Vec<String>,
-}
+pub struct BookFilter(Vec<Filter<String>>);
 
 impl BookFilter {
     fn new() -> BookFilter {
@@ -136,15 +128,24 @@ impl BookFilter {
     }
 }
 
-fn push_book_filter_query(query_builder: &mut QueryBuilder<'_, Sqlite>, filter: BookFilter) {
+fn push_book_filter_query(
+    query_builder: &mut QueryBuilder<'_, Sqlite>,
+    BookFilter(filter): BookFilter,
+) {
     query_builder.push("(");
 
-    for filter in filter.contents {
-        let filter = format!("%{}%", filter);
+    for filter in filter {
+        let pat = format!("%{}%", filter.value);
         query_builder.push("(");
-        query_builder.push("title LIKE ").push_bind(filter.clone());
-        query_builder.push(" OR ");
-        query_builder.push("description LIKE ").push_bind(filter);
+        if filter.negate {
+            query_builder.push("title NOT LIKE ").push_bind(pat.clone());
+            query_builder.push(" AND ");
+            query_builder.push("description NOT LIKE ").push_bind(pat);
+        } else {
+            query_builder.push("title LIKE ").push_bind(pat.clone());
+            query_builder.push(" OR ");
+            query_builder.push("description LIKE ").push_bind(pat);
+        }
         query_builder.push(")");
         query_builder.push(" AND ");
     }

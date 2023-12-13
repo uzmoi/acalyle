@@ -47,6 +47,12 @@ pub(crate) struct NodeListQuery<F, O> {
     pub offset: i32,
 }
 
+#[derive(Clone)]
+pub struct Filter<A> {
+    pub negate: bool,
+    pub value: A,
+}
+
 #[derive(Debug, PartialEq)]
 pub struct QueryToken {
     pub negate: bool,

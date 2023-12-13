@@ -4,7 +4,7 @@ use super::{
     query::{push_cursor_query, push_ending_query},
     util::QueryBuilderExt,
 };
-use crate::query::{NodeListQuery, OrdOp, QueryToken};
+use crate::query::{Filter, NodeListQuery, OrdOp, QueryToken};
 use async_graphql::{
     async_trait::async_trait, dataloader::Loader, futures_util::TryStreamExt, Result, ID,
 };
@@ -79,12 +79,12 @@ impl Memo {
 
 pub(crate) struct MemoQuery {
     pub filter: MemoFilter,
-    pub meta: HashMap<String, Vec<String>>,
+    pub meta: HashMap<String, Vec<Filter<String>>>,
 }
 
 impl MemoQuery {
     pub fn new(book_id: BookId, query: &str) -> MemoQuery {
-        let mut meta: HashMap<String, Vec<String>> = HashMap::new();
+        let mut meta: HashMap<String, Vec<Filter<String>>> = HashMap::new();
         let mut filter = MemoFilter::new(book_id);
         for qt in QueryToken::parse(query) {
             if qt.key.as_ref().unwrap_or(&qt.value).starts_with(['#', '@']) {
@@ -95,19 +95,14 @@ impl MemoQuery {
                     None => filter.tag_symbols.push(qt.value.to_string()),
                 };
             } else {
-                match qt.key {
-                    Some(key) => {
-                        if qt.negate { &mut meta } else { &mut meta }
-                            .entry(key.to_string())
-                            .or_default()
-                            .push(qt.value.to_string());
-                    }
-                    None if qt.negate => {
-                        filter.negate_contents.push(qt.value.to_string());
-                    }
-                    None => {
-                        filter.contents.push(qt.value.to_string());
-                    }
+                let value = Filter {
+                    negate: qt.negate,
+                    value: qt.value.to_string(),
+                };
+                if let Some(key) = qt.key {
+                    meta.entry(key.to_string()).or_default().push(value);
+                } else {
+                    filter.contents.push(value);
                 }
             }
         }
@@ -141,8 +136,7 @@ pub struct MemoFilter {
     book_id: BookId,
     tag_symbols: Vec<String>,
     negate_tag_symbols: Vec<String>,
-    contents: Vec<String>,
-    negate_contents: Vec<String>,
+    contents: Vec<Filter<String>>,
 }
 
 impl MemoFilter {
@@ -152,7 +146,6 @@ impl MemoFilter {
             tag_symbols: Vec::new(),
             negate_tag_symbols: Vec::new(),
             contents: Vec::new(),
-            negate_contents: Vec::new(),
         }
     }
 }
@@ -181,13 +174,14 @@ fn push_memo_filter_query(query_builder: &mut QueryBuilder<'_, Sqlite>, filter: 
     }
 
     for filter in filter.contents {
-        let filter = format!("%{}%", filter);
-        query_builder.push("contents LIKE ").push_bind(filter);
-        query_builder.push(" AND ");
-    }
-    for filter in filter.negate_contents {
-        let filter = format!("%{}%", filter);
-        query_builder.push("contents NOT LIKE ").push_bind(filter);
+        let pat = format!("%{}%", filter.value);
+        query_builder
+            .push(if filter.negate {
+                "contents NOT LIKE "
+            } else {
+                "contents LIKE "
+            })
+            .push_bind(pat);
         query_builder.push(" AND ");
     }
 

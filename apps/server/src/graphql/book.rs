@@ -73,7 +73,8 @@ impl BookQuery {
                 let order_by = query
                     .meta
                     .get("order")
-                    .and_then(|orders| orders.last()?.parse().ok())
+                    // TODO: 値が複数あった場合とnegatedな時の仕様の再考
+                    .and_then(|orders| orders.last()?.value.parse().ok())
                     .unwrap_or_default();
                 let query = NodeListQuery {
                     filter: query.filter,
@@ -174,7 +175,8 @@ impl Book {
                 let order_by = query
                     .meta
                     .get("order")
-                    .and_then(|orders| orders.last()?.parse().ok())
+                    // TODO: 値が複数あった場合とnegatedな時の仕様の再考
+                    .and_then(|orders| orders.last()?.value.parse().ok())
                     .unwrap_or_default();
                 let query = NodeListQuery {
                     filter: query.filter,
