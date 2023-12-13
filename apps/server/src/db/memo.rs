@@ -4,13 +4,13 @@ use super::{
     query::{push_cursor_query, push_ending_query},
     util::QueryBuilderExt,
 };
-use crate::query::{NodeListQuery, OrdOp};
+use crate::query::{NodeListQuery, OrdOp, QueryToken};
 use async_graphql::{
     async_trait::async_trait, dataloader::Loader, futures_util::TryStreamExt, Result, ID,
 };
 use chrono::{DateTime, Utc};
 use sqlx::{QueryBuilder, Sqlite, SqliteExecutor};
-use std::{collections::HashMap, fmt, sync::Arc};
+use std::{collections::HashMap, fmt, str::FromStr, sync::Arc};
 use uuid::Uuid;
 
 #[derive(Clone, PartialEq, Eq, Hash, sqlx::Type)]
@@ -77,31 +77,127 @@ impl Memo {
     }
 }
 
-#[derive(Clone, Copy, strum::Display)]
+pub(crate) struct MemoQuery {
+    pub filter: MemoFilter,
+    pub meta: HashMap<String, Vec<String>>,
+}
+
+impl MemoQuery {
+    pub fn new(book_id: BookId, query: &str) -> MemoQuery {
+        let mut meta: HashMap<String, Vec<String>> = HashMap::new();
+        let mut filter = MemoFilter::new(book_id);
+        for qt in QueryToken::parse(query) {
+            if qt.key.as_ref().unwrap_or(&qt.value).starts_with(['#', '@']) {
+                match qt.key {
+                    Some(key) if qt.negate => filter.negate_tag_symbols.push(key.to_string()),
+                    Some(key) => filter.tag_symbols.push(key.to_string()),
+                    None if qt.negate => filter.negate_tag_symbols.push(qt.value.to_string()),
+                    None => filter.tag_symbols.push(qt.value.to_string()),
+                };
+            } else {
+                match qt.key {
+                    Some(key) => {
+                        if qt.negate { &mut meta } else { &mut meta }
+                            .entry(key.to_string())
+                            .or_default()
+                            .push(qt.value.to_string());
+                    }
+                    None if qt.negate => {
+                        filter.negate_contents.push(qt.value.to_string());
+                    }
+                    None => {
+                        filter.contents.push(qt.value.to_string());
+                    }
+                }
+            }
+        }
+        MemoQuery { filter, meta }
+    }
+}
+
+#[derive(Clone, Copy, Default, strum::Display)]
 pub(crate) enum MemoSortOrderBy {
     #[strum(serialize = "createdAt")]
     Created,
     #[strum(serialize = "updatedAt")]
+    #[default]
     Updated,
 }
 
-fn push_memo_filter_query(
-    query_builder: &mut QueryBuilder<'_, Sqlite>,
-    (book_id, filter): (BookId, String),
-) {
+impl FromStr for MemoSortOrderBy {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "created" => Ok(MemoSortOrderBy::Created),
+            "updated" => Ok(MemoSortOrderBy::Updated),
+            _ => Err("invalid memo order".to_string()),
+        }
+    }
+}
+
+#[derive(Clone)]
+pub struct MemoFilter {
+    book_id: BookId,
+    tag_symbols: Vec<String>,
+    negate_tag_symbols: Vec<String>,
+    contents: Vec<String>,
+    negate_contents: Vec<String>,
+}
+
+impl MemoFilter {
+    pub(crate) fn new(book_id: BookId) -> MemoFilter {
+        MemoFilter {
+            book_id,
+            tag_symbols: Vec::new(),
+            negate_tag_symbols: Vec::new(),
+            contents: Vec::new(),
+            negate_contents: Vec::new(),
+        }
+    }
+}
+
+fn push_memo_filter_query(query_builder: &mut QueryBuilder<'_, Sqlite>, filter: MemoFilter) {
     query_builder.push("(");
 
-    query_builder.push("bookId = ").push_bind(book_id);
+    query_builder.push("bookId = ").push_bind(filter.book_id);
     query_builder.push(" AND ");
-    let filter = format!("%{}%", filter);
-    query_builder.push("contents LIKE ").push_bind(filter);
 
+    if !filter.tag_symbols.is_empty() {
+        query_builder
+            .push("id IN (")
+            .push("SELECT memoId FROM Tag WHERE symbol IN ")
+            .push_bind_values(filter.tag_symbols)
+            .push(")");
+        query_builder.push(" AND ");
+    }
+    if !filter.negate_tag_symbols.is_empty() {
+        query_builder
+            .push("id NOT IN (")
+            .push("SELECT memoId FROM Tag WHERE symbol IN ")
+            .push_bind_values(filter.negate_tag_symbols)
+            .push(")");
+        query_builder.push(" AND ");
+    }
+
+    for filter in filter.contents {
+        let filter = format!("%{}%", filter);
+        query_builder.push("contents LIKE ").push_bind(filter);
+        query_builder.push(" AND ");
+    }
+    for filter in filter.negate_contents {
+        let filter = format!("%{}%", filter);
+        query_builder.push("contents NOT LIKE ").push_bind(filter);
+        query_builder.push(" AND ");
+    }
+
+    query_builder.push("1=1");
     query_builder.push(") ");
 }
 
 pub(crate) async fn fetch_memos(
     executor: impl SqliteExecutor<'_>,
-    query: NodeListQuery<(BookId, String), MemoSortOrderBy>,
+    query: NodeListQuery<MemoFilter, MemoSortOrderBy>,
 ) -> Result<Vec<Memo>> {
     let mut query_builder = sqlx::QueryBuilder::new(
         "SELECT id, contents, createdAt, updatedAt, bookId FROM Memo WHERE ",
@@ -134,7 +230,7 @@ pub(crate) async fn fetch_memos(
 
 pub(crate) async fn count_memos(
     executor: impl SqliteExecutor<'_>,
-    filter: (BookId, String),
+    filter: MemoFilter,
 ) -> Result<i32> {
     let mut query_builder = sqlx::QueryBuilder::new("SELECT COUNT(*) FROM Memo WHERE ");
 

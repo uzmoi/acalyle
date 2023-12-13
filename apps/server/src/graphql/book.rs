@@ -10,7 +10,7 @@ use crate::{
             BookId, BookSortOrderBy, BookTag,
         },
         loader::{SqliteLoader, SqliteTagLoader},
-        memo::{count_memos, fetch_memos, Memo, MemoId, MemoSortOrderBy},
+        memo::{count_memos, fetch_memos, Memo, MemoFilter, MemoId, MemoQuery},
     },
     query::{NodeListQuery, SortOrder},
     resource::write_resource,
@@ -164,17 +164,22 @@ impl Book {
             |after, before, first, last| async move {
                 let (limit, lt_cursor, gt_cursor) = connection_args(after, before, first, last);
 
+                let query = MemoQuery::new(self.id.clone(), &query);
+                let filter = query.filter.clone();
+                let order_by = query
+                    .meta
+                    .get("order")
+                    .and_then(|orders| orders.last()?.parse().ok())
+                    .unwrap_or_default();
                 let query = NodeListQuery {
-                    filter: (self.id.clone(), query),
+                    filter: query.filter,
                     order: SortOrder::Desc,
-                    order_by: MemoSortOrderBy::Updated,
+                    order_by,
                     lt_cursor,
                     gt_cursor,
                     offset: 0,
                     limit: (limit + 1) as i32,
                 };
-                let filter = query.filter.clone();
-                let order_by = query.order_by;
                 let memos = fetch_memos(pool, query).await?;
 
                 let connection = connection(
@@ -213,7 +218,7 @@ impl Book {
 }
 
 struct MemoConnectionExtend {
-    filter: (BookId, String),
+    filter: MemoFilter,
 }
 
 #[Object]
