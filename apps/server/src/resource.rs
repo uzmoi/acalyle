@@ -21,5 +21,5 @@ pub(crate) async fn write_resource(
 ) -> io::Result<String> {
     write(resolve_resource(&id.to_string(), &file_name), contents).await?;
 
-    Ok(format!("{}/{}", id.to_string(), file_name))
+    Ok(format!("{}/{}", id, file_name))
 }

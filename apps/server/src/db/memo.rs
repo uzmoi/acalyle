@@ -372,7 +372,7 @@ impl Loader<MemoId> for SqliteTagLoader {
                 );
                 accum
                     .entry(tag.memo_id.to_owned())
-                    .or_insert_with(Vec::new)
+                    .or_default()
                     .push(tag_string);
                 accum
             }))
