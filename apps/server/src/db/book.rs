@@ -103,11 +103,23 @@ pub(crate) async fn fetch_books(
     let order_column = &query.order_by.to_string();
 
     if let Some((lt_cursor, eq)) = query.lt_cursor {
-        push_cursor_query(&mut query_builder, order_column, OrdOp::lt(eq), &lt_cursor);
+        push_cursor_query(
+            &mut query_builder,
+            order_column,
+            OrdOp::lt(eq),
+            &lt_cursor,
+            "Book",
+        );
         query_builder.push(" AND ");
     }
     if let Some((gt_cursor, eq)) = query.gt_cursor {
-        push_cursor_query(&mut query_builder, order_column, OrdOp::gt(eq), &gt_cursor);
+        push_cursor_query(
+            &mut query_builder,
+            order_column,
+            OrdOp::gt(eq),
+            &gt_cursor,
+            "Book",
+        );
         query_builder.push(" AND ");
     }
 
