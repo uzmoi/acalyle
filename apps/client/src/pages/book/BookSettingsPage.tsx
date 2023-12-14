@@ -22,6 +22,10 @@ const BookTitleForm: React.FC<{
         void changeBookTitle(bookId, title);
     };
 
+    const length = title.length;
+    const isValid = 0 < length && length <= 256;
+    const isChanged = title !== currentTitle;
+
     return (
         <Form onSubmit={onSubmit}>
             <label
@@ -32,8 +36,16 @@ const BookTitleForm: React.FC<{
             </label>
             <br />
             <ControlGroup>
-                <TextInput id={id} value={title} onValueChange={setTitle} />
-                <Button type="submit">Change</Button>
+                <TextInput
+                    id={id}
+                    value={title}
+                    onValueChange={setTitle}
+                    required
+                    aria-invalid={isChanged && !isValid}
+                />
+                <Button type="submit" disabled={!(isChanged && isValid)}>
+                    Change
+                </Button>
             </ControlGroup>
         </Form>
     );
@@ -41,7 +53,7 @@ const BookTitleForm: React.FC<{
 
 const isValidBookHandle = (handle: string): boolean => {
     const length = handle.length;
-    return 0 < length && length < 256 && /^[\w-]+$/.test(handle);
+    return 0 < length && length <= 256 && /^[\w-]+$/.test(handle);
 };
 
 const useBookHandleForm = (currentHandle: string | null) => {
@@ -92,9 +104,13 @@ const BookHandleForm: React.FC<{
                     id={id}
                     value={handle}
                     onValueChange={setHandle}
-                    aria-invalid={!(handle === "" || isAvailable) && isChanged}
+                    minLength={1}
+                    aria-invalid={isChanged && !(handle === "" || isAvailable)}
                 />
-                <Button type="submit" disabled={!isChanged}>
+                <Button
+                    type="submit"
+                    disabled={!(isChanged && (handle === "" || isAvailable))}
+                >
                     Change
                 </Button>
             </ControlGroup>
@@ -112,6 +128,9 @@ const BookDescriptionForm: React.FC<{
         void changeBookDescription(bookId, description);
     };
 
+    const isValid = description.length <= 1024;
+    const isChanged = description !== currentDescription;
+
     return (
         <Form onSubmit={onSubmit}>
             <label
@@ -126,8 +145,11 @@ const BookDescriptionForm: React.FC<{
                     id={id}
                     value={description}
                     onValueChange={setDescription}
+                    aria-invalid={isChanged && !isValid}
                 />
-                <Button type="submit">Change</Button>
+                <Button type="submit" disabled={!(isChanged && isValid)}>
+                    Change
+                </Button>
             </ControlGroup>
         </Form>
     );
