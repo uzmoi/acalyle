@@ -18,10 +18,10 @@ pub type GraphQLSchema = Schema<Query, Mutation, EmptySubscription>;
 pub fn graphql_schema(pool: SqlitePool) -> GraphQLSchema {
     let loader = DataLoader::new(SqliteLoader { pool: pool.clone() }, tokio::spawn);
     let tag_loader = DataLoader::new(SqliteTagLoader { pool: pool.clone() }, tokio::spawn);
-    let schema = Schema::build(Query::default(), Mutation::default(), EmptySubscription)
+
+    Schema::build(Query::default(), Mutation::default(), EmptySubscription)
         .data(pool)
         .data(loader)
         .data(tag_loader)
-        .finish();
-    schema
+        .finish()
 }

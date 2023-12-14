@@ -1,5 +1,5 @@
 use crate::db::{
-    book::{Book, BookHandle},
+    book::{Book, BookId},
     loader::SqliteLoader,
     memo::{Memo, MemoId},
 };
@@ -14,22 +14,21 @@ use super::cursor::Cursor;
 #[derive(Default)]
 pub(super) struct NodeQuery;
 
-#[allow(unreachable_code)]
 #[Object]
 impl NodeQuery {
-    // OPTIMIZE idにプレフィックスとしてbとかmとか付けて、load回数を1回で済むようにしたほうが良さそう。
     async fn node(&self, ctx: &Context<'_>, id: ID) -> Result<Option<Node>> {
         let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
 
-        let memo_id = MemoId(id.0.clone());
-        let memo = loader.load_one(memo_id).await?;
-        if memo.is_some() {
+        if let Ok(memo_id) = MemoId::try_from(id.clone()) {
+            let memo = loader.load_one(memo_id).await?;
             return Ok(memo.map(Node::Memo));
         }
+        if let Ok(book_id) = BookId::try_from(id) {
+            let book = loader.load_one(book_id).await?;
+            return Ok(book.map(Node::Book));
+        }
 
-        let book_id = BookHandle::Id(id.0);
-        let book = loader.load_one(book_id).await?;
-        Ok(book.map(Node::Book))
+        Ok(None)
     }
 }
 
@@ -40,8 +39,8 @@ pub(super) enum Node {
     Memo(Memo),
 }
 
-pub(super) trait NodeType {
-    fn id(&self) -> String;
+pub(super) trait NodeType<O> {
+    fn cursor(&self, order_by: O) -> Cursor;
 }
 
 pub(super) fn connection_args(
@@ -62,11 +61,12 @@ pub(super) fn connection_args(
     )
 }
 
-pub(super) fn connection<Node: ObjectType + NodeType, ConnectionFields: ObjectType>(
+pub(super) fn connection<O: Copy, Node: ObjectType + NodeType<O>, ConnectionFields: ObjectType>(
     nodes: Vec<Node>,
     limit: usize,
     first: Option<usize>,
     last: Option<usize>,
+    order_by: O,
     additional_fields: ConnectionFields,
 ) -> Connection<Cursor, Node, ConnectionFields> {
     let has_previous_page = last.map_or(false, |last| last < nodes.len());
@@ -76,7 +76,7 @@ pub(super) fn connection<Node: ObjectType + NodeType, ConnectionFields: ObjectTy
     let edges = nodes
         .into_iter()
         .take(limit)
-        .map(|node| Edge::new(Cursor(node.id()), node));
+        .map(|node| Edge::new(node.cursor(order_by), node));
     connection.edges.extend(edges);
     connection
 }

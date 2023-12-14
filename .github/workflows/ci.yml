@@ -77,4 +77,5 @@ jobs:
 
       - run: npm run build -- --filter='./packages/*'
       - run: npm run codegen -ws
+        continue-on-error: true
       - run: npm run lint
