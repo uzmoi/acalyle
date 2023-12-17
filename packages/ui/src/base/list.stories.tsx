@@ -1,0 +1,33 @@
+import type { Meta, StoryObj } from "@storybook/react";
+import { List } from "./list";
+
+const items = ["hoge", "fuga", "piyo"];
+
+export default {
+    title: "Base/List",
+    component: List,
+    render: props => (
+        <List {...props}>
+            {items.map(item => (
+                <List.Item key={item}>{item}</List.Item>
+            ))}
+        </List>
+    ),
+    parameters: {
+        layout: "centered",
+    },
+} satisfies Meta<typeof List>;
+
+type Story = StoryObj<typeof List>;
+
+export const unordered: Story = {
+    args: {
+        ordered: false,
+    },
+};
+
+export const ordered: Story = {
+    args: {
+        ordered: true,
+    },
+};
