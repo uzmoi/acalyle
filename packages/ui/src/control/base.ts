@@ -1,10 +1,7 @@
 import { styleVariants } from "@macaron-css/core";
 import { vars } from "../theme";
 
-export type ControlPartVariant = Exclude<
-    keyof typeof control,
-    "reset" | "base"
->;
+export type ControlPartVariant = "solid" | "outline" | "unstyled";
 
 export const control = /* #__PURE__ */ styleVariants({
     reset: {
@@ -52,4 +49,4 @@ export const control = /* #__PURE__ */ styleVariants({
             },
         },
     },
-});
+}) satisfies Record<ControlPartVariant, unknown>;
