@@ -27,7 +27,6 @@
     "@storybook/addon-a11y": "^7.6.5",
     "@storybook/addon-essentials": "^7.6.5",
     "@storybook/addon-interactions": "^7.6.5",
-    "@storybook/blocks": "^7.6.5",
     "@storybook/react": "^7.6.5",
     "@storybook/react-vite": "^7.6.5",
     "@storybook/test": "^7.6.5",
