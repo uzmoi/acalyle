@@ -19,7 +19,8 @@ export const createTheme = <T extends ThemeSource>(
         if (isObject(value)) {
             Object.assign(themeStyle, createTheme<{}>(name, value));
         } else {
-            themeStyle[`--${name}`] = String(value);
+            const varName = `--${name}` as const;
+            themeStyle[varName] = String(value);
         }
     }
     return themeStyle;
