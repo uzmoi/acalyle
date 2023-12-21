@@ -1,19 +1,17 @@
 import { macaronVitePlugin } from "@macaron-css/vite";
+import nitrogql from "@nitrogql/rollup-plugin";
 import react from "@vitejs/plugin-react-swc";
 import dts from "vite-plugin-dts";
-import graphqlCodegen from "vite-plugin-graphql-codegen";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
     plugins: [
         react(),
         macaronVitePlugin(),
+        nitrogql({ include: ["**/*.graphql"] }),
         dts({
             exclude: "**/*.css.ts",
             insertTypesEntry: true,
-        }),
-        graphqlCodegen({
-            configFilePathOverride: `${process.cwd()}/codegen.ts`,
         }),
     ],
     resolve: {

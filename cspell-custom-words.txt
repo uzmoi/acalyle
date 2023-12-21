@@ -1,7 +1,7 @@
-
 acalyle
 emnorst
-tauri
 nanostores
-tsup
+nitrogql
 sqlx
+tauri
+tsup

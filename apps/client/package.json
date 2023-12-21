@@ -12,7 +12,7 @@
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "precodegen": "cd ../.. && cargo run -p acalyle-server --bin schema-gen",
-    "codegen": "graphql-codegen --config codegen.ts",
+    "codegen": "nitrogql generate",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -35,10 +35,10 @@
     "react-icons": "^4.8.0"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "3.2.2",
-    "@graphql-codegen/typescript": "3.0.2",
-    "@graphql-codegen/typescript-operations": "^3.0.2",
+    "@graphql-typed-document-node/core": "^3.2.0",
     "@macaron-css/vite": "^1.1.3",
+    "@nitrogql/cli": "^1.6.0-beta.0",
+    "@nitrogql/rollup-plugin": "^1.6.0-beta.0",
     "@storybook/addon-a11y": "^7.6.5",
     "@storybook/addon-essentials": "^7.6.5",
     "@storybook/addon-interactions": "^7.6.5",
@@ -52,7 +52,6 @@
     "storybook": "^7.6.5",
     "vite": "^5.0.0",
     "vite-plugin-dts": "^3.6.0",
-    "vite-plugin-graphql-codegen": "^3.2.0",
     "vitest": "^0.34.6"
   }
 }

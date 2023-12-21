@@ -12,5 +12,5 @@ _*
 /app
 /data
 
-/prisma/*
-!/prisma/schema.prisma
+*.d.graphql.ts
+*.d.graphql.ts.map
