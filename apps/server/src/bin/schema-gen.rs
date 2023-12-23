@@ -1,11 +1,11 @@
 use acalyle_server::graphql;
 use sqlx::SqlitePool;
-use std::io::Result;
+use std::{fs, io};
 
 #[tokio::main]
-async fn main() -> Result<()> {
+async fn main() -> io::Result<()> {
     let pool = SqlitePool::connect("sqlite::memory:").await.unwrap();
     let schema = graphql::graphql_schema(pool.clone());
-    std::fs::create_dir_all("./data")?;
-    std::fs::write("./data/schema.graphql", schema.sdl())
+    fs::create_dir_all("./dist")?;
+    fs::write("./dist/schema.graphql", schema.sdl())
 }

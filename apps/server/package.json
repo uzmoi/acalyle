@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "name": "@acalyle/server",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    "./schema.graphql": "./dist/schema.graphql"
+  },
+  "scripts": {
+    "build": "cargo run --bin schema-gen",
+    "check": "cargo check",
+    "test": "cargo test"
+  }
+}
