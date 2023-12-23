@@ -1,14 +1,14 @@
 import { Alert, vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { BiError } from "react-icons/bi";
-import type { Scalars } from "~/__generated__/graphql";
+import type { ID } from "~/__generated__/graphql";
 import { NoteContents } from "./NoteContents";
 import { NoteHeader } from "./NoteHeader";
 import { useNote } from "./use-note";
 
 export const Note: React.FC<{
     book: string;
-    noteId: Scalars["ID"];
+    noteId: ID;
 }> = ({ book, noteId }) => {
     const note = useNote(noteId);
 

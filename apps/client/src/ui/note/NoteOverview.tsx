@@ -1,7 +1,7 @@
 import { vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useCallback } from "react";
-import type { Scalars } from "~/__generated__/graphql";
+import type { ID } from "~/__generated__/graphql";
 import { link } from "~/pages/link";
 import { Link } from "../Link";
 import { useBook } from "../book/use-book";
@@ -11,8 +11,8 @@ import { NoteBody } from "./NoteBody";
 import { useNote } from "./use-note";
 
 export const NoteOverview: React.FC<{
-    bookId: Scalars["ID"];
-    noteId: Scalars["ID"];
+    bookId: ID;
+    noteId: ID;
     clickAction?: "open-link" | "open-modal";
 }> = ({ bookId, noteId, clickAction = "open-modal" }) => {
     const book = useBook(bookId);

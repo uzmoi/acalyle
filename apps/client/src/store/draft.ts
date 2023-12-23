@@ -1,5 +1,5 @@
 import { Idb, IdbSchema } from "@acalyle/idb";
-import type { Scalars } from "~/__generated__/graphql";
+import type { ID } from "~/__generated__/graphql";
 
 const draftDBSchema = new IdbSchema("draft", 1, {
     "note-draft": /* #__PURE__ */ IdbSchema.objectStore<NoteDraft>({
@@ -14,7 +14,7 @@ export type NoteDraft = {
 };
 
 export const loadNoteDraft = async (
-    noteId: Scalars["ID"],
+    noteId: ID,
 ): Promise<NoteDraft | undefined> => {
     const db = await Idb.open(draftDBSchema);
     const tx = db.transaction("note-draft");
@@ -25,7 +25,7 @@ export const loadNoteDraft = async (
 };
 
 export const saveNoteDraft = async (
-    noteId: Scalars["ID"],
+    noteId: ID,
     contentsBeforeEditing: string,
     editedContents: string,
 ) => {
@@ -40,7 +40,7 @@ export const saveNoteDraft = async (
     db.close();
 };
 
-export const removeNoteDraft = async (noteId: Scalars["ID"]) => {
+export const removeNoteDraft = async (noteId: ID) => {
     const db = await Idb.open(draftDBSchema);
     const tx = db.transaction("note-draft", "readwrite");
     const store = tx.objectStore("note-draft");

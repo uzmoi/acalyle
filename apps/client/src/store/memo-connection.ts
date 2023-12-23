@@ -1,41 +1,10 @@
 import { assert } from "emnorst";
-import { gql } from "graphql-tag";
-import type {
-    GqlMemoListPaginationQuery,
-    GqlMemoListPaginationQueryVariables,
-    Scalars,
-} from "~/__generated__/graphql";
+import type { ID } from "~/__generated__/graphql";
 import { createConnectionAtom } from "~/lib/connection";
 import { memoizeBuilder } from "~/lib/memoize-builder";
 import { memoStore } from "~/store/memo";
 import { acalyle } from "../app/main";
-
-const MemoListPagination = /* #__PURE__ */ gql`
-    query MemoListPagination(
-        $bookId: ID!
-        $count: Int!
-        $cursor: String
-        $query: String!
-    ) {
-        book(id: $bookId) {
-            memos(first: $count, after: $cursor, query: $query) {
-                edges {
-                    node {
-                        id
-                        contents
-                        tags
-                        createdAt
-                        updatedAt
-                    }
-                }
-                pageInfo {
-                    endCursor
-                    hasNextPage
-                }
-            }
-        }
-    }
-`;
+import MemoPaginationQuery from "./memo-pagination.graphql";
 
 export type Memo = {
     id: string;
@@ -46,13 +15,10 @@ export type Memo = {
 };
 
 export const memoConnection = /* #__PURE__ */ memoizeBuilder(
-    (_, bookId: Scalars["ID"], query: string) =>
+    (_, bookId: ID, query: string) =>
         createConnectionAtom(
             async connectionAtom => {
-                const { data } = await acalyle.net.gql<
-                    GqlMemoListPaginationQuery,
-                    GqlMemoListPaginationQueryVariables
-                >(MemoListPagination, {
+                const { data } = await acalyle.net.gql(MemoPaginationQuery, {
                     bookId,
                     count: 32,
                     cursor: connectionAtom.get().endCursor,

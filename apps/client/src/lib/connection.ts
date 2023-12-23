@@ -5,16 +5,16 @@ import {
     atom,
     onStart,
 } from "nanostores";
-import type { GqlPageInfo, Maybe, Scalars } from "~/__generated__/graphql";
+import type { ID, PageInfo } from "~/__generated__/graphql";
 
 export type GqlConnection<TNode extends { id: string }> = {
     __typename?: `${string}Connection`;
-    edges?: Maybe<readonly Maybe<{ node?: Maybe<TNode> }>[]>;
-    pageInfo: Pick<GqlPageInfo, "hasNextPage" | "endCursor">;
+    edges?: readonly { node?: TNode }[];
+    pageInfo: Pick<PageInfo, "hasNextPage" | "endCursor">;
 };
 
 export type Connection = {
-    nodeIds: readonly Scalars["ID"][];
+    nodeIds: readonly ID[];
     hasNext: boolean;
     endCursor: string | null;
 };
@@ -26,7 +26,7 @@ export type ConnectionExt = {
     error: ReadableAtom<Error | undefined>;
 };
 
-export const createConnectionAtom = <TNode extends { id: Scalars["ID"] }>(
+export const createConnectionAtom = <TNode extends { id: ID }>(
     load: (atom: WritableAtom<Connection>) => Promise<GqlConnection<TNode>>,
     updateNode: (node: TNode) => void,
 ): ReadableAtom<Connection> & ConnectionExt => {
@@ -41,9 +41,7 @@ export const createConnectionAtom = <TNode extends { id: Scalars["ID"] }>(
     connectionStore.isLoading = isLoading;
     connectionStore.error = $error;
 
-    const loadNodes = async (
-        getIds: (ids: readonly Scalars["ID"][]) => readonly Scalars["ID"][],
-    ) => {
+    const loadNodes = async (getIds: (ids: readonly ID[]) => readonly ID[]) => {
         isLoading.set(true);
         $error.set(undefined);
         try {

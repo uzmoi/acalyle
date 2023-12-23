@@ -1,5 +1,6 @@
 import { Result } from "@acalyle/fp";
-import type { JsonValue } from "emnorst";
+import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
+import type { JsonPrimitive, JsonValue } from "emnorst";
 import type { JsonValueable } from "../lib/types";
 
 export const graphqlBodyInit = (
@@ -43,9 +44,9 @@ export const graphqlBodyInit = (
     return body;
 };
 
-type GraphQLResult = {
+type GraphQLResult<T> = {
     errors?: readonly JsonValue[];
-    data?: Record<string, JsonValue> | null;
+    data: T & (Record<string, JsonValue> | null | undefined);
     extensions?: Record<string, JsonValue>;
 };
 
@@ -54,24 +55,30 @@ export type NetworkError =
     | { type: "http_error"; status: number; body: string }
     | { type: "invalid_json" };
 
+type ReadonlyObjectDeep<T> = { readonly [P in keyof T]: ReadonlyDeep<T[P]> };
+
+type ReadonlyDeep<T> = T extends JsonPrimitive ? T : ReadonlyObjectDeep<T>;
+
 export class Network {
     private static readonly _resourceBaseUrl = new URL("api/", location.origin);
     private static readonly _apiEndpointUrl = new URL("api", location.origin);
     resolveResource(path: string): URL {
         return new URL(path, Network._resourceBaseUrl);
     }
-    async gql<T, U extends Record<string, JsonValueable>>(
-        documentNode: import("graphql").DocumentNode,
-        variables?: U,
-    ): Promise<GraphQLResult & { data: T }> {
-        return this.graphql(documentNode, variables).then(result => {
-            return result.getOrThrow() as GraphQLResult & { data: T };
-        });
+    async gql<R, V extends Record<string, JsonValueable>>(
+        documentNode: TypedDocumentNode<R, V>,
+        variables?: ReadonlyDeep<V>,
+    ): Promise<GraphQLResult<R>> {
+        return this.graphql(documentNode, variables as unknown as V).then(
+            result => {
+                return result.getOrThrow();
+            },
+        );
     }
-    async graphql(
-        documentNode: import("graphql").DocumentNode,
-        variables?: Record<string, JsonValueable>,
-    ): Promise<Result<GraphQLResult, NetworkError>> {
+    async graphql<R, V extends Record<string, JsonValueable>>(
+        documentNode: TypedDocumentNode<R, V>,
+        variables: V,
+    ): Promise<Result<GraphQLResult<R>, NetworkError>> {
         const query = documentNode.loc?.source.body ?? "";
 
         const res = await fetch(Network._apiEndpointUrl, {
@@ -91,7 +98,7 @@ export class Network {
         if (res.ok) {
             try {
                 const result = await (res.json() as Promise<JsonValue>);
-                return Result.ok(result as GraphQLResult);
+                return Result.ok(result as unknown as GraphQLResult<R>);
             } catch {
                 return Result.err({ type: "invalid_json" });
             }

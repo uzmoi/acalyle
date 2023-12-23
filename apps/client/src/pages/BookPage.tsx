@@ -6,7 +6,7 @@ import {
 } from "@acalyle/router";
 import { style } from "@macaron-css/core";
 import { Suspense } from "react";
-import type { Scalars } from "~/__generated__/graphql";
+import type { ID } from "~/__generated__/graphql";
 import { MemoListPage } from "~/pages/book/MemoListPage";
 import { BookHeader } from "~/ui/book/BookHeader";
 import { Note } from "~/ui/note/Note";
@@ -24,7 +24,7 @@ export const BookPageRoute = routes({
         <BookSettingsPage book={bookId} />
     )),
     ":memoId": page(({ bookId, memoId }: MatchParams<"bookId" | "memoId">) => (
-        <Note book={bookId} noteId={memoId as Scalars["ID"]} />
+        <Note book={bookId} noteId={memoId as ID} />
     )),
 }).map((children, _, { bookId }) => (
     // eslint-disable-next-line react/jsx-key

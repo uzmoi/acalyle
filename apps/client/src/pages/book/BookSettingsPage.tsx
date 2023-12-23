@@ -2,7 +2,7 @@ import { Button, ControlGroup, Form, TextInput } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { useId, useState } from "react";
-import type { Scalars } from "~/__generated__/graphql";
+import type { ID } from "~/__generated__/graphql";
 import {
     bookHandleStore,
     changeBookDescription,
@@ -13,7 +13,7 @@ import { useBook } from "~/store/hook";
 import { confirm } from "~/ui/modal";
 
 const BookTitleForm: React.FC<{
-    bookId: Scalars["ID"];
+    bookId: ID;
     currentTitle: string;
 }> = ({ bookId, currentTitle }) => {
     const id = useId();
@@ -64,7 +64,7 @@ const useBookHandleForm = (currentHandle: string | null) => {
 };
 
 const BookHandleForm: React.FC<{
-    bookId: Scalars["ID"];
+    bookId: ID;
     currentHandle: string | null;
 }> = ({ bookId, currentHandle }) => {
     const id = useId();
@@ -103,7 +103,7 @@ const BookHandleForm: React.FC<{
 };
 
 const BookDescriptionForm: React.FC<{
-    bookId: Scalars["ID"];
+    bookId: ID;
     currentDescription: string;
 }> = ({ bookId, currentDescription }) => {
     const id = useId();

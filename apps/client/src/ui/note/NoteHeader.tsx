@@ -1,7 +1,7 @@
 import { style } from "@macaron-css/core";
 import { useMemo } from "react";
 import { BiClipboard, BiTransfer, BiTrash } from "react-icons/bi";
-import type { Scalars } from "~/__generated__/graphql";
+import type { ID } from "~/__generated__/graphql";
 import { removeMemo, transferMemo } from "~/store/memo";
 import { AddTagButton } from "../AddTagButton";
 import { TimeStamp } from "../TimeStamp";
@@ -10,7 +10,7 @@ import { TagList } from "../tag/TagList";
 import { type MenuAction, NoteMenu } from "./NoteMenu";
 import { useNote } from "./use-note";
 
-const noteActions = (noteId: Scalars["ID"]): readonly MenuAction[] => [
+const noteActions = (noteId: ID): readonly MenuAction[] => [
     {
         icon: <BiClipboard />,
         text: "Copy memo id",
@@ -43,7 +43,7 @@ const noteActions = (noteId: Scalars["ID"]): readonly MenuAction[] => [
 
 export const NoteHeader: React.FC<{
     bookHandle: string;
-    noteId: Scalars["ID"];
+    noteId: ID;
 }> = ({ bookHandle, noteId }) => {
     const note = useNote(noteId);
 

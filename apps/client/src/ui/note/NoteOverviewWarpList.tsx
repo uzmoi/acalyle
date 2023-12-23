@@ -1,14 +1,11 @@
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
-import type { Scalars } from "~/__generated__/graphql";
+import type { ID } from "~/__generated__/graphql";
 import { useBookId } from "~/store/hook";
 import { memoConnection } from "~/store/memo-connection";
 import { NoteOverview } from "./NoteOverview";
 
-const useNoteOverviewWarpList = (
-    bookId: Scalars["ID"],
-    query = "",
-): readonly Scalars["ID"][] => {
+const useNoteOverviewWarpList = (bookId: ID, query = ""): readonly ID[] => {
     const { nodeIds } = useStore(memoConnection(bookId, query));
     return nodeIds;
 };

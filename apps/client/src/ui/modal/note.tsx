@@ -2,22 +2,19 @@ import { Button, Modal, ModalContainer, vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { Suspense } from "react";
 import { BiExpandAlt, BiX } from "react-icons/bi";
-import type { Scalars } from "~/__generated__/graphql";
+import type { ID } from "~/__generated__/graphql";
 import { link } from "~/pages/link";
 import { Link } from "../Link";
 import { Note } from "../note/Note";
 
 type NoteModalData = {
     book: string;
-    noteId: Scalars["ID"];
+    noteId: ID;
 };
 
-const noteModal = /* #__PURE__ */ Modal.create<
-    NoteModalData,
-    Scalars["ID"] | undefined
->();
+const noteModal = /* #__PURE__ */ Modal.create<NoteModalData, ID | undefined>();
 
-export const openNoteInModal = (book: string, noteId: Scalars["ID"]) => {
+export const openNoteInModal = (book: string, noteId: ID) => {
     return noteModal.open({ book, noteId });
 };
 

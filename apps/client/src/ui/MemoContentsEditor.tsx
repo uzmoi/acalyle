@@ -2,7 +2,7 @@ import { Button, ControlGroup, Form, TextArea, vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { useCallback, useMemo, useState } from "react";
-import type { Scalars } from "~/__generated__/graphql";
+import type { ID } from "~/__generated__/graphql";
 import { createQueryStore } from "~/lib/query-store";
 import {
     type NoteDraft,
@@ -16,8 +16,7 @@ import { usePromiseLoader } from "../lib/promise-loader";
 import { NoteBody } from "./note/NoteBody";
 
 const $noteDraft = /* #__PURE__ */ createQueryStore(
-    (noteId: Scalars["ID"]): Promise<NoteDraft | undefined> =>
-        loadNoteDraft(noteId),
+    (noteId: ID): Promise<NoteDraft | undefined> => loadNoteDraft(noteId),
 );
 
 type Conflict = {
@@ -25,13 +24,13 @@ type Conflict = {
     current: string;
 };
 
-const useNote = (noteId: Scalars["ID"]) => {
+const useNote = (noteId: ID) => {
     const noteLoader = useStore(memoStore(noteId));
     return usePromiseLoader(noteLoader);
 };
 
 export const useNoteDraft = (
-    noteId: Scalars["ID"],
+    noteId: ID,
 ): { initContents: string; conflict: Conflict | null } => {
     const noteDraftLoader = useStore($noteDraft(noteId));
     const noteDraft = usePromiseLoader(noteDraftLoader);
@@ -53,7 +52,7 @@ export const useNoteDraft = (
 };
 
 export const MemoContentsEditor: React.FC<{
-    noteId: Scalars["ID"];
+    noteId: ID;
     onEditEnd?: () => void;
     onSaved?: () => void;
 }> = ({ noteId, onEditEnd, onSaved }) => {
