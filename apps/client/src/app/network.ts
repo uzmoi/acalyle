@@ -2,43 +2,32 @@ import { Result } from "@acalyle/fp";
 import type { JsonValue } from "emnorst";
 import type { JsonValueable } from "../lib/types";
 
+const jsonBlob = (json: JsonValueable) =>
+    new Blob([JSON.stringify(json)], { type: "application/json" });
+
 export const graphqlBodyInit = (
     query: string,
     variables?: Record<string, JsonValueable>,
     uploadables?: Record<string, Blob>,
 ): BodyInit => {
-    const operations = JSON.stringify({
-        query,
-        variables,
-    });
+    const operations = { query, variables };
 
     if (uploadables == null) {
-        return operations;
+        return JSON.stringify(operations);
     }
 
-    const map = JSON.stringify(
-        uploadables,
-        (key, value: Record<string, Blob> | Blob) => key || value,
-    );
     const body = new FormData();
 
-    body.append(
-        "operations",
-        new Blob([operations], {
-            type: "application/json",
-        }),
-    );
+    body.append("operations", jsonBlob(operations));
 
-    body.append(
-        "map",
-        new Blob([map], {
-            type: "application/json",
-        }),
-    );
+    const map: Record<string, string> = {};
 
     for (const [key, blob] of Object.entries(uploadables)) {
+        map[key] = key;
         body.append(key, blob);
     }
+
+    body.append("map", jsonBlob(map));
 
     return body;
 };
