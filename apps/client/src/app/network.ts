@@ -1,6 +1,7 @@
 import { Result } from "@acalyle/fp";
 import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import type { JsonPrimitive, JsonValue } from "emnorst";
+import { print } from "graphql";
 import type { JsonValueable } from "../lib/types";
 
 export const graphqlBodyInit = (
@@ -79,7 +80,7 @@ export class Network {
         documentNode: TypedDocumentNode<R, V>,
         variables: V,
     ): Promise<Result<GraphQLResult<R>, NetworkError>> {
-        const query = documentNode.loc?.source.body ?? "";
+        const query = print(documentNode);
 
         const res = await fetch(Network._apiEndpointUrl, {
             method: "POST",

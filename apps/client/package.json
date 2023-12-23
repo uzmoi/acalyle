@@ -27,14 +27,14 @@
     "@nanostores/react": "^0.4.1",
     "@rizzzse/datetime": "^0.3.0",
     "emnorst": "^1.0.0-next.2",
-    "graphql-tag": "^2.12.6",
+    "graphql": "^16.8.1",
     "nanostores": "^0.7.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0"
   },
   "devDependencies": {
-    "@acalyle/server": "^0.0.0",
+    "@acalyle/server": "*",
     "@graphql-typed-document-node/core": "^3.2.0",
     "@macaron-css/vite": "^1.1.3",
     "@nitrogql/cli": "^1.6.0-beta.0",
