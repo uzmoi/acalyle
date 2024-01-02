@@ -1,4 +1,3 @@
-/* eslint-disable acalyle/no-module-side-effect */
 import type { StorybookConfig } from "@storybook/react-vite";
 import { dirname, join } from "node:path";
 

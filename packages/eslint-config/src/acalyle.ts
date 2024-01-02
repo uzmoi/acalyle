@@ -14,7 +14,7 @@ export const acalyleConfig: Linter.FlatConfig[] = [
         },
     },
     {
-        files: [typescriptFiles],
+        files: [typescriptFiles.replace("**", "**/src/**")],
         ignores: [
             "**/*[-.]{test,spec,config}.*",
             "**/{test,spec}?(s)/**",
