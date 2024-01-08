@@ -3,7 +3,6 @@ import type { Preview } from "@storybook/react";
 import React from "react";
 import { createTheme, vars } from "../src";
 
-// eslint-disable-next-line acalyle/no-module-side-effect
 const theme = createTheme<typeof vars>("acalyle", {
     color: {
         bg: {
