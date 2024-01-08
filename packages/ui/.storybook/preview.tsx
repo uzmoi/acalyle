@@ -25,8 +25,8 @@ const theme = createTheme<typeof vars>("acalyle", {
         control: "0.5em",
         layout: "1em",
     },
-    font: {},
-    zIndex: {},
+    font: { mono: "monospace", sans: "sans-serif" },
+    zIndex: { contextMenu: 0, max: 0, modal: 0, popover: 0, toast: 0 },
 });
 
 const preview: Preview = {
