@@ -22,7 +22,15 @@ export const acalyleConfig: Linter.FlatConfig[] = [
         ],
         rules: {
             "acalyle/no-module-side-effect": warn({
-                pureFunctions: ["import.meta.hot.*"],
+                pureFunctions: [
+                    // vite
+                    "import.meta.hot.*",
+                    // zero-runtime css-in-js
+                    "style",
+                    "styled",
+                    "styled.*",
+                    "css",
+                ],
             }),
         },
     },
