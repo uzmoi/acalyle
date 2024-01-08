@@ -39,14 +39,7 @@ const preview: Preview = {
             },
         },
     },
-    decorators: [
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        Story => (
-            <div style={theme}>
-                <Story />
-            </div>
-        ),
-    ],
+    decorators: [story => <div style={theme}>{story()}</div>],
 };
 
 export default preview;
