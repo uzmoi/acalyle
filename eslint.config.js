@@ -34,6 +34,7 @@ export default [
         ignores: [
             ...(configs.acalyle[1].ignores ?? []),
             "packages/eslint-config/**",
+            "**/*.stories.*",
         ],
     },
     configs.unicorn,
@@ -44,7 +45,7 @@ export default [
     configs.import,
     configs.perfectionist,
     {
-        files: ["!**/src/**"],
+        files: ["!**/src/**", "**/*.stories.*"],
         languageOptions: {
             globals: globals.node,
         },

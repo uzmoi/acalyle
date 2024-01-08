@@ -1,5 +1,5 @@
 {
     "extends": "@acalyle/tsconfig/tsconfig.node.json",
-    "include": ["**/*", "**/*.json", ".*"],
+    "include": ["**/*", "**/*.json", ".*", "**/.storybook/*"],
     "exclude": ["**/src/**", "**/dist/**"],
 }
