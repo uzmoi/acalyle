@@ -6,7 +6,7 @@ export type MenuAction = {
     icon: JSX.Element;
     text: string;
     disabled?: boolean;
-    type?: "denger";
+    type?: "danger";
     onClick: (() => void | Promise<void>) | undefined;
 };
 
@@ -58,9 +58,9 @@ export const NoteMenu: React.FC<{
                                     "& + &": {
                                         borderTop: `1px solid ${vars.color.fg.mute}`,
                                     },
-                                    '&[data-type="denger"]:enabled:is(:hover, :focus)':
+                                    '&[data-type="danger"]:enabled:is(:hover, :focus)':
                                         {
-                                            color: vars.color.denger,
+                                            color: vars.color.danger,
                                         },
                                     "&:enabled:is(:hover, :focus)": {
                                         backgroundColor: "#fff2",

@@ -48,7 +48,7 @@ const ConfirmForm: React.FC<{
                 <BiError
                     className={style({
                         verticalAlign: "bottom",
-                        color: vars.color.denger,
+                        color: vars.color.danger,
                         marginRight: "0.25em",
                         fontSize: "1.75em",
                     })}

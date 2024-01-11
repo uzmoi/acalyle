@@ -19,7 +19,7 @@ export const Alert: React.FC<
                     borderRadius: vars.radius.block,
                     selectors: {
                         '&[data-alert="error"]': {
-                            vars: { "--alert-color": vars.color.denger },
+                            vars: { "--alert-color": vars.color.danger },
                         },
                         '&[data-alert="warning"]': {
                             vars: { "--alert-color": vars.color.warning },
