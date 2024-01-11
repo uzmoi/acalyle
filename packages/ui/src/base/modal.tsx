@@ -32,7 +32,7 @@ export class Modal<out Data = void, out Result = void> {
     get data(): ReadableAtom<{ data: Data } | undefined> {
         return this.$;
     }
-    private async _trantision(name: "enter" | "exit") {
+    private async _transition(name: "enter" | "exit") {
         if (this._status.get().startsWith(name)) return;
         this._status.set(`${name}ing`);
         await timeout(TRANSITION_DURATION);
@@ -50,14 +50,14 @@ export class Modal<out Data = void, out Result = void> {
             const result = new Promise<Result>((resolve, reject) => {
                 this.$.set({ data, resolve, reject });
             });
-            void this._trantision("enter");
+            void this._transition("enter");
             return result;
         });
     }
     async close(result: Result = this._default): Promise<void> {
         this.$.get()?.resolve(result);
-        await this._trantision("exit");
-        // _trantisionと同じく
+        await this._transition("exit");
+        // _transitionと同じく
         if (this._status.get() === "exiting") {
             this.$.set(undefined);
         }

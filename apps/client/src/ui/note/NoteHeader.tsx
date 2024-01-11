@@ -31,7 +31,7 @@ const noteActions = (noteId: Scalars["ID"]): readonly MenuAction[] => [
     {
         icon: <BiTrash />,
         text: "Delete memo",
-        type: "denger",
+        type: "danger",
         onClick: async () => {
             const ok = await confirm("Delete memo");
             if (ok) {

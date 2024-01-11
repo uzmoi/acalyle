@@ -81,7 +81,7 @@ mod tests {
         assert_eq!(res, Response::new(value!({ "book": { "memo": null } })));
     }
     #[tokio::test]
-    async fn book_connetion() {
+    async fn book_connection() {
         let schema = Schema::new().await.unwrap();
         fn get_node(res: &Response, index: usize) -> serde_json::Value {
             let data = &res.data.clone().into_json().unwrap();
@@ -124,7 +124,7 @@ mod tests {
         assert_eq!(obj_get(&get_page_info(&res), "hasNextPage"), &json!(false));
     }
     #[tokio::test]
-    async fn memo_connetion() {
+    async fn memo_connection() {
         let schema = Schema::new().await.unwrap();
         fn get_id(res: &Response, key: &str) -> String {
             let data = res.data.clone().into_json().unwrap();

@@ -22,6 +22,7 @@ export const control = /* #__PURE__ */ styleVariants({
         border: `2px solid ${vars.color.fg.__}`,
         transition: "border-color 400ms",
         selectors: {
+            // cspell:word lightgreen
             "&:focus-visible": {
                 borderColor: "lightgreen",
             },
@@ -29,10 +30,10 @@ export const control = /* #__PURE__ */ styleVariants({
                 borderLeftColor: "lightgreen",
             },
             '&:invalid, &[aria-invalid="true"]': {
-                borderColor: vars.color.denger,
+                borderColor: vars.color.danger,
             },
             '&:invalid + &, &[aria-invalid="true"] + &': {
-                borderLeftColor: vars.color.denger,
+                borderLeftColor: vars.color.danger,
             },
         },
     },
@@ -45,7 +46,7 @@ export const control = /* #__PURE__ */ styleVariants({
                 borderBottomColor: "lightgreen",
             },
             '&:invalid, &[aria-invalid="true"]': {
-                borderBottomColor: vars.color.denger,
+                borderBottomColor: vars.color.danger,
             },
         },
     },

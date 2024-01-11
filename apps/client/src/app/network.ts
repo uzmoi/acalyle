@@ -85,11 +85,11 @@ export class Network {
                 return Result.err({ type: "invalid_json" });
             }
         } else {
-            const errorResponceBody = await res.text();
+            const errorResponseBody = await res.text();
             return Result.err({
                 type: "http_error",
                 status: res.status,
-                body: errorResponceBody,
+                body: errorResponseBody,
             });
         }
     }

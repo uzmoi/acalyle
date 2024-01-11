@@ -1,7 +1,7 @@
 import { assert } from "emnorst";
 import type { Rule, SourceCode } from "eslint";
-import esquery from "esquery"; // cspell:word esquery
-import type * as ESTree from "estree"; // cspell:word estree
+import esquery from "esquery";
+import type * as ESTree from "estree";
 import { RuleOptions, jsonSchema, memoize } from "../util";
 
 // https://github.com/rollup/rollup/pull/5024
