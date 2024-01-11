@@ -18,7 +18,7 @@ export const Note: React.FC<{
             <Alert type="error">
                 <BiError
                     className={style({
-                        color: vars.color.denger,
+                        color: vars.color.danger,
                         fontSize: "1.75em",
                         marginRight: "0.25em",
                     })}
