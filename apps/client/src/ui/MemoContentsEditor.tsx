@@ -84,7 +84,7 @@ export const MemoContentsEditor: React.FC<{
                 <div className={style({ marginBlock: "1em" })}>
                     <p
                         className={style({
-                            color: vars.color.denger,
+                            color: vars.color.danger,
                             marginBottom: "0.25em",
                         })}
                     >

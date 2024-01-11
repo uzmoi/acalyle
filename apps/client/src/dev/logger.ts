@@ -22,7 +22,7 @@ type LevelConfig = {
 const levelTable: Record<BasicLogLevel, LevelConfig> =
     /* prettier-ignore */ {
     [BasicLogLevel.trace]: { name: "TRACE", fn: "debug", color:   "gray"     },
-    [BasicLogLevel.debug]: { name: "DEBUG", fn: "debug", color:   "darkgray" },
+    [BasicLogLevel.debug]: { name: "DEBUG", fn: "debug", color:   "darkgray" }, // cspell:word darkgray
     [BasicLogLevel.info ]: { name: "INFO" , fn: "info" , color:   "#3cb371"  },
     [BasicLogLevel.warn ]: { name: "WARN" , fn: "warn" , color:   "orange"   },
     [BasicLogLevel.error]: { name: "ERROR", fn: "error", color:   "red"      },

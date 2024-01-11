@@ -1,11 +1,10 @@
-/* eslint-disable acalyle/no-module-side-effect */
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button } from "../control";
 import { Modal, ModalContainer } from "./modal";
 
 export default {
     title: "Base/Modal",
-    component: ModalContainer<() => void>,
+    component: ModalContainer,
     render: props => (
         <div style={{ height: "8em" }}>
             <Button

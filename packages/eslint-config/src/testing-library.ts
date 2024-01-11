@@ -2,6 +2,7 @@ import { ESLint, Linter } from "eslint";
 import eslintPluginTestingLibrary from "eslint-plugin-testing-library";
 import { unPartial } from "./util";
 
+// cspell:word marko
 type Lib = "dom" | "angular" | "react" | "vue" | "marko";
 
 export const testingLibrary = (lib: Lib): Linter.FlatConfig => ({
