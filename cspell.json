@@ -1,6 +1,5 @@
 {
     "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
-    "allowCompoundWords": true,
     "dictionaries": ["custom-words"],
     "useGitignore": true,
     "ignorePaths": ["package-lock.json"],

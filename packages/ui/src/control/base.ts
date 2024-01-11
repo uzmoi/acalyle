@@ -25,6 +25,8 @@ export const control = /* #__PURE__ */ styleVariants({
         border: `2px solid ${vars.color.fg.__}`,
         transition: "border-color 400ms",
         selectors: {
+            // cspell:word lightgreen
+            // cspell:ignore denger
             "&:focus-visible": {
                 borderColor: "lightgreen",
             },
