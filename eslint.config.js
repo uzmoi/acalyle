@@ -66,7 +66,6 @@ export default [
         },
         settings: {
             "import/parsers": {
-                // cspell:word espree
                 espree: [".js", ".cjs", ".mjs", ".jsx"],
             },
             "import/resolver": {

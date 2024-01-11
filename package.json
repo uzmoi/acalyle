@@ -15,10 +15,12 @@
     "lint": "eslint .",
     "test": "turbo run test",
     "coverage": "turbo run coverage",
-    "format": "prettier -c ."
+    "format": "prettier -c .",
+    "spell": "cspell --no-progress ."
   },
   "devDependencies": {
     "@eslint/js": "^8.54.0",
+    "cspell": "^8.3.2",
     "eslint": "^8.54.0",
     "globals": "^13.23.0",
     "lefthook": "^1.5.5",

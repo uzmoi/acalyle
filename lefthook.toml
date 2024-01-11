@@ -4,3 +4,6 @@ parallel = true
 
 [pre-commit.commands.prettier]
 run = "npx prettier --check --ignore-unknown {staged_files}"
+
+[pre-commit.commands.cSpell]
+run = "npx cspell {staged_files}"

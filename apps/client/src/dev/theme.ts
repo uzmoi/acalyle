@@ -19,6 +19,7 @@ export const devAppTheme = /* #__PURE__ */ createTheme<typeof vars>("acalyle", {
         // selection: "rgba(0 128 256 / 20%)",
     },
     font: {
+        // cspell:word Noto Roboto
         sans: "'Noto Sans JP', sans-serif",
         mono: "'Roboto Mono', monospace",
     },
