@@ -1,6 +1,6 @@
 {
     "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "esbenp.prettier-vscode", // cspell:word esbenp
     "editor.codeActionsOnSave": {
         "source.fixAll": "explicit"
     },
@@ -8,7 +8,7 @@
         "editor.defaultFormatter": "rust-lang.rust-analyzer"
     },
     "[toml]": {
-        "editor.defaultFormatter": "tamasfe.even-better-toml"
+        "editor.defaultFormatter": "tamasfe.even-better-toml" // cspell:word tamasfe
     },
     // "stylelint.validate": ["css", "typescript", "typescriptreact"],
     "eslint.experimental.useFlatConfig": true,
