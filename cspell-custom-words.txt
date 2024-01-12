@@ -1,6 +1,7 @@
 acalyle
 accum
 appdata
+autodocs
 chrono
 codegen
 cssole
@@ -18,6 +19,7 @@ lefthook
 macaron
 Millis
 nanostores
+parsea
 piyo
 precodegen
 prelint
@@ -28,6 +30,7 @@ serde
 sqlx
 tauri
 tsup
+typecheck
 uploadables
 uzmoi
 Valueable
