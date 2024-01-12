@@ -27,7 +27,11 @@ export const importConfig: Linter.FlatConfig = {
             commonjs: true,
         }),
         "import/no-extraneous-dependencies": error({
-            devDependencies: ["**/*.{test,spec}.*", "!**/src/**"],
+            devDependencies: [
+                "**/*.{test,spec}.*",
+                "**/*.{test,spec}-d.*",
+                "!**/src/**",
+            ],
         }),
         "import/unambiguous": WARN,
         "import/first": WARN,
