@@ -6,7 +6,7 @@ pub(super) struct Cursor(pub String);
 impl CursorType for Cursor {
     type Error = DecodeError;
 
-    fn decode_cursor(s: &str) -> std::result::Result<Self, Self::Error> {
+    fn decode_cursor(s: &str) -> Result<Self, Self::Error> {
         let v = STANDARD.decode(s)?;
         let cursor = String::from_utf8_lossy(&v).into_owned();
         Ok(Cursor(cursor))

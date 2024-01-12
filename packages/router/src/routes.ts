@@ -57,17 +57,17 @@ const matchParts = <T extends string>(
 };
 
 type RoutesPath<T> = {
-    [P in keyof T]: T[P] extends Route<infer Path, infer _, infer __>
-        ? `${P & string}/${Path}`
-        : never;
+    [P in keyof T]: T[P] extends Route<infer Path, infer _, infer __> ?
+        `${P & string}/${Path}`
+    :   never;
 }[keyof T];
 
 type ParamKey<T> = T extends `:${infer U}${Mark | ""}` ? U : never;
 
 type RoutesParams<T> = {
-    [P in keyof T]: T[P] extends Route<infer _, infer Params, infer __>
-        ? Omit<Params, ParamKey<P>>
-        : never;
+    [P in keyof T]: T[P] extends Route<infer _, infer Params, infer __> ?
+        Omit<Params, ParamKey<P>>
+    :   never;
 }[keyof T];
 
 type RoutesReturn<T> = T extends Route<infer _, infer __, infer R> ? R : never;

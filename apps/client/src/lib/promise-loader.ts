@@ -11,14 +11,18 @@ export type PromiseLoaderW<T = unknown> =
 
 export const usePromiseLoader = <T>(loader: PromiseLoaderW<T>): T => {
     switch (loader.status) {
-        case "unpending":
+        case "unpending": {
             throw new Error("Unpending");
-        case "pending":
+        }
+        case "pending": {
             throw loader.promise;
-        case "fulfilled":
+        }
+        case "fulfilled": {
             return loader.value;
-        case "rejected":
+        }
+        case "rejected": {
             throw loader.error;
+        }
     }
 };
 

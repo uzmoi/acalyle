@@ -1,8 +1,9 @@
 use acalyle_server::{
     db::init::{create_tables, foreign_keys},
+    graphql,
     server::serve,
 };
-use sqlx::{Result, SqlitePool};
+use sqlx::SqlitePool;
 use std::{fs::OpenOptions, io, path::Path};
 
 fn touch(path: impl AsRef<Path>) -> io::Result<()> {
@@ -13,18 +14,30 @@ fn touch(path: impl AsRef<Path>) -> io::Result<()> {
         .map(|_| ())
 }
 
-#[tokio::main]
-async fn main() -> Result<()> {
-    let db_file_path = "data/dev.db";
-    touch(db_file_path).unwrap();
+const DEFAULT_DB_URL: &str = "sqlite:data/dev.db";
 
-    let pool = SqlitePool::connect(&format!("sqlite:{db_file_path}")).await?;
-    if create_tables(&pool).await.is_ok() {
-        println!("Initialized {db_file_path}.");
-    };
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let init = std::env::args().any(|arg| arg == "--init");
+
+    let db_url = std::env::var("DATABASE_URL").or_else(|_| -> io::Result<_> {
+        if init {
+            touch(DEFAULT_DB_URL)?;
+        }
+        Ok(DEFAULT_DB_URL.to_string())
+    })?;
+
+    let pool = SqlitePool::connect(&db_url).await?;
+    if init {
+        create_tables(&pool).await?;
+        println!("Initialized {db_url}.");
+    }
+
     foreign_keys(&pool).await?;
 
-    serve(&([127, 0, 0, 1], 4323).into(), pool).await;
+    let graphql_schema = graphql::graphql_schema(pool);
+
+    serve(&([127, 0, 0, 1], 4323).into(), graphql_schema).await;
 
     Ok(())
 }

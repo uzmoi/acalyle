@@ -13,7 +13,7 @@ export const vars = /* #__PURE__ */ createGlobalThemeContract(
                 block: null,
                 inline: null,
             },
-            denger: null,
+            danger: null,
             warning: null,
             success: null,
             accent: null,

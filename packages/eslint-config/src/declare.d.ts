@@ -19,7 +19,7 @@ declare module "eslint-plugin-import" {
     export default exports;
 }
 
-declare module "eslint-plugin-simple-import-sort" {
+declare module "eslint-plugin-perfectionist" {
     import { ESLint } from "eslint";
 
     const exports: ESLint.Plugin;

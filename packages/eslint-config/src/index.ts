@@ -1,6 +1,7 @@
 import type { Linter } from "eslint";
 import { acalyleConfig } from "./acalyle";
 import { importConfig } from "./import";
+import { perfectionistConfig } from "./perfectionist";
 import { react } from "./react";
 import { testingLibrary } from "./testing-library";
 import { typescript, typescriptCustom } from "./typescript";
@@ -15,6 +16,7 @@ export const configs = {
     typescript,
     typescriptCustom,
     acalyle: acalyleConfig,
+    perfectionist: perfectionistConfig,
     unicorn,
     testingLibrary,
 } satisfies Record<

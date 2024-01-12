@@ -41,9 +41,9 @@ export const CreateTemplateMemoButtonList: React.FC<{
                     cursor: "default",
                 })}
             >
-                {templateNames.length === 0
-                    ? "No memo template."
-                    : "Create memo from template."}
+                {templateNames.length === 0 ?
+                    "No memo template."
+                :   "Create memo from template."}
             </p>
             {templateNames.map(templateName => (
                 <Button

@@ -97,12 +97,13 @@ const PopoverContent: React.FC<
     const isOpen = popoverId === openedPopoverId;
     const status = useTransitionStatus({ show: isOpen, transition });
 
-    const actualOnClick = closeOnClick
-        ? onClick
-        : (e: React.MouseEvent<HTMLDivElement>) => {
-              e.stopPropagation();
-              onClick?.(e);
-          };
+    const actualOnClick =
+        closeOnClick ? onClick : (
+            (e: React.MouseEvent<HTMLDivElement>) => {
+                e.stopPropagation();
+                onClick?.(e);
+            }
+        );
 
     return (
         <div

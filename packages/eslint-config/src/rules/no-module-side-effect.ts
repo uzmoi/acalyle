@@ -1,9 +1,8 @@
 import { assert } from "emnorst";
 import type { Rule, SourceCode } from "eslint";
-import esquery from "esquery"; // cspell:word esquery
-import type * as ESTree from "estree"; // cspell:word estree
-import type { JSONSchema4 } from "json-schema";
-import { memoize } from "../util";
+import esquery from "esquery";
+import type * as ESTree from "estree";
+import { RuleOptions, jsonSchema, memoize } from "../util";
 
 // https://github.com/rollup/rollup/pull/5024
 const _isPureFunctionComment = (comment: ESTree.Comment): boolean =>
@@ -19,11 +18,11 @@ const parsePattern = memoize((filter: string) => {
     for (const [i, name] of xs.entries()) {
         const ancestryAttribute = [
             ...ancestryAttributes,
-            i === xs.length - 1
-                ? name === "*"
-                    ? "type"
-                    : "name"
-                : "property.name",
+            i === xs.length - 1 ?
+                name === "*" ?
+                    "type"
+                :   "name"
+            :   "property.name",
         ].join(".");
         const nameRe = name.replace(/\*/g, ".+");
         selector += `[${ancestryAttribute}=/^${nameRe}$/]`;
@@ -74,38 +73,46 @@ type CheckNode = Extract<Rule.Node, { type: (typeof checkNodeType)[number] }>;
 const isPureNode = (
     node: CheckNode,
     source: SourceCode,
-    options: RuleOptions,
+    options: RuleOptions<typeof schema>,
 ): boolean => {
     switch (node.type) {
-        case "AwaitExpression":
+        case "AwaitExpression": {
             return !!options.allowAwait;
+        }
         case "UpdateExpression":
-        case "AssignmentExpression":
+        case "AssignmentExpression": {
             return !!options.allowAssign;
-        case "UnaryExpression":
+        }
+        case "UnaryExpression": {
             return !!options.allowDelete || node.operator !== "delete";
-        case "ThrowStatement":
+        }
+        case "ThrowStatement": {
             return !!options.allowThrow;
-        case "NewExpression":
+        }
+        case "NewExpression": {
             return (
                 !!options.allowNew ||
                 source.getCommentsBefore(node).some(isPureComment)
             );
-        case "TaggedTemplateExpression":
+        }
+        case "TaggedTemplateExpression": {
             return (
                 !!(options.allowTaggedTemplate ?? options.allowCall) ||
                 source.getCommentsBefore(node).some(isPureComment) ||
                 isPureFunction(node.tag, options.pureFunctions)
             );
-        case "CallExpression":
+        }
+        case "CallExpression": {
             return (
                 !!options.allowCall ||
                 source.getCommentsBefore(node).some(isPureComment) ||
                 node.callee.type === "Super" ||
                 isPureFunction(node.callee, options.pureFunctions)
             );
-        default:
+        }
+        default: {
             assert.unreachable<typeof node>();
+        }
     }
 };
 
@@ -118,7 +125,7 @@ const functionNodeType = new Set<Rule.Node["type"]>([
 
 const isInFunction = (
     ancestors: readonly ESTree.Node[],
-    options: RuleOptions,
+    options: RuleOptions<typeof schema>,
 ): boolean => {
     return ancestors.some(node => {
         return (
@@ -129,31 +136,6 @@ const isInFunction = (
     });
 };
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface, @typescript-eslint/consistent-type-definitions
-interface JSONSchema<out _ = unknown> extends JSONSchema4 {}
-
-const jsonSchema = {
-    object: <T>(properties: {
-        [P in keyof T]: JSONSchema<T[P]>;
-    }): JSONSchema<T> => ({ type: "object", properties }),
-    array: <T>(items: JSONSchema<T>): JSONSchema<T[]> => ({
-        type: "array",
-        items,
-    }),
-    boolean: (): JSONSchema<boolean> => ({ type: "boolean" }),
-    string: (schema?: {
-        maxLength?: number;
-        minLength?: number;
-        pattern?: string;
-    }): JSONSchema<string> => ({
-        type: "string",
-        ...schema,
-    }),
-};
-
-type RuleOptions = Partial<
-    typeof schema extends JSONSchema<infer T> ? T : never
->;
 const schema = jsonSchema.object({
     pureFunctions: jsonSchema.array(
         jsonSchema.string({
@@ -181,10 +163,10 @@ export const noModuleSideEffect: Rule.RuleModule = {
         schema: [schema],
     },
     create(context) {
-        const options: RuleOptions = {
+        const options: RuleOptions<typeof schema> = {
             allowNew: true,
             allowInStaticBlock: true,
-            ...(context.options[0] as RuleOptions),
+            ...(context.options[0] as RuleOptions<typeof schema>),
         };
 
         const checkSideEffect = (node: CheckNode) => {

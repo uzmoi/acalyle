@@ -28,11 +28,13 @@ export default [
         ],
     },
     eslint.configs.recommended,
+    configs.acalyle[0],
     {
-        ...configs.acalyle,
+        ...configs.acalyle[1],
         ignores: [
-            ...(configs.acalyle.ignores ?? []),
+            ...(configs.acalyle[1].ignores ?? []),
             "packages/eslint-config/**",
+            "**/*.stories.*",
         ],
     },
     configs.unicorn,
@@ -41,8 +43,9 @@ export default [
     configs.react,
     configs.testingLibrary("react"),
     configs.import,
+    configs.perfectionist,
     {
-        files: ["!**/src/**"],
+        files: ["!**/src/**", "**/*.stories.*"],
         languageOptions: {
             globals: globals.node,
         },
@@ -63,7 +66,6 @@ export default [
         },
         settings: {
             "import/parsers": {
-                // cspell:word espree
                 espree: [".js", ".cjs", ".mjs", ".jsx"],
             },
             "import/resolver": {

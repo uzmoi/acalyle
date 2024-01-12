@@ -31,23 +31,27 @@ export class Option<out A> {
         return this._value;
     }
     getOrElse<B>(value: ValueOrGetter<B>): A | B {
-        return this._value === none
-            ? typeof value === "function"
-                ? (value as () => B)()
-                : value
-            : this._value;
+        return (
+            this._value === none ?
+                typeof value === "function" ?
+                    (value as () => B)()
+                :   value
+            :   this._value
+        );
     }
     orElse<B>(option: ValueOrGetter<Option<B>>): Option<A | B> {
-        return this._value === none
-            ? typeof option === "function"
-                ? option()
-                : option
-            : this;
+        return (
+            this._value === none ?
+                typeof option === "function" ?
+                    option()
+                :   option
+            :   this
+        );
     }
     map<B>(fn: (value: A) => B): Option<B> {
-        return this._value === none
-            ? Option.none()
-            : Option.some(fn(this._value));
+        return this._value === none ?
+                Option.none()
+            :   Option.some(fn(this._value));
     }
     flatMap<B>(fn: (value: A) => Option<B>): Option<B> {
         return this._value === none ? Option.none() : fn(this._value);

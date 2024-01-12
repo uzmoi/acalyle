@@ -1,5 +1,3 @@
-// cspell:word codegen
-
 import type { CodegenConfig } from "@graphql-codegen/cli";
 import type { TypeScriptPluginConfig } from "@graphql-codegen/typescript";
 import type { TypeScriptDocumentsPluginConfig } from "@graphql-codegen/typescript-operations";

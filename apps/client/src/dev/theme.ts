@@ -12,13 +12,14 @@ export const devAppTheme = /* #__PURE__ */ createTheme<typeof vars>("acalyle", {
             block: "#22262a",
             inline: "#101214",
         },
-        denger: "#e44",
+        danger: "#e44",
         warning: "#bb4",
         success: "#1a1",
         accent: "#a88",
         // selection: "rgba(0 128 256 / 20%)",
     },
     font: {
+        // cspell:word Noto Roboto
         sans: "'Noto Sans JP', sans-serif",
         mono: "'Roboto Mono', monospace",
     },

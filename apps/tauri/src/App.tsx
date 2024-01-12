@@ -74,7 +74,7 @@ const themeStyle = createTheme<typeof vars>("acalyle", {
             block: "#22262a",
             inline: "#101214",
         },
-        denger: "#e44",
+        danger: "#e44",
         accent: "#a88",
     },
     font: {

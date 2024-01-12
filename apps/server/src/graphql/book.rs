@@ -5,11 +5,12 @@ use super::{
 use crate::{
     db::{
         book::{
-            count_books, delete_book, fetch_books, insert_book, Book, BookHandle, BookId,
-            BookSortOrderBy, BookTag,
+            self, count_books, delete_book, fetch_books, insert_book, update_book,
+            update_book_description, update_book_handle, update_book_title, Book, BookFilter,
+            BookHandle, BookId, BookSortOrderBy, BookTag,
         },
         loader::{SqliteLoader, SqliteTagLoader},
-        memo::{count_memos, fetch_memos, Memo, MemoId, MemoSortOrderBy},
+        memo::{count_memos, fetch_memos, Memo, MemoFilter, MemoId, MemoQuery},
     },
     query::{NodeListQuery, SortOrder},
     resource::write_resource,
@@ -22,7 +23,6 @@ use async_graphql::{
 use chrono::{DateTime, Utc};
 use sqlx::SqlitePool;
 use std::io::Read;
-use uuid::Uuid;
 
 #[derive(Default)]
 pub(super) struct BookQuery;
@@ -37,11 +37,17 @@ impl BookQuery {
         handle: Option<String>,
     ) -> Result<Option<Book>> {
         let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
-        let handle = id
-            .map(|id| BookHandle::Id(id.0))
-            .or_else(|| handle.map(BookHandle::Handle))
-            .ok_or_else(|| async_graphql::Error::new("id or handle is required"))?;
-        Ok(loader.load_one(handle).await?)
+        match (id, handle) {
+            (Some(id), _) => {
+                let id = BookId::try_from(id)?;
+                Ok(loader.load_one(id).await?)
+            }
+            (None, Some(handle)) => {
+                let handle = BookHandle(handle);
+                Ok(loader.load_one(handle).await?)
+            }
+            _ => Err(async_graphql::Error::new("id or handle is required")),
+        }
     }
     async fn books(
         &self,
@@ -50,7 +56,7 @@ impl BookQuery {
         before: Option<String>,
         first: Option<i32>,
         last: Option<i32>,
-        query: Option<String>,
+        #[graphql(default)] query: String,
     ) -> Result<Connection<Cursor, Book, BookConnectionExtend>> {
         let pool = ctx.data::<SqlitePool>()?;
 
@@ -62,20 +68,33 @@ impl BookQuery {
             |after, before, first, last| async move {
                 let (limit, lt_cursor, gt_cursor) = connection_args(after, before, first, last);
 
+                let query = book::BookQuery::new(&query);
+                let filter = query.filter.clone();
+                let order_by = query
+                    .meta
+                    .get("order")
+                    // TODO: 値が複数あった場合とnegatedな時の仕様の再考
+                    .and_then(|orders| orders.last()?.value.parse().ok())
+                    .unwrap_or_default();
                 let query = NodeListQuery {
-                    filter: query.unwrap_or_default(),
+                    filter: query.filter,
                     order: SortOrder::Desc,
-                    order_by: BookSortOrderBy::Updated,
+                    order_by,
                     lt_cursor,
                     gt_cursor,
                     offset: 0,
                     limit: (limit + 1) as i32,
                 };
-                let filter = query.filter.clone();
                 let books = fetch_books(pool, query).await?;
 
-                let connection =
-                    connection(books, limit, first, last, BookConnectionExtend { filter });
+                let connection = connection(
+                    books,
+                    limit,
+                    first,
+                    last,
+                    order_by,
+                    BookConnectionExtend { filter },
+                );
                 Ok::<_, async_graphql::Error>(connection)
             },
         )
@@ -84,7 +103,7 @@ impl BookQuery {
 }
 
 struct BookConnectionExtend {
-    filter: String,
+    filter: BookFilter,
 }
 
 #[Object]
@@ -96,19 +115,19 @@ impl BookConnectionExtend {
     }
 }
 
-impl NodeType for Book {
-    fn id(&self) -> String {
-        self.id.0.clone()
+impl NodeType<BookSortOrderBy> for Book {
+    fn cursor(&self, _order_by: BookSortOrderBy) -> Cursor {
+        Cursor(self.id.to_string())
     }
 }
 
 #[Object]
 impl Book {
     pub(super) async fn id(&self) -> ID {
-        ID(self.id.0.clone())
+        self.id.to_id()
     }
     async fn handle(&self) -> Option<&String> {
-        self.handle.as_ref()
+        self.handle.as_ref().map(|handle| &handle.0)
     }
     async fn title(&self) -> &str {
         &self.title
@@ -118,7 +137,7 @@ impl Book {
     }
     async fn thumbnail(&self) -> String {
         if self.thumbnail == "#image" {
-            format!("{}/thumbnail.png", self.id.0)
+            format!("{}/thumbnail.png", self.id)
         } else {
             self.thumbnail.clone()
         }
@@ -128,7 +147,8 @@ impl Book {
     }
     async fn memo(&self, ctx: &Context<'_>, id: ID) -> Result<Option<Memo>> {
         let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
-        let memo = loader.load_one(MemoId(id.0)).await?;
+        let memo_id = MemoId::try_from(id)?;
+        let memo = loader.load_one(memo_id).await?;
         Ok(memo.filter(|memo| memo.book_id == self.id))
     }
     async fn memos(
@@ -138,7 +158,7 @@ impl Book {
         before: Option<String>,
         first: Option<i32>,
         last: Option<i32>,
-        query: Option<String>,
+        #[graphql(default)] query: String,
     ) -> Result<Connection<Cursor, Memo, MemoConnectionExtend>> {
         let pool = ctx.data::<SqlitePool>()?;
 
@@ -150,20 +170,33 @@ impl Book {
             |after, before, first, last| async move {
                 let (limit, lt_cursor, gt_cursor) = connection_args(after, before, first, last);
 
+                let query = MemoQuery::new(self.id.clone(), &query);
+                let filter = query.filter.clone();
+                let order_by = query
+                    .meta
+                    .get("order")
+                    // TODO: 値が複数あった場合とnegatedな時の仕様の再考
+                    .and_then(|orders| orders.last()?.value.parse().ok())
+                    .unwrap_or_default();
                 let query = NodeListQuery {
-                    filter: (self.id.clone(), query.unwrap_or_default()),
+                    filter: query.filter,
                     order: SortOrder::Desc,
-                    order_by: MemoSortOrderBy::Updated,
+                    order_by,
                     lt_cursor,
                     gt_cursor,
                     offset: 0,
                     limit: (limit + 1) as i32,
                 };
-                let filter = query.filter.clone();
                 let memos = fetch_memos(pool, query).await?;
 
-                let connection =
-                    connection(memos, limit, first, last, MemoConnectionExtend { filter });
+                let connection = connection(
+                    memos,
+                    limit,
+                    first,
+                    last,
+                    order_by,
+                    MemoConnectionExtend { filter },
+                );
                 Ok::<_, async_graphql::Error>(connection)
             },
         )
@@ -192,7 +225,7 @@ impl Book {
 }
 
 struct MemoConnectionExtend {
-    filter: (BookId, String),
+    filter: MemoFilter,
 }
 
 #[Object]
@@ -214,6 +247,21 @@ impl BookSetting {
     }
 }
 
+async fn get_book(ctx: &Context<'_>, id: BookId) -> Result<Option<Book>> {
+    let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
+    Ok(loader.load_one(id).await?)
+}
+
+async fn write_upload_resource(
+    book_id: &BookId,
+    file_name: String,
+    mut file: impl Read,
+) -> Result<String> {
+    let mut buffer = Vec::new();
+    file.read_to_end(&mut buffer)?;
+    Ok(write_resource(book_id, file_name, buffer).await?)
+}
+
 #[derive(Default)]
 pub(super) struct BookMutation;
 
@@ -222,19 +270,18 @@ impl BookMutation {
     async fn create_book(
         &self,
         ctx: &Context<'_>,
-        title: String,
-        description: Option<String>,
+        #[graphql(validator(min_length = 1, max_length = 256))] title: String,
+        #[graphql(default, validator(max_length = 1024))] description: String,
         thumbnail: Option<Upload>,
     ) -> Result<Book> {
         let pool = ctx.data::<SqlitePool>()?;
-        let id = Uuid::new_v4();
         let now = Utc::now();
 
         let book = Book {
-            id: BookId(id.to_string()),
+            id: BookId::new(),
             handle: None,
             title,
-            description: description.unwrap_or_default(),
+            description,
             thumbnail: if thumbnail.is_some() {
                 String::from("#image")
             } else {
@@ -247,19 +294,60 @@ impl BookMutation {
         };
 
         if let Some(thumbnail) = thumbnail {
-            let mut buffer = Vec::new();
-            thumbnail.value(ctx)?.into_read().read_to_end(&mut buffer)?;
             let file_name = String::from("thumbnail.png");
-            write_resource(&book.id, file_name, buffer).await?;
+            let file = thumbnail.value(ctx)?.into_read();
+            write_upload_resource(&book.id, file_name, file).await?;
         }
 
         insert_book(pool, [book.clone()]).await?;
 
         Ok(book)
     }
-    #[allow(unreachable_code)]
-    async fn update_book_title(&self, _id: ID, _title: String) -> Book {
-        todo!()
+    async fn update_book_title(
+        &self,
+        ctx: &Context<'_>,
+        id: ID,
+        #[graphql(validator(min_length = 1, max_length = 256))] title: String,
+    ) -> Result<Option<Book>> {
+        let pool = ctx.data::<SqlitePool>()?;
+        let book_id = BookId::try_from(id)?;
+        let now = Utc::now();
+
+        update_book_title(pool, &book_id, title).await?;
+        update_book(pool, &book_id, &now).await?;
+
+        get_book(ctx, book_id).await
+    }
+    async fn update_book_handle(
+        &self,
+        ctx: &Context<'_>,
+        id: ID,
+        #[graphql(validator(min_length = 1, max_length = 256, regex = "^[[:word:]-]+$"))]
+        handle: Option<String>,
+    ) -> Result<Option<Book>> {
+        let pool = ctx.data::<SqlitePool>()?;
+        let book_id = BookId::try_from(id)?;
+        let now = Utc::now();
+
+        update_book_handle(pool, &book_id, handle).await?;
+        update_book(pool, &book_id, &now).await?;
+
+        get_book(ctx, book_id).await
+    }
+    async fn update_book_description(
+        &self,
+        ctx: &Context<'_>,
+        id: ID,
+        #[graphql(validator(max_length = 1024))] description: String,
+    ) -> Result<Option<Book>> {
+        let pool = ctx.data::<SqlitePool>()?;
+        let book_id = BookId::try_from(id)?;
+        let now = Utc::now();
+
+        update_book_description(pool, &book_id, description).await?;
+        update_book(pool, &book_id, &now).await?;
+
+        get_book(ctx, book_id).await
     }
     async fn update_book_thumbnail(
         &self,
@@ -267,18 +355,11 @@ impl BookMutation {
         id: ID,
         thumbnail: Upload,
     ) -> Result<Option<Book>> {
-        let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
-        let book = loader.load_one(BookHandle::Id(id.to_string())).await?;
-        if book.is_none() {
-            return Ok(None);
-        }
-
-        let mut buffer = Vec::new();
-        thumbnail.value(ctx)?.into_read().read_to_end(&mut buffer)?;
+        let book_id = BookId::try_from(id)?;
         let file_name = String::from("thumbnail.png");
-        write_resource(&BookId(id.0), file_name, buffer).await?;
-
-        Ok(book)
+        let file = thumbnail.value(ctx)?.into_read();
+        write_upload_resource(&book_id, file_name, file).await?;
+        get_book(ctx, book_id).await
     }
     async fn upload_resource(
         &self,
@@ -287,15 +368,14 @@ impl BookMutation {
         file_name: String,
         file: Upload,
     ) -> Result<Option<String>> {
-        let loader = ctx.data::<DataLoader<SqliteLoader>>()?;
-        let book = loader.load_one(BookHandle::Id(book_id.to_string())).await?;
+        let book_id = BookId::try_from(book_id)?;
+        let book = get_book(ctx, book_id.clone()).await?;
         if book.is_none() {
             return Ok(None);
         }
 
-        let mut buffer = Vec::new();
-        file.value(ctx)?.into_read().read_to_end(&mut buffer)?;
-        let resource_ref = write_resource(&BookId(book_id.0), file_name, buffer).await?;
+        let file = file.value(ctx)?.into_read();
+        let resource_ref = write_upload_resource(&book_id, file_name, file).await?;
 
         Ok(Some(resource_ref))
     }
@@ -305,7 +385,8 @@ impl BookMutation {
     }
     async fn delete_book(&self, ctx: &Context<'_>, id: ID) -> Result<ID> {
         let pool = ctx.data::<SqlitePool>()?;
-        delete_book(pool, &[BookId(id.to_string())]).await?;
+        let book_id = BookId::try_from(id.clone())?;
+        delete_book(pool, &[book_id]).await?;
         Ok(id)
     }
 }
