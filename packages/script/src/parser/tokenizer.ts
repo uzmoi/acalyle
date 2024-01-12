@@ -154,7 +154,7 @@ export class Tokenizer {
                         break;
                     }
                     default:
-                        throw new SyntaxError(`Unknown charactor: "${char}"`);
+                        throw new SyntaxError(`Unknown character: "${char}"`);
                 }
                 this.appendCurrent(char);
                 break;
