@@ -19,6 +19,7 @@
     "eslint-plugin-import": "^2.29.0",
     "eslint-plugin-import-access": "^2.1.1",
     "eslint-plugin-perfectionist": "^2.4.0",
+    "eslint-plugin-pure-module": "^0.0.2",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-testing-library": "^6.2.0",
