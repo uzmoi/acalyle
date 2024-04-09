@@ -2,4 +2,7 @@
     "extends": "@acalyle/tsconfig/tsconfig.lib.json",
     "include": ["src"],
     "exclude": ["**/*.test.ts", "**/*.test-d.ts"],
+    "compilerOptions": {
+        "lib": ["ESNext"]
+    }
 }

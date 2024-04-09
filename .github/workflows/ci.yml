@@ -42,8 +42,8 @@ jobs:
           path: '**/node_modules'
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
 
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
+      - uses: dtolnay/rust-toolchain@stable # cspell:word dtolnay
+      - uses: Swatinem/rust-cache@v2 # cspell:word Swatinem
 
       - run: npm run coverage
 
@@ -52,6 +52,7 @@ jobs:
           files=$(ls {apps,packages}/*/coverage/coverage-final.json | paste -sd ",")
           echo "files=$files" >> $GITHUB_OUTPUT
 
+        # cspell:word codecov
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:

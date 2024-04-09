@@ -16,7 +16,7 @@ const theme = createTheme<typeof vars>("acalyle", {
             mute: "#777",
         },
         accent: "purple",
-        denger: "red",
+        danger: "red",
         warning: "yellow",
         success: "green",
     },
