@@ -59,7 +59,7 @@ export const updateMemoContents = async (
 export const addMemoTags = async (memoId: ID, tags: readonly string[]) => {
     const { data } = await acalyle.net.gql(AddMemoTagsMutation, {
         memoId,
-        tags,
+        tags: [...tags],
     });
 
     for (const memo of data.addMemoTags) {

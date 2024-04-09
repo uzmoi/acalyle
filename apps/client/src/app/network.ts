@@ -1,6 +1,6 @@
 import { Result } from "@acalyle/fp";
 import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
-import type { JsonPrimitive, JsonValue } from "emnorst";
+import type { JsonValue } from "emnorst";
 import { print } from "graphql";
 import type { JsonValueable } from "../lib/types";
 
@@ -45,10 +45,6 @@ export type NetworkError =
     | { type: "http_error"; status: number; body: string }
     | { type: "invalid_json" };
 
-type ReadonlyObjectDeep<T> = { readonly [P in keyof T]: ReadonlyDeep<T[P]> };
-
-type ReadonlyDeep<T> = T extends JsonPrimitive ? T : ReadonlyObjectDeep<T>;
-
 export class Network {
     private static readonly _resourceBaseUrl = new URL("api/", location.origin);
     private static readonly _apiEndpointUrl = new URL("api", location.origin);
@@ -57,7 +53,7 @@ export class Network {
     }
     async gql<R, V extends Record<string, JsonValueable>>(
         documentNode: TypedDocumentNode<R, V>,
-        variables?: ReadonlyDeep<V>,
+        variables?: V,
     ): Promise<GraphQLResult<R>> {
         return this.graphql(documentNode, variables as unknown as V).then(
             result => {
