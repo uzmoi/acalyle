@@ -2,13 +2,13 @@ import { vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useCallback } from "react";
 import type { ID } from "~/__generated__/graphql";
+import { useBook } from "~/book/ui/hook";
 import { link } from "~/pages/link";
-import { Link } from "../Link";
-import { useBook } from "../book/use-book";
-import { openNoteInModal } from "../modal";
-import { TagList } from "../tag/TagList";
-import { NoteBody } from "./NoteBody";
-import { useNote } from "./use-note";
+import { Link } from "~/ui/Link";
+import { openNoteInModal } from "~/ui/modal";
+import { TagList } from "~/ui/tag/TagList";
+import { useNote } from "./hook";
+import { NoteContents } from "./note-contents";
 
 export const NoteOverview: React.FC<{
     bookId: ID;
@@ -65,7 +65,7 @@ export const NoteOverview: React.FC<{
                 >
                     <span className={visuallyHidden}>Open note.</span>
                 </Link>
-                <NoteBody contents={note.contents} />
+                <NoteContents contents={note.contents} />
             </div>
             <TagList tags={note.tags} />
         </article>

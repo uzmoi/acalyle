@@ -3,7 +3,7 @@ import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import type { ID } from "~/__generated__/graphql";
 import { bookConnection } from "~/book/store";
-import { BookOverview } from "./BookOverview";
+import { BookOverview } from "./book-overview";
 
 const useBookOverviewList = (query = ""): readonly ID[] => {
     const { nodeIds } = useStore(bookConnection(query));

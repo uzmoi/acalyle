@@ -4,6 +4,7 @@ import { bookStore } from "~/book/store";
 import { bookHandleStore, handleBookStore } from "~/book/store/book";
 import { usePromiseLoader } from "~/lib/promise-loader";
 
+/** @deprecated */
 export const useBookId = (bookHandle: string) => {
     return (
         usePromiseLoader(
@@ -16,6 +17,7 @@ export const useBookId = (bookHandle: string) => {
     );
 };
 
+/** @deprecated */
 export const useBook = (bookHandle: string) => {
     return usePromiseLoader(
         useStore(

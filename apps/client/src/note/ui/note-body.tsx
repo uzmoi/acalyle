@@ -3,11 +3,11 @@ import { style } from "@macaron-css/core";
 import { useState } from "react";
 import { BiEditAlt } from "react-icons/bi";
 import type { ID } from "~/__generated__/graphql";
-import { MemoContentsEditor } from "../MemoContentsEditor";
-import { NoteBody } from "./NoteBody";
-import { useNote } from "./use-note";
+import { MemoContentsEditor } from "../../ui/MemoContentsEditor";
+import { useNote } from "./hook";
+import { NoteContents } from "./note-contents";
 
-export const NoteContents: React.FC<{
+export const NoteBody: React.FC<{
     noteId: ID;
 }> = ({ noteId }) => {
     const note = useNote(noteId);
@@ -61,7 +61,7 @@ export const NoteContents: React.FC<{
                         setIsInEdit(false);
                     }}
                 />
-            :   <NoteBody contents={note.contents} />}
+            :   <NoteContents contents={note.contents} />}
         </div>
     );
 };

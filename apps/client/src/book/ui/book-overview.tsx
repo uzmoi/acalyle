@@ -3,9 +3,9 @@ import { style } from "@macaron-css/core";
 import { identify } from "emnorst";
 import type { ID } from "~/__generated__/graphql";
 import { link } from "~/pages/link";
-import { BookThumbnail } from "../BookThumbnail";
-import { Link } from "../Link";
-import { useBook } from "./use-book";
+import { BookThumbnail } from "~/ui/BookThumbnail";
+import { Link } from "~/ui/Link";
+import { useBook } from "./hook";
 
 export const BookOverview: React.FC<{
     bookId: ID;

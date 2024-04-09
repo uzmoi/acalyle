@@ -1,8 +1,9 @@
 import { TextInput } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useDeferredValue, useState } from "react";
+import type { BookRef } from "~/book/store";
+import { NoteOverviewWarpList } from "~/note/ui/note-overview-warplist";
 import { CreateMemoButton } from "~/ui/CreateMemoButton";
-import { NoteOverviewWarpList } from "~/ui/note/NoteOverviewWarpList";
 
 export const MemoListPage: React.FC<{
     bookHandle: string;
@@ -22,7 +23,7 @@ export const MemoListPage: React.FC<{
                 {/* <MemoImportButton /> */}
             </div>
             <NoteOverviewWarpList
-                book={bookHandle}
+                bookRef={bookHandle as BookRef}
                 query={`-@relate:* ${deferredQuery}`}
             />
         </div>

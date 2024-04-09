@@ -2,14 +2,15 @@ import { Alert, vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { BiError } from "react-icons/bi";
 import type { ID } from "~/__generated__/graphql";
-import { NoteContents } from "./NoteContents";
-import { NoteHeader } from "./NoteHeader";
-import { useNote } from "./use-note";
+import type { BookRef } from "~/book/store";
+import { useNote } from "./hook";
+import { NoteBody } from "./note-body";
+import { NoteHeader } from "./note-header";
 
 export const Note: React.FC<{
-    book: string;
+    bookRef: BookRef;
     noteId: ID;
-}> = ({ book, noteId }) => {
+}> = ({ bookRef, noteId }) => {
     const note = useNote(noteId);
 
     if (note == null) {
@@ -38,8 +39,8 @@ export const Note: React.FC<{
 
     return (
         <article data-note-id={noteId}>
-            <NoteHeader noteId={noteId} bookHandle={book} />
-            <NoteContents noteId={noteId} />
+            <NoteHeader noteId={noteId} bookRef={bookRef} />
+            <NoteBody noteId={noteId} />
         </article>
     );
 };

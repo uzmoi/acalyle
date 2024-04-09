@@ -2,13 +2,14 @@ import { style } from "@macaron-css/core";
 import { useMemo } from "react";
 import { BiClipboard, BiTransfer, BiTrash } from "react-icons/bi";
 import type { ID } from "~/__generated__/graphql";
+import type { BookRef } from "~/book/store";
 import { removeNote, transferNote } from "~/note/store/note";
-import { AddTagButton } from "../AddTagButton";
-import { TimeStamp } from "../TimeStamp";
-import { confirm, selectBook } from "../modal";
-import { TagList } from "../tag/TagList";
-import { type MenuAction, NoteMenu } from "./NoteMenu";
-import { useNote } from "./use-note";
+import { AddTagButton } from "~/ui/AddTagButton";
+import { TimeStamp } from "~/ui/TimeStamp";
+import { confirm, selectBook } from "~/ui/modal";
+import { TagList } from "~/ui/tag/TagList";
+import { useNote } from "./hook";
+import { type MenuAction, NoteMenu } from "./note-menu";
 
 const noteActions = (noteId: ID): readonly MenuAction[] => [
     {
@@ -42,9 +43,9 @@ const noteActions = (noteId: ID): readonly MenuAction[] => [
 ];
 
 export const NoteHeader: React.FC<{
-    bookHandle: string;
+    bookRef: BookRef;
     noteId: ID;
-}> = ({ bookHandle, noteId }) => {
+}> = ({ bookRef, noteId }) => {
     const note = useNote(noteId);
 
     const actions = useMemo(() => noteActions(noteId), [noteId]);
@@ -69,7 +70,7 @@ export const NoteHeader: React.FC<{
                     tags={note.tags}
                     className={style({ display: "inline-block" })}
                 />
-                <AddTagButton bookHandle={bookHandle} memoId={noteId} />
+                <AddTagButton bookHandle={bookRef} memoId={noteId} />
             </div>
         </header>
     );

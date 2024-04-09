@@ -1,19 +1,20 @@
 import { vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { link } from "~/pages/link";
-import { useBook } from "~/store/hook";
-import { Link } from "../Link";
+import { Link } from "~/ui/Link";
+import type { BookRef } from "../store";
+import { useBook } from "./hook";
 
 export const BookHeader: React.FC<{
-    book: string;
-}> = ({ book: bookHandle }) => {
-    const book = useBook(bookHandle);
+    bookRef: BookRef;
+}> = ({ bookRef }) => {
+    const book = useBook(bookRef);
 
     if (book == null) return null;
 
     const tabs = [
-        [link(":bookId", { bookId: bookHandle }), "Notes"],
-        [link(":bookId/settings", { bookId: bookHandle }), "Settings"],
+        [link(":bookId", { bookId: bookRef }), "Notes"],
+        [link(":bookId/settings", { bookId: bookRef }), "Settings"],
     ] as const;
 
     return (

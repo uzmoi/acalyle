@@ -14,7 +14,7 @@ import {
 } from "~/store/draft";
 import { debounce } from "../lib/debounce";
 import { usePromiseLoader } from "../lib/promise-loader";
-import { NoteBody } from "./note/NoteBody";
+import { NoteContents } from "../note/ui/note-contents";
 
 const $noteDraft = /* #__PURE__ */ createQueryStore(
     (noteId: ID): Promise<NoteDraft | undefined> => loadNoteDraft(noteId),
@@ -92,7 +92,7 @@ export const MemoContentsEditor: React.FC<{
                         Conflicting edits. This note was edited elsewhere as
                         follows:
                     </p>
-                    <NoteBody contents={conflict.current} />
+                    <NoteContents contents={conflict.current} />
                 </div>
             )}
             <ControlGroup

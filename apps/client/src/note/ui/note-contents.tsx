@@ -1,7 +1,7 @@
 import { vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 
-export const NoteBody: React.FC<{
+export const NoteContents: React.FC<{
     contents: string;
 }> = ({ contents }) => {
     return (

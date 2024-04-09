@@ -11,6 +11,9 @@ import ChangeBookTitleMutation from "./graphql/change-book-title.graphql";
 import CreateBookMutation from "./graphql/create-book.graphql";
 
 /** @package */
+export type BookRef = ID | `@${string}`;
+
+/** @package */
 export type Book = {
     id: ID;
     handle: string | null;
