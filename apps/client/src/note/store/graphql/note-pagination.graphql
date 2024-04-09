@@ -1,4 +1,6 @@
-query MemoPagination(
+#import NoteFragment from "./note-fragment.graphql"
+
+query NotePagination(
     $bookId: ID!
     $count: Int!
     $cursor: String
@@ -8,11 +10,7 @@ query MemoPagination(
         memos(first: $count, after: $cursor, query: $query) {
             edges {
                 node {
-                    id
-                    contents
-                    tags
-                    createdAt
-                    updatedAt
+                    ...NoteFragment
                 }
             }
             pageInfo {

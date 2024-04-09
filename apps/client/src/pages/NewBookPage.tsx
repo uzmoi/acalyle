@@ -1,8 +1,8 @@
 import { style } from "@macaron-css/core";
 import { useCallback } from "react";
 import { BiLeftArrowAlt } from "react-icons/bi";
+import type { Book } from "~/book/store";
 import { link } from "~/pages/link";
-import type { Book } from "~/store/book-connection";
 import { Location } from "~/store/location";
 import { CreateBookForm } from "~/ui/CreateBookForm";
 import { Link } from "~/ui/Link";

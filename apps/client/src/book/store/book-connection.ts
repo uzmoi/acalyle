@@ -1,19 +1,10 @@
-import type { ID } from "~/__generated__/graphql";
+import { acalyle } from "~/app/main";
 import { createConnectionAtom } from "~/lib/connection";
 import { memoizeBuilder } from "~/lib/memoize-builder";
-import { bookStore } from "~/store/book";
-import { acalyle } from "../app/main";
-import BookPaginationQuery from "./book-pagination.graphql";
+import { bookStore } from "./book";
+import BookPaginationQuery from "./graphql/book-pagination.graphql";
 
-export type Book = {
-    id: ID;
-    handle: string | null;
-    title: string;
-    description: string;
-    thumbnail: string;
-    tags: readonly string[];
-};
-
+/** @package */
 export const bookConnection = /* #__PURE__ */ memoizeBuilder(
     (_id, query: string) =>
         createConnectionAtom(

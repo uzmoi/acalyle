@@ -1,0 +1,3 @@
+mutation RemoveNote($noteId: ID!) {
+    removeMemo(ids: [$noteId])
+}

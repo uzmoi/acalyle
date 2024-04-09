@@ -3,7 +3,7 @@ import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { useCallback, useDeferredValue, useState } from "react";
 import { BiBookAdd, BiError } from "react-icons/bi";
-import { bookConnection } from "~/store/book-connection";
+import { bookConnection } from "~/book/store";
 import { BookSearchBar } from "~/ui/BookSearchBar";
 import { Link } from "~/ui/Link";
 import { BookOverviewWarpList } from "~/ui/book/BookOverviewWarpList";

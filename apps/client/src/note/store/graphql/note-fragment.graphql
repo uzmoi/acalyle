@@ -1,0 +1,7 @@
+fragment NoteFragment on Memo {
+    id
+    contents
+    tags
+    createdAt
+    updatedAt
+}

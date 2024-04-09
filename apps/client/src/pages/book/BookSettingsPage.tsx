@@ -8,7 +8,7 @@ import {
     changeBookDescription,
     changeBookHandle,
     changeBookTitle,
-} from "~/store/book";
+} from "~/book/store/book";
 import { useBook } from "~/store/hook";
 import { confirm } from "~/ui/modal";
 

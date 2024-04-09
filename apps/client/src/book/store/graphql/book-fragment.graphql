@@ -1,0 +1,8 @@
+fragment BookFragment on Book {
+    id
+    handle
+    title
+    description
+    thumbnail
+    createdAt
+}

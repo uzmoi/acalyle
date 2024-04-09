@@ -1,11 +1,8 @@
+#import BookFragment from "./book-fragment.graphql"
+
 query Book($bookId: ID, $handle: String) {
     book(id: $bookId, handle: $handle) {
-        id
-        handle
-        title
-        description
-        thumbnail
-        createdAt
+        ...BookFragment
         tags
     }
 }

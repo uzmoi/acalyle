@@ -2,10 +2,10 @@ import { Button, ControlGroup, Popover, Spinner } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { Suspense, useCallback } from "react";
 import { BiCaretDown } from "react-icons/bi";
+import { createNote } from "~/note/store/note";
 import { link } from "~/pages/link";
 import { useBookId } from "~/store/hook";
 import { Location } from "~/store/location";
-import { createMemo } from "~/store/memo";
 import { CreateTemplateMemoButtonList } from "./CreateTemplateMemoButtonList";
 
 export const CreateMemoButton: React.FC<{
@@ -14,7 +14,7 @@ export const CreateMemoButton: React.FC<{
     const bookId = useBookId(bookHandle);
 
     const createMemoNoTemplate = useCallback(() => {
-        void createMemo(bookId).then(memo => {
+        void createNote(bookId).then(memo => {
             Location.set(
                 link(":bookId/:memoId", {
                     bookId: bookHandle,

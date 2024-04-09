@@ -10,7 +10,7 @@ import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { useCallback, useState } from "react";
 import type { ID } from "~/__generated__/graphql";
-import { bookConnection } from "~/store/book-connection";
+import { bookConnection } from "~/book/store";
 import { BookSearchBar } from "~/ui/BookSearchBar";
 import { BookOverview } from "~/ui/book/BookOverview";
 

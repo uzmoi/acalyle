@@ -1,3 +1,5 @@
+#import BookFragment from "./book-fragment.graphql"
+
 mutation CreateBook(
     $title: String!
     $description: String!
@@ -8,11 +10,6 @@ mutation CreateBook(
         description: $description
         thumbnail: $thumbnail
     ) {
-        id
-        handle
-        title
-        description
-        thumbnail
-        createdAt
+        ...BookFragment
     }
 }

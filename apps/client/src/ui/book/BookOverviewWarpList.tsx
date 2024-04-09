@@ -2,7 +2,7 @@ import { List } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import type { ID } from "~/__generated__/graphql";
-import { bookConnection } from "~/store/book-connection";
+import { bookConnection } from "~/book/store";
 import { BookOverview } from "./BookOverview";
 
 const useBookOverviewList = (query = ""): readonly ID[] => {

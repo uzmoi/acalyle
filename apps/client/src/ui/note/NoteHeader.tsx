@@ -2,7 +2,7 @@ import { style } from "@macaron-css/core";
 import { useMemo } from "react";
 import { BiClipboard, BiTransfer, BiTrash } from "react-icons/bi";
 import type { ID } from "~/__generated__/graphql";
-import { removeMemo, transferMemo } from "~/store/memo";
+import { removeNote, transferNote } from "~/note/store/note";
 import { AddTagButton } from "../AddTagButton";
 import { TimeStamp } from "../TimeStamp";
 import { confirm, selectBook } from "../modal";
@@ -24,7 +24,7 @@ const noteActions = (noteId: ID): readonly MenuAction[] => [
         onClick: async () => {
             const bookId = await selectBook();
             if (bookId != null) {
-                void transferMemo(noteId, bookId);
+                void transferNote(noteId, bookId);
             }
         },
     },
@@ -35,7 +35,7 @@ const noteActions = (noteId: ID): readonly MenuAction[] => [
         onClick: async () => {
             const ok = await confirm("Delete memo");
             if (ok) {
-                void removeMemo(noteId);
+                void removeNote(noteId);
             }
         },
     },

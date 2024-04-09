@@ -1,16 +1,26 @@
 import type { ID } from "~/__generated__/graphql";
+import { acalyle } from "~/app/main";
 import { derived } from "~/lib/derived";
 import { memoizeBuilder } from "~/lib/memoize-builder";
 import type { PromiseLoaderW } from "~/lib/promise-loader";
 import { createQueryStore } from "~/lib/query-store";
-import { acalyle } from "../app/main";
-import type { Book } from "./book-connection";
-import BookQuery from "./book.graphql";
-import ChangeBookDescriptionMutation from "./change-book-description.graphql";
-import ChangeBookHandleMutation from "./change-book-handle.graphql";
-import ChangeBookTitleMutation from "./change-book-title.graphql";
-import CreateBookMutation from "./create-book.graphql";
+import BookQuery from "./graphql/book.graphql";
+import ChangeBookDescriptionMutation from "./graphql/change-book-description.graphql";
+import ChangeBookHandleMutation from "./graphql/change-book-handle.graphql";
+import ChangeBookTitleMutation from "./graphql/change-book-title.graphql";
+import CreateBookMutation from "./graphql/create-book.graphql";
 
+/** @package */
+export type Book = {
+    id: ID;
+    handle: string | null;
+    title: string;
+    description: string;
+    thumbnail: string;
+    tags: readonly string[];
+};
+
+/** @package */
 export const bookStore = /* #__PURE__ */ createQueryStore(
     async (bookId: ID): Promise<Book | null> => {
         const { data } = await acalyle.net.gql(BookQuery, { bookId });

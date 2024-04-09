@@ -1,3 +1,0 @@
-mutation TransferMemo($memoIds: [ID!]!, $bookId: ID!) {
-    transferMemo(memoIds: $memoIds, bookId: $bookId)
-}
