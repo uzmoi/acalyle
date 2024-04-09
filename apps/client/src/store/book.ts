@@ -1,44 +1,19 @@
-import { gql } from "graphql-tag";
-import type {
-    GqlBookQuery,
-    GqlBookQueryVariables,
-    GqlChangeBookDescriptionMutation,
-    GqlChangeBookDescriptionMutationVariables,
-    GqlChangeBookHandleMutation,
-    GqlChangeBookHandleMutationVariables,
-    GqlChangeBookTitleMutation,
-    GqlChangeBookTitleMutationVariables,
-    GqlCreateBookMutation,
-    GqlCreateBookMutationVariables,
-    Scalars,
-} from "~/__generated__/graphql";
+import type { ID } from "~/__generated__/graphql";
 import { derived } from "~/lib/derived";
 import { memoizeBuilder } from "~/lib/memoize-builder";
 import type { PromiseLoaderW } from "~/lib/promise-loader";
 import { createQueryStore } from "~/lib/query-store";
 import { acalyle } from "../app/main";
 import type { Book } from "./book-connection";
-
-const BookQuery = /* #__PURE__ */ gql`
-    query Book($bookId: ID, $handle: String) {
-        book(id: $bookId, handle: $handle) {
-            id
-            handle
-            title
-            description
-            thumbnail
-            createdAt
-            tags
-        }
-    }
-`;
+import BookQuery from "./book.graphql";
+import ChangeBookDescriptionMutation from "./change-book-description.graphql";
+import ChangeBookHandleMutation from "./change-book-handle.graphql";
+import ChangeBookTitleMutation from "./change-book-title.graphql";
+import CreateBookMutation from "./create-book.graphql";
 
 export const bookStore = /* #__PURE__ */ createQueryStore(
-    async (bookId: Scalars["ID"]): Promise<Book | null> => {
-        const { data } = await acalyle.net.gql<
-            GqlBookQuery,
-            GqlBookQueryVariables
-        >(BookQuery, { bookId });
+    async (bookId: ID): Promise<Book | null> => {
+        const { data } = await acalyle.net.gql(BookQuery, { bookId });
         if (data.book == null) {
             return null;
         }
@@ -54,14 +29,11 @@ export const bookStore = /* #__PURE__ */ createQueryStore(
 );
 
 export const bookHandleStore = /* #__PURE__ */ createQueryStore(
-    async (handle: string): Promise<Scalars["ID"] | null> => {
+    async (handle: string): Promise<ID | null> => {
         if (handle === "") {
             return null;
         }
-        const { data } = await acalyle.net.gql<
-            GqlBookQuery,
-            GqlBookQueryVariables
-        >(BookQuery, { handle });
+        const { data } = await acalyle.net.gql(BookQuery, { handle });
         if (data.book == null) {
             return null;
         }
@@ -87,32 +59,8 @@ export const handleBookStore = /* #__PURE__ */ memoizeBuilder(
         }),
 );
 
-const CreateBookMutation = /* #__PURE__ */ gql`
-    mutation CreateBook(
-        $title: String!
-        $description: String!
-        $thumbnail: Upload
-    ) {
-        createBook(
-            title: $title
-            description: $description
-            thumbnail: $thumbnail
-        ) {
-            id
-            handle
-            title
-            description
-            thumbnail
-            createdAt
-        }
-    }
-`;
-
 export const createBook = async (title: string, description: string) => {
-    const { data } = await acalyle.net.gql<
-        GqlCreateBookMutation,
-        GqlCreateBookMutationVariables
-    >(
+    const { data } = await acalyle.net.gql(
         CreateBookMutation,
         { title, description, thumbnail: null },
         // { "variables.thumbnail": thumbnail },
@@ -126,24 +74,11 @@ export const createBook = async (title: string, description: string) => {
     return book;
 };
 
-const ChangeBookTitleMutation = /* #__PURE__ */ gql`
-    mutation ChangeBookTitle($bookId: ID!, $title: String!) {
-        updateBookTitle(id: $bookId, title: $title) {
-            id
-            handle
-            title
-            description
-            thumbnail
-            createdAt
-        }
-    }
-`;
-
-export const changeBookTitle = async (bookId: Scalars["ID"], title: string) => {
-    const { data } = await acalyle.net.gql<
-        GqlChangeBookTitleMutation,
-        GqlChangeBookTitleMutationVariables
-    >(ChangeBookTitleMutation, { bookId, title });
+export const changeBookTitle = async (bookId: ID, title: string) => {
+    const { data } = await acalyle.net.gql(ChangeBookTitleMutation, {
+        bookId,
+        title,
+    });
 
     const store = bookStore(bookId);
 
@@ -159,27 +94,11 @@ export const changeBookTitle = async (bookId: Scalars["ID"], title: string) => {
     }
 };
 
-const ChangeBookHandleMutation = /* #__PURE__ */ gql`
-    mutation ChangeBookHandle($bookId: ID!, $handle: String) {
-        updateBookHandle(id: $bookId, handle: $handle) {
-            id
-            handle
-            title
-            description
-            thumbnail
-            createdAt
-        }
-    }
-`;
-
-export const changeBookHandle = async (
-    bookId: Scalars["ID"],
-    handle: string | null,
-) => {
-    const { data } = await acalyle.net.gql<
-        GqlChangeBookHandleMutation,
-        GqlChangeBookHandleMutationVariables
-    >(ChangeBookHandleMutation, { bookId, handle });
+export const changeBookHandle = async (bookId: ID, handle: string | null) => {
+    const { data } = await acalyle.net.gql(ChangeBookHandleMutation, {
+        bookId,
+        handle,
+    });
 
     const store = bookStore(bookId);
 
@@ -195,27 +114,14 @@ export const changeBookHandle = async (
     }
 };
 
-const ChangeBookDescriptionMutation = /* #__PURE__ */ gql`
-    mutation ChangeBookDescription($bookId: ID!, $description: String!) {
-        updateBookDescription(id: $bookId, description: $description) {
-            id
-            handle
-            title
-            description
-            thumbnail
-            createdAt
-        }
-    }
-`;
-
 export const changeBookDescription = async (
-    bookId: Scalars["ID"],
+    bookId: ID,
     description: string,
 ) => {
-    const { data } = await acalyle.net.gql<
-        GqlChangeBookDescriptionMutation,
-        GqlChangeBookDescriptionMutationVariables
-    >(ChangeBookDescriptionMutation, { bookId, description });
+    const { data } = await acalyle.net.gql(ChangeBookDescriptionMutation, {
+        bookId,
+        description,
+    });
 
     const store = bookStore(bookId);
 

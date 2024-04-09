@@ -1,0 +1,9 @@
+query Memo($memoId: ID!) {
+    memo(id: $memoId) {
+        id
+        contents
+        tags
+        createdAt
+        updatedAt
+    }
+}

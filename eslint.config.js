@@ -25,6 +25,7 @@ export default [
             "**/__generated__/**",
             "**/__*",
             "**/*.d.ts",
+            "**/*.d.*.ts",
         ],
     },
     eslint.configs.recommended,

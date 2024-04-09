@@ -2,13 +2,13 @@ import { Button, vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useState } from "react";
 import { BiEditAlt } from "react-icons/bi";
-import type { Scalars } from "~/__generated__/graphql";
+import type { ID } from "~/__generated__/graphql";
 import { MemoContentsEditor } from "../MemoContentsEditor";
 import { NoteBody } from "./NoteBody";
 import { useNote } from "./use-note";
 
 export const NoteContents: React.FC<{
-    noteId: Scalars["ID"];
+    noteId: ID;
 }> = ({ noteId }) => {
     const note = useNote(noteId);
     const [isInEdit, setIsInEdit] = useState(false);

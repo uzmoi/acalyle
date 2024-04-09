@@ -1,0 +1,10 @@
+mutation ChangeBookTitle($bookId: ID!, $title: String!) {
+    updateBookTitle(id: $bookId, title: $title) {
+        id
+        handle
+        title
+        description
+        thumbnail
+        createdAt
+    }
+}

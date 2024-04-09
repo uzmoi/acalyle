@@ -1,5 +1,7 @@
 import { Result } from "@acalyle/fp";
+import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import type { JsonValue } from "emnorst";
+import { print } from "graphql";
 import type { JsonValueable } from "../lib/types";
 
 const jsonBlob = (json: JsonValueable) =>
@@ -32,9 +34,9 @@ export const graphqlBodyInit = (
     return body;
 };
 
-type GraphQLResult = {
+type GraphQLResult<T> = {
     errors?: readonly JsonValue[];
-    data?: Record<string, JsonValue> | null;
+    data: T & (Record<string, JsonValue> | null | undefined);
     extensions?: Record<string, JsonValue>;
 };
 
@@ -49,19 +51,21 @@ export class Network {
     resolveResource(path: string): URL {
         return new URL(path, Network._resourceBaseUrl);
     }
-    async gql<T, U extends Record<string, JsonValueable>>(
-        documentNode: import("graphql").DocumentNode,
-        variables?: U,
-    ): Promise<GraphQLResult & { data: T }> {
-        return this.graphql(documentNode, variables).then(result => {
-            return result.getOrThrow() as GraphQLResult & { data: T };
-        });
+    async gql<R, V extends Record<string, JsonValueable>>(
+        documentNode: TypedDocumentNode<R, V>,
+        variables?: V,
+    ): Promise<GraphQLResult<R>> {
+        return this.graphql(documentNode, variables as unknown as V).then(
+            result => {
+                return result.getOrThrow();
+            },
+        );
     }
-    async graphql(
-        documentNode: import("graphql").DocumentNode,
-        variables?: Record<string, JsonValueable>,
-    ): Promise<Result<GraphQLResult, NetworkError>> {
-        const query = documentNode.loc?.source.body ?? "";
+    async graphql<R, V extends Record<string, JsonValueable>>(
+        documentNode: TypedDocumentNode<R, V>,
+        variables: V,
+    ): Promise<Result<GraphQLResult<R>, NetworkError>> {
+        const query = print(documentNode);
 
         const res = await fetch(Network._apiEndpointUrl, {
             method: "POST",
@@ -80,7 +84,7 @@ export class Network {
         if (res.ok) {
             try {
                 const result = await (res.json() as Promise<JsonValue>);
-                return Result.ok(result as GraphQLResult);
+                return Result.ok(result as unknown as GraphQLResult<R>);
             } catch {
                 return Result.err({ type: "invalid_json" });
             }

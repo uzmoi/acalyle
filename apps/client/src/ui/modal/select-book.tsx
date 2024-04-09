@@ -9,12 +9,12 @@ import {
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { useCallback, useState } from "react";
-import type { Scalars } from "~/__generated__/graphql";
+import type { ID } from "~/__generated__/graphql";
 import { bookConnection } from "~/store/book-connection";
 import { BookSearchBar } from "~/ui/BookSearchBar";
 import { BookOverview } from "~/ui/book/BookOverview";
 
-const modal = /* #__PURE__ */ Modal.create<void, Scalars["ID"] | undefined>();
+const modal = /* #__PURE__ */ Modal.create<void, ID | undefined>();
 
 export const selectBook = () => {
     return modal.open();
@@ -47,9 +47,9 @@ export const renderSelectBookModal = () => (
 
 const BookSelectForm: React.FC<{
     query?: string;
-    onSubmit?: (bookId?: Scalars["ID"] | null) => void;
+    onSubmit?: (bookId?: ID | null) => void;
 }> = ({ query = "", onSubmit }) => {
-    const [selectedBookId, setBookId] = useState<Scalars["ID"] | null>(null);
+    const [selectedBookId, setBookId] = useState<ID | null>(null);
     const { nodeIds } = useStore(bookConnection(query));
 
     const handleSubmit = useCallback(() => {

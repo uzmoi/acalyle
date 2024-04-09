@@ -1,11 +1,11 @@
 import { List } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
-import type { Scalars } from "~/__generated__/graphql";
+import type { ID } from "~/__generated__/graphql";
 import { bookConnection } from "~/store/book-connection";
 import { BookOverview } from "./BookOverview";
 
-const useBookOverviewList = (query = ""): readonly Scalars["ID"][] => {
+const useBookOverviewList = (query = ""): readonly ID[] => {
     const { nodeIds } = useStore(bookConnection(query));
     return nodeIds;
 };

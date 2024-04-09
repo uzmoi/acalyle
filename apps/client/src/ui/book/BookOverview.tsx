@@ -1,14 +1,14 @@
 import { vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { identify } from "emnorst";
-import type { Scalars } from "~/__generated__/graphql";
+import type { ID } from "~/__generated__/graphql";
 import { link } from "~/pages/link";
 import { BookThumbnail } from "../BookThumbnail";
 import { Link } from "../Link";
 import { useBook } from "./use-book";
 
 export const BookOverview: React.FC<{
-    bookId: Scalars["ID"];
+    bookId: ID;
 }> = ({ bookId }) => {
     const book = useBook(bookId);
 

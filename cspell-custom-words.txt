@@ -19,6 +19,7 @@ lefthook
 macaron
 Millis
 nanostores
+nitrogql
 parens
 parsea
 piyo

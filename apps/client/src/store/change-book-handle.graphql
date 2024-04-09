@@ -1,0 +1,10 @@
+mutation ChangeBookHandle($bookId: ID!, $handle: String) {
+    updateBookHandle(id: $bookId, handle: $handle) {
+        id
+        handle
+        title
+        description
+        thumbnail
+        createdAt
+    }
+}
