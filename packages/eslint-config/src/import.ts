@@ -30,6 +30,7 @@ export const importConfig: Linter.FlatConfig = {
             devDependencies: [
                 "**/*.{test,spec}.*",
                 "**/*.{test,spec}-d.*",
+                "**/*.stories.*",
                 "!**/src/**",
             ],
         }),
