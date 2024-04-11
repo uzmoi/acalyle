@@ -1,54 +1,17 @@
 import { style } from "@macaron-css/core";
-import { useMemo } from "react";
-import { BiClipboard, BiTransfer, BiTrash } from "react-icons/bi";
 import type { ID } from "~/__generated__/graphql";
 import type { BookRef } from "~/book/store";
-import { removeNote, transferNote } from "~/note/store/note";
 import { AddTagButton } from "~/ui/AddTagButton";
 import { TimeStamp } from "~/ui/TimeStamp";
-import { confirm, selectBook } from "~/ui/modal";
 import { TagList } from "~/ui/tag/TagList";
 import { useNote } from "./hook";
-import { type MenuAction, NoteMenu } from "./note-menu";
-
-const noteActions = (noteId: ID): readonly MenuAction[] => [
-    {
-        icon: <BiClipboard />,
-        text: "Copy memo id",
-        onClick: () => {
-            void navigator.clipboard.writeText(noteId);
-        },
-    },
-    {
-        icon: <BiTransfer />,
-        text: "Transfer memo",
-        onClick: async () => {
-            const bookId = await selectBook();
-            if (bookId != null) {
-                void transferNote(noteId, bookId);
-            }
-        },
-    },
-    {
-        icon: <BiTrash />,
-        text: "Delete memo",
-        type: "danger",
-        onClick: async () => {
-            const ok = await confirm("Delete memo");
-            if (ok) {
-                void removeNote(noteId);
-            }
-        },
-    },
-];
+import { NoteMenuButton } from "./note-menu";
 
 export const NoteHeader: React.FC<{
     bookRef: BookRef;
     noteId: ID;
 }> = ({ bookRef, noteId }) => {
     const note = useNote(noteId);
-
-    const actions = useMemo(() => noteActions(noteId), [noteId]);
 
     if (note == null) return null;
 
@@ -63,7 +26,7 @@ export const NoteHeader: React.FC<{
                         created <TimeStamp dt={note.createdAt} />
                     </p>
                 </div>
-                <NoteMenu actions={actions} />
+                <NoteMenuButton noteId={noteId} />
             </div>
             <div className={style({ marginTop: "0.5em" })}>
                 <TagList

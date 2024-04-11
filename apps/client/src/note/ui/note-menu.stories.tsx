@@ -1,25 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fireEvent, within } from "@storybook/test";
-import { BiSquare } from "react-icons/bi";
-import { NoteMenu } from "./note-menu";
+import { NoteMenuButton } from "./note-menu";
 
 export default {
     title: "Note / NoteMenu",
-    component: NoteMenu,
+    component: NoteMenuButton,
     parameters: {
         layout: "centered",
     },
-} satisfies Meta<typeof NoteMenu>;
+} satisfies Meta<typeof NoteMenuButton>;
 
-type Story = StoryObj<typeof NoteMenu>;
+type Story = StoryObj<typeof NoteMenuButton>;
 
 export const Default: Story = {
-    args: {
-        actions: [
-            { text: "Item 1", icon: <BiSquare />, onClick() {} },
-            { text: "Item 2", icon: <BiSquare />, onClick() {} },
-        ],
-    },
     async play({ canvasElement }) {
         const canvas = within(canvasElement);
         const button = await canvas.findByRole("button");

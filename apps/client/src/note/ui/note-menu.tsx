@@ -1,8 +1,16 @@
 import { Button, Popover, vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
-import { BiDotsVertical } from "react-icons/bi";
+import {
+    BiClipboard,
+    BiDotsVertical,
+    BiTransfer,
+    BiTrash,
+} from "react-icons/bi";
+import type { ID } from "~/__generated__/graphql";
+import { removeNote, transferNote } from "~/note/store/note";
+import { confirm, selectBook } from "~/ui/modal";
 
-export type MenuAction = {
+type MenuAction = {
     icon: JSX.Element;
     text: string;
     disabled?: boolean;
@@ -10,9 +18,42 @@ export type MenuAction = {
     onClick: (() => void | Promise<void>) | undefined;
 };
 
-export const NoteMenu: React.FC<{
-    actions: readonly MenuAction[];
-}> = ({ actions }) => {
+const noteActions = (noteId: ID): readonly MenuAction[] => [
+    {
+        icon: <BiClipboard />,
+        text: "Copy memo id",
+        onClick() {
+            void navigator.clipboard.writeText(noteId);
+        },
+    },
+    {
+        icon: <BiTransfer />,
+        text: "Transfer memo",
+        async onClick() {
+            const bookId = await selectBook();
+            if (bookId != null) {
+                void transferNote(noteId, bookId);
+            }
+        },
+    },
+    {
+        icon: <BiTrash />,
+        text: "Delete memo",
+        type: "danger",
+        async onClick() {
+            const ok = await confirm("Delete memo");
+            if (ok) {
+                void removeNote(noteId);
+            }
+        },
+    },
+];
+
+export const NoteMenuButton: React.FC<{
+    noteId: ID;
+}> = ({ noteId }) => {
+    const actions = noteActions(noteId);
+
     return (
         <Popover>
             <Popover.Button
