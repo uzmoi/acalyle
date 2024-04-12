@@ -11,4 +11,8 @@ export default {
 
 type Story = StoryObj<typeof BookHeader>;
 
-export const Default: Story = {};
+export const Default: Story = {
+    args: {
+        bookRef: "@handle",
+    },
+};

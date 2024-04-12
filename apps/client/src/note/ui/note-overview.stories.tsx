@@ -11,4 +11,9 @@ export default {
 
 type Story = StoryObj<typeof NoteOverview>;
 
-export const Default: Story = {};
+export const Default: Story = {
+    args: {
+        bookId: "book-id" as never,
+        noteId: "note-id" as never,
+    },
+};
