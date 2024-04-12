@@ -1,4 +1,4 @@
-import { Button, vars } from "@acalyle/ui";
+import { Button, corner, vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useState } from "react";
 import { BiEditAlt } from "react-icons/bi";
@@ -26,10 +26,7 @@ export const NoteBody: React.FC<{
             <Button
                 variant="unstyled"
                 className={style({
-                    position: "absolute",
-                    top: 0,
-                    right: 0,
-                    translate: "50% -50%",
+                    ...corner("upper", "right"),
                     padding: "0.25em",
                     lineHeight: 1,
                     borderRadius: "50%",

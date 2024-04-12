@@ -6,6 +6,7 @@ import { type ReadableAtom, atom } from "nanostores";
 import { useEffect } from "react";
 import { vars } from "../theme";
 import { cx } from "./cx";
+import { center } from "./style-utilities";
 import type { TransitionStatus } from "./use-transition-status";
 
 const TRANSITION_DURATION = 200;
@@ -130,10 +131,7 @@ export const ModalContainer: <T>(props: {
                 <div
                     className={cx(
                         style({
-                            position: "absolute",
-                            top: "50%",
-                            left: "50%",
-                            translate: "-50% -50%",
+                            ...center(),
                             maxWidth: "min(calc(100vw - min(8em, 20%)), 72em)",
                             maxHeight: "calc(100dvh - 4em)",
                             backgroundColor: vars.color.bg.layout,

@@ -1,4 +1,4 @@
-import { vars } from "@acalyle/ui";
+import { vars, visuallyHidden } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { identify } from "emnorst";
 import type { ID } from "~/__generated__/graphql";
@@ -99,18 +99,3 @@ export const BookOverview: React.FC<{
         </div>
     );
 };
-
-const visuallyHidden = /* #__PURE__ */ style(
-    {
-        position: "fixed",
-        padding: 0,
-        margin: "-1px",
-        width: "1px",
-        height: "1px",
-        opacity: "0",
-        overflow: "hidden",
-        border: "none",
-        clip: "rect(0 0 0 0)",
-    },
-    "visually-hidden",
-);
