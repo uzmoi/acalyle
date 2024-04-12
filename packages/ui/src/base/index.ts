@@ -1,5 +1,6 @@
 export * from "./alert";
 export * from "./cx";
+export * from "./spacer";
 export * from "./intersection";
 export * from "./list";
 export * from "./modal";
