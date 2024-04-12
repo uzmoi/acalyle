@@ -1,9 +1,9 @@
 import type { ID } from "~/__generated__/graphql";
 import type { Note } from "../../store";
 
-export const useNote = (_noteId: ID): Note => {
+export const useNote = (noteId: ID): Note => {
     return {
-        id: "id" as ID,
+        id: noteId,
         contents: "contents\nhogehoge",
         tags: ["#tagA", "#tagB"],
         createdAt: new Date().toISOString(),
