@@ -52,8 +52,6 @@ const noteActions = (noteId: ID): readonly MenuAction[] => [
 export const NoteMenuButton: React.FC<{
     noteId: ID;
 }> = ({ noteId }) => {
-    const actions = noteActions(noteId);
-
     return (
         <Popover>
             <Popover.Button
@@ -77,37 +75,47 @@ export const NoteMenuButton: React.FC<{
                     whiteSpace: "nowrap",
                 })}
             >
-                <Menu>
-                    {actions.map(({ icon, text, disabled, type, onClick }) => (
-                        <Menu.Item
-                            key={text}
-                            disabled={disabled}
-                            onClick={() => {
-                                void onClick?.();
-                            }}
-                            data-type={type}
-                            className={style({
-                                selectors: {
-                                    '&[data-type="danger"]:enabled:is(:hover, :focus)':
-                                        {
-                                            color: vars.color.danger,
-                                        },
-                                },
-                            })}
-                        >
-                            {icon}
-                            <span
-                                className={style({
-                                    marginLeft: "0.5em",
-                                    verticalAlign: "middle",
-                                })}
-                            >
-                                {text}
-                            </span>
-                        </Menu.Item>
-                    ))}
-                </Menu>
+                <NoteMenuContent noteId={noteId} />
             </Popover.Content>
         </Popover>
+    );
+};
+
+export const NoteMenuContent: React.FC<{
+    noteId: ID;
+}> = ({ noteId }) => {
+    const actions = noteActions(noteId);
+
+    return (
+        <Menu>
+            {actions.map(({ icon, text, disabled, type, onClick }) => (
+                <Menu.Item
+                    key={text}
+                    disabled={disabled}
+                    onClick={() => {
+                        void onClick?.();
+                    }}
+                    data-type={type}
+                    className={style({
+                        selectors: {
+                            '&[data-type="danger"]:enabled:is(:hover, :focus)':
+                                {
+                                    color: vars.color.danger,
+                                },
+                        },
+                    })}
+                >
+                    {icon}
+                    <span
+                        className={style({
+                            marginLeft: "0.5em",
+                            verticalAlign: "middle",
+                        })}
+                    >
+                        {text}
+                    </span>
+                </Menu.Item>
+            ))}
+        </Menu>
     );
 };
