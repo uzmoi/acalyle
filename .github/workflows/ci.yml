@@ -99,6 +99,7 @@ jobs:
           path: '**/node_modules'
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
 
+      - run: npm run check -- --filter='./packages/ui'
       - name: Run Chromatic on @acalyle/ui
         uses: chromaui/action@latest # cspell:word chromaui
         with:
@@ -106,6 +107,11 @@ jobs:
           workingDir: packages/ui
           exitZeroOnChanges: false
 
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: npm run build -w @acalyle/server
+
+      - run: npm run check -- --filter='./apps/client'
       - name: Run Chromatic on @acalyle/client
         uses: chromaui/action@latest # cspell:word chromaui
         with:
