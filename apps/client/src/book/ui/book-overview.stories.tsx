@@ -11,4 +11,8 @@ export default {
 
 type Story = StoryObj<typeof BookOverview>;
 
-export const Default: Story = {};
+export const Default: Story = {
+    args: {
+        bookId: "id" as never,
+    },
+};
