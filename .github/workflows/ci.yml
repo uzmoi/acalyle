@@ -82,3 +82,33 @@ jobs:
       - run: npm run codegen -ws
         continue-on-error: true
       - run: npm run lint
+  chromatic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - uses: actions/cache/restore@v3
+        id: npm-cache
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Run Chromatic on @acalyle/ui
+        uses: chromaui/action@latest # cspell:word chromaui
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN_UI }}
+          workingDir: packages/ui
+          exitZeroOnChanges: false
+
+      - name: Run Chromatic on @acalyle/client
+        uses: chromaui/action@latest # cspell:word chromaui
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          workingDir: apps/client
+          exitZeroOnChanges: false
