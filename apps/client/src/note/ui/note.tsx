@@ -1,4 +1,4 @@
-import { Alert, vars } from "@acalyle/ui";
+import { Alert, Spacer, vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { BiError } from "react-icons/bi";
 import type { ID } from "~/__generated__/graphql";
@@ -40,6 +40,7 @@ export const Note: React.FC<{
     return (
         <article data-note-id={noteId}>
             <NoteHeader noteId={noteId} bookRef={bookRef} />
+            <Spacer size="1em" />
             <NoteBody noteId={noteId} />
         </article>
     );

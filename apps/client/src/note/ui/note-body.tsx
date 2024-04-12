@@ -16,13 +16,7 @@ export const NoteBody: React.FC<{
     if (note == null) return null;
 
     return (
-        <div
-            className={style({
-                // FIXME: margin
-                marginTop: "1em",
-                position: "relative",
-            })}
-        >
+        <div className={style({ position: "relative" })}>
             <Button
                 variant="unstyled"
                 className={style({
