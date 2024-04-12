@@ -11,7 +11,7 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "check": "turbo run check",
-    "prelint": "npm run build -w @acalyle/eslint-config",
+    "prelint": "npm run build -w @acalyle/eslint-config && npm run codegen -w @acalyle/client",
     "lint": "eslint .",
     "test": "turbo run test",
     "coverage": "turbo run coverage",
