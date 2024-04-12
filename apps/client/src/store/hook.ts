@@ -1,8 +1,10 @@
 import { useStore } from "@nanostores/react";
 import type { ID } from "~/__generated__/graphql";
+import { bookStore } from "~/book/store";
+import { bookHandleStore, handleBookStore } from "~/book/store/book";
 import { usePromiseLoader } from "~/lib/promise-loader";
-import { bookHandleStore, bookStore, handleBookStore } from "~/store/book";
 
+/** @deprecated */
 export const useBookId = (bookHandle: string) => {
     return (
         usePromiseLoader(
@@ -15,6 +17,7 @@ export const useBookId = (bookHandle: string) => {
     );
 };
 
+/** @deprecated */
 export const useBook = (bookHandle: string) => {
     return usePromiseLoader(
         useStore(

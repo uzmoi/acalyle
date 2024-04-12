@@ -1,0 +1,7 @@
+#import NoteFragment from "./note-fragment.graphql"
+
+mutation CreateNote($bookId: ID!, $templateName: String) {
+    createMemo(bookId: $bookId, template: $templateName) {
+        ...NoteFragment
+    }
+}

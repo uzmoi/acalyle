@@ -7,9 +7,10 @@ import {
 import { style } from "@macaron-css/core";
 import { Suspense } from "react";
 import type { ID } from "~/__generated__/graphql";
+import type { BookRef } from "~/book/store";
+import { BookHeader } from "~/book/ui/book-header";
+import { Note } from "~/note/ui/note";
 import { MemoListPage } from "~/pages/book/MemoListPage";
-import { BookHeader } from "~/ui/book/BookHeader";
-import { Note } from "~/ui/note/Note";
 import { BookSettingsPage } from "./book";
 
 export type BookPageRoute = InferPath<typeof BookPageRoute>;
@@ -24,7 +25,7 @@ export const BookPageRoute = routes({
         <BookSettingsPage book={bookId} />
     )),
     ":memoId": page(({ bookId, memoId }: MatchParams<"bookId" | "memoId">) => (
-        <Note book={bookId} noteId={memoId as ID} />
+        <Note bookRef={bookId as BookRef} noteId={memoId as ID} />
     )),
 }).map((children, _, { bookId }) => (
     // eslint-disable-next-line react/jsx-key
@@ -38,7 +39,7 @@ export const BookPage: React.FC<{
 }> = ({ bookHandle, children }) => {
     return (
         <main className={style({ padding: "1.25em" })}>
-            <BookHeader book={bookHandle} />
+            <BookHeader bookRef={bookHandle as BookRef} />
             <Suspense>{children}</Suspense>
         </main>
     );

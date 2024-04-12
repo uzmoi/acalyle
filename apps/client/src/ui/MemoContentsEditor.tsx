@@ -4,16 +4,17 @@ import { useStore } from "@nanostores/react";
 import { useCallback, useMemo, useState } from "react";
 import type { ID } from "~/__generated__/graphql";
 import { createQueryStore } from "~/lib/query-store";
+import { noteStore } from "~/note/store";
+import { updateNoteContents } from "~/note/store/note";
 import {
     type NoteDraft,
     loadNoteDraft,
     removeNoteDraft,
     saveNoteDraft,
 } from "~/store/draft";
-import { memoStore, updateMemoContents } from "~/store/memo";
 import { debounce } from "../lib/debounce";
 import { usePromiseLoader } from "../lib/promise-loader";
-import { NoteBody } from "./note/NoteBody";
+import { NoteContents } from "../note/ui/note-contents";
 
 const $noteDraft = /* #__PURE__ */ createQueryStore(
     (noteId: ID): Promise<NoteDraft | undefined> => loadNoteDraft(noteId),
@@ -25,7 +26,7 @@ type Conflict = {
 };
 
 const useNote = (noteId: ID) => {
-    const noteLoader = useStore(memoStore(noteId));
+    const noteLoader = useStore(noteStore(noteId));
     return usePromiseLoader(noteLoader);
 };
 
@@ -71,7 +72,7 @@ export const MemoContentsEditor: React.FC<{
 
     const onSubmit = useCallback(() => {
         onEditEnd?.();
-        void updateMemoContents(noteId, contents).then(() => {
+        void updateNoteContents(noteId, contents).then(() => {
             void removeNoteDraft(noteId);
             onSaved?.();
         });
@@ -91,7 +92,7 @@ export const MemoContentsEditor: React.FC<{
                         Conflicting edits. This note was edited elsewhere as
                         follows:
                     </p>
-                    <NoteBody contents={conflict.current} />
+                    <NoteContents contents={conflict.current} />
                 </div>
             )}
             <ControlGroup

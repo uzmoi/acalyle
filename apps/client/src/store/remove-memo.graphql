@@ -1,3 +1,0 @@
-mutation RemoveMemo($memoId: ID!) {
-    removeMemo(ids: [$memoId])
-}

@@ -1,8 +1,8 @@
 import { Button, Form, TextInput } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useCallback, useId, useState } from "react";
-import { createBook } from "~/store/book";
-import type { Book } from "~/store/book-connection";
+import type { Book } from "~/book/store";
+import { createBook } from "~/book/store/book";
 
 export const CreateBookForm: React.FC<{
     onCreatedBook: (args: Book) => void;

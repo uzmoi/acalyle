@@ -1,0 +1,15 @@
+#import BookFragment from "./book-fragment.graphql"
+
+mutation CreateBook(
+    $title: String!
+    $description: String!
+    $thumbnail: Upload
+) {
+    createBook(
+        title: $title
+        description: $description
+        thumbnail: $thumbnail
+    ) {
+        ...BookFragment
+    }
+}

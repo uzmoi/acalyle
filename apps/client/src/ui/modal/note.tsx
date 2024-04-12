@@ -3,19 +3,20 @@ import { style } from "@macaron-css/core";
 import { Suspense } from "react";
 import { BiExpandAlt, BiX } from "react-icons/bi";
 import type { ID } from "~/__generated__/graphql";
+import type { BookRef } from "~/book/store";
+import { Note } from "~/note/ui/note";
 import { link } from "~/pages/link";
 import { Link } from "../Link";
-import { Note } from "../note/Note";
 
 type NoteModalData = {
-    book: string;
+    bookRef: BookRef;
     noteId: ID;
 };
 
 const noteModal = /* #__PURE__ */ Modal.create<NoteModalData, ID | undefined>();
 
-export const openNoteInModal = (book: string, noteId: ID) => {
-    return noteModal.open({ book, noteId });
+export const openNoteInModal = (bookRef: BookRef, noteId: ID) => {
+    return noteModal.open({ bookRef, noteId });
 };
 
 export const renderNoteModal = () => (
@@ -30,7 +31,7 @@ const close = () => {
     void noteModal.close();
 };
 
-const renderNoteModalContent = ({ book, noteId }: NoteModalData) => (
+const renderNoteModalContent = ({ bookRef, noteId }: NoteModalData) => (
     <section
         className={style({
             display: "flex",
@@ -70,7 +71,7 @@ const renderNoteModalContent = ({ book, noteId }: NoteModalData) => (
             >
                 <Link
                     to={link(":bookId/:memoId", {
-                        bookId: book,
+                        bookId: bookRef,
                         memoId: noteId,
                     })}
                     onClick={close}
@@ -91,7 +92,7 @@ const renderNoteModalContent = ({ book, noteId }: NoteModalData) => (
             })}
         >
             <Suspense>
-                <Note book={book} noteId={noteId} />
+                <Note bookRef={bookRef} noteId={noteId} />
             </Suspense>
         </div>
     </section>

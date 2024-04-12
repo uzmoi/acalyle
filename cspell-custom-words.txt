@@ -38,3 +38,4 @@ typecheck
 uploadables
 uzmoi
 Valueable
+warplist

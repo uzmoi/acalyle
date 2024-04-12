@@ -1,9 +1,0 @@
-mutation CreateMemo($bookId: ID!, $templateName: String) {
-    createMemo(bookId: $bookId, template: $templateName) {
-        id
-        contents
-        tags
-        createdAt
-        updatedAt
-    }
-}

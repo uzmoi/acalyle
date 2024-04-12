@@ -76,7 +76,9 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
 
+      # TODO: その場しのぎをやめる
       - run: npm run build -- --filter='./packages/*'
+      - run: npm run build -w @acalyle/server
       - run: npm run codegen -ws
         continue-on-error: true
       - run: npm run lint

@@ -4,23 +4,23 @@ import { useStore } from "@nanostores/react";
 import { assert } from "emnorst";
 import { useCallback } from "react";
 import { usePromiseLoader } from "~/lib/promise-loader";
+import { createNote, noteTemplateStore } from "~/note/store/note";
 import { link } from "~/pages/link";
 import { useBookId } from "~/store/hook";
 import { Location } from "~/store/location";
-import { createMemo, memoTemplateStore } from "~/store/memo";
 
 export const CreateTemplateMemoButtonList: React.FC<{
     bookHandle: string;
 }> = ({ bookHandle }) => {
     const bookId = useBookId(bookHandle);
     const templateNames =
-        usePromiseLoader(useStore(memoTemplateStore(bookId))) ?? [];
+        usePromiseLoader(useStore(noteTemplateStore(bookId))) ?? [];
 
     const createTemplateMemo = useCallback(
         (e: React.MouseEvent<HTMLButtonElement>) => {
             const { templateName } = e.currentTarget.dataset;
             assert.nonNullable(templateName);
-            void createMemo(bookId, templateName).then(memo => {
+            void createNote(bookId, templateName).then(memo => {
                 Location.set(
                     link(":bookId/:memoId", {
                         bookId: bookHandle,

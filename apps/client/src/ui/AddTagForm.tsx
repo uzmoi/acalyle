@@ -2,7 +2,7 @@ import { Form, TextInput, vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useCallback, useRef, useState } from "react";
 import type { ID } from "~/__generated__/graphql";
-import { addMemoTags } from "~/store/memo";
+import { addMemoTags } from "~/note/store/note";
 import { TagComplementList } from "./TagComplementList";
 
 export const AddTagForm: React.FC<{

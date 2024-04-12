@@ -1,19 +1,16 @@
 import { style } from "@macaron-css/core";
 import { useCallback } from "react";
 import { BiLeftArrowAlt } from "react-icons/bi";
+import type { Book } from "~/book/store";
+import { bookRefOf } from "~/book/store";
 import { link } from "~/pages/link";
-import type { Book } from "~/store/book-connection";
 import { Location } from "~/store/location";
 import { CreateBookForm } from "~/ui/CreateBookForm";
 import { Link } from "~/ui/Link";
 
 export const NewBookPage: React.FC = () => {
     const onCreatedBook = useCallback((book: Book) => {
-        Location.set(
-            link(":bookId", {
-                bookId: book.handle ? `@${book.handle}` : book.id,
-            }),
-        );
+        Location.set(link(":bookId", { bookId: bookRefOf(book) }));
     }, []);
 
     return (

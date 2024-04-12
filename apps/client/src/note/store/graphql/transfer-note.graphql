@@ -1,0 +1,3 @@
+mutation TransferNote($noteIds: [ID!]!, $bookId: ID!) {
+    transferMemo(memoIds: $noteIds, bookId: $bookId)
+}

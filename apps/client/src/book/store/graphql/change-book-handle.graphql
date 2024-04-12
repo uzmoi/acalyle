@@ -1,0 +1,7 @@
+#import BookFragment from "./book-fragment.graphql"
+
+mutation ChangeBookHandle($bookId: ID!, $handle: String) {
+    updateBookHandle(id: $bookId, handle: $handle) {
+        ...BookFragment
+    }
+}
