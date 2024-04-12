@@ -5,6 +5,7 @@ import type { ID } from "~/__generated__/graphql";
 import { link } from "~/pages/link";
 import { BookThumbnail } from "~/ui/BookThumbnail";
 import { Link } from "~/ui/Link";
+import { bookRefOf } from "../store";
 import { useBook } from "./hook";
 
 export const BookOverview: React.FC<{
@@ -15,10 +16,6 @@ export const BookOverview: React.FC<{
     if (book == null) {
         return null;
     }
-
-    const bookLink = link(":bookId", {
-        bookId: book.handle ? `@${book.handle}` : book.id,
-    });
 
     return (
         <div
@@ -42,7 +39,7 @@ export const BookOverview: React.FC<{
                 })}
             >
                 <Link
-                    to={bookLink}
+                    to={link(":bookId", { bookId: bookRefOf(book) })}
                     className={style({
                         position: "absolute",
                         inset: 0,

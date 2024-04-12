@@ -2,6 +2,7 @@ import { vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useCallback } from "react";
 import type { ID } from "~/__generated__/graphql";
+import { bookRefOf } from "~/book/store";
 import { useBook } from "~/book/ui/hook";
 import { link } from "~/pages/link";
 import { Link } from "~/ui/Link";
@@ -32,11 +33,6 @@ export const NoteOverview: React.FC<{
 
     if (book == null || note == null) return null;
 
-    const memoLink = link(":bookId/:memoId", {
-        bookId: book.handle ? `@${book.handle}` : book.id,
-        memoId: noteId,
-    });
-
     return (
         <article
             data-note-id={noteId}
@@ -55,7 +51,10 @@ export const NoteOverview: React.FC<{
                 })}
             >
                 <Link
-                    to={memoLink}
+                    to={link(":bookId/:memoId", {
+                        bookId: bookRefOf(book),
+                        memoId: noteId,
+                    })}
                     onClick={handleClick}
                     className={style({
                         position: "absolute",

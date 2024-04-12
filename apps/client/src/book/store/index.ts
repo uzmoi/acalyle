@@ -1,6 +1,4 @@
-export {
-    /** @public */ type Book,
-    /** @public */ type BookRef,
-    /** @public */ bookStore,
-} from "./book";
-export { /** @public */ bookConnection } from "./book-connection";
+/** @public */
+export { type Book, type BookRef, bookRefOf, bookStore } from "./book";
+/** @public */
+export { bookConnection } from "./book-connection";

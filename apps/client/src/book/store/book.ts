@@ -14,6 +14,10 @@ import CreateBookMutation from "./graphql/create-book.graphql";
 export type BookRef = ID | `@${string}`;
 
 /** @package */
+export const bookRefOf = (book: Book): BookRef =>
+    book.handle ? `@${book.handle}` : book.id;
+
+/** @package */
 export type Book = {
     id: ID;
     handle: string | null;
