@@ -1,4 +1,4 @@
-import { Button, Popover, vars } from "@acalyle/ui";
+import { Menu, Popover, vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import {
     BiClipboard,
@@ -77,37 +77,21 @@ export const NoteMenuButton: React.FC<{
                     whiteSpace: "nowrap",
                 })}
             >
-                <div role="menu">
+                <Menu>
                     {actions.map(({ icon, text, disabled, type, onClick }) => (
-                        <Button
+                        <Menu.Item
                             key={text}
-                            role="menuitem"
                             disabled={disabled}
                             onClick={() => {
                                 void onClick?.();
                             }}
                             data-type={type}
-                            variant="unstyled"
                             className={style({
-                                display: "block",
-                                width: "100%",
-                                padding: "0.25em 1em",
-                                fontSize: "0.9em",
-                                fontWeight: "normal",
-                                textAlign: "start",
-                                transition:
-                                    "background-color 200ms, color 200ms",
                                 selectors: {
-                                    "& + &": {
-                                        borderTop: `1px solid ${vars.color.fg.mute}`,
-                                    },
                                     '&[data-type="danger"]:enabled:is(:hover, :focus)':
                                         {
                                             color: vars.color.danger,
                                         },
-                                    "&:enabled:is(:hover, :focus)": {
-                                        backgroundColor: "#fff2",
-                                    },
                                 },
                             })}
                         >
@@ -120,9 +104,9 @@ export const NoteMenuButton: React.FC<{
                             >
                                 {text}
                             </span>
-                        </Button>
+                        </Menu.Item>
                     ))}
-                </div>
+                </Menu>
             </Popover.Content>
         </Popover>
     );
