@@ -7,6 +7,7 @@ import { MemoContentsEditor } from "../../ui/MemoContentsEditor";
 import { useNote } from "./hook";
 import { NoteContents } from "./note-contents";
 
+/** @package */
 export const NoteBody: React.FC<{
     noteId: ID;
 }> = ({ noteId }) => {

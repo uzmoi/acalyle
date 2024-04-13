@@ -49,6 +49,7 @@ const noteActions = (noteId: ID): readonly MenuAction[] => [
     },
 ];
 
+/** @package */
 export const NoteMenuButton: React.FC<{
     noteId: ID;
 }> = ({ noteId }) => {
@@ -81,6 +82,7 @@ export const NoteMenuButton: React.FC<{
     );
 };
 
+/** @package */
 export const NoteMenuContent: React.FC<{
     noteId: ID;
 }> = ({ noteId }) => {
