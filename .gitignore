@@ -3,12 +3,14 @@ __generated__/
 coverage/
 target/
 dist/
+storybook-static/
 .turbo/
 
 _*
 *.local
 *-local.*
 *.tsbuildinfo
+*.log
 
 /app
 /data
