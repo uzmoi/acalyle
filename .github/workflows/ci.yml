@@ -10,11 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18.x
-      - uses: actions/cache@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+
+      - uses: actions/cache@v4
         id: npm-cache
         with:
           path: '**/node_modules'
@@ -31,13 +30,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
 
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18.x
-      - uses: actions/cache/restore@v3
-        id: npm-cache
+      - uses: actions/cache/restore@v4
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -54,7 +50,7 @@ jobs:
 
         # cspell:word codecov
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           files: ${{ steps.coverage_files.outputs.files }}
   lint:
@@ -62,13 +58,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
 
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18.x
-      - uses: actions/cache/restore@v3
-        id: npm-cache
+      - uses: actions/cache/restore@v4
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -90,11 +83,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18.x
-      - uses: actions/cache/restore@v3
-        id: npm-cache
+      - uses: actions/setup-node@v4
+
+      - uses: actions/cache/restore@v4
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
