@@ -34,6 +34,7 @@ jobs:
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          fail-on-cache-miss: true
 
       - uses: dtolnay/rust-toolchain@stable # cspell:word dtolnay
       - uses: Swatinem/rust-cache@v2 # cspell:word Swatinem
@@ -62,6 +63,7 @@ jobs:
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          fail-on-cache-miss: true
 
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
@@ -86,6 +88,7 @@ jobs:
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          fail-on-cache-miss: true
 
       - run: npm run check -- --filter='./packages/ui'
       - name: Run Chromatic on @acalyle/ui
