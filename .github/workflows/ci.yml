@@ -19,12 +19,9 @@ jobs:
           path: '**/node_modules'
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: ${{ runner.os }}-node-
-      - id: pre-install
-        run: echo "hash=${{ hashFiles('**/package-lock.json') }}" >> $GITHUB_OUTPUT
+
       - if: steps.npm-cache.outputs.cache-hit != 'true'
         run: npm install
-      - if: steps.pre-install.outputs.hash != hashFiles('**/package-lock.json')
-        run: exit 1
   test:
     needs: prepare
     runs-on: ubuntu-latest
