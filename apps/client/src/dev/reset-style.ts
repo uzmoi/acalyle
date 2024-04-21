@@ -1,4 +1,4 @@
-/* eslint-disable acalyle/no-module-side-effect */
+/* eslint-disable pure-module/pure-module */
 import { globalStyle } from "@macaron-css/core";
 
 globalStyle("*, ::before, ::after", {

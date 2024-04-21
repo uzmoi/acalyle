@@ -4,7 +4,7 @@ import { Location } from "../store/location";
 const getLocation = () =>
     location.pathname.split("/").filter(Boolean).join("/");
 
-// eslint-disable-next-line acalyle/no-module-side-effect
+// eslint-disable-next-line pure-module/pure-module
 onMount(Location, () => {
     const unbind = Location.listen(path => {
         if (path === getLocation()) return;

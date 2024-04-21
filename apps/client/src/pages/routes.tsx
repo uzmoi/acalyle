@@ -1,4 +1,4 @@
-/* eslint-disable acalyle/no-module-side-effect */
+/* eslint-disable pure-module/pure-module */
 import { type InferPath, page, routes } from "@acalyle/router";
 import { BookListPage } from "./BookListPage";
 import { BookPageRoute } from "./BookPage";

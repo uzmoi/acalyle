@@ -1,4 +1,4 @@
-/* eslint-disable acalyle/no-module-side-effect */
+/* eslint-disable pure-module/pure-module */
 import { globalStyle, style } from "@macaron-css/core";
 import { cx } from "../base/cx";
 import { vars } from "../theme";

@@ -45,18 +45,18 @@ export const Select: React.FC<
 type SelectOptionGroupComponent = React.FC<
     React.ComponentPropsWithoutRef<"optgroup">
 >;
-// eslint-disable-next-line acalyle/no-module-side-effect
+// eslint-disable-next-line pure-module/pure-module
 Select.Group = ({ ...restProps }) => {
     return <optgroup {...restProps} />;
 };
 
 if (process.env.NODE_ENV === "development") {
-    // eslint-disable-next-line acalyle/no-module-side-effect
+    // eslint-disable-next-line pure-module/pure-module
     Select.Group.displayName = "Select.Group";
 }
 
 type SelectOptionComponent = React.FC<React.ComponentPropsWithoutRef<"option">>;
-// eslint-disable-next-line acalyle/no-module-side-effect
+// eslint-disable-next-line pure-module/pure-module
 Select.Option = ({ className, ...restProps }) => {
     return (
         <option
@@ -70,6 +70,6 @@ Select.Option = ({ className, ...restProps }) => {
 };
 
 if (process.env.NODE_ENV === "development") {
-    // eslint-disable-next-line acalyle/no-module-side-effect
+    // eslint-disable-next-line pure-module/pure-module
     Select.Option.displayName = "Select.Option";
 }

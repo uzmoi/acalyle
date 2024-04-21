@@ -74,5 +74,5 @@ export const TagComplementList: React.FC<{
     },
 );
 
-// eslint-disable-next-line acalyle/no-module-side-effect
+// eslint-disable-next-line pure-module/pure-module
 TagComplementList.displayName = "TagComplementList";
