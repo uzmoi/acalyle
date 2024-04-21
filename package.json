@@ -8,6 +8,7 @@
     "packages/*"
   ],
   "scripts": {
+    "codegen": "turbo run codegen",
     "build": "turbo run build",
     "dev": "turbo run dev",
     "check": "turbo run check",
