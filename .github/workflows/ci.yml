@@ -136,11 +136,9 @@ jobs:
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN_UI }}
           workingDir: packages/ui
-          exitZeroOnChanges: false
 
       - name: Run Chromatic on @acalyle/client
         uses: chromaui/action@latest # cspell:word chromaui
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           workingDir: apps/client
-          exitZeroOnChanges: false
