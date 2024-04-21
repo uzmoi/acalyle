@@ -9,12 +9,14 @@ jobs:
   prepare:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    outputs:
+      turbo-hash: ${{ steps.turbo-hash.outputs.hash }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
 
-      - uses: actions/cache@v4
-        id: npm-cache
+      - id: npm-cache
+        uses: actions/cache/restore@v4
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -22,6 +24,30 @@ jobs:
 
       - if: steps.npm-cache.outputs.cache-hit != 'true'
         run: npm install
+
+      - if: steps.npm-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+      - id: turbo-hash
+        run: |
+          hash=$(npm run codegen -- --dry=json | sha256sum | cut -d ' ' -f 1)
+          echo "hash=$hash" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            node_modules/.cache/turbo
+            **/.turbo
+          key: ${{ runner.os }}-turbo-${{ steps.turbo-hash.outputs.hash }}
+          restore-keys: ${{ runner.os }}-turbo-
+
+      - uses: dtolnay/rust-toolchain@stable # cspell:word dtolnay
+      - uses: Swatinem/rust-cache@v2 # cspell:word Swatinem
+
+      - run: npm run codegen
   test:
     needs: prepare
     runs-on: ubuntu-latest
@@ -36,19 +62,23 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           fail-on-cache-miss: true
 
-      - uses: dtolnay/rust-toolchain@stable # cspell:word dtolnay
-      - uses: Swatinem/rust-cache@v2 # cspell:word Swatinem
+      - uses: actions/cache/restore@v4
+        with:
+          path: |
+            node_modules/.cache/turbo
+            **/.turbo
+          key: ${{ runner.os }}-turbo-${{ needs.prepare.outputs.turbo-hash }}
+          fail-on-cache-miss: true
 
-      - run: npm run coverage
+      - run: npm run coverage -- --output-logs=new-only
 
       - id: coverage_files
         run: |
           files=$(ls {apps,packages}/*/coverage/coverage-final.json | paste -sd ",")
           echo "files=$files" >> $GITHUB_OUTPUT
 
-        # cspell:word codecov
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v4 # cspell:word codecov
         with:
           files: ${{ steps.coverage_files.outputs.files }}
   lint:
@@ -65,16 +95,17 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           fail-on-cache-miss: true
 
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
+      - uses: actions/cache/restore@v4
+        with:
+          path: |
+            node_modules/.cache/turbo
+            **/.turbo
+          key: ${{ runner.os }}-turbo-${{ needs.prepare.outputs.turbo-hash }}
+          fail-on-cache-miss: true
 
-      # TODO: その場しのぎをやめる
-      - run: npm run build -- --filter='./packages/*'
-      - run: npm run build -w @acalyle/server
-      - run: npm run codegen -ws
-        continue-on-error: true
-      - run: npm run lint
+      - run: npm run lint -- --output-logs=new-only
   chromatic:
+    needs: prepare
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -90,7 +121,16 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           fail-on-cache-miss: true
 
-      - run: npm run check -- --filter='./packages/ui'
+      - uses: actions/cache/restore@v4
+        with:
+          path: |
+            node_modules/.cache/turbo
+            **/.turbo
+          key: ${{ runner.os }}-turbo-${{ needs.prepare.outputs.turbo-hash }}
+          fail-on-cache-miss: true
+
+      - run: npm run codegen -- --output-logs=new-only
+
       - name: Run Chromatic on @acalyle/ui
         uses: chromaui/action@latest # cspell:word chromaui
         with:
@@ -98,11 +138,6 @@ jobs:
           workingDir: packages/ui
           exitZeroOnChanges: false
 
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
-      - run: npm run build -w @acalyle/server
-
-      - run: npm run check -- --filter='./apps/client'
       - name: Run Chromatic on @acalyle/client
         uses: chromaui/action@latest # cspell:word chromaui
         with:
