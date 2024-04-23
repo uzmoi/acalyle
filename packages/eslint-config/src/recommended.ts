@@ -1,12 +1,16 @@
-import { ESLint, Linter } from "eslint";
+import eslint from "@eslint/js";
+import type { ESLint, Linter } from "eslint";
+import perfectionist from "eslint-plugin-perfectionist";
 import unicornPlugin from "eslint-plugin-unicorn";
-import { typescriptFiles } from "./typescript";
 import { ERROR, OFF, WARN, replaceWarn, unPartial, warn } from "./util";
 
-export const unicorn: Linter.FlatConfig = {
-    files: [typescriptFiles],
-    plugins: { unicorn: unicornPlugin },
+export const recommended: Linter.FlatConfig = {
+    plugins: {
+        unicorn: unicornPlugin,
+        perfectionist,
+    },
     rules: {
+        ...eslint.configs.recommended.rules,
         ...replaceWarn(
             unPartial(
                 (unicornPlugin.configs?.recommended as ESLint.ConfigData)
@@ -37,5 +41,21 @@ export const unicorn: Linter.FlatConfig = {
             tags: [],
             selectors: ["TaggedTemplateExpression"],
         }),
+        ...replaceWarn(
+            unPartial(
+                (
+                    perfectionist.configs?.[
+                        "recommended-natural"
+                    ] as ESLint.ConfigData
+                ).rules!,
+            ),
+        ),
+        "perfectionist/sort-imports": OFF,
+        "perfectionist/sort-interfaces": OFF,
+        "perfectionist/sort-classes": OFF,
+        "perfectionist/sort-jsx-props": OFF,
+        "perfectionist/sort-object-types": OFF,
+        "perfectionist/sort-objects": OFF,
+        "perfectionist/sort-union-types": OFF,
     },
 };

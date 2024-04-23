@@ -1,22 +1,20 @@
 import type { Linter } from "eslint";
 import { acalyleConfig } from "./acalyle";
 import { importConfig } from "./import";
-import { perfectionistConfig } from "./perfectionist";
 import { react } from "./react";
+import { recommended } from "./recommended";
 import { testingLibrary } from "./testing-library";
 import { typescript } from "./typescript";
-import { unicorn } from "./unicorn";
 
 export { acalylePlugin } from "./acalyle";
 export * from "./util";
 
 export const configs = {
+    recommended,
     import: importConfig,
     react,
     typescript,
     acalyle: acalyleConfig,
-    perfectionist: perfectionistConfig,
-    unicorn,
     testingLibrary,
 } satisfies Record<
     string,

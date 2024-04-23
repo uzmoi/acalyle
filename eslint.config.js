@@ -1,6 +1,5 @@
 // @ts-check
 
-import eslint from "@eslint/js";
 import globals from "globals";
 import { OFF, configs } from "@acalyle/eslint-config";
 
@@ -28,7 +27,7 @@ export default [
             "**/*.d.*.ts",
         ],
     },
-    eslint.configs.recommended,
+    configs.recommended,
     configs.acalyle[0],
     {
         ...configs.acalyle[1],
@@ -38,11 +37,9 @@ export default [
             "**/*.stories.*",
         ],
     },
-    configs.unicorn,
     configs.typescript("recommended-type-checked", "stylistic-type-checked"),
     configs.react,
     configs.import,
-    configs.perfectionist,
     {
         files: ["!**/src/**", "**/*.stories.*"],
         languageOptions: {
