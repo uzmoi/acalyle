@@ -40,7 +40,6 @@ export default [
     },
     configs.unicorn,
     configs.typescript("recommended-type-checked", "stylistic-type-checked"),
-    configs.typescriptCustom,
     configs.react,
     configs.import,
     configs.perfectionist,

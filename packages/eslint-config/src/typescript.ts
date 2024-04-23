@@ -27,17 +27,13 @@ export const typescript = (
         parser: parser as Linter.ParserModule,
         parserOptions: { sourceType: "module" },
     },
-    rules: replacePluginName(
-        extendsRules(ts.configs, configs, {
-            warn: name => name.startsWith("stylistic"),
-        }),
-        {}, // TODO: { "@typescript-eslint": "ts" },
-    ),
-});
-
-export const typescriptCustom: Linter.FlatConfig = {
-    files: [typescriptFiles],
     rules: {
+        ...replacePluginName(
+            extendsRules(ts.configs, configs, {
+                warn: configName => configName.startsWith("stylistic"),
+            }),
+            {}, // TODO: { "@typescript-eslint": "ts" },
+        ),
         "@typescript-eslint/prefer-for-of": OFF,
         "@typescript-eslint/consistent-type-definitions": warn("type"),
         "@typescript-eslint/ban-types": warn({
@@ -106,4 +102,4 @@ export const typescriptCustom: Linter.FlatConfig = {
             })),
         ),
     },
-};
+});

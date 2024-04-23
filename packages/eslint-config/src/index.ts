@@ -4,7 +4,7 @@ import { importConfig } from "./import";
 import { perfectionistConfig } from "./perfectionist";
 import { react } from "./react";
 import { testingLibrary } from "./testing-library";
-import { typescript, typescriptCustom } from "./typescript";
+import { typescript } from "./typescript";
 import { unicorn } from "./unicorn";
 
 export { acalylePlugin } from "./acalyle";
@@ -14,7 +14,6 @@ export const configs = {
     import: importConfig,
     react,
     typescript,
-    typescriptCustom,
     acalyle: acalyleConfig,
     perfectionist: perfectionistConfig,
     unicorn,
