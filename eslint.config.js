@@ -42,7 +42,6 @@ export default [
     configs.typescript("recommended-type-checked", "stylistic-type-checked"),
     configs.typescriptCustom,
     configs.react,
-    configs.testingLibrary("react"),
     configs.import,
     configs.perfectionist,
     {
