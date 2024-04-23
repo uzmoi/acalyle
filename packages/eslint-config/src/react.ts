@@ -2,11 +2,11 @@ import type { ESLint, Linter } from "eslint";
 import reactPlugin from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import { testingLibrary } from "./testing-library";
-import { typescriptFiles } from "./typescript";
+import { tsExts } from "./util";
 
 export const react: Linter.FlatConfig[] = [
     {
-        files: [typescriptFiles.replace(/t/g, "j"), typescriptFiles],
+        files: [`**/*.${tsExts}`],
         languageOptions: {
             parserOptions: {
                 ecmaFeatures: { jsx: true },

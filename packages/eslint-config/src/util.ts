@@ -3,6 +3,8 @@ import { ClassicConfig } from "@typescript-eslint/utils/ts-eslint";
 import { WeakMeta } from "emnorst";
 import type { Linter } from "eslint";
 
+export const tsExts = "{ts,mts,cts,tsx}";
+
 export const always = "always";
 export const never = "never";
 

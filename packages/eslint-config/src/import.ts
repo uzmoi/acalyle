@@ -1,11 +1,10 @@
 import type { ESLint, Linter } from "eslint";
 import importPlugin from "eslint-plugin-import";
 import importAccess from "eslint-plugin-import-access";
-import { typescriptFiles } from "./typescript";
-import { ERROR, OFF, WARN, error, never, warn } from "./util";
+import { ERROR, OFF, WARN, error, never, tsExts, warn } from "./util";
 
 export const importConfig: Linter.FlatConfig = {
-    files: [typescriptFiles],
+    files: [`**/*.${tsExts}`],
     plugins: {
         import: importPlugin,
         "import-access": { ...importAccess } as ESLint.Plugin,
@@ -27,12 +26,7 @@ export const importConfig: Linter.FlatConfig = {
             commonjs: true,
         }),
         "import/no-extraneous-dependencies": error({
-            devDependencies: [
-                "**/*.{test,spec}.*",
-                "**/*.{test,spec}-d.*",
-                "**/*.stories.*",
-                "!**/src/**",
-            ],
+            devDependencies: ["**/*.{test,test-d,stories}.*", "!**/src/**"],
         }),
         "import/unambiguous": WARN,
         "import/first": WARN,

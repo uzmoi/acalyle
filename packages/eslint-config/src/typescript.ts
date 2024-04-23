@@ -1,9 +1,7 @@
 import ts from "@typescript-eslint/eslint-plugin";
 import parser from "@typescript-eslint/parser";
 import type { ESLint, Linter } from "eslint";
-import { OFF, extendsRules, replacePluginName, warn } from "./util";
-
-export const typescriptFiles = "**/*.{ts,mts,cts,tsx,mtx,ctx}";
+import { OFF, extendsRules, replacePluginName, tsExts, warn } from "./util";
 
 type TypeScriptESLintConfigName =
     | "all"
@@ -18,7 +16,7 @@ type TypeScriptESLintConfigName =
 export const typescript = (
     ...configs: readonly TypeScriptESLintConfigName[]
 ): Linter.FlatConfig => ({
-    files: [typescriptFiles],
+    files: [`**/*.${tsExts}`],
     plugins: {
         // TODO: Rename to "ts".
         "@typescript-eslint": ts as unknown as ESLint.Plugin,

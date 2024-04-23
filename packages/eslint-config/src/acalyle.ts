@@ -1,14 +1,13 @@
 import { ESLint, Linter } from "eslint";
 import pureModule from "eslint-plugin-pure-module";
 import { rules } from "./rules";
-import { typescriptFiles } from "./typescript";
-import { WARN, warn } from "./util";
+import { WARN, tsExts } from "./util";
 
 export const acalylePlugin: ESLint.Plugin = { rules };
 
 export const acalyleConfig: Linter.FlatConfig[] = [
     {
-        files: [typescriptFiles],
+        files: [`**/*.${tsExts}`],
         plugins: {
             acalyle: acalylePlugin,
             "pure-module": pureModule as unknown as ESLint.Plugin,
@@ -18,13 +17,8 @@ export const acalyleConfig: Linter.FlatConfig[] = [
         },
     },
     {
-        files: [typescriptFiles.replace("**", "**/src/**")],
-        ignores: [
-            "**/*[-.]{test,spec,config}.*",
-            "**/*[-.]{test,spec}-d.*",
-            "**/{test,spec}?(s)/**",
-            "**/__{test,spec}?(s)__/**",
-        ],
+        files: [`**/src/**/*.${tsExts}`],
+        ignores: ["**/*.{test,test-d,stories}.*"],
         rules: {
             "pure-module/pure-module": warn({
                 pureFunctions: [
