@@ -14,6 +14,7 @@ export const recommended: Linter.FlatConfig[] = [
         rules: {
             ...eslint.configs.recommended.rules,
             ...extendsRules(unicornPlugin, ["recommended"], { warn: true }),
+            "unicorn/consistent-destructuring": WARN,
             "unicorn/import-style": OFF,
             "unicorn/no-array-callback-reference": OFF,
             "unicorn/no-array-reduce": OFF,
@@ -44,6 +45,7 @@ export const recommended: Linter.FlatConfig[] = [
             "perfectionist/sort-jsx-props": OFF,
             "perfectionist/sort-object-types": OFF,
             "perfectionist/sort-objects": OFF,
+            "perfectionist/sort-intersection-types": OFF,
             "perfectionist/sort-union-types": OFF,
         },
     },
