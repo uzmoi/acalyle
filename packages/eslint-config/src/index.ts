@@ -7,6 +7,9 @@ import { testingLibrary } from "./testing-library";
 import { typescript } from "./typescript";
 
 export { acalylePlugin } from "./acalyle";
+export { type Options, createConfig } from "./create-config";
+export type { TestingLibraryLib } from "./testing-library";
+export type { TypeScriptESLintConfigName } from "./typescript";
 export * from "./util";
 
 export const configs = {

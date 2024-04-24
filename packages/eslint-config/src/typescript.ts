@@ -3,7 +3,7 @@ import parser from "@typescript-eslint/parser";
 import type { ESLint, Linter } from "eslint";
 import { OFF, extendsRules, replacePluginName, tsExts, warn } from "./util";
 
-type TypeScriptESLintConfigName =
+export type TypeScriptESLintConfigName =
     | "all"
     | "recommended"
     | "recommended-type-checked"
