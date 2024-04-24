@@ -50,5 +50,5 @@ export const createConfig = ({
     ...recommended,
     typescript(...ts),
     ...(useReactConfig ? react : []),
-    importConfig,
+    ...importConfig,
 ];

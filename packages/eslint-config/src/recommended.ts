@@ -14,9 +14,6 @@ export const recommended: Linter.FlatConfig[] = [
         rules: {
             ...eslint.configs.recommended.rules,
             ...extendsRules(unicornPlugin, ["recommended"], { warn: true }),
-            "unicorn/filename-case": warn({
-                cases: { kebabCase: true, pascalCase: true },
-            }),
             "unicorn/import-style": OFF,
             "unicorn/no-array-callback-reference": OFF,
             "unicorn/no-array-reduce": OFF,

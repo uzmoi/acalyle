@@ -32,8 +32,7 @@ export const typescript = (
             }),
             {}, // TODO: { "@typescript-eslint": "ts" },
         ),
-        "@typescript-eslint/prefer-for-of": OFF,
-        "@typescript-eslint/consistent-type-definitions": warn("type"),
+        "@typescript-eslint/consistent-type-definitions": OFF,
         "@typescript-eslint/ban-types": warn({
             extendDefaults: true,
             types: { "{}": false },

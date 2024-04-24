@@ -6,13 +6,16 @@ import { tsExts } from "./util";
 
 export const react: Linter.FlatConfig[] = [
     {
-        files: [`**/*.${tsExts}`],
+        files: ["**/*.tsx"],
         languageOptions: {
             parserOptions: {
                 ecmaFeatures: { jsx: true },
                 jsxPragma: null,
             },
         },
+    },
+    {
+        files: [`**/*.${tsExts}`],
         settings: {
             react: { version: "detect" },
         },
