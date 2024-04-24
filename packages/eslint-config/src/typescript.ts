@@ -1,17 +1,15 @@
-import ts from "@typescript-eslint/eslint-plugin";
-import parser from "@typescript-eslint/parser";
 import type { ESLint, Linter } from "eslint";
-import { OFF, extendsRules, replacePluginName, tsExts, warn } from "./util";
+import tsEslint from "typescript-eslint";
+import {
+    OFF,
+    extendsFlatRules,
+    replacePluginName,
+    replaceWarn,
+    tsExts,
+    warn,
+} from "./util";
 
-export type TypeScriptESLintConfigName =
-    | "all"
-    | "recommended"
-    | "recommended-type-checked"
-    | "strict"
-    | "strict-type-checked"
-    | "stylistic"
-    | "stylistic-type-checked"
-    | "disable-type-checked";
+export type TypeScriptESLintConfigName = keyof typeof tsEslint.configs;
 
 export const typescript = (
     ...configs: readonly TypeScriptESLintConfigName[]
@@ -19,17 +17,17 @@ export const typescript = (
     files: [`**/*.${tsExts}`],
     plugins: {
         // TODO: Rename to "ts".
-        "@typescript-eslint": ts as unknown as ESLint.Plugin,
+        "@typescript-eslint": tsEslint.plugin as ESLint.Plugin,
     },
     languageOptions: {
-        parser: parser as Linter.ParserModule,
-        parserOptions: { sourceType: "module" },
+        parser: tsEslint.parser as Linter.ParserModule,
+        parserOptions: { project: true, sourceType: "module" },
     },
     rules: {
         ...replacePluginName(
-            extendsRules(ts, configs, {
-                warn: configName => configName.startsWith("stylistic"),
-            }),
+            extendsFlatRules(tsEslint, configs, (rules, configName) =>
+                configName.startsWith("stylistic") ? replaceWarn(rules) : rules,
+            ),
             {}, // TODO: { "@typescript-eslint": "ts" },
         ),
         "@typescript-eslint/consistent-type-definitions": OFF,
@@ -62,7 +60,7 @@ export const typescript = (
             })),
             ...[false, true].map(unused => ({
                 // NOTE: selectorは配列でなくとも良いはずだが、
-                // typescript-eslint@6.12.0ではスキーマが非対応なのかエラーが出る
+                // typescript-eslintのスキーマが非対応なのかエラーが出る
                 selector: ["import"],
                 modifiers: unused ? ["unused"] : undefined,
                 format: ["camelCase", "PascalCase"],

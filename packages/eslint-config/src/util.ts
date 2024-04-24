@@ -58,22 +58,46 @@ export const replacePluginName = (
     ]);
 };
 
-export const replaceWarn = (rules: Linter.RulesRecord): Linter.RulesRecord => {
+export const replaceWarn = (
+    rules: Partial<Linter.RulesRecord>,
+): Linter.RulesRecord => {
     return mapEntries(rules, (ruleName, entry) => [
         ruleName,
         Array.isArray(entry) && entry[0] === ERROR ?
             [WARN, ...(entry as unknown[]).slice(1)]
         : entry === ERROR ? WARN
-        : entry,
+        : entry ?? OFF,
     ]);
 };
 
-const asArray = <T>(
-    value: T | readonly T[] | null | undefined,
-): readonly T[] =>
-    Array.isArray(value) ? value
+export const asArray = <T>(value: T | readonly T[] | null | undefined): T[] =>
+    Array.isArray(value) ? [...value]
     : value == null ? []
     : [value as T];
+
+export const extendsFlatRules = (
+    plugin: { configs?: Record<string, unknown> },
+    configNames: readonly string[],
+    mapRules: (
+        rules: Linter.RulesRecord,
+        configName: string,
+    ) => Linter.RulesRecord,
+) => {
+    const result: Linter.RulesRecord = {};
+    for (const configName of configNames) {
+        const configs = asArray(
+            plugin.configs?.[configName],
+        ) as Linter.FlatConfig[];
+        const lastConfig = configs.pop();
+        Object.assign(
+            result,
+            ...configs.map(config => config.rules),
+            // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+            mapRules(lastConfig?.rules!, configName),
+        );
+    }
+    return result;
+};
 
 export const extendsRules = (
     plugin: { configs?: Record<string, unknown> },

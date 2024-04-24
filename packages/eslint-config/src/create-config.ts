@@ -13,7 +13,7 @@ export type Options = Partial<{
 
 export const createConfig = ({
     ignores = [],
-    ts = ["recommended-type-checked", "stylistic-type-checked"],
+    ts = ["recommendedTypeChecked", "stylisticTypeChecked"],
     tsProject = ["tsconfig.json", "tsconfig.*.json"],
     react: useReactConfig,
 }: Options = {}): Linter.FlatConfig[] => [
