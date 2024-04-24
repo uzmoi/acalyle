@@ -28,7 +28,6 @@ export const usePromiseLoader = <T>(loader: PromiseLoaderW<T>): T => {
 
 declare const T: unique symbol;
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export interface PromiseLoaderExt {
     [T]: Extract<StoreValue<this>, { status: "fulfilled" }>["value"];
     pending(
