@@ -1,5 +1,6 @@
 {
     "extends": "@acalyle/tsconfig/tsconfig.web.json",
+    "files": [".storybook/preview.tsx"],
     "include": ["**/*.test.ts"],
     "compilerOptions": {
         "jsx": "react-jsx",

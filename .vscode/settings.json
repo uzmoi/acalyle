@@ -10,6 +10,7 @@
     "[toml]": {
         "editor.defaultFormatter": "tamasfe.even-better-toml" // cspell:word tamasfe
     },
+    "eslint.workingDirectories": [{ "pattern": "apps/*" }, { "pattern": "packages/*" }],
     // "stylelint.validate": ["css", "typescript", "typescriptreact"],
     "eslint.experimental.useFlatConfig": true,
     "typescript.tsdk": "node_modules/typescript/lib",

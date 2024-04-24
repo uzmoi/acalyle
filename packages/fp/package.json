@@ -8,6 +8,7 @@
   "scripts": {
     "build": "tsup",
     "check": "tsc",
+    "lint": "eslint .",
     "test": "vitest",
     "coverage": "vitest run --coverage --passWithNoTests"
   },
@@ -15,6 +16,7 @@
     "emnorst": "^1.0.0-next.2"
   },
   "devDependencies": {
+    "@acalyle/eslint-config": "*",
     "@acalyle/tsconfig": "*",
     "tsup": "^8.0.0",
     "vitest": "^0.34.6"

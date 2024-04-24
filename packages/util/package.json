@@ -8,6 +8,7 @@
   "scripts": {
     "build": "tsup src/index.ts --format esm --minify-syntax --sourcemap --dts",
     "check": "tsc",
+    "lint": "eslint .",
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },
@@ -15,6 +16,7 @@
     "emnorst": "^1.0.0-next.2"
   },
   "devDependencies": {
+    "@acalyle/eslint-config": "*",
     "@acalyle/tsconfig": "*",
     "@vitest/coverage-v8": "^0.34.6",
     "tsup": "^8.0.0",

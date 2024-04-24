@@ -1,74 +1,21 @@
-// @ts-check
+// import globals from "globals";
+import { OFF, createConfig } from "@acalyle/eslint-config";
 
-import globals from "globals";
-import { OFF, configs } from "@acalyle/eslint-config";
-
-const typescriptProject = [
-    "tsconfig.json",
-    "apps/*/tsconfig.json",
-    "apps/*/tsconfig.*.json",
-    "packages/*/tsconfig.json",
-    "packages/*/tsconfig.*.json",
-];
-
-/** @type {import("eslint").Linter.FlatConfig[]} */
 export default [
-    {
-        ignores: [
-            "main/**",
-            "renderer/**",
-            "scripts/**",
-            "apps/tauri/src-tauri/**",
-            "**/dist/**",
-            "**/coverage/**",
-            "**/__generated__/**",
-            "**/__*",
-            "**/*.d.ts",
-            "**/*.d.*.ts",
+    ...createConfig({
+        tsProject: [
+            "tsconfig.json",
+            "apps/*/tsconfig.json",
+            "apps/*/tsconfig.*.json",
+            "packages/*/tsconfig.json",
+            "packages/*/tsconfig.*.json",
         ],
-    },
-    configs.recommended,
-    configs.acalyle[0],
+        ignores: ["apps/tauri/src-tauri/**"],
+    }),
     {
-        ...configs.acalyle[1],
-        ignores: [
-            ...(configs.acalyle[1].ignores ?? []),
-            "packages/eslint-config/**",
-            "**/*.stories.*",
-        ],
-    },
-    configs.typescript("recommended-type-checked", "stylistic-type-checked"),
-    configs.react,
-    configs.import,
-    {
-        files: ["!**/src/**", "**/*.stories.*"],
-        languageOptions: {
-            globals: globals.node,
-        },
+        files: ["packages/eslint-config/src/**"],
         rules: {
-            "import/no-default-export": OFF,
-        },
-    },
-    {
-        linterOptions: {
-            reportUnusedDisableDirectives: true,
-        },
-        languageOptions: {
-            parserOptions: {
-                ecmaVersion: "latest",
-                sourceType: "module",
-                project: typescriptProject,
-            },
-        },
-        settings: {
-            "import/parsers": {
-                espree: [".js", ".cjs", ".mjs", ".jsx"],
-            },
-            "import/resolver": {
-                typescript: {
-                    project: typescriptProject,
-                },
-            },
+            "pure-module/pure-module": OFF,
         },
     },
 ];

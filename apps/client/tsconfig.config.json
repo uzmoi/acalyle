@@ -1,6 +1,6 @@
 {
     "extends": "@acalyle/tsconfig/tsconfig.node.json",
-    "files": ["graphql.config.ts", "vite.config.ts"],
+    "files": ["graphql.config.ts", "vite.config.ts", ".storybook/main.ts"],
     "compilerOptions": {
         "noEmit": false,
         "composite": true,
