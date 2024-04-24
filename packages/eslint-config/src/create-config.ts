@@ -27,6 +27,10 @@ export const createConfig = ({
             ...ignores,
         ],
     },
+    ...recommended,
+    typescript(...ts),
+    ...(useReactConfig ? react : []),
+    ...importConfig,
     {
         linterOptions: {
             reportUnusedDisableDirectives: true,
@@ -47,8 +51,4 @@ export const createConfig = ({
             },
         },
     },
-    ...recommended,
-    typescript(...ts),
-    ...(useReactConfig ? react : []),
-    ...importConfig,
 ];
