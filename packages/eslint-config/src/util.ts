@@ -3,6 +3,8 @@ import { ClassicConfig } from "@typescript-eslint/utils/ts-eslint";
 import { WeakMeta } from "emnorst";
 import type { Linter } from "eslint";
 
+export const tsExts = "{ts,mts,cts,tsx}";
+
 export const always = "always";
 export const never = "never";
 
@@ -56,36 +58,62 @@ export const replacePluginName = (
     ]);
 };
 
-export const replaceWarn = (rules: Linter.RulesRecord): Linter.RulesRecord => {
+export const replaceWarn = (
+    rules: Partial<Linter.RulesRecord>,
+): Linter.RulesRecord => {
     return mapEntries(rules, (ruleName, entry) => [
         ruleName,
         Array.isArray(entry) && entry[0] === ERROR ?
             [WARN, ...(entry as unknown[]).slice(1)]
         : entry === ERROR ? WARN
-        : entry,
+        : entry ?? OFF,
     ]);
 };
 
-const asArray = <T>(
-    value: T | readonly T[] | null | undefined,
-): readonly T[] =>
-    Array.isArray(value) ? value
+export const asArray = <T>(value: T | readonly T[] | null | undefined): T[] =>
+    Array.isArray(value) ? [...value]
     : value == null ? []
     : [value as T];
 
-export const extendsRules = (
-    configs: Record<string, ClassicConfig.Config>,
+export const extendsFlatRules = (
+    plugin: { configs?: Record<string, unknown> },
     configNames: readonly string[],
-    { warn }: { warn?: (configName: string) => boolean } = {},
+    mapRules: (
+        rules: Linter.RulesRecord,
+        configName: string,
+    ) => Linter.RulesRecord,
+) => {
+    const result: Linter.RulesRecord = {};
+    for (const configName of configNames) {
+        const configs = asArray(
+            plugin.configs?.[configName],
+        ) as Linter.FlatConfig[];
+        const lastConfig = configs.pop();
+        Object.assign(
+            result,
+            ...configs.map(config => config.rules),
+            // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+            mapRules(lastConfig?.rules!, configName),
+        );
+    }
+    return result;
+};
+
+export const extendsRules = (
+    plugin: { configs?: Record<string, unknown> },
+    configNames: readonly string[],
+    options: { warn?: boolean | ((configName: string) => boolean) } = {},
 ): Linter.RulesRecord => {
     const rules: Linter.RulesRecord = {};
     for (const configName of configNames) {
-        const config = { ...configs[configName] };
+        const config = {
+            ...(plugin.configs?.[configName] as ClassicConfig.Config),
+        };
 
         const extendConfigNames = asArray(config.extends).map(name =>
             name.replace(/^.+\//, ""),
         );
-        const extendConfigs = extendsRules(configs, extendConfigNames);
+        const extendConfigs = extendsRules(plugin, extendConfigNames);
 
         if (config.overrides) {
             Object.assign(
@@ -94,7 +122,12 @@ export const extendsRules = (
             );
         }
 
-        if (config.rules && warn?.(configName)) {
+        if (
+            config.rules &&
+            (typeof options.warn === "function" ?
+                options.warn(configName)
+            :   options.warn)
+        ) {
             config.rules = replaceWarn(unPartial(config.rules));
         }
         Object.assign(rules, extendConfigs, config.rules);

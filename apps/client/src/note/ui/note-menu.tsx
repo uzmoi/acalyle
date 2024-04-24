@@ -83,7 +83,9 @@ export const NoteMenuButton: React.FC<{
                             key={text}
                             role="menuitem"
                             disabled={disabled}
-                            onClick={onClick}
+                            onClick={() => {
+                                void onClick?.();
+                            }}
                             data-type={type}
                             variant="unstyled"
                             className={style({

@@ -13,7 +13,6 @@ const preview: Preview = {
             },
         },
     },
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     decorators: [story => <div style={devTheme}>{story()}</div>],
 };
 

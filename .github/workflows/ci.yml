@@ -103,7 +103,7 @@ jobs:
           key: ${{ runner.os }}-turbo-${{ needs.prepare.outputs.turbo-hash }}
           fail-on-cache-miss: true
 
-      - run: npm run lint # -- --output-logs=new-only
+      - run: npm run lint -- --output-logs=new-only
   chromatic:
     needs: prepare
     runs-on: ubuntu-latest

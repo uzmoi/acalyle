@@ -9,6 +9,7 @@
     "dev": "vite",
     "build": "vite build",
     "check": "tsc",
+    "lint": "eslint .",
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "codegen": "nitrogql generate",
@@ -34,6 +35,7 @@
     "react-icons": "^4.8.0"
   },
   "devDependencies": {
+    "@acalyle/eslint-config": "*",
     "@acalyle/server": "*",
     "@graphql-typed-document-node/core": "^3.2.0",
     "@macaron-css/vite": "^1.1.3",

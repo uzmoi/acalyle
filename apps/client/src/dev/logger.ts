@@ -63,5 +63,5 @@ const simpleConsoleTransport: Transport<
     },
 };
 
-// eslint-disable-next-line acalyle/no-module-side-effect
+// eslint-disable-next-line pure-module/pure-module
 acalyle.context.logger.attachTransport(simpleConsoleTransport);

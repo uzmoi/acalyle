@@ -31,12 +31,12 @@ const variants = /* #__PURE__ */ styleVariants({
 });
 
 type ListItemComponent = React.FC<React.ComponentPropsWithoutRef<"li">>;
-// eslint-disable-next-line acalyle/no-module-side-effect
+// eslint-disable-next-line pure-module/pure-module
 List.Item = ({ ...restProps }) => {
     return <li {...restProps} />;
 };
 
 if (process.env.NODE_ENV === "development") {
-    // eslint-disable-next-line acalyle/no-module-side-effect
+    // eslint-disable-next-line pure-module/pure-module
     List.Item.displayName = "List.Item";
 }

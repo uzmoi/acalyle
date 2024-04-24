@@ -2,10 +2,13 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "codegen": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "inputs": ["src/**/*.graphql", "graphql.config.ts"],
+      "outputs": ["**/__generated__/**", "**/*.d.graphql.ts", "**/*.d.graphql.ts.map"]
     },
     "build": {
       "dependsOn": ["check"],
+      "inputs": ["src/**", "!**/*.{test,test-d,stories}.*", "tsconfig.json"],
       "outputs": ["dist/**"]
     },
     "dev": {
@@ -14,7 +17,8 @@
       "persistent": true
     },
     "check": {
-      "dependsOn": ["codegen"]
+      "dependsOn": ["codegen"],
+      "inputs": ["!**/*.{test,test-d,stories}.*"]
     },
     "lint": {
       "dependsOn": ["codegen"]

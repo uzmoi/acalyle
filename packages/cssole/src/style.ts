@@ -86,7 +86,7 @@ type ConsoleStyleKey =
 /**
  * @see https://developer.mozilla.org/docs/Web/API/console#styling_console_output
  */
-// eslint-disable-next-line @typescript-eslint/no-empty-interface, @typescript-eslint/consistent-type-definitions
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ConsoleStyle extends Record<ConsoleStyleKey, string | null> {}
 
 export const printConsoleStyle = (style: Partial<ConsoleStyle>): string => {
