@@ -76,18 +76,20 @@ const asArray = <T>(
     : [value as T];
 
 export const extendsRules = (
-    configs: Record<string, ClassicConfig.Config>,
+    plugin: { configs?: Record<string, unknown> },
     configNames: readonly string[],
-    { warn }: { warn?: (configName: string) => boolean } = {},
+    options: { warn?: boolean | ((configName: string) => boolean) } = {},
 ): Linter.RulesRecord => {
     const rules: Linter.RulesRecord = {};
     for (const configName of configNames) {
-        const config = { ...configs[configName] };
+        const config = {
+            ...(plugin.configs?.[configName] as ClassicConfig.Config),
+        };
 
         const extendConfigNames = asArray(config.extends).map(name =>
             name.replace(/^.+\//, ""),
         );
-        const extendConfigs = extendsRules(configs, extendConfigNames);
+        const extendConfigs = extendsRules(plugin, extendConfigNames);
 
         if (config.overrides) {
             Object.assign(
@@ -96,7 +98,12 @@ export const extendsRules = (
             );
         }
 
-        if (config.rules && warn?.(configName)) {
+        if (
+            config.rules &&
+            (typeof options.warn === "function" ?
+                options.warn(configName)
+            :   options.warn)
+        ) {
             config.rules = replaceWarn(unPartial(config.rules));
         }
         Object.assign(rules, extendConfigs, config.rules);

@@ -27,7 +27,7 @@ export const typescript = (
     },
     rules: {
         ...replacePluginName(
-            extendsRules(ts.configs, configs, {
+            extendsRules(ts, configs, {
                 warn: configName => configName.startsWith("stylistic"),
             }),
             {}, // TODO: { "@typescript-eslint": "ts" },

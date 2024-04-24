@@ -3,7 +3,7 @@ import type { ESLint, Linter } from "eslint";
 import perfectionist from "eslint-plugin-perfectionist";
 import pureModule from "eslint-plugin-pure-module";
 import unicornPlugin from "eslint-plugin-unicorn";
-import { ERROR, OFF, WARN, replaceWarn, tsExts, unPartial, warn } from "./util";
+import { ERROR, OFF, WARN, extendsRules, tsExts, warn } from "./util";
 
 export const recommended: Linter.FlatConfig[] = [
     {
@@ -13,12 +13,7 @@ export const recommended: Linter.FlatConfig[] = [
         },
         rules: {
             ...eslint.configs.recommended.rules,
-            ...replaceWarn(
-                unPartial(
-                    (unicornPlugin.configs?.recommended as ESLint.ConfigData)
-                        .rules!,
-                ),
-            ),
+            ...extendsRules(unicornPlugin, ["recommended"], { warn: true }),
             "unicorn/filename-case": warn({
                 cases: { kebabCase: true, pascalCase: true },
             }),
@@ -43,15 +38,9 @@ export const recommended: Linter.FlatConfig[] = [
                 tags: [],
                 selectors: ["TaggedTemplateExpression"],
             }),
-            ...replaceWarn(
-                unPartial(
-                    (
-                        perfectionist.configs?.[
-                            "recommended-natural"
-                        ] as ESLint.ConfigData
-                    ).rules!,
-                ),
-            ),
+            ...extendsRules(perfectionist, ["recommended-natural"], {
+                warn: true,
+            }),
             "perfectionist/sort-imports": OFF,
             "perfectionist/sort-interfaces": OFF,
             "perfectionist/sort-classes": OFF,
