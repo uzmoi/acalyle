@@ -61,15 +61,16 @@ export const TextArea: React.FC<
                 defaultValue={defaultValue}
                 onChange={handleChange}
                 className={cx(
-                    control.reset,
                     style({
                         position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: "100%",
-                        height: "100%",
+                        inset: 0,
                         padding: "inherit",
                         overflow: "hidden",
+                        backgroundColor: "transparent",
+                        border: "none",
+                        outline: "none",
+                        appearance: "none",
+                        font: "inherit",
                         color: "transparent",
                         textAlign: "inherit",
                         textIndent: "inherit",
@@ -80,7 +81,6 @@ export const TextArea: React.FC<
                         resize: "none",
                         wordSpacing: "inherit",
                         caretColor: "var(--caret-color)",
-                        // opacity: 0,
                     }),
                 )}
                 autoFocus={autoFocus}
