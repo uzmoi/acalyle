@@ -8,37 +8,26 @@ const ZeroWidthSpace = "\u200B";
 export const TextArea: React.FC<
     {
         variant?: ControlPartVariant;
-        value?: string;
-        defaultValue?: string;
         onValueChange?: (value: string) => void;
-        textareaId?: string;
-        placeholder?: string;
-        autoFocus?: boolean;
-        disabled?: boolean;
-        readOnly?: boolean;
-    } & React.ComponentPropsWithoutRef<"div">
+    } & React.ComponentPropsWithoutRef<"textarea">
 > = ({
     variant = "solid",
     value,
     defaultValue,
+    onChange,
     onValueChange,
-    textareaId,
-    placeholder,
-    autoFocus,
-    disabled,
-    readOnly,
     className,
     ...restProps
 }) => {
     const handleChange =
-        onValueChange &&
+        (onChange ?? onValueChange) &&
         ((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-            onValueChange(e.target.value);
+            onChange?.(e);
+            onValueChange?.(e.target.value);
         });
 
     return (
         <div
-            {...restProps}
             className={cx(
                 control.base,
                 control[variant],
@@ -54,9 +43,7 @@ export const TextArea: React.FC<
             )}
         >
             <textarea
-                id={textareaId}
-                // form={form}
-                // name={name}
+                {...restProps}
                 value={value}
                 defaultValue={defaultValue}
                 onChange={handleChange}
@@ -83,10 +70,6 @@ export const TextArea: React.FC<
                         caretColor: "var(--caret-color)",
                     }),
                 )}
-                autoFocus={autoFocus}
-                placeholder={placeholder}
-                disabled={disabled}
-                readOnly={readOnly}
                 autoComplete="off"
                 autoCapitalize="off"
                 autoCorrect="off"
@@ -100,7 +83,7 @@ export const TextArea: React.FC<
                 })}
                 aria-hidden
             >
-                {value}
+                {value ?? defaultValue}
                 {ZeroWidthSpace}
             </div>
         </div>
