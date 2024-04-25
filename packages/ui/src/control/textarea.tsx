@@ -1,4 +1,5 @@
 import { style } from "@macaron-css/core";
+import { useRef } from "react";
 import { cx } from "../base/cx";
 import { vars } from "../theme";
 import { type ControlPartVariant, control } from "./base";
@@ -19,9 +20,13 @@ export const TextArea: React.FC<
     className,
     ...restProps
 }) => {
+    const dummyEl = useRef<HTMLDivElement>(null);
     const handleChange =
-        (onChange ?? onValueChange) &&
+        (value == null || (onChange ?? onValueChange)) &&
         ((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+            if (value == null && dummyEl.current) {
+                dummyEl.current.textContent = e.target.value + ZeroWidthSpace;
+            }
             onChange?.(e);
             onValueChange?.(e.target.value);
         });
@@ -76,6 +81,7 @@ export const TextArea: React.FC<
                 spellCheck="false"
             />
             <div
+                ref={dummyEl}
                 className={style({
                     minHeight: "1em",
                     pointerEvents: "none",
