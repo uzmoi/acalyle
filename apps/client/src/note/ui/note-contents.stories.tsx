@@ -4,9 +4,6 @@ import { NoteContents } from "./note-contents";
 export default {
     title: "Note / NoteContents",
     component: NoteContents,
-    parameters: {
-        layout: "centered",
-    },
 } satisfies Meta<typeof NoteContents>;
 
 type Story = StoryObj<typeof NoteContents>;

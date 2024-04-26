@@ -4,9 +4,6 @@ import { TextInput } from "./text-input";
 export default {
     title: "Control/TextInput",
     component: TextInput,
-    parameters: {
-        layout: "centered",
-    },
 } satisfies Meta<typeof TextInput>;
 
 type Story = StoryObj<typeof TextInput>;

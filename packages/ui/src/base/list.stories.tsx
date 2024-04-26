@@ -13,9 +13,6 @@ export default {
             ))}
         </List>
     ),
-    parameters: {
-        layout: "centered",
-    },
 } satisfies Meta<typeof List>;
 
 type Story = StoryObj<typeof List>;

@@ -13,9 +13,6 @@ export default {
             ))}
         </Select>
     ),
-    parameters: {
-        layout: "centered",
-    },
 } satisfies Meta<typeof Select>;
 
 type Story = StoryObj<typeof Select>;

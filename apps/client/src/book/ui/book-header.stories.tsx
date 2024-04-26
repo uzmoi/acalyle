@@ -4,9 +4,6 @@ import { BookHeader } from "./book-header";
 export default {
     title: "Book / BookHeader",
     component: BookHeader,
-    parameters: {
-        layout: "centered",
-    },
 } satisfies Meta<typeof BookHeader>;
 
 type Story = StoryObj<typeof BookHeader>;

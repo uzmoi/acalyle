@@ -10,9 +10,6 @@ export default {
             <Menu.Item>Menu 2</Menu.Item>
         </Menu>
     ),
-    parameters: {
-        layout: "centered",
-    },
 } satisfies Meta<typeof Menu>;
 
 type Story = StoryObj<typeof Menu>;

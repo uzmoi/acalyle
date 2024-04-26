@@ -19,9 +19,6 @@ export default {
             <ModalContainer {...props} />
         </div>
     ),
-    parameters: {
-        layout: "fullscreen",
-    },
     args: {
         render: close => (
             <div style={{ padding: "1em" }}>

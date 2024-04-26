@@ -4,9 +4,6 @@ import { FileInput } from "./file-input";
 export default {
     title: "Control/FileInput",
     component: FileInput,
-    parameters: {
-        layout: "centered",
-    },
 } satisfies Meta<typeof FileInput>;
 
 type Story = StoryObj<typeof FileInput>;

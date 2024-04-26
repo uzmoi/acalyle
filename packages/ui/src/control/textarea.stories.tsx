@@ -4,9 +4,6 @@ import { TextArea } from "./textarea";
 export default {
     title: "Control/TextArea",
     component: TextArea,
-    parameters: {
-        layout: "centered",
-    },
     argTypes: {
         value: { type: "string" },
     },

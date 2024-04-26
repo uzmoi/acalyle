@@ -4,9 +4,6 @@ import { Alert } from "./alert";
 export default {
     title: "Base/Alert",
     component: Alert,
-    parameters: {
-        layout: "centered",
-    },
     args: {
         children: "Alert",
     },
