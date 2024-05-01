@@ -43,7 +43,7 @@ const MenuItem: React.FC<
 
 // eslint-disable-next-line pure-module/pure-module
 Menu.Item = MenuItem;
-if (process.env.NODE_ENV === "development") {
+if (import.meta.env.DEV) {
     // eslint-disable-next-line pure-module/pure-module
     Menu.Item.displayName = "Menu.Item";
 }

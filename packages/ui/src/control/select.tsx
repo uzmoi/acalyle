@@ -50,7 +50,7 @@ Select.Group = ({ ...restProps }) => {
     return <optgroup {...restProps} />;
 };
 
-if (process.env.NODE_ENV === "development") {
+if (import.meta.env.DEV) {
     // eslint-disable-next-line pure-module/pure-module
     Select.Group.displayName = "Select.Group";
 }
@@ -69,7 +69,7 @@ Select.Option = ({ className, ...restProps }) => {
     );
 };
 
-if (process.env.NODE_ENV === "development") {
+if (import.meta.env.DEV) {
     // eslint-disable-next-line pure-module/pure-module
     Select.Option.displayName = "Select.Option";
 }

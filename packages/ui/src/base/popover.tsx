@@ -79,7 +79,7 @@ const PopoverButton: React.FC<
 
 // eslint-disable-next-line pure-module/pure-module
 Popover.Button = PopoverButton;
-if (process.env.NODE_ENV === "development") {
+if (import.meta.env.DEV) {
     // eslint-disable-next-line pure-module/pure-module
     Popover.Button.displayName = "Popover.Button";
 }
@@ -135,7 +135,7 @@ const PopoverContent: React.FC<
 
 // eslint-disable-next-line pure-module/pure-module
 Popover.Content = PopoverContent;
-if (process.env.NODE_ENV === "development") {
+if (import.meta.env.DEV) {
     // eslint-disable-next-line pure-module/pure-module
     Popover.Content.displayName = "Popover.Content";
 }
