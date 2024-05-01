@@ -1,10 +1,17 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { fn } from "@storybook/test";
 import { TextInput } from "./text-input";
 
-export default {
+const meta: Meta<typeof TextInput> = {
     title: "Control/TextInput",
     component: TextInput,
-} satisfies Meta<typeof TextInput>;
+    args: {
+        onChange: fn(),
+        onValueChange: fn(),
+    },
+};
+
+export default meta;
 
 type Story = StoryObj<typeof TextInput>;
 

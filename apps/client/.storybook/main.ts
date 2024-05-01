@@ -7,6 +7,7 @@ const config: StorybookConfig = {
         "@storybook/addon-interactions",
         "@storybook/addon-a11y",
         "storybook-addon-manual-mocks",
+        "@chromatic-com/storybook",
     ],
     framework: "@storybook/react-vite",
     docs: { autodocs: true },

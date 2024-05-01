@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { fn } from "@storybook/test";
 import { Button } from "../control";
 import { Modal, ModalContainer } from "./modal";
 
-export default {
+const meta: Meta<typeof ModalContainer<() => void>> = {
     title: "Base/Modal",
     component: ModalContainer,
     parameters: {
@@ -29,8 +30,11 @@ export default {
                 <Button onClick={close}>close</Button>
             </div>
         ),
+        onClickBackdrop: fn(),
     },
-} satisfies Meta<typeof ModalContainer<() => void>>;
+};
+
+export default meta;
 
 type Story = StoryObj<typeof ModalContainer>;
 

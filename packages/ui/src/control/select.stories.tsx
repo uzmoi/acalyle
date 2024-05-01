@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { fn } from "@storybook/test";
 import { Select } from "./select";
 
 const options = ["hoge", "fuga", "piyo"];
 
-export default {
+const meta: Meta<typeof Select> = {
     title: "Control/Select",
     component: Select,
     render: props => (
@@ -13,7 +14,13 @@ export default {
             ))}
         </Select>
     ),
-} satisfies Meta<typeof Select>;
+    args: {
+        onChange: fn(),
+        onValueChange: fn(),
+    },
+};
+
+export default meta;
 
 type Story = StoryObj<typeof Select>;
 

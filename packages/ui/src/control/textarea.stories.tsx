@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { fn } from "@storybook/test";
 import { TextArea } from "./textarea";
 
-export default {
+const meta: Meta<typeof TextArea> = {
     title: "Control/TextArea",
     component: TextArea,
     argTypes: {
@@ -10,8 +11,12 @@ export default {
     args: {
         value: undefined,
         defaultValue: "お前のギターの\nせいでバンドが\n死んでいる",
+        onChange: fn(),
+        onValueChange: fn(),
     },
-} satisfies Meta<typeof TextArea>;
+};
+
+export default meta;
 
 type Story = StoryObj<typeof TextArea>;
 
