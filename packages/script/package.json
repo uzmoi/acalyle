@@ -7,7 +7,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsup src/index.ts --format esm --minify-syntax --sourcemap --dts",
-    "check": "tsc && vitest typecheck --run",
+    "check": "vitest run --typecheck.only",
     "lint": "eslint .",
     "test": "vitest",
     "coverage": "vitest run --coverage"
@@ -21,8 +21,8 @@
   "devDependencies": {
     "@acalyle/eslint-config": "*",
     "@acalyle/tsconfig": "*",
-    "@vitest/coverage-v8": "^0.34.6",
+    "@vitest/coverage-v8": "^1.5.3",
     "tsup": "^7.2.0",
-    "vitest": "^0.34.6"
+    "vitest": "^1.5.3"
   }
 }
