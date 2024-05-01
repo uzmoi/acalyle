@@ -1,4 +1,5 @@
 import type { Preview } from "@storybook/react";
+import { Provider } from "@acalyle/client/src/dev/provider";
 
 const preview: Preview = {
     parameters: {
@@ -11,6 +12,7 @@ const preview: Preview = {
             },
         },
     },
+    decorators: [story => <Provider>{story()}</Provider>],
 };
 
 export default preview;

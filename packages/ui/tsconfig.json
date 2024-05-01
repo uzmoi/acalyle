@@ -5,4 +5,8 @@
     "compilerOptions": {
         "jsx": "react-jsx",
     },
+    "references": [
+        { "path": "./tsconfig.config.json" },
+        { "path": "./tsconfig.test.json" },
+    ]
 }

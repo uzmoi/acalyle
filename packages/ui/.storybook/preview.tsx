@@ -1,6 +1,4 @@
 import type { Preview } from "@storybook/react";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import React from "react";
 import { devTheme } from "../src/theme/test-theme";
 
 const preview: Preview = {

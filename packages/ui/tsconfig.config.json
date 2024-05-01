@@ -1,4 +1,8 @@
 {
     "extends": "@acalyle/tsconfig/tsconfig.node.json",
     "files": [".storybook/main.ts", "vite.config.ts"],
+    "compilerOptions": {
+        "noEmit": false,
+        "composite": true,
+    }
 }

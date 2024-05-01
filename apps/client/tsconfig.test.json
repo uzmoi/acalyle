@@ -5,6 +5,7 @@
     "compilerOptions": {
         "jsx": "react-jsx",
         "lib": ["DOM", "DOM.Iterable", "ESNext"],
-        "types": ["react", "react-dom"],
+        "noEmit": false,
+        "composite": true,
     },
 }

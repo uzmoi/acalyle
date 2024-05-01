@@ -1,8 +1,10 @@
 {
     "extends": "@acalyle/tsconfig/tsconfig.web.json",
-    "files": [".storybook/preview.tsx"],
+    "files": [".storybook/preview.tsx", "src/theme/test-theme.ts"],
     "include": ["**/*.test.ts"],
     "compilerOptions": {
         "jsx": "react-jsx",
+        "noEmit": false,
+        "composite": true,
     },
 }
