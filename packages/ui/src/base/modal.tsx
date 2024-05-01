@@ -6,6 +6,7 @@ import { type ReadableAtom, atom } from "nanostores";
 import { useEffect } from "react";
 import { vars } from "../theme";
 import { cx } from "./cx";
+import { center } from "./style-utilities";
 import type { TransitionStatus } from "./use-transition-status";
 
 const TRANSITION_DURATION = 200;
@@ -25,12 +26,12 @@ export class Modal<out Data = void, out Result = void> {
     private constructor(private readonly _default: Result) {}
     private readonly _mutex = Semaphore.mutex();
     private readonly _status = atom<TransitionStatus>("exited");
-    private readonly $ = atom<ModalData<Data, Result> | undefined>();
+    private readonly _$data = atom<ModalData<Data, Result> | undefined>();
     get status(): ReadableAtom<TransitionStatus> {
         return this._status;
     }
     get data(): ReadableAtom<{ data: Data } | undefined> {
-        return this.$;
+        return this._$data;
     }
     private async _transition(name: "enter" | "exit") {
         if (this._status.get().startsWith(name)) return;
@@ -48,18 +49,18 @@ export class Modal<out Data = void, out Result = void> {
     open(data: Data): Promise<Result> {
         return this._mutex.use(() => {
             const result = new Promise<Result>((resolve, reject) => {
-                this.$.set({ data, resolve, reject });
+                this._$data.set({ data, resolve, reject });
             });
             void this._transition("enter");
             return result;
         });
     }
     async close(result: Result = this._default): Promise<void> {
-        this.$.get()?.resolve(result);
+        this._$data.get()?.resolve(result);
         await this._transition("exit");
         // _transitionと同じく
         if (this._status.get() === "exiting") {
-            this.$.set(undefined);
+            this._$data.set(undefined);
         }
     }
 }
@@ -130,10 +131,7 @@ export const ModalContainer: <T>(props: {
                 <div
                     className={cx(
                         style({
-                            position: "absolute",
-                            top: "50%",
-                            left: "50%",
-                            translate: "-50% -50%",
+                            ...center(),
                             maxWidth: "min(calc(100vw - min(8em, 20%)), 72em)",
                             maxHeight: "calc(100dvh - 4em)",
                             backgroundColor: vars.color.bg.layout,

@@ -1,4 +1,5 @@
 import { style } from "@macaron-css/core";
+import { useRef } from "react";
 import { cx } from "../base/cx";
 import { vars } from "../theme";
 import { type ControlPartVariant, control } from "./base";
@@ -8,37 +9,30 @@ const ZeroWidthSpace = "\u200B";
 export const TextArea: React.FC<
     {
         variant?: ControlPartVariant;
-        value?: string;
-        defaultValue?: string;
         onValueChange?: (value: string) => void;
-        textareaId?: string;
-        placeholder?: string;
-        autoFocus?: boolean;
-        disabled?: boolean;
-        readOnly?: boolean;
-    } & React.ComponentPropsWithoutRef<"div">
+    } & React.ComponentPropsWithoutRef<"textarea">
 > = ({
     variant = "solid",
     value,
     defaultValue,
+    onChange,
     onValueChange,
-    textareaId,
-    placeholder,
-    autoFocus,
-    disabled,
-    readOnly,
     className,
     ...restProps
 }) => {
+    const dummyEl = useRef<HTMLDivElement>(null);
     const handleChange =
-        onValueChange &&
+        (value == null || (onChange ?? onValueChange)) &&
         ((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-            onValueChange(e.target.value);
+            if (value == null && dummyEl.current) {
+                dummyEl.current.textContent = e.target.value + ZeroWidthSpace;
+            }
+            onChange?.(e);
+            onValueChange?.(e.target.value);
         });
 
     return (
         <div
-            {...restProps}
             className={cx(
                 control.base,
                 control[variant],
@@ -54,22 +48,21 @@ export const TextArea: React.FC<
             )}
         >
             <textarea
-                id={textareaId}
-                // form={form}
-                // name={name}
+                {...restProps}
                 value={value}
                 defaultValue={defaultValue}
                 onChange={handleChange}
                 className={cx(
-                    control.reset,
                     style({
                         position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: "100%",
-                        height: "100%",
+                        inset: 0,
                         padding: "inherit",
                         overflow: "hidden",
+                        backgroundColor: "transparent",
+                        border: "none",
+                        outline: "none",
+                        appearance: "none",
+                        font: "inherit",
                         color: "transparent",
                         textAlign: "inherit",
                         textIndent: "inherit",
@@ -80,19 +73,15 @@ export const TextArea: React.FC<
                         resize: "none",
                         wordSpacing: "inherit",
                         caretColor: "var(--caret-color)",
-                        // opacity: 0,
                     }),
                 )}
-                autoFocus={autoFocus}
-                placeholder={placeholder}
-                disabled={disabled}
-                readOnly={readOnly}
                 autoComplete="off"
                 autoCapitalize="off"
                 autoCorrect="off"
                 spellCheck="false"
             />
             <div
+                ref={dummyEl}
                 className={style({
                     minHeight: "1em",
                     pointerEvents: "none",
@@ -100,7 +89,7 @@ export const TextArea: React.FC<
                 })}
                 aria-hidden
             >
-                {value}
+                {value ?? defaultValue}
                 {ZeroWidthSpace}
             </div>
         </div>

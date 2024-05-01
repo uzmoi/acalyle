@@ -1,4 +1,5 @@
 import "react";
+import "vite/client";
 
 declare module "react" {
     interface CSSProperties {

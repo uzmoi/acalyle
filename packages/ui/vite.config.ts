@@ -5,7 +5,15 @@ import { defineConfig } from "vitest/config";
 import { dependencies } from "./package.json";
 
 export default defineConfig({
-    plugins: [react(), macaronVitePlugin(), dts({ exclude: "**/*.css.ts" })],
+    plugins: [
+        react(),
+        macaronVitePlugin(),
+        dts({
+            exclude: "**/*.css.ts",
+            tsconfigPath: "tsconfig.main.json",
+            rollupTypes: true,
+        }),
+    ],
     build: {
         target: "esnext",
         sourcemap: true,

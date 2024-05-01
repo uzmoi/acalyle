@@ -1,10 +1,15 @@
+import { globalStyle } from "@macaron-css/core";
 import type { Preview } from "@storybook/react";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import React from "react";
 import { devTheme } from "../src/theme/test-theme";
+
+globalStyle("*, ::before, ::after", {
+    boxSizing: "border-box",
+    margin: 0,
+});
 
 const preview: Preview = {
     parameters: {
+        layout: "centered",
         actions: { argTypesRegex: "^on[A-Z].*" },
         controls: {
             matchers: {

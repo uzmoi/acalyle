@@ -4,9 +4,6 @@ import { Spinner } from "./spinner";
 export default {
     title: "Base/Spinner",
     component: Spinner,
-    parameters: {
-        layout: "centered",
-    },
 } satisfies Meta<typeof Spinner>;
 
 type Story = StoryObj<typeof Spinner>;

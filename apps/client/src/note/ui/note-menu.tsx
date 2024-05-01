@@ -1,4 +1,4 @@
-import { Button, Popover, vars } from "@acalyle/ui";
+import { Menu, Popover, vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import {
     BiClipboard,
@@ -49,11 +49,10 @@ const noteActions = (noteId: ID): readonly MenuAction[] => [
     },
 ];
 
+/** @package */
 export const NoteMenuButton: React.FC<{
     noteId: ID;
 }> = ({ noteId }) => {
-    const actions = noteActions(noteId);
-
     return (
         <Popover>
             <Popover.Button
@@ -77,53 +76,48 @@ export const NoteMenuButton: React.FC<{
                     whiteSpace: "nowrap",
                 })}
             >
-                <div role="menu">
-                    {actions.map(({ icon, text, disabled, type, onClick }) => (
-                        <Button
-                            key={text}
-                            role="menuitem"
-                            disabled={disabled}
-                            onClick={() => {
-                                void onClick?.();
-                            }}
-                            data-type={type}
-                            variant="unstyled"
-                            className={style({
-                                display: "block",
-                                width: "100%",
-                                padding: "0.25em 1em",
-                                fontSize: "0.9em",
-                                fontWeight: "normal",
-                                textAlign: "start",
-                                transition:
-                                    "background-color 200ms, color 200ms",
-                                selectors: {
-                                    "& + &": {
-                                        borderTop: `1px solid ${vars.color.fg.mute}`,
-                                    },
-                                    '&[data-type="danger"]:enabled:is(:hover, :focus)':
-                                        {
-                                            color: vars.color.danger,
-                                        },
-                                    "&:enabled:is(:hover, :focus)": {
-                                        backgroundColor: "#fff2",
-                                    },
-                                },
-                            })}
-                        >
-                            {icon}
-                            <span
-                                className={style({
-                                    marginLeft: "0.5em",
-                                    verticalAlign: "middle",
-                                })}
-                            >
-                                {text}
-                            </span>
-                        </Button>
-                    ))}
-                </div>
+                <NoteMenuContent noteId={noteId} />
             </Popover.Content>
         </Popover>
+    );
+};
+
+/** @package */
+export const NoteMenuContent: React.FC<{
+    noteId: ID;
+}> = ({ noteId }) => {
+    const actions = noteActions(noteId);
+
+    return (
+        <Menu>
+            {actions.map(({ icon, text, disabled, type, onClick }) => (
+                <Menu.Item
+                    key={text}
+                    disabled={disabled}
+                    onClick={() => {
+                        void onClick?.();
+                    }}
+                    data-type={type}
+                    className={style({
+                        selectors: {
+                            '&[data-type="danger"]:enabled:is(:hover, :focus)':
+                                {
+                                    color: vars.color.danger,
+                                },
+                        },
+                    })}
+                >
+                    {icon}
+                    <span
+                        className={style({
+                            marginLeft: "0.5em",
+                            verticalAlign: "middle",
+                        })}
+                    >
+                        {text}
+                    </span>
+                </Menu.Item>
+            ))}
+        </Menu>
     );
 };

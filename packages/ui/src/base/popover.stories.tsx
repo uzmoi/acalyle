@@ -17,9 +17,6 @@ export default {
             </Popover.Content>
         </Popover>
     ),
-    parameters: {
-        layout: "centered",
-    },
     args: {
         closeOnClick: false,
     },

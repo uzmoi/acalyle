@@ -4,26 +4,30 @@ import { TextArea } from "./textarea";
 export default {
     title: "Control/TextArea",
     component: TextArea,
-    parameters: {
-        layout: "centered",
+    argTypes: {
+        value: { type: "string" },
+    },
+    args: {
+        value: undefined,
+        defaultValue: "お前のギターの\nせいでバンドが\n死んでいる",
     },
 } satisfies Meta<typeof TextArea>;
 
 type Story = StoryObj<typeof TextArea>;
 
-export const solid: Story = {
+export const Solid: Story = {
     args: {
         variant: "solid",
     },
 };
 
-export const outline: Story = {
+export const Outline: Story = {
     args: {
         variant: "outline",
     },
 };
 
-export const unstyled: Story = {
+export const Unstyled: Story = {
     args: {
         variant: "unstyled",
     },

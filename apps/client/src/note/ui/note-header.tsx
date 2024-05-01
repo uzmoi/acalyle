@@ -7,6 +7,7 @@ import { TagList } from "~/ui/tag/TagList";
 import { useNote } from "./hook";
 import { NoteMenuButton } from "./note-menu";
 
+/** @package */
 export const NoteHeader: React.FC<{
     bookRef: BookRef;
     noteId: ID;

@@ -11,7 +11,8 @@ export default defineConfig({
         nitrogql({ include: ["**/*.graphql"] }),
         dts({
             exclude: "**/*.css.ts",
-            insertTypesEntry: true,
+            tsconfigPath: "tsconfig.main.json",
+            rollupTypes: true,
         }),
     ],
     resolve: {

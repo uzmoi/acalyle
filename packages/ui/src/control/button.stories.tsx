@@ -4,9 +4,6 @@ import { Button } from "./button";
 export default {
     title: "Control/Button",
     component: Button,
-    parameters: {
-        layout: "centered",
-    },
     args: {
         children: "hoge",
     },

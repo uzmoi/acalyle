@@ -79,13 +79,13 @@ const PopoverButton: React.FC<
 
 // eslint-disable-next-line pure-module/pure-module
 Popover.Button = PopoverButton;
-if (process.env.NODE_ENV === "development") {
+if (import.meta.env.DEV) {
     // eslint-disable-next-line pure-module/pure-module
     Popover.Button.displayName = "Popover.Button";
 }
 
-const transitionDuration = 200;
-const transition = () => timeout(transitionDuration);
+const TRANSITION_DURATION = 200;
+const transition = () => timeout(TRANSITION_DURATION);
 
 const PopoverContent: React.FC<
     {
@@ -118,14 +118,10 @@ const PopoverContent: React.FC<
                     backgroundColor: vars.color.bg.block,
                     borderRadius: vars.radius.block,
                     boxShadow: "0 0 2em #111",
-                    transition: `opacity ${transitionDuration}ms`,
+                    transition: `opacity ${TRANSITION_DURATION}ms`,
                     selectors: {
-                        '&[data-open="false"]': {
-                            opacity: 0,
-                        },
-                        '&[data-status="exited"]': {
-                            visibility: "hidden",
-                        },
+                        '&[data-open="false"]': { opacity: 0 },
+                        '&[data-status="exited"]': { visibility: "hidden" },
                     },
                 }),
                 className,
@@ -139,7 +135,7 @@ const PopoverContent: React.FC<
 
 // eslint-disable-next-line pure-module/pure-module
 Popover.Content = PopoverContent;
-if (process.env.NODE_ENV === "development") {
+if (import.meta.env.DEV) {
     // eslint-disable-next-line pure-module/pure-module
     Popover.Content.displayName = "Popover.Content";
 }

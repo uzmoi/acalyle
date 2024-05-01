@@ -5,6 +5,9 @@ import { Modal, ModalContainer } from "./modal";
 export default {
     title: "Base/Modal",
     component: ModalContainer,
+    parameters: {
+        layout: "fullscreen",
+    },
     render: props => (
         <div style={{ height: "8em" }}>
             <Button
@@ -19,9 +22,6 @@ export default {
             <ModalContainer {...props} />
         </div>
     ),
-    parameters: {
-        layout: "fullscreen",
-    },
     args: {
         render: close => (
             <div style={{ padding: "1em" }}>

@@ -5,9 +5,6 @@ import { NoteMenuButton } from "./note-menu";
 export default {
     title: "Note / NoteMenu",
     component: NoteMenuButton,
-    parameters: {
-        layout: "centered",
-    },
 } satisfies Meta<typeof NoteMenuButton>;
 
 type Story = StoryObj<typeof NoteMenuButton>;

@@ -1,1 +1,4 @@
+# This config file is for VSCode.
+
 schema = "data/schema.graphql"
+documents = "apps/client/src/**/*.graphql"

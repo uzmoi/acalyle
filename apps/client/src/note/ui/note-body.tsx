@@ -1,4 +1,4 @@
-import { Button, vars } from "@acalyle/ui";
+import { Button, corner, vars } from "@acalyle/ui";
 import { style } from "@macaron-css/core";
 import { useState } from "react";
 import { BiEditAlt } from "react-icons/bi";
@@ -7,6 +7,7 @@ import { MemoContentsEditor } from "../../ui/MemoContentsEditor";
 import { useNote } from "./hook";
 import { NoteContents } from "./note-contents";
 
+/** @package */
 export const NoteBody: React.FC<{
     noteId: ID;
 }> = ({ noteId }) => {
@@ -16,34 +17,22 @@ export const NoteBody: React.FC<{
     if (note == null) return null;
 
     return (
-        <div
-            className={style({
-                // FIXME: margin
-                marginTop: "1em",
-                position: "relative",
-            })}
-        >
+        <div className={style({ position: "relative" })}>
             <Button
                 variant="unstyled"
                 className={style({
-                    position: "absolute",
-                    top: 0,
-                    right: 0,
-                    translate: "50% -50%",
+                    ...corner("upper", "right"),
                     padding: "0.25em",
                     lineHeight: 1,
                     borderRadius: "50%",
                     backgroundColor: vars.color.bg.inline,
                     zIndex: vars.zIndex.max,
-                    ":disabled": {
-                        visibility: "hidden",
-                    },
+                    ":disabled": { visibility: "hidden" },
+                    // <NoteContents />もしくはこのボタンに:hover時のみ可視化
                     transition: "opacity 125ms",
                     opacity: 0,
                     selectors: {
-                        ":hover > &, &:hover": {
-                            opacity: 1,
-                        },
+                        ":hover > &, &:hover": { opacity: 1 },
                     },
                 })}
                 onClick={() => {
