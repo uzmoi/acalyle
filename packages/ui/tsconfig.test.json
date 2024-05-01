@@ -1,7 +1,7 @@
 {
     "extends": "@acalyle/tsconfig/tsconfig.web.json",
     "files": [".storybook/preview.tsx", "src/theme/test-theme.ts"],
-    "include": ["**/*.test.ts"],
+    "include": ["**/*.test.*", "**/*.test-d.*", "**/*.stories.*"],
     "compilerOptions": {
         "jsx": "react-jsx",
         "noEmit": false,
