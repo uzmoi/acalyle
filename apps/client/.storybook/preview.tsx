@@ -1,5 +1,5 @@
 import type { Preview } from "@storybook/react";
-import { Provider } from "@acalyle/client/src/dev/provider";
+import { Provider } from "../src/dev/provider";
 
 const preview: Preview = {
     parameters: {

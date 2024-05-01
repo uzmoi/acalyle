@@ -1,16 +1,8 @@
 {
-    "extends": "@acalyle/tsconfig/tsconfig.web.json",
-    "include": ["src"],
-    "exclude": ["**/*.test.*", "**/*.test-d.*", "**/*.stories.*"],
-    "compilerOptions": {
-        "jsx": "react-jsx",
-        "lib": ["DOM", "DOM.Iterable", "ESNext"],
-        "baseUrl": "./",
-        "paths": { "~/*": ["./src/*"] },
-        "allowArbitraryExtensions": true
-    },
+    "extends": "@acalyle/tsconfig/tsconfig.node.json",
+    "files": ["graphql.config.ts", "vite.config.ts", ".storybook/main.ts"],
     "references": [
-        { "path": "./tsconfig.config.json" },
-        { "path": "./tsconfig.test.json" }
+        { "path": "./tsconfig.test.json" },
+        { "path": "./tsconfig.main.json" }
     ]
 }
