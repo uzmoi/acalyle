@@ -2,7 +2,7 @@ import { macaronVitePlugin } from "@macaron-css/vite";
 import nitrogql from "@nitrogql/rollup-plugin";
 import react from "@vitejs/plugin-react-swc";
 import dts from "vite-plugin-dts";
-import { defineConfig } from "vitest/config";
+import { coverageConfigDefaults, defineConfig } from "vitest/config";
 
 const isStorybook = process.argv[1]?.endsWith("storybook");
 
@@ -37,6 +37,16 @@ export default defineConfig({
                 target: "http://localhost:4323/",
                 rewrite: path => `${path.replace(/^\/api/, "")}?endpoint=/api`,
             },
+        },
+    },
+    test: {
+        coverage: {
+            include: ["src/**"],
+            exclude: [
+                ...coverageConfigDefaults.exclude,
+                "**/__{generated,mocks}__/**",
+                "**/*.stories.tsx",
+            ],
         },
     },
 });
