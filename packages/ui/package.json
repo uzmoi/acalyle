@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@acalyle/util": "*",
-    "@macaron-css/core": "^1.0.0",
+    "@macaron-css/core": "^1.5.2",
     "@nanostores/react": "^0.5.0",
     "emnorst": "^1.0.0-next.2",
     "nanostores": "^0.8.0",
@@ -26,7 +26,7 @@
     "@acalyle/eslint-config": "*",
     "@acalyle/tsconfig": "*",
     "@chromatic-com/storybook": "^1.3.3",
-    "@macaron-css/vite": "^1.1.3",
+    "@macaron-css/vite": "^1.5.1",
     "@storybook/addon-a11y": "^8.0.9",
     "@storybook/addon-essentials": "^8.0.9",
     "@storybook/addon-interactions": "^8.0.9",
