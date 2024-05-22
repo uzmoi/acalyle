@@ -1,5 +1,6 @@
-import { macaronVitePlugin } from "@macaron-css/vite";
+import { tagResolver } from "@acalyle/css/tag-resolver";
 import react from "@vitejs/plugin-react-swc";
+import wywInJS from "@wyw-in-js/vite";
 import dts from "vite-plugin-dts";
 import { coverageConfigDefaults, defineConfig } from "vitest/config";
 import { dependencies } from "./package.json";
@@ -7,7 +8,13 @@ import { dependencies } from "./package.json";
 export default defineConfig({
     plugins: [
         react(),
-        macaronVitePlugin(),
+        (wywInJS as unknown as typeof import("@wyw-in-js/vite").default)({
+            sourceMap: true,
+            babelOptions: {
+                presets: ["@babel/preset-typescript"],
+            },
+            tagResolver,
+        }),
         dts({
             exclude: "**/*.css.ts",
             tsconfigPath: "tsconfig.main.json",

@@ -15,6 +15,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@acalyle/css": "*",
     "@acalyle/util": "*",
     "@macaron-css/core": "^1.5.2",
     "@nanostores/react": "^0.5.0",
@@ -38,6 +39,7 @@
     "@types/react": "^18.3.2",
     "@vitejs/plugin-react-swc": "^3.6.0",
     "@vitest/coverage-v8": "^1.5.3",
+    "@wyw-in-js/vite": "^0.5.3",
     "happy-dom": "^14.7.1",
     "react-dom": "^18.3.1",
     "storybook": "^8.0.9",
