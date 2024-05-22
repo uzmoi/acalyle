@@ -1,10 +1,17 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { fn } from "@storybook/test";
 import { FileInput } from "./file-input";
 
-export default {
+const meta: Meta<typeof FileInput> = {
     title: "Control/FileInput",
     component: FileInput,
-} satisfies Meta<typeof FileInput>;
+    args: {
+        onChange: fn(),
+        onFileChange: fn<[File | FileList]>(),
+    },
+};
+
+export default meta;
 
 type Story = StoryObj<typeof FileInput>;
 

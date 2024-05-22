@@ -35,6 +35,6 @@
     "@types/eslint__js": "^8.42.3",
     "@types/esquery": "^1.5.1",
     "tsup": "^8.0.0",
-    "vitest": "^0.34.6"
+    "vitest": "^1.5.3"
   }
 }

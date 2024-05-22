@@ -1,7 +1,7 @@
 import { macaronVitePlugin } from "@macaron-css/vite";
 import react from "@vitejs/plugin-react-swc";
 import dts from "vite-plugin-dts";
-import { defineConfig } from "vitest/config";
+import { coverageConfigDefaults, defineConfig } from "vitest/config";
 import { dependencies } from "./package.json";
 
 export default defineConfig({
@@ -29,5 +29,9 @@ export default defineConfig({
     },
     test: {
         environment: "happy-dom",
+        coverage: {
+            include: ["src/**"],
+            exclude: [...coverageConfigDefaults.exclude, "**/*.stories.tsx"],
+        },
     },
 });

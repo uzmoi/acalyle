@@ -23,7 +23,7 @@ const config: NitrogqlConfig = {
                     scalarTypes: {
                         Upload: "null",
                         DateTime: "string",
-                        ID: 'import("emnorst").Meta<string, "ID">',
+                        ID: 'import("~/lib/graphql").ID',
                     },
                 },
             },
