@@ -6,7 +6,7 @@ import { complementTagSymbol } from "~/lib/complement-tag";
 import { useBook } from "~/store/hook";
 
 export const TagComplementList: React.FC<{
-    ref?: React.Ref<string | undefined>;
+    ref?: React.LegacyRef<string | undefined>;
     bookHandle: string;
     input: string;
     selectedIndex: number;

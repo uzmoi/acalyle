@@ -75,8 +75,9 @@ const renderNoteModalContent = ({ bookRef, noteId }: NoteModalData) => (
                         memoId: noteId,
                     })}
                     onClick={close}
+                    aria-label="view on page"
                 >
-                    <BiExpandAlt alt="view on page" />
+                    <BiExpandAlt />
                 </Link>
                 <Button variant="unstyled" onClick={close}>
                     <BiX />
