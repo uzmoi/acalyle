@@ -1,5 +1,5 @@
+import { style } from "@acalyle/css";
 import { Alert, Intersection, Spinner, vars } from "@acalyle/ui";
-import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { useCallback, useDeferredValue, useState } from "react";
 import { BiBookAdd, BiError } from "react-icons/bi";
@@ -75,9 +75,7 @@ export const BookListPage: React.FC = () => {
                     >
                         Loading...
                     </span>
-                    <Spinner
-                        className={style({ vars: { "--size": "1.5em" } })}
-                    />
+                    <Spinner className={style({ "--size": "1.5em" })} />
                 </div>
             )}
             {error && (

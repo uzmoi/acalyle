@@ -1,5 +1,5 @@
+import { style } from "@acalyle/css";
 import { vars } from "@acalyle/ui";
-import { style } from "@macaron-css/core";
 import { devAppTheme } from "./theme";
 
 export const Provider: React.FC<{

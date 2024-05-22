@@ -1,5 +1,4 @@
-import { style } from "@macaron-css/core";
-import { cx } from "../base/cx";
+import { cx, style } from "@acalyle/css";
 import { vars } from "../theme/theme";
 import { Button } from "./button";
 
@@ -26,13 +25,11 @@ const MenuItem: React.FC<
                     fontWeight: "normal",
                     textAlign: "start",
                     transition: "background-color 200ms, color 200ms",
-                    selectors: {
-                        "& + &": {
-                            borderTop: `1px solid ${vars.color.fg.mute}`,
-                        },
-                        "&:enabled:is(:hover, :focus)": {
-                            backgroundColor: "#fff2",
-                        },
+                    "& + &": {
+                        borderTop: `1px solid ${vars.color.fg.mute}`,
+                    },
+                    "&:enabled:is(:hover, :focus)": {
+                        backgroundColor: "#fff2",
                     },
                 }),
                 className,

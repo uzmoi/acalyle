@@ -1,5 +1,5 @@
+import { style } from "@acalyle/css";
 import { Button, ControlGroup, Popover, Spinner } from "@acalyle/ui";
-import { style } from "@macaron-css/core";
 import { Suspense, useCallback } from "react";
 import { BiCaretDown } from "react-icons/bi";
 import { createNote } from "~/note/store/note";
@@ -52,7 +52,7 @@ export const CreateMemoButton: React.FC<{
                                 translate: "-50%",
                                 marginBlock: "0.5em",
                                 fontSize: "0.75em",
-                                vars: { "--size": "1.5em" },
+                                "--size": "1.5em",
                             })}
                         />
                     }

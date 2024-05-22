@@ -1,5 +1,5 @@
+import { style } from "@acalyle/css";
 import { Button, corner, vars } from "@acalyle/ui";
-import { style } from "@macaron-css/core";
 import { useState } from "react";
 import { BiEditAlt } from "react-icons/bi";
 import type { ID } from "~/__generated__/graphql";
@@ -27,13 +27,11 @@ export const NoteBody: React.FC<{
                     borderRadius: "50%",
                     backgroundColor: vars.color.bg.inline,
                     zIndex: vars.zIndex.max,
-                    ":disabled": { visibility: "hidden" },
+                    "&:disabled": { visibility: "hidden" },
                     // <NoteContents />もしくはこのボタンに:hover時のみ可視化
                     transition: "opacity 125ms",
                     opacity: 0,
-                    selectors: {
-                        ":hover > &, &:hover": { opacity: 1 },
-                    },
+                    ":hover > &, &:hover": { opacity: 1 },
                 })}
                 onClick={() => {
                     setIsInEdit(true);

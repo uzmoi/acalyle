@@ -1,4 +1,4 @@
-import { globalStyle } from "@macaron-css/core";
+import { globalStyle } from "@acalyle/css";
 import type { Preview } from "@storybook/react";
 import { devTheme } from "../src/theme/test-theme";
 

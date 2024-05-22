@@ -1,6 +1,6 @@
 import type { AcalyleMemoTag } from "@acalyle/core";
+import { style } from "@acalyle/css";
 import { vars } from "@acalyle/ui";
-import { style } from "@macaron-css/core";
 
 export const Tag: React.FC<{
     tag: AcalyleMemoTag;

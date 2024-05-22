@@ -1,6 +1,5 @@
-import { style } from "@macaron-css/core";
+import { cx, style } from "@acalyle/css";
 import { vars } from "../theme";
-import { cx } from "./cx";
 
 export const Alert: React.FC<
     {
@@ -17,16 +16,14 @@ export const Alert: React.FC<
                     padding: "0.75em 1.25em",
                     border: "1px solid var(--alert-color)",
                     borderRadius: vars.radius.block,
-                    selectors: {
-                        '&[data-alert="error"]': {
-                            vars: { "--alert-color": vars.color.danger },
-                        },
-                        '&[data-alert="warning"]': {
-                            vars: { "--alert-color": vars.color.warning },
-                        },
-                        '&[data-alert="success"]': {
-                            vars: { "--alert-color": vars.color.success },
-                        },
+                    '&[data-alert="error"]': {
+                        "--alert-color": vars.color.danger,
+                    },
+                    '&[data-alert="warning"]': {
+                        "--alert-color": vars.color.warning,
+                    },
+                    '&[data-alert="success"]': {
+                        "--alert-color": vars.color.success,
                     },
                 }),
                 className,

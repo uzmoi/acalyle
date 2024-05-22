@@ -1,5 +1,5 @@
+import { style } from "@acalyle/css";
 import { Button, vars } from "@acalyle/ui";
-import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { assert } from "emnorst";
 import { useCallback } from "react";
@@ -57,10 +57,8 @@ export const CreateTemplateMemoButtonList: React.FC<{
                         fontWeight: "normal",
                         textAlign: "start",
                         borderTop: `1px solid ${vars.color.fg.mute}`,
-                        selectors: {
-                            "&:enabled:is(:hover, :focus)": {
-                                backgroundColor: "#fff2",
-                            },
+                        "&:enabled:is(:hover, :focus)": {
+                            backgroundColor: "#fff2",
                         },
                     })}
                     onClick={createTemplateMemo}

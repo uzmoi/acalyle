@@ -1,11 +1,10 @@
-import { style } from "@macaron-css/core";
+import { cx, style } from "@acalyle/css";
 import { useStore } from "@nanostores/react";
 import { timeout } from "emnorst";
 import { atom, onMount } from "nanostores";
 import { createContext, useCallback, useContext, useId } from "react";
 import { Button } from "../control/button";
 import { vars } from "../theme/theme";
-import { cx } from "./cx";
 import { useTransitionStatus } from "./use-transition-status";
 
 const PopoverStore = /* #__PURE__ */ atom<string | null>(null);
@@ -119,10 +118,8 @@ const PopoverContent: React.FC<
                     borderRadius: vars.radius.block,
                     boxShadow: "0 0 2em #111",
                     transition: `opacity ${TRANSITION_DURATION}ms`,
-                    selectors: {
-                        '&[data-open="false"]': { opacity: 0 },
-                        '&[data-status="exited"]': { visibility: "hidden" },
-                    },
+                    '&[data-open="false"]': { opacity: 0 },
+                    '&[data-status="exited"]': { visibility: "hidden" },
                 }),
                 className,
             )}

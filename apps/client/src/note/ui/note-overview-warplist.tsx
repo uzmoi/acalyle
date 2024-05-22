@@ -1,4 +1,4 @@
-import { style } from "@macaron-css/core";
+import { style } from "@acalyle/css";
 import { useStore } from "@nanostores/react";
 import type { ID } from "~/__generated__/graphql";
 import type { BookRef } from "~/book/store";

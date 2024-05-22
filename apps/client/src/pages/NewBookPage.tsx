@@ -1,4 +1,4 @@
-import { style } from "@macaron-css/core";
+import { style } from "@acalyle/css";
 import { useCallback } from "react";
 import { BiLeftArrowAlt } from "react-icons/bi";
 import type { Book } from "~/book/store";

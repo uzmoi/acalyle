@@ -1,5 +1,5 @@
+import { style } from "@acalyle/css";
 import { vars } from "@acalyle/ui";
-import { style } from "@macaron-css/core";
 import { link } from "~/pages/link";
 import { Link } from "~/ui/Link";
 import type { BookRef } from "../store";

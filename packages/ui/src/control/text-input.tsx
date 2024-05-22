@@ -1,4 +1,4 @@
-import { cx } from "../base/cx";
+import { cx } from "@acalyle/css";
 import { type ControlPartVariant, control } from "./base";
 
 // prettier-ignore

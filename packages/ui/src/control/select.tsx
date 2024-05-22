@@ -1,5 +1,4 @@
-import { style } from "@macaron-css/core";
-import { cx } from "../base/cx";
+import { cx, style } from "@acalyle/css";
 import { vars } from "../theme";
 import { type ControlPartVariant, control } from "./base";
 

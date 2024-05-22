@@ -1,5 +1,4 @@
-import { styleVariants } from "@macaron-css/core";
-import { cx } from "./cx";
+import { cx, style } from "@acalyle/css";
 
 export type ListVariant = keyof typeof variants;
 
@@ -22,13 +21,13 @@ export const List: React.FC<
     );
 };
 
-const variants = /* #__PURE__ */ styleVariants({
-    default: [],
-    unstyled: {
+const variants = {
+    default: "",
+    unstyled: style({
         paddingLeft: 0,
         listStyle: "none",
-    },
-});
+    }),
+};
 
 type ListItemComponent = React.FC<React.ComponentPropsWithoutRef<"li">>;
 // eslint-disable-next-line pure-module/pure-module

@@ -1,3 +1,4 @@
+import { style } from "@acalyle/css";
 import {
     Button,
     ControlGroup,
@@ -6,7 +7,6 @@ import {
     Modal,
     ModalContainer,
 } from "@acalyle/ui";
-import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { useCallback, useState } from "react";
 import type { ID } from "~/__generated__/graphql";
@@ -87,10 +87,8 @@ const BookSelectForm: React.FC<{
                             setBookId(bookId);
                         }}
                         className={style({
-                            selectors: {
-                                '&[data-selected="true"]': {
-                                    outline: "1px solid red",
-                                },
+                            '&[data-selected="true"]': {
+                                outline: "1px solid red",
                             },
                         })}
                     >

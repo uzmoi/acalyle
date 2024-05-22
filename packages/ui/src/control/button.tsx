@@ -1,5 +1,4 @@
-import { style } from "@macaron-css/core";
-import { cx } from "../base/cx";
+import { cx, style } from "@acalyle/css";
 import { vars } from "../theme";
 import { type ControlPartVariant, control } from "./base";
 
@@ -19,7 +18,7 @@ export const Button: React.FC<
                 style({
                     fontWeight: "bold",
                     cursor: "pointer",
-                    ":disabled": {
+                    "&:disabled": {
                         color: vars.color.fg.mute,
                         cursor: "not-allowed",
                     },

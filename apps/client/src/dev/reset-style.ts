@@ -1,5 +1,5 @@
 /* eslint-disable pure-module/pure-module */
-import { globalStyle } from "@macaron-css/core";
+import { globalStyle } from "@acalyle/css";
 
 globalStyle("*, ::before, ::after", {
     boxSizing: "border-box",
