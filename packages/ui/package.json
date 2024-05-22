@@ -20,7 +20,7 @@
     "@nanostores/react": "^0.5.0",
     "emnorst": "^1.0.0-next.2",
     "nanostores": "^0.8.0",
-    "react": "^18.2.0"
+    "react": "^18.3.1"
   },
   "devDependencies": {
     "@acalyle/eslint-config": "*",
@@ -35,11 +35,11 @@
     "@storybook/test": "^8.0.9",
     "@testing-library/react": "^15.0.6",
     "@testing-library/user-event": "^14.5.2",
-    "@types/react": "^18.0.28",
+    "@types/react": "^18.3.2",
     "@vitejs/plugin-react-swc": "^3.6.0",
     "@vitest/coverage-v8": "^1.5.3",
     "happy-dom": "^14.7.1",
-    "react-dom": "^18.2.0",
+    "react-dom": "^18.3.1",
     "storybook": "^8.0.9",
     "vite": "^5.2.10",
     "vite-plugin-dts": "^3.9.0",
