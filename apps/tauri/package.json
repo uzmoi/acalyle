@@ -12,7 +12,6 @@
     "@acalyle/client": "*",
     "@acalyle/router": "*",
     "@acalyle/ui": "*",
-    "@macaron-css/core": "^1.0.0",
     "@nanostores/react": "^0.4.1",
     "@tauri-apps/api": "^1.2.0",
     "nanostores": "^0.7.4",
@@ -20,7 +19,6 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@macaron-css/vite": "^1.1.3",
     "@tauri-apps/cli": "^1.2.2",
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18.0.6",
