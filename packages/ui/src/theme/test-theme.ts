@@ -1,3 +1,5 @@
+import "./reset";
+
 import { createTheme, vars } from ".";
 
 export const devTheme = /* #__PURE__ */ createTheme<typeof vars>("acalyle", {

@@ -2,7 +2,9 @@
   "private": true,
   "name": "@acalyle/ui",
   "type": "module",
-  "sideEffects": false,
+  "sideEffects": [
+    "src/theme/reset.ts"
+  ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {

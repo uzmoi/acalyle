@@ -1,5 +1,4 @@
 import "@acalyle/ui/dist/style.css";
-import "../src/dev/reset-style";
 
 import type { Preview } from "@storybook/react";
 import { Provider } from "../src/dev/provider";
