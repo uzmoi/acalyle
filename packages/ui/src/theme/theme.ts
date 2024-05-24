@@ -9,14 +9,15 @@ const createGlobalThemeContract = <T extends Tokens>(
     path: readonly string[] = [],
 ): MapLeafNodes<T, VarFunction> => {
     for (const [key, value] of Object.entries(tokens)) {
-        if (value == null) continue;
+        const nextPath = [...path, key];
         tokens[key as keyof T] = (
-            typeof tokens === "object" ?
-                createGlobalThemeContract(value as Tokens, mapFn, [
-                    ...path,
-                    key,
-                ])
-            :   `var(--${mapFn(tokens, path)})`) as T[keyof T];
+            typeof value === "string" || value == null ?
+                `var(--${mapFn(value, nextPath)})`
+            :   createGlobalThemeContract(
+                    value,
+                    mapFn,
+                    nextPath,
+                )) as T[keyof T];
     }
     return tokens as unknown as MapLeafNodes<T, VarFunction>;
 };
