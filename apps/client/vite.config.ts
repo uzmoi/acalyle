@@ -30,7 +30,11 @@ export default defineConfig({
             formats: ["es"],
         },
         rollupOptions: {
-            external: [/^react/, /^react-dom/, /^@acalyle\//],
+            external: [
+                /^react/,
+                /^react-dom/,
+                /^@acalyle\/(?!ui\/dist\/style\.css)/,
+            ],
         },
     },
     server: {
