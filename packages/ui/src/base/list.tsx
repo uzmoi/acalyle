@@ -1,6 +1,6 @@
 import { cx, style } from "@acalyle/css";
 
-export type ListVariant = keyof typeof variants;
+export type ListVariant = "default" | "unstyled";
 
 export const List: React.FC<
     (
@@ -16,17 +16,13 @@ export const List: React.FC<
     return (
         <Component
             {...restProps}
-            className={cx(variants[variant], className)}
+            className={cx(
+                variant === "unstyled" &&
+                    style({ paddingLeft: 0, listStyle: "none" }),
+                className,
+            )}
         />
     );
-};
-
-const variants = {
-    default: "",
-    unstyled: style({
-        paddingLeft: 0,
-        listStyle: "none",
-    }),
 };
 
 type ListItemComponent = React.FC<React.ComponentPropsWithoutRef<"li">>;
