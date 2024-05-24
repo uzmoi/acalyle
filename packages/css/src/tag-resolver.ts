@@ -7,13 +7,13 @@ export const tagResolver = (source: string, tag: string): string | null => {
 
     switch (tag) {
         case "style": {
-            return require.resolve("@acalyle/css/processors/style");
+            return require.resolve("@acalyle/css/processors/style.cjs");
         }
         case "globalStyle": {
-            return require.resolve("@acalyle/css/processors/global-style");
+            return require.resolve("@acalyle/css/processors/global-style.cjs");
         }
         case "keyframes": {
-            return require.resolve("@acalyle/css/processors/keyframes");
+            return require.resolve("@acalyle/css/processors/keyframes.cjs");
         }
     }
 
