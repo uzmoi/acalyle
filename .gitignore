@@ -12,8 +12,11 @@ _*
 *.tsbuildinfo
 *.log
 
-/app
-/data
+/app/
+/data/
 
+# nitrogql
 *.d.graphql.ts
 *.d.graphql.ts.map
+
+vite.config.ts.timestamp-*.mjs

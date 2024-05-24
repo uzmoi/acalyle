@@ -39,4 +39,5 @@ typecheck
 uploadables
 uzmoi
 Valueable
+vite
 warplist
