@@ -5,21 +5,19 @@ import dts from "vite-plugin-dts";
 import { coverageConfigDefaults, defineConfig } from "vitest/config";
 import { dependencies } from "./package.json";
 
+const isStorybook = process.argv[1]?.includes("storybook");
+
 export default defineConfig({
     plugins: [
         react(),
         (wywInJS as unknown as typeof import("@wyw-in-js/vite").default)({
+            include: ["**/*.{ts,tsx}"],
+            babelOptions: { presets: ["@babel/preset-typescript"] },
             sourceMap: true,
-            babelOptions: {
-                presets: ["@babel/preset-typescript"],
-            },
             tagResolver,
         }),
-        dts({
-            exclude: "**/*.css.ts",
-            tsconfigPath: "tsconfig.main.json",
-            rollupTypes: true,
-        }),
+        !isStorybook &&
+            dts({ tsconfigPath: "tsconfig.main.json", rollupTypes: true }),
     ],
     build: {
         target: "esnext",

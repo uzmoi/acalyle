@@ -5,7 +5,7 @@ import wywInJS from "@wyw-in-js/vite";
 import dts from "vite-plugin-dts";
 import { coverageConfigDefaults, defineConfig } from "vitest/config";
 
-const isStorybook = process.argv[1]?.endsWith("storybook");
+const isStorybook = process.argv[1]?.includes("storybook");
 
 export default defineConfig({
     plugins: [
@@ -18,11 +18,7 @@ export default defineConfig({
         }),
         nitrogql({ include: ["**/*.graphql"] }),
         !isStorybook &&
-            dts({
-                exclude: "**/*.css.ts",
-                tsconfigPath: "tsconfig.main.json",
-                rollupTypes: true,
-            }),
+            dts({ tsconfigPath: "tsconfig.main.json", rollupTypes: true }),
     ],
     resolve: {
         alias: { "~/": `${__dirname}/src/` },
