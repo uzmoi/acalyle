@@ -7,7 +7,15 @@ export const Tag: React.FC<{
 }> = ({ tag }) => {
     return (
         <span
-            className={style({ fontFamily: vars.font.mono })}
+            className={style({
+                display: "inline-block",
+                padding: "0.125rem 0.25rem",
+                lineHeight: 1,
+                fontSize: "0.75em",
+                fontFamily: vars.font.mono,
+                border: `1px solid ${vars.color.accent}`,
+                borderRadius: vars.radius.block,
+            })}
             data-tag-type={tag.type()}
         >
             <span>{tag.symbol}</span>

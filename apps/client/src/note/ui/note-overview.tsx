@@ -7,9 +7,9 @@ import { useBook } from "~/book/ui/hook";
 import { link } from "~/pages/link";
 import { Link } from "~/ui/Link";
 import { openNoteInModal } from "~/ui/modal";
-import { TagList } from "~/ui/tag/TagList";
 import { useNote } from "./hook";
 import { NoteContents } from "./note-contents";
+import { TagList } from "./tag-list";
 
 export const NoteOverview: React.FC<{
     bookId: ID;

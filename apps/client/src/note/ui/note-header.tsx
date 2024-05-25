@@ -3,9 +3,9 @@ import type { ID } from "~/__generated__/graphql";
 import type { BookRef } from "~/book/store";
 import { AddTagButton } from "~/ui/AddTagButton";
 import { TimeStamp } from "~/ui/TimeStamp";
-import { TagList } from "~/ui/tag/TagList";
 import { useNote } from "./hook";
 import { NoteMenuButton } from "./note-menu";
+import { TagList } from "./tag-list";
 
 /** @package */
 export const NoteHeader: React.FC<{

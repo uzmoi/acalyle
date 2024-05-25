@@ -1,23 +1,23 @@
 import { AcalyleMemoTag } from "@acalyle/core";
-import { style } from "@acalyle/css";
+import { cx, style } from "@acalyle/css";
 import { List } from "@acalyle/ui";
 import { nonNullable } from "emnorst";
-import { Tag } from "./Tag";
+import { Tag } from "./tag";
 
 export const TagList: React.FC<{
     tags: readonly string[];
     className?: string;
-}> = ({ tags: tagStrings, className }) => {
-    const tags = tagStrings.map(AcalyleMemoTag.fromString).filter(nonNullable);
+}> = ({ tags, className }) => {
+    const noteTags = tags.map(AcalyleMemoTag.fromString).filter(nonNullable);
 
     return (
-        <List className={className}>
-            {tags.map(tag => (
+        <List className={cx(style({ paddingInline: "0.5em" }), className)}>
+            {noteTags.map(tag => (
                 <List.Item
                     key={tag.symbol}
                     className={style({
                         display: "inline-block",
-                        paddingInline: "0.25em",
+                        paddingInline: "0.125em",
                     })}
                 >
                     <Tag tag={tag} />
