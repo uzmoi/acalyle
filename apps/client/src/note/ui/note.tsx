@@ -3,6 +3,7 @@ import { Alert, vars } from "@acalyle/ui";
 import { BiError } from "react-icons/bi";
 import type { ID } from "~/__generated__/graphql";
 import type { BookRef } from "~/book/store";
+import { MIN_NOTE_WIDTH } from "./constants";
 import { useNote } from "./hook";
 import { NoteBody } from "./note-body";
 import { NoteHeader } from "./note-header";
@@ -40,7 +41,7 @@ export const Note: React.FC<{
     return (
         <article
             data-note-id={noteId}
-            className={style({ minWidth: "24em", minHeight: "8em" })}
+            className={style({ minWidth: MIN_NOTE_WIDTH, minHeight: "8em" })}
         >
             <NoteHeader noteId={noteId} bookRef={bookRef} />
             <NoteBody noteId={noteId} />

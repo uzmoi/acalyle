@@ -4,6 +4,7 @@ import { useState } from "react";
 import { BiEditAlt } from "react-icons/bi";
 import type { ID } from "~/__generated__/graphql";
 import { MemoContentsEditor } from "../../ui/MemoContentsEditor";
+import { MIN_NOTE_WIDTH } from "./constants";
 import { useNote } from "./hook";
 import { NoteContents } from "./note-contents";
 
@@ -17,7 +18,12 @@ export const NoteBody: React.FC<{
     if (note == null) return null;
 
     return (
-        <div className={style({ position: "relative", minWidth: "24em" })}>
+        <div
+            className={style({
+                position: "relative",
+                minWidth: MIN_NOTE_WIDTH,
+            })}
+        >
             <Button
                 variant="unstyled"
                 className={style({

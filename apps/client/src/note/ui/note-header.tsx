@@ -5,6 +5,7 @@ import type { ID } from "~/__generated__/graphql";
 import type { BookRef } from "~/book/store";
 import { AddTagForm } from "~/ui/AddTagForm";
 import { TimeStamp } from "~/ui/TimeStamp";
+import { MIN_NOTE_WIDTH } from "./constants";
 import { useNote } from "./hook";
 import { NoteMenuButton } from "./note-menu";
 import { TagList } from "./tag-list";
@@ -19,7 +20,9 @@ export const NoteHeader: React.FC<{
     if (note == null) return null;
 
     return (
-        <header className={style({ minWidth: "24em", padding: "0.5em" })}>
+        <header
+            className={style({ minWidth: MIN_NOTE_WIDTH, padding: "0.5em" })}
+        >
             <div className={style({ display: "flex", alignItems: "center" })}>
                 <div className={style({ flex: "1 0", fontSize: "0.725em" })}>
                     <p>

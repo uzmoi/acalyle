@@ -7,6 +7,7 @@ import { useBook } from "~/book/ui/hook";
 import { link } from "~/pages/link";
 import { Link } from "~/ui/Link";
 import { openNoteInModal } from "~/ui/modal";
+import { MIN_NOTE_WIDTH } from "./constants";
 import { useNote } from "./hook";
 import { NoteContents } from "./note-contents";
 import { TagList } from "./tag-list";
@@ -46,7 +47,7 @@ export const NoteOverview: React.FC<{
         <article
             data-note-id={noteId}
             className={style({
-                minWidth: "24em",
+                minWidth: MIN_NOTE_WIDTH,
                 minHeight: "8em",
                 display: "flex",
                 flexDirection: "column",
