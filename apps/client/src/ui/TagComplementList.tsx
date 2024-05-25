@@ -1,5 +1,5 @@
+import { style } from "@acalyle/css";
 import { Button, List } from "@acalyle/ui";
-import { style } from "@macaron-css/core";
 import { modulo } from "emnorst";
 import { forwardRef, useCallback, useImperativeHandle } from "react";
 import { complementTagSymbol } from "~/lib/complement-tag";
@@ -45,13 +45,11 @@ export const TagComplementList: React.FC<{
                             i === modulo(selectedIndex, symbols.length)
                         }
                         className={style({
-                            ":hover": {
+                            "&:hover": {
                                 backgroundColor: "#0003",
                             },
-                            selectors: {
-                                '&[data-selected="true"]': {
-                                    backgroundColor: "#0003",
-                                },
+                            '&[data-selected="true"]': {
+                                backgroundColor: "#0003",
                             },
                         })}
                     >

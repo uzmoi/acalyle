@@ -1,5 +1,5 @@
+import { style } from "@acalyle/css";
 import { vars, visuallyHidden } from "@acalyle/ui";
-import { style } from "@macaron-css/core";
 import { useCallback } from "react";
 import type { ID } from "~/__generated__/graphql";
 import { bookRefOf } from "~/book/store";

@@ -1,5 +1,4 @@
-import { cx } from "@acalyle/ui";
-import { style } from "@macaron-css/core";
+import { cx, style } from "@acalyle/css";
 import { Location } from "~/store/location";
 
 export const Link: React.FC<

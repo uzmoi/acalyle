@@ -1,4 +1,26 @@
-import { createGlobalThemeContract } from "@macaron-css/core";
+import type { MapLeafNodes } from "./create";
+
+type VarFunction = `var(--${string})`;
+type Tokens = { [_ in string]: Tokens | string | null };
+
+const createGlobalThemeContract = <T extends Tokens>(
+    tokens: T,
+    mapFn: (value: string | null, path: readonly string[]) => string,
+    path: readonly string[] = [],
+): MapLeafNodes<T, VarFunction> => {
+    for (const [key, value] of Object.entries(tokens)) {
+        const nextPath = [...path, key];
+        tokens[key as keyof T] = (
+            typeof value === "string" || value == null ?
+                `var(--${mapFn(value, nextPath)})`
+            :   createGlobalThemeContract(
+                    value,
+                    mapFn,
+                    nextPath,
+                )) as T[keyof T];
+    }
+    return tokens as unknown as MapLeafNodes<T, VarFunction>;
+};
 
 export const vars = /* #__PURE__ */ createGlobalThemeContract(
     {

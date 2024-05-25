@@ -1,4 +1,8 @@
+/* eslint-disable pure-module/pure-module */
+
 import "@acalyle/ui/dist/style.css";
+
+import { globalStyle } from "@acalyle/css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { PageRoot } from "~/pages/Root";
@@ -6,7 +10,10 @@ import { renderModals } from "~/ui/modal/render-modals";
 import { Provider } from "./provider";
 import "./logger";
 import "./location";
-import "./reset-style";
+
+globalStyle(":root, body, #app", {
+    height: "100%",
+});
 
 const DevAppRoot: React.FC = () => {
     return (
@@ -17,10 +24,8 @@ const DevAppRoot: React.FC = () => {
     );
 };
 
-// eslint-disable-next-line pure-module/pure-module
 const appEl = document.getElementById("app");
 if (appEl != null) {
-    // eslint-disable-next-line pure-module/pure-module
     createRoot(appEl).render(
         <StrictMode>
             <DevAppRoot />

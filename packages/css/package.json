@@ -1,0 +1,25 @@
+{
+  "private": true,
+  "name": "@acalyle/css",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./dist/index.js",
+    "./tag-resolver": "./dist/tag-resolver.js",
+    "./processors/*": "./dist/processors/*"
+  },
+  "scripts": {
+    "build": "tsup",
+    "check": "tsc",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@wyw-in-js/processor-utils": "^0.5.3",
+    "csstype": "^3.1.3"
+  },
+  "devDependencies": {
+    "@acalyle/eslint-config": "*",
+    "@acalyle/tsconfig": "*",
+    "tsup": "^8.0.0"
+  }
+}

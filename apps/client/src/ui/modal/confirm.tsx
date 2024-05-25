@@ -1,3 +1,4 @@
+import { style } from "@acalyle/css";
 import {
     Button,
     ControlGroup,
@@ -6,7 +7,6 @@ import {
     ModalContainer,
     vars,
 } from "@acalyle/ui";
-import { style } from "@macaron-css/core";
 import { useCallback } from "react";
 import { BiError } from "react-icons/bi";
 

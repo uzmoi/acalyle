@@ -1,5 +1,4 @@
-import { keyframes, style } from "@macaron-css/core";
-import { cx } from "./cx";
+import { cx, keyframes, style } from "@acalyle/css";
 
 const spin = /* #__PURE__ */ keyframes({ to: { transform: "rotate(360deg)" } });
 

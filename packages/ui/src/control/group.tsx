@@ -1,6 +1,5 @@
 /* eslint-disable pure-module/pure-module */
-import { globalStyle, style } from "@macaron-css/core";
-import { cx } from "../base/cx";
+import { cx, globalStyle, style } from "@acalyle/css";
 import { vars } from "../theme";
 import { control } from "./base";
 

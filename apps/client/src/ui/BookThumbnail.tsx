@@ -1,5 +1,4 @@
-import { cx } from "@acalyle/ui";
-import { style } from "@macaron-css/core";
+import { cx, style } from "@acalyle/css";
 import { acalyle } from "../app/main";
 
 export const BookThumbnail: React.FC<{
@@ -28,7 +27,7 @@ export const BookThumbnail: React.FC<{
     );
 };
 
-const ThumbnailStyle = /* #__PURE__ */ style({
+const ThumbnailStyle = style({
     width: "6em",
     height: "6em",
 });

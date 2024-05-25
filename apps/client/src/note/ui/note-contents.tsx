@@ -1,5 +1,5 @@
+import { style } from "@acalyle/css";
 import { vars } from "@acalyle/ui";
-import { style } from "@macaron-css/core";
 
 export const NoteContents: React.FC<{
     contents: string;

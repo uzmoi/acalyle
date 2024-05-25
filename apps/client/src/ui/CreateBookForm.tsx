@@ -1,5 +1,5 @@
+import { style } from "@acalyle/css";
 import { Button, Form, TextInput } from "@acalyle/ui";
-import { style } from "@macaron-css/core";
 import { useCallback, useId, useState } from "react";
 import type { Book } from "~/book/store";
 import { createBook } from "~/book/store/book";
@@ -69,12 +69,12 @@ export const CreateBookForm: React.FC<{
     );
 };
 
-const DTStyle = /* #__PURE__ */ style({
+const DTStyle = style({
     marginTop: "1em",
     marginBottom: "0.25em",
 });
 
-const LabelStyle = /* #__PURE__ */ style({
+const LabelStyle = style({
     fontSize: "0.9em",
     fontWeight: "bold",
 });

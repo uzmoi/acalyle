@@ -1,5 +1,5 @@
+import { style } from "@acalyle/css";
 import { Form, TextInput, vars } from "@acalyle/ui";
-import { style } from "@macaron-css/core";
 import { useCallback, useRef, useState } from "react";
 import type { ID } from "~/__generated__/graphql";
 import { addMemoTags } from "~/note/store/note";

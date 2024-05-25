@@ -1,5 +1,5 @@
+import { style } from "@acalyle/css";
 import { List } from "@acalyle/ui";
-import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import type { ID } from "~/__generated__/graphql";
 import { bookConnection } from "~/book/store";

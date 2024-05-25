@@ -1,5 +1,4 @@
-import { style } from "@macaron-css/core";
-import { cx } from "./cx";
+import { cx, style } from "@acalyle/css";
 
 export const Spacer: React.FC<
     {

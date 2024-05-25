@@ -1,11 +1,10 @@
+import { cx, style } from "@acalyle/css";
 import { Semaphore } from "@acalyle/util";
-import { style } from "@macaron-css/core";
 import { useStore } from "@nanostores/react";
 import { timeout } from "emnorst";
 import { type ReadableAtom, atom } from "nanostores";
 import { useEffect } from "react";
 import { vars } from "../theme";
-import { cx } from "./cx";
 import { center } from "./style-utilities";
 import type { TransitionStatus } from "./use-transition-status";
 
@@ -114,13 +113,11 @@ export const ModalContainer: <T>(props: {
                     backgroundColor: "#0008",
                     backdropFilter: "blur(0.0625em)",
                     transition: `opacity ${TRANSITION_DURATION}ms`,
-                    selectors: {
-                        '&[data-open="false"]': {
-                            opacity: 0,
-                        },
-                        '&[data-status="exited"]': {
-                            visibility: "hidden",
-                        },
+                    '&[data-open="false"]': {
+                        opacity: 0,
+                    },
+                    '&[data-status="exited"]': {
+                        visibility: "hidden",
                     },
                 }),
                 className,
@@ -139,10 +136,7 @@ export const ModalContainer: <T>(props: {
                             boxShadow: "0 0 2em #111",
                         }),
                         size === "max" &&
-                            style(
-                                { width: "100%", height: "100%" },
-                                "modal--size__max",
-                            ),
+                            style({ width: "100%", height: "100%" }),
                     )}
                 >
                     {render(data.data)}

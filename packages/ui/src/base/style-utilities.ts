@@ -1,19 +1,16 @@
-import { style } from "@macaron-css/core";
+import { style } from "@acalyle/css";
 
-export const visuallyHidden = /* #__PURE__ */ style(
-    {
-        position: "fixed",
-        padding: 0,
-        margin: "-1px",
-        width: "1px",
-        height: "1px",
-        opacity: 0,
-        overflow: "hidden",
-        border: "none",
-        clip: "rect(0 0 0 0)",
-    },
-    "visually-hidden",
-);
+export const visuallyHidden = style({
+    position: "fixed",
+    padding: 0,
+    margin: "-1px",
+    width: "1px",
+    height: "1px",
+    opacity: 0,
+    overflow: "hidden",
+    border: "none",
+    clip: "rect(0 0 0 0)",
+});
 
 export const corner = (y: "upper" | "lower", x: "left" | "right") => {
     const translateX = x === "left" ? -50 : 50;

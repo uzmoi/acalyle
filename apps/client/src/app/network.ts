@@ -46,8 +46,8 @@ export type NetworkError =
     | { type: "invalid_json" };
 
 export class Network {
-    private static readonly _resourceBaseUrl = new URL("api/", location.origin);
-    private static readonly _apiEndpointUrl = new URL("api", location.origin);
+    private static readonly _resourceBaseUrl = `${location.origin}/api/`;
+    private static readonly _apiEndpointUrl = `${location.origin}/api`;
     resolveResource(path: string): URL {
         return new URL(path, Network._resourceBaseUrl);
     }

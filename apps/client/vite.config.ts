@@ -1,22 +1,24 @@
-import { macaronVitePlugin } from "@macaron-css/vite";
+import { tagResolver } from "@acalyle/css/tag-resolver";
 import nitrogql from "@nitrogql/rollup-plugin";
 import react from "@vitejs/plugin-react-swc";
+import wywInJS from "@wyw-in-js/vite";
 import dts from "vite-plugin-dts";
 import { coverageConfigDefaults, defineConfig } from "vitest/config";
 
-const isStorybook = process.argv[1]?.endsWith("storybook");
+const isStorybook = process.argv[1]?.includes("storybook");
 
 export default defineConfig({
     plugins: [
         react(),
-        macaronVitePlugin(),
+        (wywInJS as unknown as typeof import("@wyw-in-js/vite").default)({
+            include: ["**/*.{ts,tsx}"],
+            babelOptions: { presets: ["@babel/preset-typescript"] },
+            sourceMap: true,
+            tagResolver,
+        }),
         nitrogql({ include: ["**/*.graphql"] }),
         !isStorybook &&
-            dts({
-                exclude: "**/*.css.ts",
-                tsconfigPath: "tsconfig.main.json",
-                rollupTypes: true,
-            }),
+            dts({ tsconfigPath: "tsconfig.main.json", rollupTypes: true }),
     ],
     resolve: {
         alias: { "~/": `${__dirname}/src/` },
@@ -28,7 +30,11 @@ export default defineConfig({
             formats: ["es"],
         },
         rollupOptions: {
-            external: [/^react/, /^react-dom/, /^@acalyle\//],
+            external: [
+                /^react/,
+                /^react-dom/,
+                /^@acalyle\/(?!ui\/dist\/style\.css)/,
+            ],
         },
     },
     server: {

@@ -1,5 +1,5 @@
+import { style } from "@acalyle/css";
 import { Button, Modal, ModalContainer, vars } from "@acalyle/ui";
-import { style } from "@macaron-css/core";
 import { Suspense } from "react";
 import { BiExpandAlt, BiX } from "react-icons/bi";
 import type { ID } from "~/__generated__/graphql";
@@ -64,9 +64,7 @@ const renderNoteModalContent = ({ bookRef, noteId }: NoteModalData) => (
             <div
                 className={style({
                     flex: "0 0 auto",
-                    selectors: {
-                        "& + &": { paddingLeft: "0.5em" },
-                    },
+                    "& + &": { paddingLeft: "0.5em" },
                 })}
             >
                 <Link

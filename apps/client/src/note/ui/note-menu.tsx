@@ -1,5 +1,5 @@
+import { style } from "@acalyle/css";
 import { Menu, Popover, vars } from "@acalyle/ui";
-import { style } from "@macaron-css/core";
 import {
     BiClipboard,
     BiDotsVertical,
@@ -99,11 +99,8 @@ export const NoteMenuContent: React.FC<{
                     }}
                     data-type={type}
                     className={style({
-                        selectors: {
-                            '&[data-type="danger"]:enabled:is(:hover, :focus)':
-                                {
-                                    color: vars.color.danger,
-                                },
+                        '&[data-type="danger"]:enabled:is(:hover, :focus)': {
+                            color: vars.color.danger,
                         },
                     })}
                 >

@@ -1,7 +1,6 @@
-import { styleVariants } from "@macaron-css/core";
-import { cx } from "./cx";
+import { cx, style } from "@acalyle/css";
 
-export type ListVariant = keyof typeof variants;
+export type ListVariant = "default" | "unstyled";
 
 export const List: React.FC<
     (
@@ -17,18 +16,14 @@ export const List: React.FC<
     return (
         <Component
             {...restProps}
-            className={cx(variants[variant], className)}
+            className={cx(
+                variant === "unstyled" &&
+                    style({ paddingLeft: 0, listStyle: "none" }),
+                className,
+            )}
         />
     );
 };
-
-const variants = /* #__PURE__ */ styleVariants({
-    default: [],
-    unstyled: {
-        paddingLeft: 0,
-        listStyle: "none",
-    },
-});
 
 type ListItemComponent = React.FC<React.ComponentPropsWithoutRef<"li">>;
 // eslint-disable-next-line pure-module/pure-module

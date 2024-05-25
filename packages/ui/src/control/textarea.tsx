@@ -1,6 +1,5 @@
-import { style } from "@macaron-css/core";
+import { cx, style } from "@acalyle/css";
 import { useRef } from "react";
-import { cx } from "../base/cx";
 import { vars } from "../theme";
 import { type ControlPartVariant, control } from "./base";
 
@@ -40,9 +39,7 @@ export const TextArea: React.FC<
                     position: "relative",
                     overflowWrap: "break-word",
                     whiteSpace: "pre-wrap",
-                    vars: {
-                        "--caret-color": vars.color.fg.__,
-                    },
+                    "--caret-color": vars.color.fg.__,
                 }),
                 className,
             )}

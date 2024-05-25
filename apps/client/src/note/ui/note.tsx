@@ -1,5 +1,5 @@
+import { style } from "@acalyle/css";
 import { Alert, Spacer, vars } from "@acalyle/ui";
-import { style } from "@macaron-css/core";
 import { BiError } from "react-icons/bi";
 import type { ID } from "~/__generated__/graphql";
 import type { BookRef } from "~/book/store";

@@ -1,5 +1,5 @@
+import { style } from "@acalyle/css";
 import { vars, visuallyHidden } from "@acalyle/ui";
-import { style } from "@macaron-css/core";
 import { identify } from "emnorst";
 import type { ID } from "~/__generated__/graphql";
 import { link } from "~/pages/link";
@@ -85,7 +85,7 @@ export const BookOverview: React.FC<{
                                 WebkitLineClamp: 1,
                                 WebkitBoxOrient: "vertical",
                             }),
-                            ":first-child": {
+                            "&:first-child": {
                                 ...identify({
                                     WebkitLineClamp: 2,
                                 }),

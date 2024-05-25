@@ -1,6 +1,6 @@
 import { AcalyleMemoTag } from "@acalyle/core";
+import { style } from "@acalyle/css";
 import { List } from "@acalyle/ui";
-import { style } from "@macaron-css/core";
 import { nonNullable } from "emnorst";
 import { Tag } from "./Tag";
 
