@@ -17,7 +17,7 @@ export const NoteBody: React.FC<{
     if (note == null) return null;
 
     return (
-        <div className={style({ position: "relative" })}>
+        <div className={style({ position: "relative", minWidth: "24em" })}>
             <Button
                 variant="unstyled"
                 className={style({

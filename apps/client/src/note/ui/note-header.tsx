@@ -1,7 +1,9 @@
 import { style } from "@acalyle/css";
+import { Popover, closePopover } from "@acalyle/ui";
+import { BiPlus } from "react-icons/bi";
 import type { ID } from "~/__generated__/graphql";
 import type { BookRef } from "~/book/store";
-import { AddTagButton } from "~/ui/AddTagButton";
+import { AddTagForm } from "~/ui/AddTagForm";
 import { TimeStamp } from "~/ui/TimeStamp";
 import { useNote } from "./hook";
 import { NoteMenuButton } from "./note-menu";
@@ -17,7 +19,7 @@ export const NoteHeader: React.FC<{
     if (note == null) return null;
 
     return (
-        <header>
+        <header className={style({ minWidth: "24em", padding: "0.5em" })}>
             <div className={style({ display: "flex", alignItems: "center" })}>
                 <div className={style({ flex: "1 0", fontSize: "0.725em" })}>
                     <p>
@@ -29,12 +31,28 @@ export const NoteHeader: React.FC<{
                 </div>
                 <NoteMenuButton noteId={noteId} />
             </div>
-            <div className={style({ marginTop: "0.5em" })}>
+            <div className={style({ marginTop: "0.25em" })}>
                 <TagList
                     tags={note.tags}
                     className={style({ display: "inline-block" })}
                 />
-                <AddTagButton bookHandle={bookRef} memoId={noteId} />
+                <Popover className={style({ display: "inline-block" })}>
+                    <Popover.Button variant="unstyled">
+                        <BiPlus />
+                    </Popover.Button>
+                    <Popover.Content
+                        className={style({
+                            top: "calc(100% + 0.5em)",
+                            whiteSpace: "nowrap",
+                        })}
+                    >
+                        <AddTagForm
+                            bookHandle={bookRef}
+                            memoId={noteId}
+                            onCompleted={closePopover}
+                        />
+                    </Popover.Content>
+                </Popover>
             </div>
         </header>
     );

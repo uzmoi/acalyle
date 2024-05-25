@@ -37,6 +37,8 @@ export const NoteOverview: React.FC<{
         <article
             data-note-id={noteId}
             className={style({
+                minWidth: "24em",
+                minHeight: "8em",
                 display: "flex",
                 flexDirection: "column",
                 paddingBlock: "0.25em",
@@ -66,7 +68,10 @@ export const NoteOverview: React.FC<{
                 </Link>
                 <NoteContents contents={note.contents} />
             </div>
-            <TagList tags={note.tags} />
+            <TagList
+                tags={note.tags}
+                className={style({ marginInline: "0.5em" })}
+            />
         </article>
     );
 };

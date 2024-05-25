@@ -1,5 +1,5 @@
 import { style } from "@acalyle/css";
-import { Alert, Spacer, vars } from "@acalyle/ui";
+import { Alert, vars } from "@acalyle/ui";
 import { BiError } from "react-icons/bi";
 import type { ID } from "~/__generated__/graphql";
 import type { BookRef } from "~/book/store";
@@ -38,9 +38,11 @@ export const Note: React.FC<{
     }
 
     return (
-        <article data-note-id={noteId}>
+        <article
+            data-note-id={noteId}
+            className={style({ minWidth: "24em", minHeight: "8em" })}
+        >
             <NoteHeader noteId={noteId} bookRef={bookRef} />
-            <Spacer size="1em" />
             <NoteBody noteId={noteId} />
         </article>
     );
