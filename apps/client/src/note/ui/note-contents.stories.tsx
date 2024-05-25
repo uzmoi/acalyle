@@ -10,6 +10,6 @@ type Story = StoryObj<typeof NoteContents>;
 
 export const Default: Story = {
     args: {
-        contents: "",
+        contents: "ふふっ、ごめん。財布ないわ\nぴぇ……！",
     },
 };
