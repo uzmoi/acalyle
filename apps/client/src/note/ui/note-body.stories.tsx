@@ -8,4 +8,9 @@ export default {
 
 type Story = StoryObj<typeof NoteBody>;
 
-export const Default: Story = {};
+export const Default: Story = {
+    args: {
+        noteId: "id",
+        contents: "おかわり頂けるだろうか。\nもう一度ご飯いただこう。",
+    },
+};

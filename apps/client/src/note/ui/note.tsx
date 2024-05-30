@@ -43,8 +43,8 @@ export const Note: React.FC<{
             data-note-id={noteId}
             className={style({ minWidth: MIN_NOTE_WIDTH, minHeight: "8em" })}
         >
-            <NoteHeader noteId={noteId} bookRef={bookRef} />
-            <NoteBody noteId={noteId} />
+            <NoteHeader bookRef={bookRef} note={note} />
+            <NoteBody noteId={noteId} contents={note.contents} />
         </article>
     );
 };

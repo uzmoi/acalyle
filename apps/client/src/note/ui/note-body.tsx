@@ -5,17 +5,14 @@ import { BiEditAlt } from "react-icons/bi";
 import type { ID } from "~/__generated__/graphql";
 import { MemoContentsEditor } from "../../ui/MemoContentsEditor";
 import { MIN_NOTE_WIDTH } from "./constants";
-import { useNote } from "./hook";
 import { NoteContents } from "./note-contents";
 
 /** @package */
 export const NoteBody: React.FC<{
     noteId: ID;
-}> = ({ noteId }) => {
-    const note = useNote(noteId);
+    contents: string;
+}> = ({ noteId, contents }) => {
     const [isInEdit, setIsInEdit] = useState(false);
-
-    if (note == null) return null;
 
     return (
         <div
@@ -54,7 +51,7 @@ export const NoteBody: React.FC<{
                         setIsInEdit(false);
                     }}
                 />
-            :   <NoteContents contents={note.contents} />}
+            :   <NoteContents contents={contents} />}
         </div>
     );
 };

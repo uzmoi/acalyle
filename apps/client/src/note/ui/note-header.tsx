@@ -1,24 +1,19 @@
 import { style } from "@acalyle/css";
 import { Popover, closePopover } from "@acalyle/ui";
 import { BiPlus } from "react-icons/bi";
-import type { ID } from "~/__generated__/graphql";
 import type { BookRef } from "~/book/store";
 import { AddTagForm } from "~/ui/AddTagForm";
 import { TimeStamp } from "~/ui/TimeStamp";
+import type { Note } from "../store";
 import { MIN_NOTE_WIDTH } from "./constants";
-import { useNote } from "./hook";
 import { NoteMenuButton } from "./note-menu";
 import { TagList } from "./tag-list";
 
 /** @package */
 export const NoteHeader: React.FC<{
     bookRef: BookRef;
-    noteId: ID;
-}> = ({ bookRef, noteId }) => {
-    const note = useNote(noteId);
-
-    if (note == null) return null;
-
+    note: Note;
+}> = ({ bookRef, note }) => {
     return (
         <header
             className={style({ minWidth: MIN_NOTE_WIDTH, padding: "0.5em" })}
@@ -32,7 +27,7 @@ export const NoteHeader: React.FC<{
                         created <TimeStamp dt={note.createdAt} />
                     </p>
                 </div>
-                <NoteMenuButton noteId={noteId} />
+                <NoteMenuButton noteId={note.id} />
             </div>
             <div className={style({ marginTop: "0.25em" })}>
                 <TagList
@@ -51,7 +46,7 @@ export const NoteHeader: React.FC<{
                     >
                         <AddTagForm
                             bookHandle={bookRef}
-                            memoId={noteId}
+                            memoId={note.id}
                             onCompleted={closePopover}
                         />
                     </Popover.Content>
