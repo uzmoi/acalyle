@@ -1,4 +1,5 @@
 export * from "./alert";
+export * from "./catch";
 export * from "./intersection";
 export * from "./list";
 export * from "./modal";
