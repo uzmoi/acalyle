@@ -1,4 +1,4 @@
-import { AcalyleMemoTag } from "@acalyle/core";
+import { NoteTag } from "@acalyle/core";
 import { style } from "@acalyle/css";
 import { List } from "@acalyle/ui";
 import { nonNullable } from "emnorst";
@@ -8,7 +8,7 @@ export const TagList: React.FC<{
     tags: readonly string[];
     className?: string;
 }> = ({ tags, className }) => {
-    const noteTags = tags.map(AcalyleMemoTag.fromString).filter(nonNullable);
+    const noteTags = tags.map(NoteTag.fromString).filter(nonNullable);
 
     return (
         <List className={className}>

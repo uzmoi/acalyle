@@ -1,9 +1,9 @@
-import type { AcalyleMemoTag } from "@acalyle/core";
+import type { NoteTag } from "@acalyle/core";
 import { style } from "@acalyle/css";
 import { vars } from "@acalyle/ui";
 
 export const Tag: React.FC<{
-    tag: AcalyleMemoTag;
+    tag: NoteTag;
 }> = ({ tag }) => {
     return (
         <span
@@ -16,7 +16,7 @@ export const Tag: React.FC<{
                 border: `1px solid ${vars.color.accent}`,
                 borderRadius: vars.radius.block,
             })}
-            data-tag-type={tag.type()}
+            data-tag-type={tag.type}
         >
             <span>{tag.symbol}</span>
             {tag.prop && ":"}

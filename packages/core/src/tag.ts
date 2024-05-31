@@ -9,7 +9,7 @@ const tagTypes = {
     "@": "control",
 } as const;
 
-export type AcalyleMemoTagParseResult = {
+export type NoteTagParseResult = {
     hasHead: boolean;
     head: TagHead;
     path: string[];
@@ -17,8 +17,8 @@ export type AcalyleMemoTagParseResult = {
     tagString: string;
 };
 
-export class AcalyleMemoTag {
-    static parse(this: void, tagString: string): AcalyleMemoTagParseResult {
+export class NoteTag {
+    static parse(this: void, tagString: string): NoteTagParseResult {
         const headChar = tagString.charAt(0);
         const hasHead = has(tagTypes, headChar);
         const head = hasHead ? (headChar as TagHead) : "#";
@@ -33,13 +33,13 @@ export class AcalyleMemoTag {
 
         return { hasHead, head, path, prop, tagString };
     }
-    static fromString(this: void, tagString: string): AcalyleMemoTag | null {
-        const { head, path, prop } = AcalyleMemoTag.parse(tagString);
+    static fromString(this: void, tagString: string): NoteTag | null {
+        const { head, path, prop } = NoteTag.parse(tagString);
         const name = path.filter(Boolean).join("/");
         if (name === "") {
             return null;
         }
-        return new AcalyleMemoTag(`${head}${name}`, prop || null);
+        return new NoteTag(`${head}${name}`, prop || null);
     }
     constructor(
         readonly symbol: TagSymbol,
@@ -48,7 +48,7 @@ export class AcalyleMemoTag {
     toString(this: this): string {
         return this.symbol + (this.prop ? ":" + this.prop : "");
     }
-    type(this: this): TagType {
+    get type(): TagType {
         return tagTypes[this.symbol[0] as TagHead];
     }
 }
