@@ -1,5 +1,5 @@
 import { cx } from "@acalyle/css";
-import { type ControlPartVariant, control } from "./base";
+import { base, reset } from "./base";
 
 // prettier-ignore
 type OmitPropNames = (
@@ -45,14 +45,14 @@ type TextInputType = (
 export const TextInput: React.FC<
     {
         type?: TextInputType;
-        variant?: ControlPartVariant;
+        unstyled?: boolean;
         value?: string;
         defaultValue?: string;
         onValueChange?: (value: string) => void;
     } & Omit<React.ComponentPropsWithoutRef<"input">, OmitPropNames>
 > = ({
     type = "text",
-    variant = "solid",
+    unstyled,
     onChange,
     onValueChange,
     className,
@@ -70,12 +70,7 @@ export const TextInput: React.FC<
             {...restProps}
             onChange={handleChange}
             type={type}
-            className={cx(
-                control.reset,
-                control.base,
-                control[variant],
-                className,
-            )}
+            className={cx(reset, !unstyled && base, className)}
             autoComplete="off"
             autoCapitalize="off"
             autoCorrect="off"

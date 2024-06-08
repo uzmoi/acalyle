@@ -1,17 +1,17 @@
 import { cx, style } from "@acalyle/css";
 import { useRef } from "react";
 import { vars } from "../theme";
-import { type ControlPartVariant, control } from "./base";
+import { base } from "./base";
 
 const ZeroWidthSpace = "\u200B";
 
 export const TextArea: React.FC<
     {
-        variant?: ControlPartVariant;
+        unstyled?: boolean;
         onValueChange?: (value: string) => void;
     } & React.ComponentPropsWithoutRef<"textarea">
 > = ({
-    variant = "solid",
+    unstyled,
     value,
     defaultValue,
     onChange,
@@ -33,8 +33,7 @@ export const TextArea: React.FC<
     return (
         <div
             className={cx(
-                control.base,
-                control[variant],
+                !unstyled && base,
                 style({
                     position: "relative",
                     overflowWrap: "break-word",
