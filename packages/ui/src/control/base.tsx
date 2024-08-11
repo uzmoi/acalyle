@@ -23,25 +23,10 @@ export const reset = style({
 
 export const base = style({
     padding: "0.2em 0.8em",
-    border: `2px solid ${vars.color.fg.__}`,
-    transition: "border-color 400ms",
-    // cspell:word lightgreen
-    "&:focus-visible": {
-        borderColor: "lightgreen",
-    },
-    "&:focus-visible + &": {
-        borderLeftColor: "lightgreen",
-    },
-    '&:invalid, &[aria-invalid="true"]': {
-        borderColor: vars.color.danger,
-    },
-    '&:invalid + &, &[aria-invalid="true"] + &': {
-        borderLeftColor: vars.color.danger,
-    },
 
     borderRadius: vars.radius.control,
     selectors: {
-        [`.${group} > & + &`]: { marginLeft: "-1px" },
+        [`.${group} > & + &`]: { marginLeft: "1px" },
         [`.${group} > &`]: { borderRadius: 0 },
         [`.${group} > &:first-child`]: {
             borderRadius: `${vars.radius.control} 0 0 ${vars.radius.control}`,
@@ -52,5 +37,15 @@ export const base = style({
         [`.${group} > &:only-child`]: {
             borderRadius: vars.radius.control,
         },
+    },
+
+    backgroundColor: vars.color.bg.inline,
+    borderBottom: `2px solid ${vars.color.fg.__}`,
+    transition: "border-bottom-color 400ms",
+    "&:focus-visible": {
+        borderBottomColor: "lightgreen",
+    },
+    '&:invalid, &[aria-invalid="true"]': {
+        borderBottomColor: vars.color.danger,
     },
 });
