@@ -1,8 +1,8 @@
 import { style } from "@acalyle/css";
 import { List } from "@acalyle/ui";
 import { useStore } from "@nanostores/react";
-import type { ID } from "~/__generated__/graphql";
 import { bookConnection } from "~/book/store";
+import type { ID } from "~/lib/graphql";
 import { BookOverview } from "./book-overview";
 
 const useBookOverviewList = (query = ""): readonly ID[] => {

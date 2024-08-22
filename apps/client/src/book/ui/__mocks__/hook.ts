@@ -1,4 +1,4 @@
-import type { ID } from "~/__generated__/graphql";
+import type { ID } from "~/lib/graphql";
 import type { BookRef, Book } from "../../store";
 
 export const useBookId = (bookRef: BookRef) => {

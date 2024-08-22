@@ -6,7 +6,7 @@ import {
     BiTransfer,
     BiTrash,
 } from "react-icons/bi";
-import type { ID } from "~/__generated__/graphql";
+import type { ID } from "~/lib/graphql";
 import { removeNote, transferNote } from "~/note/store/note";
 import { confirm, selectBook } from "~/ui/modal";
 

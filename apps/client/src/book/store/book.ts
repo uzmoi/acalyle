@@ -1,6 +1,6 @@
-import type { ID } from "~/__generated__/graphql";
 import { acalyle } from "~/app/main";
 import { derived } from "~/lib/derived";
+import type { ID } from "~/lib/graphql";
 import { memoizeBuilder } from "~/lib/memoize-builder";
 import type { PromiseLoaderW } from "~/lib/promise-loader";
 import { createQueryStore } from "~/lib/query-store";

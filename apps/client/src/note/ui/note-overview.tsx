@@ -1,9 +1,9 @@
 import { style } from "@acalyle/css";
 import { vars, visuallyHidden } from "@acalyle/ui";
 import { useCallback } from "react";
-import type { ID } from "~/__generated__/graphql";
 import { bookRefOf } from "~/book/store";
 import { useBook } from "~/book/ui/hook";
+import type { ID } from "~/lib/graphql";
 import { link } from "~/pages/link";
 import { Link } from "~/ui/Link";
 import { openNoteInModal } from "~/ui/modal";

@@ -1,8 +1,8 @@
 import { style } from "@acalyle/css";
 import { useStore } from "@nanostores/react";
-import type { ID } from "~/__generated__/graphql";
 import type { BookRef } from "~/book/store";
 import { useBookId } from "~/book/ui/hook";
+import type { ID } from "~/lib/graphql";
 import { noteConnection } from "~/note/store";
 import { MIN_NOTE_WIDTH } from "./constants";
 import { NoteOverview } from "./note-overview";

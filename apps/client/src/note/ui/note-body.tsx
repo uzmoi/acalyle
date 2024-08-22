@@ -2,7 +2,7 @@ import { style } from "@acalyle/css";
 import { Button, corner, vars } from "@acalyle/ui";
 import { useState } from "react";
 import { BiEditAlt } from "react-icons/bi";
-import type { ID } from "~/__generated__/graphql";
+import type { ID } from "~/lib/graphql";
 import { MemoContentsEditor } from "../../ui/MemoContentsEditor";
 import { MIN_NOTE_WIDTH } from "./constants";
 import { NoteContents } from "./note-contents";

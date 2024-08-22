@@ -1,5 +1,5 @@
 import { useStore } from "@nanostores/react";
-import type { ID } from "~/__generated__/graphql";
+import type { ID } from "~/lib/graphql";
 import { usePromiseLoader } from "~/lib/promise-loader";
 import { type BookRef, bookStore } from "../store";
 import { bookHandleStore, handleBookStore } from "../store/book";

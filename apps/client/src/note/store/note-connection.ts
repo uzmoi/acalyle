@@ -1,7 +1,7 @@
 import { assert } from "emnorst";
-import type { ID } from "~/__generated__/graphql";
 import { acalyle } from "~/app/main";
 import { createConnectionAtom } from "~/lib/connection";
+import type { ID } from "~/lib/graphql";
 import { memoizeBuilder } from "~/lib/memoize-builder";
 import NotePaginationQuery from "./graphql/note-pagination.graphql";
 import { noteStore } from "./note";

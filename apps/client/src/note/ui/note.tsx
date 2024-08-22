@@ -1,8 +1,8 @@
 import { style } from "@acalyle/css";
 import { Alert, vars } from "@acalyle/ui";
 import { BiError } from "react-icons/bi";
-import type { ID } from "~/__generated__/graphql";
 import type { BookRef } from "~/book/store";
+import type { ID } from "~/lib/graphql";
 import { MIN_NOTE_WIDTH } from "./constants";
 import { useNote } from "./hook";
 import { NoteBody } from "./note-body";

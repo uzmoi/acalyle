@@ -1,5 +1,5 @@
-import type { ID } from "~/__generated__/graphql";
 import { acalyle } from "~/app/main";
+import type { ID } from "~/lib/graphql";
 import { createQueryStore } from "~/lib/query-store";
 import AddMemoTagsMutation from "./graphql/add-memo-tags.graphql";
 import CreateNoteMutation from "./graphql/create-note.graphql";

@@ -1,7 +1,7 @@
 import { style } from "@acalyle/css";
 import { vars, visuallyHidden } from "@acalyle/ui";
 import { identify } from "emnorst";
-import type { ID } from "~/__generated__/graphql";
+import type { ID } from "~/lib/graphql";
 import { link } from "~/pages/link";
 import { BookThumbnail } from "~/ui/BookThumbnail";
 import { Link } from "~/ui/Link";
