@@ -1,5 +1,5 @@
 import { cx } from "@acalyle/css";
-import { control } from "./base";
+import { reset } from "./base";
 
 // prettier-ignore
 type OmitPropNames = (
@@ -80,7 +80,7 @@ export const FileInput: React.FC<
             onChange={handleChange}
             type="file"
             multiple={multiple}
-            className={cx(control.reset, className)}
+            className={cx(reset, className)}
         />
     );
 };

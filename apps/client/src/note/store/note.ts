@@ -11,7 +11,7 @@ import UpdateNoteContentsMutation from "./graphql/update-note-contents.graphql";
 
 /** @package */
 export type Note = {
-    id: string;
+    id: ID;
     contents: string;
     tags: readonly string[];
     createdAt: string;

@@ -1,20 +1,19 @@
 import { cx, style } from "@acalyle/css";
 import { vars } from "../theme";
-import { type ControlPartVariant, control } from "./base";
+import { base, reset } from "./base";
 
 export const Button: React.FC<
     {
-        variant?: ControlPartVariant;
+        unstyled?: boolean;
     } & React.ComponentPropsWithoutRef<"button">
-> = ({ variant = "solid", className, ...restProps }) => {
+> = ({ unstyled, className, ...restProps }) => {
     return (
         <button
             type="button"
             {...restProps}
             className={cx(
-                control.reset,
-                control.base,
-                control[variant],
+                reset,
+                !unstyled && base,
                 style({
                     fontWeight: "bold",
                     cursor: "pointer",

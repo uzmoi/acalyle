@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { getNote } from "./__mocks__/hook";
 import { NoteHeader } from "./note-header";
 
 export default {
@@ -8,4 +9,9 @@ export default {
 
 type Story = StoryObj<typeof NoteHeader>;
 
-export const Default: Story = {};
+export const Default: Story = {
+    args: {
+        bookRef: "@handle",
+        note: getNote("id"),
+    },
+};

@@ -48,7 +48,7 @@ export const CreateTemplateMemoButtonList: React.FC<{
             {templateNames.map(templateName => (
                 <Button
                     key={templateName}
-                    variant="unstyled"
+                    unstyled
                     className={style({
                         display: "block",
                         width: "100%",

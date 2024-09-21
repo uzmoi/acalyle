@@ -1,17 +1,17 @@
 import { cx, style } from "@acalyle/css";
 import { vars } from "../theme";
-import { type ControlPartVariant, control } from "./base";
+import { base, reset } from "./base";
 
 export const Select: React.FC<
     {
-        variant?: ControlPartVariant;
+        unstyled?: boolean;
         onValueChange?: (value: string) => void;
     } & React.ComponentPropsWithoutRef<"select">
 > & {
     Group: SelectOptionGroupComponent;
     Option: SelectOptionComponent;
 } = ({
-    variant = "outline",
+    unstyled,
     onChange,
     onValueChange,
     className,
@@ -29,12 +29,7 @@ export const Select: React.FC<
         <select
             {...restProps}
             onChange={handleChange}
-            className={cx(
-                control.reset,
-                control.base,
-                control[variant],
-                className,
-            )}
+            className={cx(reset, !unstyled && base, className)}
         >
             {children}
         </select>

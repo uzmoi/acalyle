@@ -4,22 +4,25 @@ import { useState } from "react";
 import { BiEditAlt } from "react-icons/bi";
 import type { ID } from "~/__generated__/graphql";
 import { MemoContentsEditor } from "../../ui/MemoContentsEditor";
-import { useNote } from "./hook";
+import { MIN_NOTE_WIDTH } from "./constants";
 import { NoteContents } from "./note-contents";
 
 /** @package */
 export const NoteBody: React.FC<{
     noteId: ID;
-}> = ({ noteId }) => {
-    const note = useNote(noteId);
+    contents: string;
+}> = ({ noteId, contents }) => {
     const [isInEdit, setIsInEdit] = useState(false);
 
-    if (note == null) return null;
-
     return (
-        <div className={style({ position: "relative" })}>
+        <div
+            className={style({
+                position: "relative",
+                minWidth: MIN_NOTE_WIDTH,
+            })}
+        >
             <Button
-                variant="unstyled"
+                unstyled
                 className={style({
                     ...corner("upper", "right"),
                     padding: "0.25em",
@@ -48,7 +51,7 @@ export const NoteBody: React.FC<{
                         setIsInEdit(false);
                     }}
                 />
-            :   <NoteContents contents={note.contents} />}
+            :   <NoteContents contents={contents} />}
         </div>
     );
 };

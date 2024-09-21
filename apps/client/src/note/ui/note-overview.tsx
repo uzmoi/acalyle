@@ -7,19 +7,19 @@ import { useBook } from "~/book/ui/hook";
 import { link } from "~/pages/link";
 import { Link } from "~/ui/Link";
 import { openNoteInModal } from "~/ui/modal";
-import { TagList } from "~/ui/tag/TagList";
+import { MIN_NOTE_WIDTH } from "./constants";
 import { useNote } from "./hook";
 import { NoteContents } from "./note-contents";
+import { TagList } from "./tag-list";
 
-export const NoteOverview: React.FC<{
-    bookId: ID;
-    noteId: ID;
-    clickAction?: "open-link" | "open-modal";
-}> = ({ bookId, noteId, clickAction = "open-modal" }) => {
-    const book = useBook(bookId);
-    const note = useNote(noteId);
+type ClickAction = "open-link" | "open-modal";
 
-    const handleClick = useCallback(
+const useNoteOverviewAction = (
+    bookId: ID,
+    noteId: ID,
+    clickAction: ClickAction = "open-modal",
+): ((e: React.MouseEvent) => void) => {
+    return useCallback(
         (e: React.MouseEvent) => {
             if (clickAction === "open-modal") {
                 // NOTE: noscript環境でなるべく正しく動くようにLinkのままpreventDefaultしている。
@@ -30,6 +30,16 @@ export const NoteOverview: React.FC<{
         },
         [bookId, noteId, clickAction],
     );
+};
+
+export const NoteOverview: React.FC<{
+    bookId: ID;
+    noteId: ID;
+    clickAction?: ClickAction;
+}> = ({ bookId, noteId, clickAction }) => {
+    const book = useBook(bookId);
+    const note = useNote(noteId);
+    const handleClick = useNoteOverviewAction(bookId, noteId, clickAction);
 
     if (book == null || note == null) return null;
 
@@ -37,6 +47,8 @@ export const NoteOverview: React.FC<{
         <article
             data-note-id={noteId}
             className={style({
+                minWidth: MIN_NOTE_WIDTH,
+                minHeight: "8em",
                 display: "flex",
                 flexDirection: "column",
                 paddingBlock: "0.25em",
@@ -66,7 +78,10 @@ export const NoteOverview: React.FC<{
                 </Link>
                 <NoteContents contents={note.contents} />
             </div>
-            <TagList tags={note.tags} />
+            <TagList
+                tags={note.tags}
+                className={style({ marginInline: "0.5em" })}
+            />
         </article>
     );
 };

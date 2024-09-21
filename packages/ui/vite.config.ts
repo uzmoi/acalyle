@@ -15,6 +15,8 @@ export default defineConfig({
             babelOptions: { presets: ["@babel/preset-typescript"] },
             sourceMap: true,
             tagResolver,
+            classNameSlug: (hash, title, { name }) =>
+                `${title === "className" ? name : title}__${hash}`,
         }),
         !isStorybook &&
             dts({ tsconfigPath: "tsconfig.main.json", rollupTypes: true }),

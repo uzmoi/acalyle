@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { fireEvent, within } from "@storybook/test";
+import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { NoteMenuButton } from "./note-menu";
 
 export default {
@@ -13,6 +13,8 @@ export const Default: Story = {
     async play({ canvasElement }) {
         const canvas = within(canvasElement);
         const button = await canvas.findByRole("button");
-        await fireEvent.click(button);
+        await userEvent.click(button);
+        const menu = await canvas.findByRole("menu");
+        await waitFor(() => expect(menu).toBeVisible());
     },
 };

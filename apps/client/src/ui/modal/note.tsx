@@ -77,7 +77,7 @@ const renderNoteModalContent = ({ bookRef, noteId }: NoteModalData) => (
                 >
                     <BiExpandAlt />
                 </Link>
-                <Button variant="unstyled" onClick={close}>
+                <Button unstyled onClick={close}>
                     <BiX />
                 </Button>
             </div>
