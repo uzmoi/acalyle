@@ -15,7 +15,7 @@ const MenuItem: React.FC<
         <Button
             {...restProps}
             role="menuitem"
-            variant="unstyled"
+            unstyled
             className={cx(
                 style({
                     display: "block",
