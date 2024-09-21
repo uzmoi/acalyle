@@ -22,7 +22,7 @@ export const NoteBody: React.FC<{
             })}
         >
             <Button
-                variant="unstyled"
+                unstyled
                 className={style({
                     ...corner("upper", "right"),
                     padding: "0.25em",

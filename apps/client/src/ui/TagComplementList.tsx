@@ -54,7 +54,7 @@ export const TagComplementList: React.FC<{
                         })}
                     >
                         <Button
-                            variant="unstyled"
+                            unstyled
                             className={style({
                                 width: "100%",
                                 textAlign: "start",

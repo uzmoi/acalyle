@@ -35,7 +35,7 @@ export const NoteHeader: React.FC<{
                     className={style({ display: "inline-block" })}
                 />
                 <Popover className={style({ display: "inline-block" })}>
-                    <Popover.Button variant="unstyled">
+                    <Popover.Button unstyled>
                         <BiPlus />
                     </Popover.Button>
                     <Popover.Content
