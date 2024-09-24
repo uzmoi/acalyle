@@ -41,3 +41,4 @@ uzmoi
 Valueable
 vite
 warplist
+xxhash
