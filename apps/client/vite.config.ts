@@ -7,14 +7,22 @@ import { coverageConfigDefaults, defineConfig } from "vitest/config";
 
 const isStorybook = process.argv[1]?.includes("storybook");
 
+type WyWinJS = typeof import("@wyw-in-js/vite").default;
+
 export default defineConfig({
     plugins: [
         react(),
-        (wywInJS as unknown as typeof import("@wyw-in-js/vite").default)({
+        (wywInJS as unknown as WyWinJS)({
             include: ["**/*.{ts,tsx}"],
-            babelOptions: { presets: ["@babel/preset-typescript"] },
+            babelOptions: {
+                presets: ["@babel/preset-typescript"],
+                plugins: ["transform-vite-meta-env"],
+            },
             sourceMap: true,
             tagResolver,
+            features: {
+                dangerousCodeRemover: ["**/*", "!**/src/theme/*"],
+            } as NonNullable<Parameters<WyWinJS>[0]>["features"],
             classNameSlug: (hash, title, { name }) =>
                 `${title === "className" ? name : title}__${hash}`,
         }),

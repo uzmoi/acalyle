@@ -53,6 +53,7 @@
     "@vitejs/plugin-react-swc": "^3.6.0",
     "@vitest/coverage-v8": "^1.5.3",
     "@wyw-in-js/vite": "^0.5.3",
+    "babel-plugin-transform-vite-meta-env": "^1.0.3",
     "storybook": "^8.0.9",
     "storybook-addon-manual-mocks": "^1.0.4",
     "vite": "^5.2.10",
