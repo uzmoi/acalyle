@@ -19,6 +19,8 @@ export const BookOverview: React.FC<{
 
     return (
         <div
+            data-book-id={book.id}
+            data-book-handle={book.handle}
             className={style({
                 display: "flex",
                 height: "6em",
