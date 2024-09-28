@@ -12,4 +12,18 @@ export const theme = <
     key: IfUnion<S, S, `${S}-${K}`>,
 ): `var(--${string})` => `var(--${varName(key)})`;
 
+export const defineTheme = (theme: Theme) => {
+    const style: Record<`--${string}`, string> = {};
+
+    for (const [scope, vars] of Object.entries(
+        theme as unknown as Record<keyof Theme, Record<string, string>>,
+    )) {
+        for (const [key, value] of Object.entries(vars)) {
+            style[`--${varName(`${scope}-${key}`)}`] = value;
+        }
+    }
+
+    return style;
+};
+
 export type * from "./theme";
