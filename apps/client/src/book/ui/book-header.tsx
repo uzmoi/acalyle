@@ -20,15 +20,9 @@ export const BookHeader: React.FC<{
     return (
         <div>
             <h2>{book.title}</h2>
-            <div className={style({ marginTop: "0.5em" })}>
+            <div className=":uno: mt-2">
                 {tabs.map(([link, text]) => (
-                    <div
-                        key={link}
-                        className={style({
-                            display: "inline-block",
-                            padding: "0.25em 0.5em",
-                        })}
-                    >
+                    <div key={link} className=":uno: inline-block px-2 py-1">
                         <Link
                             to={link}
                             className={style({

@@ -65,7 +65,7 @@ export const NoteMenuButton: React.FC<{
                     border: 0,
                 })}
             >
-                <BiDotsVertical className={style({ verticalAlign: "top" })} />
+                <BiDotsVertical className=":uno: align-top" />
             </Popover.Button>
             <Popover.Content
                 closeOnClick
@@ -105,14 +105,7 @@ export const NoteMenuContent: React.FC<{
                     })}
                 >
                     {icon}
-                    <span
-                        className={style({
-                            marginLeft: "0.5em",
-                            verticalAlign: "middle",
-                        })}
-                    >
-                        {text}
-                    </span>
+                    <span className=":uno: ml-2 align-middle">{text}</span>
                 </Menu.Item>
             ))}
         </Menu>

@@ -29,12 +29,9 @@ export const NoteHeader: React.FC<{
                 </div>
                 <NoteMenuButton noteId={note.id} />
             </div>
-            <div className={style({ marginTop: "0.25em" })}>
-                <TagList
-                    tags={note.tags}
-                    className={style({ display: "inline-block" })}
-                />
-                <Popover className={style({ display: "inline-block" })}>
+            <div className=":uno: mt-1">
+                <TagList tags={note.tags} className=":uno: inline-block" />
+                <Popover className=":uno: inline-block">
                     <Popover.Button unstyled>
                         <BiPlus />
                     </Popover.Button>

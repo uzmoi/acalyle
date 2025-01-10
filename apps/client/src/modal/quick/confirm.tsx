@@ -16,7 +16,7 @@ export const ConfirmForm: React.FC<{
     }, [close]);
 
     return (
-        <Form onSubmit={ok} className={style({ padding: "1.25em" })}>
+        <Form onSubmit={ok} className=":uno: p-5">
             <p>
                 <BiError
                     className={style({
@@ -26,15 +26,9 @@ export const ConfirmForm: React.FC<{
                         fontSize: "1.75em",
                     })}
                 />
-                <span className={style({ fontSize: "1.25em" })}>{message}</span>
+                <span className=":uno: text-size-xl">{message}</span>
             </p>
-            <div
-                className={style({
-                    marginTop: "0.75em",
-                    marginInline: "auto",
-                    width: "fit-content",
-                })}
-            >
+            <div className=":uno: mx-auto mt-3 w-fit">
                 <ControlGroup>
                     <Button onClick={cancel}>cancel</Button>
                     <Button type="submit">ok</Button>

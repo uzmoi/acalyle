@@ -2,6 +2,7 @@ import { tagResolver } from "@acalyle/css/tag-resolver";
 import nitrogql from "@nitrogql/rollup-plugin";
 import react from "@vitejs/plugin-react-swc";
 import wywInJS from "@wyw-in-js/vite";
+import unocss from "unocss/vite";
 import dts from "vite-plugin-dts";
 import { coverageConfigDefaults, defineConfig } from "vitest/config";
 
@@ -12,6 +13,7 @@ type WyWinJS = typeof import("@wyw-in-js/vite").default;
 export default defineConfig({
     plugins: [
         react(),
+        unocss(),
         (wywInJS as unknown as WyWinJS)({
             include: ["**/*.{ts,tsx}"],
             babelOptions: {

@@ -1,5 +1,4 @@
 import { NoteTag } from "@acalyle/core";
-import { style } from "@acalyle/css";
 import { List } from "@acalyle/ui";
 import { nonNullable } from "emnorst";
 import { Tag } from "./tag";
@@ -15,10 +14,7 @@ export const TagList: React.FC<{
             {noteTags.map(tag => (
                 <List.Item
                     key={tag.symbol}
-                    className={style({
-                        display: "inline-block",
-                        paddingInline: "0.125em",
-                    })}
+                    className=":uno: inline-block px-0.5"
                 >
                     <Tag tag={tag} />
                 </List.Item>
