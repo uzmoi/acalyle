@@ -5,6 +5,7 @@ import { bookRefOf } from "~/book/store";
 import { useBook } from "~/book/ui/hook";
 import type { ID } from "~/lib/graphql";
 import { link } from "~/pages/link";
+import { theme } from "~/theme";
 import { Link } from "~/ui/Link";
 import { openNoteInModal } from "~/ui/modal";
 import { MIN_NOTE_WIDTH } from "./constants";
@@ -53,34 +54,26 @@ export const NoteOverview: React.FC<{
                 flexDirection: "column",
                 paddingBlock: "0.25em",
                 backgroundColor: vars.color.bg.block,
+                color: theme("note-text"),
+                background: theme("note-bg"),
+                position: "relative",
+                overflow: "hidden",
             })}
         >
-            <div
-                className={style({
-                    flex: "1 1 0",
-                    position: "relative",
-                    overflow: "hidden",
+            <Link
+                to={link(":bookId/:memoId", {
+                    bookId: bookRefOf(book),
+                    memoId: noteId,
                 })}
+                onClick={handleClick}
+                className=":uno: absolute inset-0"
             >
-                <Link
-                    to={link(":bookId/:memoId", {
-                        bookId: bookRefOf(book),
-                        memoId: noteId,
-                    })}
-                    onClick={handleClick}
-                    className={style({
-                        position: "absolute",
-                        inset: 0,
-                        zIndex: vars.zIndex.modal,
-                    })}
-                >
-                    <span className={visuallyHidden}>Open note.</span>
-                </Link>
-                <NoteContents contents={note.contents} />
-            </div>
+                <span className={visuallyHidden}>Open note.</span>
+            </Link>
+            <NoteContents contents={note.contents} />
             <TagList
                 tags={note.tags}
-                className={style({ marginInline: "0.5em" })}
+                className=":uno: absolute pos-bottom-1 mx-2"
             />
         </article>
     );

@@ -15,11 +15,9 @@ export const NoteHeader: React.FC<{
     note: Note;
 }> = ({ bookRef, note }) => {
     return (
-        <header
-            className={style({ minWidth: MIN_NOTE_WIDTH, padding: "0.5em" })}
-        >
-            <div className={style({ display: "flex", alignItems: "center" })}>
-                <div className={style({ flex: "1 0", fontSize: "0.725em" })}>
+        <header className=":uno: px-2 py-1">
+            <div className=":uno: flex items-center">
+                <div className=":uno: flex-1 text-size-xs text-gray-3">
                     <p>
                         updated <TimeStamp dt={note.updatedAt} />
                     </p>
