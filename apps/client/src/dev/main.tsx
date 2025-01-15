@@ -7,8 +7,7 @@ import "virtual:uno.css";
 import { globalStyle } from "@acalyle/css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { PageRoot } from "~/pages/Root";
-import { renderModals } from "~/ui/modal/render-modals";
+import { App } from "~/app/app";
 import { Provider } from "./provider";
 import "./logger";
 import "./location";
@@ -20,8 +19,7 @@ globalStyle(":root, body, #app", {
 const DevAppRoot: React.FC = () => {
     return (
         <Provider>
-            <PageRoot />
-            {renderModals()}
+            <App />
         </Provider>
     );
 };
