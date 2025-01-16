@@ -4,12 +4,10 @@ import { Suspense, lazy } from "react";
 const Devtools =
   import.meta.env.DEV ?
     lazy(async () => {
-      const { TanStackRouterDevtools } = await import(
-        "@tanstack/router-devtools"
-      );
+      const tanstackRouter = await import("@tanstack/router-devtools");
       const devtools = (
         <>
-          <TanStackRouterDevtools />
+          <tanstackRouter.TanStackRouterDevtools />
         </>
       );
       return { default: () => devtools };
