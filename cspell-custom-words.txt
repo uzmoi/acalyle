@@ -2,6 +2,7 @@ acalyle
 accum
 appdata
 autodocs
+biomejs
 chrono
 codegen
 cssole

@@ -4,7 +4,7 @@
   "experimentalTernaries": true,
   "overrides": [
     {
-      "files": [".prettierrc", "**/routes/**/*"],
+      "files": [".prettierrc", "biome.json", "**/routes/**/*"],
       "options": { "tabWidth": 2 }
     }
   ]
