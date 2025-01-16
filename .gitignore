@@ -7,8 +7,10 @@ storybook-static/
 .turbo/
 
 _*
+!**/routes/**/__*
 *.local
 *-local.*
+*.gen.*
 *.tsbuildinfo
 *.log
 

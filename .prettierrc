@@ -1,5 +1,11 @@
 {
-    "tabWidth": 4,
-    "arrowParens": "avoid",
-    "experimentalTernaries": true
+  "tabWidth": 4,
+  "arrowParens": "avoid",
+  "experimentalTernaries": true,
+  "overrides": [
+    {
+      "files": [".prettierrc", "**/routes/**/*"],
+      "options": { "tabWidth": 2 }
+    }
+  ]
 }

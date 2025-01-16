@@ -1,6 +1,6 @@
 {
     "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode", // cspell:word esbenp
+    "editor.defaultFormatter": "esbenp.prettier-vscode", // cspell:ignore esbenp
     "editor.codeActionsOnSave": {
         "source.fixAll": "explicit"
     },
@@ -8,7 +8,15 @@
         "editor.defaultFormatter": "rust-lang.rust-analyzer"
     },
     "[toml]": {
-        "editor.defaultFormatter": "tamasfe.even-better-toml" // cspell:word tamasfe
+        "editor.defaultFormatter": "tamasfe.even-better-toml" // cspell:ignore tamasfe
+    },
+    "files.watcherExclude": {
+        "**/routeTree.gen.ts": true,
+        "**/target": true,
+    },
+    "files.readonlyInclude": {
+        "**/routeTree.gen.ts": true,
+        "**/target": true
     },
     "eslint.workingDirectories": [{ "pattern": "apps/*" }, { "pattern": "packages/*" }],
     // "stylelint.validate": ["css", "typescript", "typescriptreact"],
