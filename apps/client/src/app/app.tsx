@@ -3,7 +3,6 @@ import { vars } from "@acalyle/ui";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { devAppTheme } from "~/dev/theme";
 import { QuickModalContainer } from "~/modal/container";
-import { PageRoot } from "~/pages/Root";
 import { routeTree } from "~/routeTree.gen";
 import { theme } from "~/theme";
 import { defaultTheme } from "~/theme/default";
@@ -35,7 +34,6 @@ export const App: React.FC = () => {
             )}
         >
             <RouterProvider router={router} />
-            <PageRoot />
             <QuickModalContainer />
         </div>
     );
