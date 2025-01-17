@@ -1,6 +1,7 @@
 import { cx, style } from "@acalyle/css";
 import { vars } from "@acalyle/ui";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
+import { devAppTheme } from "~/dev/theme";
 import { QuickModalContainer } from "~/modal/container";
 import { PageRoot } from "~/pages/Root";
 import { routeTree } from "~/routeTree.gen";
@@ -21,6 +22,8 @@ declare module "@tanstack/react-router" {
 export const App: React.FC = () => {
     return (
         <div
+            // TODO: テーマの参照の移行が終わったら消す
+            style={devAppTheme}
             className={cx(
                 defaultTheme,
                 style({
