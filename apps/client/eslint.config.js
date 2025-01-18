@@ -1,6 +1,6 @@
 // @ts-check
 
-import { createConfig } from "@acalyle/eslint-config";
+import { createConfig, warn } from "@acalyle/eslint-config";
 import unocss from "@unocss/eslint-config/flat";
 
 /** @type {import("eslint").Linter.FlatConfig[]} */
@@ -10,8 +10,11 @@ export default [
     }),
     unocss,
     {
-        files: ["**/*.tsx"],
+        files: ["**/*"],
         rules: {
+            "import-access/jsdoc": warn({
+                defaultImportability: "package",
+            }),
             "unocss/enforce-class-compile": "warn",
         },
     },
