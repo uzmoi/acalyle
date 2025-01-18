@@ -7,7 +7,7 @@ import {
 import { useBook } from "~/store/hook";
 
 const RouteComponent: React.FC = () => {
-  const { "book-id": bookRef } = useParams({ from: Route.fullPath });
+  const { "book-ref": bookRef } = useParams({ from: Route.fullPath });
   const book = useBook(bookRef);
 
   if (book == null) return null;
@@ -25,6 +25,6 @@ const RouteComponent: React.FC = () => {
 };
 
 // eslint-disable-next-line pure-module/pure-module
-export const Route = createFileRoute("/books/$book-id/settings")({
+export const Route = createFileRoute("/books/$book-ref/settings")({
   component: RouteComponent,
 });

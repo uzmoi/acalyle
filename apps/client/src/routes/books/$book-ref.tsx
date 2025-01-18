@@ -7,7 +7,7 @@ import {
 import { useBook } from "~/store/hook";
 
 const LayoutComponent: React.FC = () => {
-  const { "book-id": bookRef } = useParams({ from: Route.fullPath });
+  const { "book-ref": bookRef } = useParams({ from: Route.fullPath });
   const book = useBook(bookRef);
 
   if (book == null) {
@@ -29,6 +29,6 @@ const LayoutComponent: React.FC = () => {
   );
 };
 
-export const Route = /* #__PURE__ */ createFileRoute("/books/$book-id")({
+export const Route = /* #__PURE__ */ createFileRoute("/books/$book-ref")({
   component: LayoutComponent,
 });

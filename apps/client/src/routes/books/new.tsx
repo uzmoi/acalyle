@@ -8,8 +8,8 @@ const RouteComponent: React.FC = () => {
 
   const onCreatedBook = (book: Book) => {
     void navigate({
-      to: "/books/$book-id",
-      params: { "book-id": bookRefOf(book) },
+      to: "/books/$book-ref",
+      params: { "book-ref": bookRefOf(book) },
     });
   };
 

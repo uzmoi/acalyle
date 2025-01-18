@@ -6,7 +6,7 @@ import { NoteOverviewWarpList } from "~/note/ui/note-overview-warplist";
 import { CreateMemoButton } from "~/ui/CreateMemoButton";
 
 const RouteComponent: React.FC = () => {
-  const { "book-id": bookRef } = useParams({ from: Route.fullPath });
+  const { "book-ref": bookRef } = useParams({ from: Route.fullPath });
 
   const [query, setQuery] = useState("");
   const deferredQuery = useDeferredValue(query);
@@ -29,6 +29,6 @@ const RouteComponent: React.FC = () => {
   );
 };
 
-export const Route = /* #__PURE__ */ createFileRoute("/books/$book-id/")({
+export const Route = /* #__PURE__ */ createFileRoute("/books/$book-ref/")({
   component: RouteComponent,
 });
