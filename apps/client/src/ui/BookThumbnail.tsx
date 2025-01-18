@@ -1,4 +1,5 @@
 import { cx, style } from "@acalyle/css";
+import { theme } from "~/theme";
 import { acalyle } from "../app/main";
 
 export const BookThumbnail: React.FC<{
@@ -30,4 +31,6 @@ export const BookThumbnail: React.FC<{
 const ThumbnailStyle = style({
     width: "6em",
     height: "6em",
+    borderRadius: theme("bookOverview-round"),
+    overflow: "hidden",
 });

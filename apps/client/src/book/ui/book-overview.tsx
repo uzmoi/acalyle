@@ -3,6 +3,7 @@ import { vars, visuallyHidden } from "@acalyle/ui";
 import { identify } from "emnorst";
 import type { ID } from "~/lib/graphql";
 import { link } from "~/pages/link";
+import { theme } from "~/theme";
 import { BookThumbnail } from "~/ui/BookThumbnail";
 import { Link } from "~/ui/Link";
 import { bookRefOf } from "../store";
@@ -24,7 +25,9 @@ export const BookOverview: React.FC<{
             className={style({
                 display: "flex",
                 height: "6em",
-                backgroundColor: vars.color.bg.block,
+                background: theme("bookOverview-bg"),
+                color: theme("bookOverview-text"),
+                borderRadius: theme("bookOverview-round"),
             })}
         >
             <BookThumbnail
@@ -64,7 +67,8 @@ export const BookOverview: React.FC<{
                 </p>
                 <div
                     className={style({
-                        borderTop: `1px solid ${vars.color.fg.mute}`,
+                        borderTop: "1px solid",
+                        borderTopColor: theme("bookOverview-border"),
                         paddingTop: "0.25em",
                     })}
                 >
