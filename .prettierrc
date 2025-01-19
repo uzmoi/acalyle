@@ -8,6 +8,7 @@
         ".prettierrc",
         "biome.json",
         "**/routes/**/*",
+        "**/entities/**/*",
         "**/features/**/*"
       ],
       "options": { "tabWidth": 2 }

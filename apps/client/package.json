@@ -29,6 +29,7 @@
     "@nanostores/react": "^0.4.1",
     "@rizzzse/datetime": "^0.3.0",
     "@tanstack/react-router": "^1.58.12",
+    "@uzmoi/ut": "^0.1.1",
     "emnorst": "^1.0.0-next.2",
     "graphql": "^16.8.1",
     "nanostores": "^0.7.4",
