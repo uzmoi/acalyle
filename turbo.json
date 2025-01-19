@@ -8,7 +8,7 @@
     },
     "build": {
       "dependsOn": ["check"],
-      "inputs": ["src/**", "!**/*.{test,test-d,stories}.*", "tsconfig.json"],
+      "inputs": ["src/**", "!**/*.{test,test-d,stories}.*", "*.config.*", "tsconfig.json"],
       "outputs": ["dist/**"]
     },
     "dev": {

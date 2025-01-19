@@ -20,6 +20,6 @@
   "devDependencies": {
     "@acalyle/eslint-config": "*",
     "@acalyle/tsconfig": "*",
-    "tsup": "^8.0.0"
+    "tsup": "^8.4.0"
   }
 }
