@@ -5,7 +5,6 @@ import type { Book } from "~/book/store";
 import { bookRefOf } from "~/book/store";
 import { link } from "~/pages/link";
 import { Location } from "~/store/location";
-import { CreateBookForm } from "~/ui/CreateBookForm";
 import { Link } from "~/ui/Link";
 
 export const NewBookPage: React.FC = () => {
@@ -23,7 +22,7 @@ export const NewBookPage: React.FC = () => {
                     Return to books
                 </span>
             </Link>
-            <CreateBookForm onCreatedBook={onCreatedBook} />
+            {/* <CreateBookForm onCreatedBook={onCreatedBook} /> */}
         </main>
     );
 };

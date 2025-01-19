@@ -10,7 +10,7 @@ export default [
     }),
     unocss,
     {
-        files: ["**/*"],
+        files: ["**/*.{ts,mts,cts,tsx}"],
         rules: {
             "import-access/jsdoc": warn({
                 defaultImportability: "package",
