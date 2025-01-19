@@ -1,0 +1,5 @@
+mutation ChangeBookDescription($bookId: ID!, $description: String!) {
+  updateBookDescription(id: $bookId, description: $description) {
+    description
+  }
+}

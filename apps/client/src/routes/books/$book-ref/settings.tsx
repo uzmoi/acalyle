@@ -1,4 +1,5 @@
 import { createFileRoute, useParams } from "@tanstack/react-router";
+import type { BookId } from "~/entities/book";
 import {
   BookDescriptionForm,
   BookHandleForm,
@@ -14,10 +15,16 @@ const RouteComponent: React.FC = () => {
 
   return (
     <div>
-      <BookTitleForm bookId={book.id} currentTitle={book.title} />
-      <BookHandleForm bookId={book.id} currentHandle={book.handle} />
+      <BookTitleForm
+        bookId={book.id as string as BookId}
+        currentTitle={book.title}
+      />
+      <BookHandleForm
+        bookId={book.id as string as BookId}
+        currentHandle={book.handle}
+      />
       <BookDescriptionForm
-        bookId={book.id}
+        bookId={book.id as string as BookId}
         currentDescription={book.description}
       />
     </div>

@@ -3,12 +3,7 @@ import { Button, ControlGroup, Form, TextInput } from "@acalyle/ui";
 import { useStore } from "@nanostores/react";
 import { useId, useState } from "react";
 import type { ID } from "~/__generated__/graphql";
-import {
-    bookHandleStore,
-    changeBookDescription,
-    changeBookHandle,
-    changeBookTitle,
-} from "~/book/store/book";
+import { bookHandleStore } from "~/book/store/book";
 import { useBook } from "~/store/hook";
 import { confirm } from "~/ui/modal";
 
@@ -19,7 +14,7 @@ const BookTitleForm: React.FC<{
     const id = useId();
     const [title, setTitle] = useState(currentTitle);
     const onSubmit = () => {
-        void changeBookTitle(bookId, title);
+        // void changeBookTitle(bookId, title);
     };
 
     const length = title.length;
@@ -86,7 +81,7 @@ const BookHandleForm: React.FC<{
     const onSubmit = async () => {
         const action = handle === "" ? "削除" : `「${handle}」に変更`;
         if (await confirm(`book handleを${action}しますわ。よろしくて？`)) {
-            void changeBookHandle(bookId, handle === "" ? null : handle);
+            // void changeBookHandle(bookId, handle === "" ? null : handle);
         }
     };
 
@@ -125,7 +120,7 @@ const BookDescriptionForm: React.FC<{
     const id = useId();
     const [description, setDescription] = useState(currentDescription);
     const onSubmit = () => {
-        void changeBookDescription(bookId, description);
+        // void changeBookDescription(bookId, description);
     };
 
     const isValid = description.length <= 1024;

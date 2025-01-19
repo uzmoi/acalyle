@@ -1,24 +1,21 @@
 import { Button, ControlGroup, Form, TextInput } from "@acalyle/ui";
 import { useId, useState } from "react";
-import { changeBookDescription } from "~/book/store/book";
-import type { ID } from "~/lib/graphql";
+import type { BookId } from "~/entities/book";
+import { changeBookDescription } from "../model";
 
 export const BookDescriptionForm: React.FC<{
-  bookId: ID;
+  bookId: BookId;
   currentDescription: string;
 }> = ({ bookId, currentDescription }) => {
   const id = useId();
   const [description, setDescription] = useState(currentDescription);
-  const onSubmit = () => {
+  const commit = () => {
     void changeBookDescription(bookId, description);
   };
 
-  const isValid = description.length <= 1024;
-  const isChanged = description !== currentDescription;
-
   return (
-    <Form onSubmit={onSubmit}>
-      <label htmlFor={id} className=":uno: text-size-xs font-bold">
+    <Form onSubmit={commit}>
+      <label htmlFor={id} className=":uno: text-xs font-bold">
         Description
       </label>
       <br />
@@ -27,10 +24,10 @@ export const BookDescriptionForm: React.FC<{
           id={id}
           value={description}
           onValueChange={setDescription}
-          aria-invalid={isChanged && !isValid}
+          maxLength={1024}
           className=":uno: flex-grow"
         />
-        <Button type="submit" disabled={!isChanged || !isValid}>
+        <Button type="submit" disabled={description === currentDescription}>
           Change
         </Button>
       </ControlGroup>

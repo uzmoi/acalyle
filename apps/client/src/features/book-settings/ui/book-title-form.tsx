@@ -1,41 +1,33 @@
-import { style } from "@acalyle/css";
 import { Button, ControlGroup, Form, TextInput } from "@acalyle/ui";
 import { useId, useState } from "react";
-import { changeBookTitle } from "~/book/store/book";
-import type { ID } from "~/lib/graphql";
+import type { BookId } from "~/entities/book";
+import { changeBookTitle } from "../model";
 
 export const BookTitleForm: React.FC<{
-  bookId: ID;
+  bookId: BookId;
   currentTitle: string;
 }> = ({ bookId, currentTitle }) => {
   const id = useId();
   const [title, setTitle] = useState(currentTitle);
-  const onSubmit = () => {
+  const commit = () => {
     void changeBookTitle(bookId, title);
   };
 
-  const length = title.length;
-  const isValid = 0 < length && length <= 256;
-  const isChanged = title !== currentTitle;
-
   return (
-    <Form onSubmit={onSubmit}>
-      <label
-        htmlFor={id}
-        className={style({ fontSize: "0.75em", fontWeight: "bold" })}
-      >
+    <Form onSubmit={commit}>
+      <label htmlFor={id} className=":uno: text-xs font-bold">
         Title
       </label>
       <br />
-      <ControlGroup>
+      <ControlGroup className=":uno: inline-flex">
         <TextInput
           id={id}
           value={title}
           onValueChange={setTitle}
           required
-          aria-invalid={isChanged && !isValid}
+          maxLength={256}
         />
-        <Button type="submit" disabled={!(isChanged && isValid)}>
+        <Button type="submit" disabled={title === currentTitle}>
           Change
         </Button>
       </ControlGroup>

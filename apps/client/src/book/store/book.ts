@@ -5,9 +5,6 @@ import { memoizeBuilder } from "~/lib/memoize-builder";
 import type { PromiseLoaderW } from "~/lib/promise-loader";
 import { createQueryStore } from "~/lib/query-store";
 import BookQuery from "./graphql/book.graphql";
-import ChangeBookDescriptionMutation from "./graphql/change-book-description.graphql";
-import ChangeBookHandleMutation from "./graphql/change-book-handle.graphql";
-import ChangeBookTitleMutation from "./graphql/change-book-title.graphql";
 import CreateBookMutation from "./graphql/create-book.graphql";
 
 /** @package */
@@ -89,67 +86,4 @@ export const createBook = async (title: string, description: string) => {
     };
     bookStore(book.id).resolve(book);
     return book;
-};
-
-export const changeBookTitle = async (bookId: ID, title: string) => {
-    const { data } = await acalyle.net.gql(ChangeBookTitleMutation, {
-        bookId,
-        title,
-    });
-
-    const store = bookStore(bookId);
-
-    if (data.updateBookTitle) {
-        const book: Book = {
-            ...data.updateBookTitle,
-            handle: data.updateBookTitle.handle ?? null,
-            tags: [],
-        };
-        store.resolve(book);
-    } else {
-        store.resolve(null);
-    }
-};
-
-export const changeBookHandle = async (bookId: ID, handle: string | null) => {
-    const { data } = await acalyle.net.gql(ChangeBookHandleMutation, {
-        bookId,
-        handle,
-    });
-
-    const store = bookStore(bookId);
-
-    if (data.updateBookHandle) {
-        const book: Book = {
-            ...data.updateBookHandle,
-            handle: data.updateBookHandle.handle ?? null,
-            tags: [],
-        };
-        store.resolve(book);
-    } else {
-        store.resolve(null);
-    }
-};
-
-export const changeBookDescription = async (
-    bookId: ID,
-    description: string,
-) => {
-    const { data } = await acalyle.net.gql(ChangeBookDescriptionMutation, {
-        bookId,
-        description,
-    });
-
-    const store = bookStore(bookId);
-
-    if (data.updateBookDescription) {
-        const book: Book = {
-            ...data.updateBookDescription,
-            handle: data.updateBookDescription.handle ?? null,
-            tags: [],
-        };
-        store.resolve(book);
-    } else {
-        store.resolve(null);
-    }
 };

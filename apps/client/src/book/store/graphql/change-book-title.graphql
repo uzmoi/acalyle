@@ -1,7 +1,0 @@
-#import BookFragment from "./book-fragment.graphql"
-
-mutation ChangeBookTitle($bookId: ID!, $title: String!) {
-    updateBookTitle(id: $bookId, title: $title) {
-        ...BookFragment
-    }
-}
