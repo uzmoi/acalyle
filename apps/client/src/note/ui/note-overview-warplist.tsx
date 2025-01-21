@@ -2,10 +2,10 @@ import { style } from "@acalyle/css";
 import { useStore } from "@nanostores/react";
 import type { BookRef } from "~/book/store";
 import { useBookId } from "~/book/ui/hook";
+import { NoteOverview } from "~/entities/note";
 import type { ID } from "~/lib/graphql";
 import { noteConnection } from "~/note/store";
 import { MIN_NOTE_WIDTH } from "./constants";
-import { NoteOverview } from "./note-overview";
 
 const useNoteOverviewWarpList = (bookId: ID, query = ""): readonly ID[] => {
     const { nodeIds } = useStore(noteConnection(bookId, query));

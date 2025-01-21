@@ -14,7 +14,7 @@ import {
 } from "~/store/draft";
 import { debounce } from "../lib/debounce";
 import { usePromiseLoader } from "../lib/promise-loader";
-import { NoteContents } from "../note/ui/note-contents";
+import { NoteContents } from "../entities/note/ui/contents";
 
 const $noteDraft = /* #__PURE__ */ createQueryStore(
     (noteId: ID): Promise<NoteDraft | undefined> => loadNoteDraft(noteId),

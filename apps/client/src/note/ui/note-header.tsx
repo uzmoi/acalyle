@@ -2,12 +2,12 @@ import { style } from "@acalyle/css";
 import { Popover, closePopover } from "@acalyle/ui";
 import { BiPlus } from "react-icons/bi";
 import type { BookRef } from "~/book/store";
+import { type NoteTagString, TagList } from "~/entities/note";
 import { AddTagForm } from "~/ui/AddTagForm";
 import { TimeStamp } from "~/ui/TimeStamp";
 import type { Note } from "../store";
 import { MIN_NOTE_WIDTH } from "./constants";
 import { NoteMenuButton } from "./note-menu";
-import { TagList } from "./tag-list";
 
 /** @package */
 export const NoteHeader: React.FC<{
@@ -28,7 +28,10 @@ export const NoteHeader: React.FC<{
                 <NoteMenuButton noteId={note.id} />
             </div>
             <div className=":uno: mt-1">
-                <TagList tags={note.tags} className=":uno: inline-block" />
+                <TagList
+                    tags={note.tags as NoteTagString[]}
+                    className=":uno: inline-block"
+                />
                 <Popover className=":uno: inline-block">
                     <Popover.Button unstyled>
                         <BiPlus />
