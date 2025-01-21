@@ -7,4 +7,4 @@ export {
   bookRefOf,
 } from "./model";
 /** @public */
-export {} from "./ui";
+export { BookOverview } from "./ui";

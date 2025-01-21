@@ -2,8 +2,8 @@ import { style } from "@acalyle/css";
 import { List } from "@acalyle/ui";
 import { useStore } from "@nanostores/react";
 import { bookConnection } from "~/book/store";
+import { type BookId, BookOverview } from "~/entities/book";
 import type { ID } from "~/lib/graphql";
-import { BookOverview } from "./book-overview";
 
 const useBookOverviewList = (query = ""): readonly ID[] => {
     const { nodeIds } = useStore(bookConnection(query));
@@ -25,7 +25,7 @@ export const BookOverviewWarpList: React.FC<{
         >
             {books.map(book => (
                 <List.Item key={book}>
-                    <BookOverview bookId={book} />
+                    <BookOverview bookId={book as string as BookId} />
                 </List.Item>
             ))}
         </List>

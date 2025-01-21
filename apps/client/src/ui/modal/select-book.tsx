@@ -11,7 +11,7 @@ import { useStore } from "@nanostores/react";
 import { useCallback, useState } from "react";
 import type { ID } from "~/__generated__/graphql";
 import { bookConnection } from "~/book/store";
-import { BookOverview } from "~/book/ui/book-overview";
+import { BookOverview } from "~/entities/book";
 import { BookSearchBar } from "~/ui/BookSearchBar";
 
 const modal = /* #__PURE__ */ Modal.create<void, ID | undefined>();
