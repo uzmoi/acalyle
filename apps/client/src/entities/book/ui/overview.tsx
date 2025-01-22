@@ -2,16 +2,14 @@ import { cx, style } from "@acalyle/css";
 import { visuallyHidden } from "@acalyle/ui";
 import { Link } from "@tanstack/react-router";
 import { identify } from "emnorst";
-import { useBook } from "~/book/ui/hook";
-import type { ID } from "~/lib/graphql";
 import { theme } from "~/theme";
-import { type Book, type BookId, bookRefOf } from "../model";
+import { type BookId, bookRefOf, useBook } from "../model";
 import { BookThumbnail } from "./thumbnail";
 
 export const BookOverview: React.FC<{
   bookId: BookId;
 }> = ({ bookId }) => {
-  const book = useBook(bookId as string as ID) as Book | null;
+  const book = useBook(bookId);
 
   if (book == null) {
     return null;

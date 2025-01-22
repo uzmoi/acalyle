@@ -2,14 +2,12 @@ import { style } from "@acalyle/css";
 import { vars, visuallyHidden } from "@acalyle/ui";
 import { Link } from "@tanstack/react-router";
 import { useCallback } from "react";
-import { useBook } from "~/book/ui/hook";
-import { type Book, type BookId, bookRefOf } from "~/entities/book";
+import { type BookId, bookRefOf, useBook } from "~/entities/book";
 import type { ID } from "~/lib/graphql";
 import { MIN_NOTE_WIDTH } from "~/note/ui/constants";
-import { useNote } from "~/note/ui/hook";
 import { theme } from "~/theme";
 import { openNoteInModal } from "~/ui/modal";
-import type { Note, NoteId } from "../model";
+import { type NoteId, useNote } from "../model";
 import { NoteContents } from "./contents";
 import { TagList } from "./tag-list";
 
@@ -38,8 +36,8 @@ export const NoteOverview: React.FC<{
   noteId: NoteId;
   clickAction?: ClickAction;
 }> = ({ bookId, noteId, clickAction }) => {
-  const book = useBook(bookId as string as ID) as Book | null;
-  const note = useNote(noteId as string as ID) as Note | null;
+  const book = useBook(bookId);
+  const note = useNote(noteId);
   const handleClick = useNoteOverviewAction(bookId, noteId, clickAction);
 
   if (book == null || note == null) return null;
