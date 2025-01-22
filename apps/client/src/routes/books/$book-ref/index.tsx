@@ -2,6 +2,7 @@ import { TextInput } from "@acalyle/ui";
 import { createFileRoute, useParams } from "@tanstack/react-router";
 import { useDeferredValue, useState } from "react";
 import type { BookRef } from "~/book/store";
+import { NoteModalContainer } from "~/features/note-modal";
 import { NoteOverviewWarpList } from "~/note/ui/note-overview-warplist";
 import { CreateMemoButton } from "~/ui/CreateMemoButton";
 
@@ -25,6 +26,7 @@ const RouteComponent: React.FC = () => {
         bookRef={bookRef as BookRef}
         query={`-@relate:* ${deferredQuery}`}
       />
+      <NoteModalContainer />
     </div>
   );
 };

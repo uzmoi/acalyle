@@ -3,16 +3,16 @@ import { vars, visuallyHidden } from "@acalyle/ui";
 import { Link } from "@tanstack/react-router";
 import { useCallback } from "react";
 import { type BookId, bookRefOf, useBook } from "~/entities/book";
-import type { ID } from "~/lib/graphql";
+import { openNoteInModal } from "~/features/note-modal";
 import { MIN_NOTE_WIDTH } from "~/note/ui/constants";
 import { theme } from "~/theme";
-import { openNoteInModal } from "~/ui/modal";
 import { type NoteId, useNote } from "../model";
 import { NoteContents } from "./contents";
 import { TagList } from "./tag-list";
 
 type ClickAction = "open-link" | "open-modal";
 
+// TODO: featureに依存してしまっているので、コンポーネントのpropsからハンドラをもらうようにする。
 const useNoteOverviewAction = (
   bookId: BookId,
   noteId: NoteId,
@@ -24,7 +24,7 @@ const useNoteOverviewAction = (
         // NOTE: noscript環境でなるべく正しく動くようにLinkのままpreventDefaultしている。
         // これが本当正しいのかはわからない。
         e.preventDefault();
-        void openNoteInModal(bookId as string as ID, noteId as string as ID);
+        void openNoteInModal(bookId, noteId);
       }
     },
     [bookId, noteId, clickAction],
