@@ -1,11 +1,11 @@
 import { style } from "@acalyle/css";
 import { Button, Form, TextInput } from "@acalyle/ui";
 import { useCallback, useId, useState } from "react";
-import type { Book } from "~/book/store";
-import { createBook } from "~/book/store/book";
+import type { BookId } from "~/entities/book";
+import { createBook } from "../model";
 
 export const CreateBookForm: React.FC<{
-  onCreatedBook: (book: Book) => void;
+  onCreatedBook: (bookId: BookId) => void;
 }> = ({ onCreatedBook }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");

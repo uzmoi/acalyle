@@ -1,0 +1,11 @@
+mutation CreateBook(
+  $title: String!
+  $description: String!
+  $thumbnail: Upload
+) {
+  createBook(title: $title, description: $description, thumbnail: $thumbnail) {
+    id
+    thumbnail
+    createdAt
+  }
+}

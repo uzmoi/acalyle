@@ -1,15 +1,15 @@
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { BiLeftArrowAlt } from "react-icons/bi";
-import { type Book, bookRefOf } from "~/book/store";
+import type { BookId } from "~/entities/book";
 import { CreateBookForm } from "~/features/create-book";
 
 const RouteComponent: React.FC = () => {
   const navigate = useNavigate();
 
-  const onCreatedBook = (book: Book) => {
+  const onCreatedBook = (bookId: BookId) => {
     void navigate({
       to: "/books/$book-ref",
-      params: { "book-ref": bookRefOf(book) },
+      params: { "book-ref": bookId },
     });
   };
 

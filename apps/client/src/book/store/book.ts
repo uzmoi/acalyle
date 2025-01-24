@@ -4,7 +4,6 @@ import type { ID } from "~/lib/graphql";
 import { memoizeBuilder } from "~/lib/memoize-builder";
 import type { PromiseLoaderW } from "~/lib/promise-loader";
 import { createQueryStore } from "~/lib/query-store";
-import CreateBookMutation from "./graphql/create-book.graphql";
 
 /** @package */
 export type BookRef = ID | `@${string}`;
@@ -71,18 +70,3 @@ export const handleBookStore = /* #__PURE__ */ memoizeBuilder(
             return get(bookStore(bookIdLoader.value));
         }),
 );
-
-export const createBook = async (title: string, description: string) => {
-    const { data } = await acalyle.net.gql(
-        CreateBookMutation,
-        { title, description, thumbnail: null },
-        // { "variables.thumbnail": thumbnail },
-    );
-    const book: Book = {
-        ...data.createBook,
-        handle: data.createBook.handle ?? null,
-        tags: [],
-    };
-    bookStore(book.id).resolve(book);
-    return book;
-};
