@@ -2,16 +2,17 @@ import { style } from "@acalyle/css";
 import { Button, ControlGroup, Popover, Spinner } from "@acalyle/ui";
 import { Suspense, useCallback } from "react";
 import { BiCaretDown } from "react-icons/bi";
+import { type BookRef, useBookByRef } from "~/entities/book";
+import type { ID } from "~/lib/graphql";
 import { createNote } from "~/note/store/note";
 import { link } from "~/pages/link";
-import { useBookId } from "~/store/hook";
 import { Location } from "~/store/location";
 import { CreateTemplateMemoButtonList } from "./CreateTemplateMemoButtonList";
 
 export const CreateMemoButton: React.FC<{
     bookHandle: string;
 }> = ({ bookHandle }) => {
-    const bookId = useBookId(bookHandle);
+    const bookId = useBookByRef(bookHandle as BookRef)!.id as string as ID;
 
     const createMemoNoTemplate = useCallback(() => {
         void createNote(bookId).then(memo => {

@@ -4,11 +4,11 @@ import {
   createFileRoute,
   useParams,
 } from "@tanstack/react-router";
-import { useBook } from "~/store/hook";
+import { type BookRef, useBookByRef } from "~/entities/book";
 
 const LayoutComponent: React.FC = () => {
   const { "book-ref": bookRef } = useParams({ from: Route.fullPath });
-  const book = useBook(bookRef);
+  const book = useBookByRef(bookRef as BookRef);
 
   if (book == null) {
     return (

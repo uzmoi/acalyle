@@ -1,7 +1,6 @@
 import { style } from "@acalyle/css";
 import { useStore } from "@nanostores/react";
-import type { BookRef } from "~/book/store";
-import { useBookId } from "~/book/ui/hook";
+import { type BookRef, useBookByRef } from "~/entities/book";
 import { NoteOverview } from "~/entities/note";
 import type { ID } from "~/lib/graphql";
 import { noteConnection } from "~/note/store";
@@ -16,8 +15,8 @@ export const NoteOverviewWarpList: React.FC<{
     bookRef: BookRef;
     query?: string;
 }> = ({ bookRef, query }) => {
-    const bookId = useBookId(bookRef);
-    const notes = useNoteOverviewWarpList(bookId, query);
+    const bookId = useBookByRef(bookRef)!.id;
+    const notes = useNoteOverviewWarpList(bookId as string as ID, query);
 
     return (
         <div
