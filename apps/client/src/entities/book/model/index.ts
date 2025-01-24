@@ -1,4 +1,4 @@
-export { bookRefOf } from "./helpers";
 export { useBook, useBookByRef } from "./hook";
+export { type BookRef, bookRefOf } from "./ref";
 export { $book } from "./store";
-export type { Book, BookHandle, BookId, BookRef } from "./types";
+export type { Book, BookHandle, BookId } from "./types";

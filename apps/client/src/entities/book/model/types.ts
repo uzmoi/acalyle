@@ -4,8 +4,6 @@ export type BookId = string & Brand<"BookId">;
 
 export type BookHandle = `@${string}` & Brand<"BookHandle">;
 
-export type BookRef = BookId | BookHandle;
-
 export interface Book {
   id: BookId;
   handle: string | null;
