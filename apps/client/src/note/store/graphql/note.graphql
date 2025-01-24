@@ -1,7 +1,0 @@
-#import NoteFragment from "./note-fragment.graphql"
-
-query Note($noteId: ID!) {
-    memo(id: $noteId) {
-        ...NoteFragment
-    }
-}

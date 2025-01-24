@@ -1,13 +1,12 @@
 import { acalyle } from "~/app/main";
-import { bookStore } from "~/book/store/book";
-import type { Book, BookId } from "~/entities/book";
+import { $book, type Book, type BookId } from "~/entities/book";
 import type { ID } from "~/lib/graphql";
 import ChangeBookDescriptionMutation from "../api/change-book-description.graphql";
 import ChangeBookHandleMutation from "../api/change-book-handle.graphql";
 import ChangeBookTitleMutation from "../api/change-book-title.graphql";
 
 const set = async (id: BookId, fields: Partial<Omit<Book, "id">>) => {
-  const store = bookStore(id as string as ID);
+  const store = $book(id);
 
   let loader = store.get();
 

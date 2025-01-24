@@ -4,7 +4,6 @@ import { createQueryStore } from "~/lib/query-store";
 import AddMemoTagsMutation from "./graphql/add-memo-tags.graphql";
 import CreateNoteMutation from "./graphql/create-note.graphql";
 import NoteTemplateQuery from "./graphql/note-template.graphql";
-import NoteQuery from "./graphql/note.graphql";
 import RemoveNoteMutation from "./graphql/remove-note.graphql";
 import TransferNoteMutation from "./graphql/transfer-note.graphql";
 import UpdateNoteContentsMutation from "./graphql/update-note-contents.graphql";

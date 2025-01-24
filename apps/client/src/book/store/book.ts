@@ -4,7 +4,6 @@ import type { ID } from "~/lib/graphql";
 import { memoizeBuilder } from "~/lib/memoize-builder";
 import type { PromiseLoaderW } from "~/lib/promise-loader";
 import { createQueryStore } from "~/lib/query-store";
-import BookQuery from "./graphql/book.graphql";
 import CreateBookMutation from "./graphql/create-book.graphql";
 
 /** @package */
