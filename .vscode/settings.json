@@ -18,6 +18,9 @@
         "**/routeTree.gen.ts": true,
         "**/target": true
     },
+    "explorer.fileNesting.patterns": {
+        "*.graphql": "${capture}.d.graphql.ts, ${capture}.d.graphql.ts.map",
+    },
     "eslint.workingDirectories": [{ "pattern": "apps/*" }, { "pattern": "packages/*" }],
     // "stylelint.validate": ["css", "typescript", "typescriptreact"],
     "eslint.experimental.useFlatConfig": true,
