@@ -44,20 +44,20 @@ export class NoteConnection extends GraphqlConnection<NoteNode> {
   }
 }
 
-const connectionMap = new Map<string, NoteConnection>();
+const connectionMap = new Map<`${BookId}/${string}`, NoteConnection>();
 
 export const $noteConnection = (
   bookId: BookId,
   query: string,
 ): NoteConnection => {
-  const key = `${bookId}/${query}`;
+  const key = `${bookId}/${query}` as const;
   const entry = connectionMap.get(key);
 
   if (entry != null) return entry;
 
   const conn = new NoteConnection(bookId, query);
 
-  connectionMap.set(query, conn);
+  connectionMap.set(key, conn);
 
   return conn;
 };
