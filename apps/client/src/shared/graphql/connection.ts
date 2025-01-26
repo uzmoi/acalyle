@@ -85,6 +85,7 @@ export abstract class GraphqlConnection<
 
       this.nodeIds.splice(0, 0, ...edges.map(edge => edge.node.id));
 
+      this.updateNodes(edges.map(edge => edge.node));
       this.notify();
     }
   }
@@ -100,6 +101,7 @@ export abstract class GraphqlConnection<
       const length = this.nodeIds.length;
       this.nodeIds.splice(length, 0, ...edges.map(edge => edge.node.id));
 
+      this.updateNodes(edges.map(edge => edge.node));
       this.notify();
     }
   }
