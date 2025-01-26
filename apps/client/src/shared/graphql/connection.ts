@@ -9,7 +9,9 @@ class Listenable {
       this.subscriptions.delete(f);
     };
   }
+  notifyId = 0;
   notify() {
+    this.notifyId++;
     for (const flash of this.subscriptions) {
       flash();
     }
@@ -53,12 +55,17 @@ export abstract class GraphqlConnection<
 
   nodeIds: TNode["id"][] = [];
 
+  private _cache = new Map<number, ConnectionSnapshot<TNode["id"]>>();
+
   toConnectionSnapshot(): ConnectionSnapshot<TNode["id"]> {
-    return {
-      nodeIds: this.nodeIds,
-      hasPreviousPage: this.hasPreviousPage,
-      hasNextPage: this.hasNextPage,
-    };
+    if (!this._cache.has(this.notifyId)) {
+      this._cache.set(this.notifyId, {
+        nodeIds: [...this.nodeIds],
+        hasPreviousPage: this.hasPreviousPage,
+        hasNextPage: this.hasNextPage,
+      });
+    }
+    return this._cache.get(this.notifyId)!;
   }
 
   protected abstract fetchPage(
