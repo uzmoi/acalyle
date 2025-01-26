@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { BookListPage } from "~/pages/BookListPage";
+import { BookListPage } from "~/pages/book-list";
 
 const RouteComponent: React.FC = () => {
   return <BookListPage />;
