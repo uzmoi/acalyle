@@ -75,34 +75,34 @@ export abstract class GraphqlConnection<
   protected abstract updateNodes(nodes: readonly TNode[]): void;
 
   async loadPreviousPage() {
-    if (this.hasPreviousPage) {
-      const {
-        pageInfo: { hasPreviousPage, startCursor },
-        edges,
-      } = await this.fetchPage(this.startCursor, "previous");
-      this.hasPreviousPage = hasPreviousPage && startCursor != null;
-      this.startCursor = startCursor as Cursor | null;
+    if (!this.hasPreviousPage) return;
 
-      this.nodeIds.splice(0, 0, ...edges.map(edge => edge.node.id));
+    const {
+      pageInfo: { hasPreviousPage, startCursor },
+      edges,
+    } = await this.fetchPage(this.startCursor, "previous");
+    this.hasPreviousPage = hasPreviousPage && startCursor != null;
+    this.startCursor = startCursor as Cursor | null;
 
-      this.updateNodes(edges.map(edge => edge.node));
-      this.notify();
-    }
+    this.nodeIds.splice(0, 0, ...edges.map(edge => edge.node.id));
+
+    this.updateNodes(edges.map(edge => edge.node));
+    this.notify();
   }
   async loadNextPage() {
-    if (this.hasNextPage) {
-      const {
-        pageInfo: { hasNextPage, endCursor },
-        edges,
-      } = await this.fetchPage(this.endCursor, "next");
-      this.hasNextPage = hasNextPage && endCursor != null;
-      this.endCursor = endCursor as Cursor | null;
+    if (!this.hasNextPage) return;
 
-      const length = this.nodeIds.length;
-      this.nodeIds.splice(length, 0, ...edges.map(edge => edge.node.id));
+    const {
+      pageInfo: { hasNextPage, endCursor },
+      edges,
+    } = await this.fetchPage(this.endCursor, "next");
+    this.hasNextPage = hasNextPage && endCursor != null;
+    this.endCursor = endCursor as Cursor | null;
 
-      this.updateNodes(edges.map(edge => edge.node));
-      this.notify();
-    }
+    const length = this.nodeIds.length;
+    this.nodeIds.splice(length, 0, ...edges.map(edge => edge.node.id));
+
+    this.updateNodes(edges.map(edge => edge.node));
+    this.notify();
   }
 }
