@@ -1,11 +1,8 @@
 import { cx, style } from "@acalyle/css";
-import { Alert, Intersection, List, Spinner, vars } from "@acalyle/ui";
-import { useStore } from "@nanostores/react";
+import { Intersection, List } from "@acalyle/ui";
 import { Link } from "@tanstack/react-router";
 import { useCallback, useDeferredValue, useState } from "react";
-import { BiBookAdd, BiError } from "react-icons/bi";
-import type { NetworkError } from "~/app/network";
-import { bookConnection } from "~/book/store";
+import { BiBookAdd } from "react-icons/bi";
 import { $bookConnection, type BookId, BookOverview } from "~/entities/book";
 import { useConnection } from "~/shared/graphql";
 import { BookSearchBar } from "~/ui/BookSearchBar";
@@ -13,10 +10,6 @@ import { BookSearchBar } from "~/ui/BookSearchBar";
 export const BookListPage: React.FC = () => {
   const [query, setQuery] = useState("");
   const deferredQuery = useDeferredValue(query);
-  const isLoading = useStore(bookConnection(deferredQuery).isLoading);
-  const error = useStore(bookConnection(deferredQuery).error) as
-    | NetworkError
-    | undefined;
 
   const { nodeIds } = useConnection($bookConnection(deferredQuery ?? ""));
 
@@ -30,8 +23,8 @@ export const BookListPage: React.FC = () => {
   );
 
   const refetchBookConnection = useCallback(() => {
-    void bookConnection(deferredQuery).refetch();
-  }, [deferredQuery]);
+    // void $bookConnection(deferredQuery).refetch();
+  }, []);
 
   return (
     <main className=":uno: p-5">
@@ -61,13 +54,13 @@ export const BookListPage: React.FC = () => {
         ))}
       </List>
       <Intersection onIntersection={onIntersection} rootMargin="25% 0px" />
-      {isLoading && (
+      {/* {isLoading && (
         <div className=":uno: ml-50% mt-4 inline-block translate-x--50%">
           <span className=":uno: mr-16 h-4 align-top">Loading...</span>
           <Spinner className={style({ "--size": "1.5em" })} />
         </div>
-      )}
-      {error && (
+      )} */}
+      {/* {error && (
         <Alert type="error">
           <BiError
             className={style({
@@ -80,7 +73,7 @@ export const BookListPage: React.FC = () => {
           <p>error code: {error.type}</p>
           {error.type === "http_error" && <p>status: {error.status}</p>}
         </Alert>
-      )}
+      )} */}
     </main>
   );
 };

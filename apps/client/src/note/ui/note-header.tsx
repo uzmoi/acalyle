@@ -1,7 +1,7 @@
 import { style } from "@acalyle/css";
 import { Popover, closePopover } from "@acalyle/ui";
 import { BiPlus } from "react-icons/bi";
-import type { BookRef } from "~/book/store";
+import type { BookRef } from "~/entities/book";
 import { type NoteTagString, TagList } from "~/entities/note";
 import { AddTagForm } from "~/ui/AddTagForm";
 import { TimeStamp } from "~/ui/TimeStamp";
