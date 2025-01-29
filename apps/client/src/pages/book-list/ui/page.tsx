@@ -37,7 +37,7 @@ export const BookListPage: React.FC = () => {
           />
         </div>
         <Link to="/books/new" className=":uno: ml-4">
-          <BiBookAdd className=":uno: align-middle" />
+          <BiBookAdd />
           <span className=":uno: ml-1">New</span>
         </Link>
       </div>
