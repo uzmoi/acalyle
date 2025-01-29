@@ -5,8 +5,7 @@
     {
       "files": [
         "apps/client/*",
-        "apps/client/src/{app,book,dev,lib,modal,note,store,theme,ui}/**",
-        "apps/client/src/pages/{*,book/*}"
+        "apps/client/src/{app,book,dev,lib,modal,note,store,theme,ui}/**"
       ],
       "excludeFiles": ["apps/client/biome.json"],
       "options": { "tabWidth": 4 }
