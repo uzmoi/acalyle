@@ -3,10 +3,10 @@ import { Intersection, TextInput } from "@acalyle/ui";
 import { useCallback, useDeferredValue, useState } from "react";
 import { type BookRef, useBookByRef } from "~/entities/book";
 import { $noteConnection, type NoteId, NoteOverview } from "~/entities/note";
+import { NoteCreateButton } from "~/features/create-note";
 import { NoteModalContainer } from "~/features/note-modal";
 import { MIN_NOTE_WIDTH } from "~/note/ui/constants";
 import { useConnection } from "~/shared/graphql";
-import { CreateMemoButton } from "~/ui/CreateMemoButton";
 
 export const NoteListPage: React.FC<{
   bookRef: BookRef;
@@ -40,7 +40,7 @@ export const NoteListPage: React.FC<{
           className=":uno: flex-1"
           onValueChange={setQuery}
         />
-        <CreateMemoButton bookHandle={bookRef} />
+        <NoteCreateButton bookRef={bookRef} />
       </div>
       <div
         className={cx(

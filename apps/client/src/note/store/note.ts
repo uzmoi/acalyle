@@ -2,7 +2,6 @@ import { acalyle } from "~/app/main";
 import type { ID } from "~/lib/graphql";
 import { createQueryStore } from "~/lib/query-store";
 import AddMemoTagsMutation from "./graphql/add-memo-tags.graphql";
-import CreateNoteMutation from "./graphql/create-note.graphql";
 import NoteTemplateQuery from "./graphql/note-template.graphql";
 import RemoveNoteMutation from "./graphql/remove-note.graphql";
 import TransferNoteMutation from "./graphql/transfer-note.graphql";
@@ -31,16 +30,6 @@ export const noteTemplateStore = /* #__PURE__ */ createQueryStore(
         return data.book?.tagProps;
     },
 );
-
-export const createNote = async (bookId: ID, templateName?: string) => {
-    const { data } = await acalyle.net.gql(CreateNoteMutation, {
-        bookId,
-        templateName,
-    });
-    const note = data.createMemo;
-    noteStore(note.id).resolve(note);
-    return note;
-};
 
 export const removeNote = async (noteId: ID) => {
     const { data: _ } = await acalyle.net.gql(RemoveNoteMutation, { noteId });
