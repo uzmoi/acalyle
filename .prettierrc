@@ -1,17 +1,15 @@
 {
-  "tabWidth": 4,
   "arrowParens": "avoid",
   "experimentalTernaries": true,
   "overrides": [
     {
       "files": [
-        ".prettierrc",
-        "biome.json",
-        "**/routes/**/*",
-        "**/entities/**/*",
-        "**/features/**/*"
+        "apps/client/*",
+        "apps/client/src/{app,book,dev,lib,modal,note,store,theme,ui}/**",
+        "apps/client/src/pages/{*,book/*}"
       ],
-      "options": { "tabWidth": 2 }
+      "excludeFiles": ["apps/client/biome.json"],
+      "options": { "tabWidth": 4 }
     }
   ]
 }
