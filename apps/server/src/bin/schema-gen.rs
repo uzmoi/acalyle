@@ -6,6 +6,5 @@ use std::{fs, io};
 async fn main() -> io::Result<()> {
     let pool = SqlitePool::connect("sqlite::memory:").await.unwrap();
     let schema = graphql::graphql_schema(pool.clone());
-    fs::create_dir_all("./dist")?;
-    fs::write("./dist/schema.graphql", schema.sdl())
+    fs::write("./schema.graphql", schema.sdl())
 }

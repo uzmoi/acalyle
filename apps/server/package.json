@@ -4,11 +4,10 @@
   "type": "module",
   "sideEffects": false,
   "exports": {
-    "./schema.graphql": "./dist/schema.graphql"
+    "./schema.graphql": "./schema.graphql"
   },
   "scripts": {
-    "build": "cargo run --bin schema-gen",
-    "check": "cargo check",
+    "schema-gen": "cargo run --bin schema-gen",
     "test": "cargo test"
   }
 }
