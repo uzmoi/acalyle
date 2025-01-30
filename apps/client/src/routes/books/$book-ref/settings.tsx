@@ -4,7 +4,7 @@ import {
   BookDescriptionForm,
   BookHandleForm,
   BookTitleForm,
-} from "~/features/book-settings";
+} from "~/pages/book-settings";
 
 const RouteComponent: React.FC = () => {
   const { "book-ref": bookRef } = useParams({ from: Route.fullPath });
