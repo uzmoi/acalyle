@@ -10,6 +10,7 @@
     "build": "vite build",
     "precheck": "vite build || true",
     "check": "tsc -p tsconfig.main.json --noEmit",
+    "prelint": "vite build || true",
     "lint": "eslint .",
     "test": "vitest",
     "coverage": "vitest run --coverage",
