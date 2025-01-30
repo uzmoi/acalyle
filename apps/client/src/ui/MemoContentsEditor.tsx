@@ -3,8 +3,9 @@ import { Button, ControlGroup, Form, TextArea, vars } from "@acalyle/ui";
 import { useStore } from "@nanostores/react";
 import { useCallback, useMemo, useState } from "react";
 import type { ID } from "~/__generated__/graphql";
+import { type NoteId, useNote } from "~/entities/note";
+import { NoteContents } from "~/entities/note/ui/contents";
 import { createQueryStore } from "~/lib/query-store";
-import { noteStore } from "~/note/store";
 import { updateNoteContents } from "~/note/store/note";
 import {
     type NoteDraft,
@@ -14,7 +15,6 @@ import {
 } from "~/store/draft";
 import { debounce } from "../lib/debounce";
 import { usePromiseLoader } from "../lib/promise-loader";
-import { NoteContents } from "../note/ui/note-contents";
 
 const $noteDraft = /* #__PURE__ */ createQueryStore(
     (noteId: ID): Promise<NoteDraft | undefined> => loadNoteDraft(noteId),
@@ -25,18 +25,13 @@ type Conflict = {
     current: string;
 };
 
-const useNote = (noteId: ID) => {
-    const noteLoader = useStore(noteStore(noteId));
-    return usePromiseLoader(noteLoader);
-};
-
 export const useNoteDraft = (
     noteId: ID,
 ): { initContents: string; conflict: Conflict | null } => {
     const noteDraftLoader = useStore($noteDraft(noteId));
     const noteDraft = usePromiseLoader(noteDraftLoader);
 
-    const note = useNote(noteId);
+    const note = useNote(noteId as string as NoteId);
 
     const initContents = noteDraft?.contents ?? note!.contents;
 

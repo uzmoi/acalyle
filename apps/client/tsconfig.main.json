@@ -10,5 +10,11 @@
         "allowArbitraryExtensions": true,
         "noEmit": false,
         "composite": true,
+        "plugins": [
+            {
+                "name": "eslint-plugin-import-access",
+                "jsdoc": { "defaultImportability": "package" },
+            }
+        ]
     },
 }

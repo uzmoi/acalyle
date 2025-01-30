@@ -1,1 +1,0 @@
-export { BookSettingsPage } from "./BookSettingsPage";

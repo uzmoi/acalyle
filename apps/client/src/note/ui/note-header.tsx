@@ -1,13 +1,13 @@
 import { style } from "@acalyle/css";
 import { Popover, closePopover } from "@acalyle/ui";
 import { BiPlus } from "react-icons/bi";
-import type { BookRef } from "~/book/store";
+import type { BookRef } from "~/entities/book";
+import { type NoteTagString, TagList } from "~/entities/note";
 import { AddTagForm } from "~/ui/AddTagForm";
 import { TimeStamp } from "~/ui/TimeStamp";
 import type { Note } from "../store";
 import { MIN_NOTE_WIDTH } from "./constants";
 import { NoteMenuButton } from "./note-menu";
-import { TagList } from "./tag-list";
 
 /** @package */
 export const NoteHeader: React.FC<{
@@ -15,11 +15,9 @@ export const NoteHeader: React.FC<{
     note: Note;
 }> = ({ bookRef, note }) => {
     return (
-        <header
-            className={style({ minWidth: MIN_NOTE_WIDTH, padding: "0.5em" })}
-        >
-            <div className={style({ display: "flex", alignItems: "center" })}>
-                <div className={style({ flex: "1 0", fontSize: "0.725em" })}>
+        <header className=":uno: px-2 py-1">
+            <div className=":uno: flex items-center">
+                <div className=":uno: flex-1 text-size-xs text-gray-3">
                     <p>
                         updated <TimeStamp dt={note.updatedAt} />
                     </p>
@@ -29,12 +27,12 @@ export const NoteHeader: React.FC<{
                 </div>
                 <NoteMenuButton noteId={note.id} />
             </div>
-            <div className={style({ marginTop: "0.25em" })}>
+            <div className=":uno: mt-1">
                 <TagList
-                    tags={note.tags}
-                    className={style({ display: "inline-block" })}
+                    tags={note.tags as NoteTagString[]}
+                    className=":uno: inline-block"
                 />
-                <Popover className={style({ display: "inline-block" })}>
+                <Popover className=":uno: inline-block">
                     <Popover.Button unstyled>
                         <BiPlus />
                     </Popover.Button>
@@ -45,7 +43,7 @@ export const NoteHeader: React.FC<{
                         })}
                     >
                         <AddTagForm
-                            bookHandle={bookRef}
+                            bookRef={bookRef}
                             memoId={note.id}
                             onCompleted={closePopover}
                         />

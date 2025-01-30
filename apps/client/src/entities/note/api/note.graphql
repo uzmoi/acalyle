@@ -1,0 +1,9 @@
+query Note($noteId: ID!) {
+  memo(id: $noteId) {
+    id
+    contents
+    tags
+    createdAt
+    updatedAt
+  }
+}

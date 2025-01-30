@@ -2,18 +2,18 @@ import { style } from "@acalyle/css";
 import { Button, List } from "@acalyle/ui";
 import { modulo } from "emnorst";
 import { forwardRef, useCallback, useImperativeHandle } from "react";
+import { type BookRef, useBookByRef } from "~/entities/book";
 import { complementTagSymbol } from "~/lib/complement-tag";
-import { useBook } from "~/store/hook";
 
 export const TagComplementList: React.FC<{
     ref?: React.LegacyRef<string | undefined>;
-    bookHandle: string;
+    bookRef: BookRef;
     input: string;
     selectedIndex: number;
     onComplement?: (tag: string) => void;
 }> = /* #__PURE__ */ forwardRef(
-    ({ bookHandle, input, selectedIndex, onComplement }, ref) => {
-        const book = useBook(bookHandle);
+    ({ bookRef, input, selectedIndex, onComplement }, ref) => {
+        const book = useBookByRef(bookRef);
 
         const symbols = complementTagSymbol(book?.tags ?? [], input);
 

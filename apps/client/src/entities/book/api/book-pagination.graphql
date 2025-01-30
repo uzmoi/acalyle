@@ -1,0 +1,21 @@
+query BookPagination($count: Int!, $cursor: String, $query: String!) {
+  books(first: $count, after: $cursor, query: $query) {
+    edges {
+      node {
+        id
+        handle
+        title
+        description
+        thumbnail
+        createdAt
+        tags
+      }
+    }
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+  }
+}

@@ -1,3 +1,4 @@
-import type { Meta } from "emnorst";
+import type { Brand } from "@uzmoi/ut/types";
 
-export type ID = Meta<string, "GraphQL/ID">;
+/** @public */
+export type ID = string & Brand<"GraphQL/ID">;

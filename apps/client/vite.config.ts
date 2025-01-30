@@ -1,20 +1,32 @@
 import { tagResolver } from "@acalyle/css/tag-resolver";
 import nitrogql from "@nitrogql/rollup-plugin";
+import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react-swc";
 import wywInJS from "@wyw-in-js/vite";
+import unocss from "unocss/vite";
 import dts from "vite-plugin-dts";
 import { coverageConfigDefaults, defineConfig } from "vitest/config";
 
 const isStorybook = process.argv[1]?.includes("storybook");
 
+type WyWinJS = typeof import("@wyw-in-js/vite").default;
+
 export default defineConfig({
     plugins: [
+        TanStackRouterVite(),
         react(),
-        (wywInJS as unknown as typeof import("@wyw-in-js/vite").default)({
+        unocss(),
+        (wywInJS as unknown as WyWinJS)({
             include: ["**/*.{ts,tsx}"],
-            babelOptions: { presets: ["@babel/preset-typescript"] },
+            babelOptions: {
+                presets: ["@babel/preset-typescript"],
+                plugins: ["transform-vite-meta-env"],
+            },
             sourceMap: true,
             tagResolver,
+            features: {
+                dangerousCodeRemover: ["**/*", "!**/src/theme/*"],
+            } as NonNullable<Parameters<WyWinJS>[0]>["features"],
             classNameSlug: (hash, title, { name }) =>
                 `${title === "className" ? name : title}__${hash}`,
         }),

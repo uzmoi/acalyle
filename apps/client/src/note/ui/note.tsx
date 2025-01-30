@@ -1,10 +1,11 @@
 import { style } from "@acalyle/css";
 import { Alert, vars } from "@acalyle/ui";
 import { BiError } from "react-icons/bi";
-import type { ID } from "~/__generated__/graphql";
-import type { BookRef } from "~/book/store";
+import type { BookRef } from "~/entities/book";
+import { type NoteId, useNote } from "~/entities/note";
+import type { ID } from "~/lib/graphql";
+import type { Note as NoteType } from "../store";
 import { MIN_NOTE_WIDTH } from "./constants";
-import { useNote } from "./hook";
 import { NoteBody } from "./note-body";
 import { NoteHeader } from "./note-header";
 
@@ -12,7 +13,7 @@ export const Note: React.FC<{
     bookRef: BookRef;
     noteId: ID;
 }> = ({ bookRef, noteId }) => {
-    const note = useNote(noteId);
+    const note = useNote(noteId as string as NoteId);
 
     if (note == null) {
         return (
@@ -43,7 +44,7 @@ export const Note: React.FC<{
             data-note-id={noteId}
             className={style({ minWidth: MIN_NOTE_WIDTH, minHeight: "8em" })}
         >
-            <NoteHeader bookRef={bookRef} note={note} />
+            <NoteHeader bookRef={bookRef} note={note as unknown as NoteType} />
             <NoteBody noteId={noteId} contents={note.contents} />
         </article>
     );

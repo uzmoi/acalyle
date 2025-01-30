@@ -1,4 +1,6 @@
 import "@acalyle/ui/dist/style.css";
+// eslint-disable-next-line import/no-unresolved
+import "virtual:uno.css";
 
 import type { Preview } from "@storybook/react";
 import { Provider } from "../src/dev/provider";

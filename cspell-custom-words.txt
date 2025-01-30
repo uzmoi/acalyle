@@ -2,6 +2,7 @@ acalyle
 accum
 appdata
 autodocs
+biomejs
 chrono
 codegen
 cssole
@@ -17,6 +18,7 @@ fullscreen
 graphiql
 hoge
 icns
+Importability
 lefthook
 Millis
 nanostores
@@ -24,6 +26,7 @@ nitrogql
 parens
 parsea
 piyo
+precheck
 precodegen
 prelint
 quasis
@@ -36,8 +39,10 @@ tauri
 tsbuildinfo
 tsup
 typecheck
+unocss
 uploadables
 uzmoi
 Valueable
 vite
 warplist
+xxhash

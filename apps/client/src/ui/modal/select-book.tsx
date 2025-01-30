@@ -7,11 +7,10 @@ import {
     Modal,
     ModalContainer,
 } from "@acalyle/ui";
-import { useStore } from "@nanostores/react";
 import { useCallback, useState } from "react";
-import type { ID } from "~/__generated__/graphql";
-import { bookConnection } from "~/book/store";
-import { BookOverview } from "~/book/ui/book-overview";
+import { $bookConnection, type BookId, BookOverview } from "~/entities/book";
+import type { ID } from "~/lib/graphql";
+import { useConnection } from "~/shared/graphql";
 import { BookSearchBar } from "~/ui/BookSearchBar";
 
 const modal = /* #__PURE__ */ Modal.create<void, ID | undefined>();
@@ -50,7 +49,7 @@ const BookSelectForm: React.FC<{
     onSubmit?: (bookId?: ID | null) => void;
 }> = ({ query = "", onSubmit }) => {
     const [selectedBookId, setBookId] = useState<ID | null>(null);
-    const { nodeIds } = useStore(bookConnection(query));
+    const { nodeIds } = useConnection($bookConnection(query));
 
     const handleSubmit = useCallback(() => {
         onSubmit?.(selectedBookId);
@@ -92,7 +91,7 @@ const BookSelectForm: React.FC<{
                             },
                         })}
                     >
-                        <BookOverview bookId={bookId} />
+                        <BookOverview bookId={bookId as string as BookId} />
                     </List.Item>
                 ))}
             </List>

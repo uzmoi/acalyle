@@ -1,4 +1,4 @@
-import type { ID } from "~/__generated__/graphql";
+import type { ID } from "~/lib/graphql";
 import type { Note } from "../../store";
 
 export const getNote = (noteId: ID): Note => ({
