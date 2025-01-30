@@ -2,5 +2,5 @@ import "@acalyle/ui/dist/style.css";
 // eslint-disable-next-line import/no-unresolved
 import "virtual:uno.css";
 
-export * from "./pages/routes";
+export * from "./app/app";
 export * from "./store/location";

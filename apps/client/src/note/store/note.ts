@@ -18,9 +18,8 @@ export type Note = {
 
 /** @package */
 export const noteStore = /* #__PURE__ */ createQueryStore(
-    async (noteId: ID): Promise<Note | null> => {
-        const { data } = await acalyle.net.gql(NoteQuery, { noteId });
-        return data.memo ?? null;
+    (noteId: ID): Promise<Note | null> => {
+        throw new Error("Don't use noteStore");
     },
 );
 

@@ -39,10 +39,7 @@ export const NoteModalContent: React.FC<NoteModalInput> = ({
       </header>
       <div className=":uno: flex-1 overflow-x-hidden p-3">
         <Suspense>
-          <Note
-            bookRef={bookId as string as ID}
-            noteId={noteId as string as ID}
-          />
+          <Note bookRef={bookId} noteId={noteId as string as ID} />
         </Suspense>
       </div>
     </section>
