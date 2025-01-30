@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "precheck": "vite build || true",
     "check": "tsc -p tsconfig.main.json --noEmit",
     "lint": "eslint .",
     "test": "vitest",

@@ -26,6 +26,7 @@ nitrogql
 parens
 parsea
 piyo
+precheck
 precodegen
 prelint
 quasis
