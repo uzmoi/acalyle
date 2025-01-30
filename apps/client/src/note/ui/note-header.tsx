@@ -43,7 +43,7 @@ export const NoteHeader: React.FC<{
                         })}
                     >
                         <AddTagForm
-                            bookHandle={bookRef}
+                            bookRef={bookRef}
                             memoId={note.id}
                             onCompleted={closePopover}
                         />

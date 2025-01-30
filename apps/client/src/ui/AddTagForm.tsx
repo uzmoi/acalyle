@@ -2,14 +2,15 @@ import { style } from "@acalyle/css";
 import { Form, TextInput, vars } from "@acalyle/ui";
 import { useCallback, useRef, useState } from "react";
 import type { ID } from "~/__generated__/graphql";
+import type { BookRef } from "~/entities/book";
 import { addMemoTags } from "~/note/store/note";
 import { TagComplementList } from "./TagComplementList";
 
 export const AddTagForm: React.FC<{
-    bookHandle: string;
+    bookRef: BookRef;
     memoId: ID;
     onCompleted?: () => void;
-}> = ({ bookHandle, memoId, onCompleted }) => {
+}> = ({ bookRef, memoId, onCompleted }) => {
     const [tagString, setTagString] = useState("");
     const [caretIndex, setCaretIndex] = useState(0);
     const [selectedIndex, setSelectedIndex] = useState(0);
@@ -84,7 +85,7 @@ export const AddTagForm: React.FC<{
             />
             <TagComplementList
                 ref={complementTagRef}
-                bookHandle={bookHandle}
+                bookRef={bookRef}
                 input={tagString.slice(0, caretIndex)}
                 selectedIndex={selectedIndex}
                 onComplement={onComplement}
