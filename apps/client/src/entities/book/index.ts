@@ -1,6 +1,7 @@
 /** @public */
 export {
   $book,
+  $bookByRef,
   $bookConnection,
   type Book,
   type BookConnection,
