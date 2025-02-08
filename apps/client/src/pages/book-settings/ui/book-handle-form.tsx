@@ -1,15 +1,15 @@
 import { Button, ControlGroup, Form, TextInput } from "@acalyle/ui";
 import { useId, useState } from "react";
-import type { BookId } from "~/entities/book";
+import type { BookHandle, BookId } from "~/entities/book";
 import { confirm } from "~/modal";
 import { changeBookHandle, useBookHandleStatus } from "../model";
 
 export const BookHandleForm: React.FC<{
   bookId: BookId;
-  currentHandle: string | null;
+  currentHandle: BookHandle | null;
 }> = ({ bookId, currentHandle }) => {
   const id = useId();
-  const [handle, setHandle] = useState(currentHandle ?? "");
+  const [handle, setHandle] = useState<string>(currentHandle ?? "");
   const availableStatus = useBookHandleStatus(handle || null);
   const isChanged = handle !== (currentHandle ?? "");
 

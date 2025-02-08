@@ -1,10 +1,10 @@
 import { $book } from "./store";
 import type { Book, BookHandle, BookId } from "./types";
 
-export type BookRef = BookId | BookHandle;
+export type BookRef = BookId | `@${BookHandle}`;
 
 export const bookRefOf = (book: Book): BookRef =>
-  book.handle ? (`@${book.handle}` as BookHandle) : book.id;
+  book.handle ? `@${book.handle}` : book.id;
 
 export const $bookByRef = (ref: BookRef) =>
   ref.startsWith("@") ?

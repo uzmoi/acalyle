@@ -1,5 +1,10 @@
 import { acalyle } from "~/app/main";
-import { $book, type Book, type BookId } from "~/entities/book";
+import {
+  $book,
+  type Book,
+  type BookHandle,
+  type BookId,
+} from "~/entities/book";
 import type { ID } from "~/lib/graphql";
 import ChangeBookDescriptionMutation from "../api/change-book-description.graphql";
 import ChangeBookHandleMutation from "../api/change-book-handle.graphql";
@@ -47,7 +52,7 @@ export const changeBookHandle = async (id: BookId, handle: string | null) => {
 
   if (book == null) return;
 
-  await set(id, { handle: book.handle });
+  await set(id, { handle: book.handle as BookHandle | null });
 };
 
 export const changeBookDescription = async (
