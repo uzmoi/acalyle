@@ -7,7 +7,7 @@ import { FullNote } from "~/widgets/note";
 import { type NoteModalInput, close } from "../model";
 
 export const NoteModalContent: React.FC<NoteModalInput> = ({
-  bookId,
+  bookRef,
   noteId,
 }) => {
   return (
@@ -24,7 +24,7 @@ export const NoteModalContent: React.FC<NoteModalInput> = ({
         >
           <Link
             to="/books/$book-ref/$note-id"
-            params={{ "book-ref": bookId, "note-id": noteId }}
+            params={{ "book-ref": bookRef, "note-id": noteId }}
             onClick={close}
             aria-label="view on page"
           >

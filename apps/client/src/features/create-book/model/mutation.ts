@@ -1,8 +1,11 @@
 import { acalyle } from "~/app/main";
-import { $book, type BookId } from "~/entities/book";
+import { $book, type BookId, type BookRef } from "~/entities/book";
 import CreateBookMutation from "../api/create-book.graphql";
 
-export const createBook = async (title: string, description: string) => {
+export const createBook = async (
+  title: string,
+  description: string,
+): Promise<BookRef> => {
   const gql = acalyle.net.gql.bind(acalyle.net);
 
   const { data } = await gql(CreateBookMutation, {

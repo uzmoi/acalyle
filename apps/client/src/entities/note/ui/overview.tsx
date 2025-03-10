@@ -2,7 +2,7 @@ import { style } from "@acalyle/css";
 import { vars, visuallyHidden } from "@acalyle/ui";
 import { Link } from "@tanstack/react-router";
 import { useCallback } from "react";
-import { type BookId, bookRefOf, useBook } from "~/entities/book";
+import { type BookId, type BookRef, bookRefOf, useBook } from "~/entities/book";
 import { openNoteInModal } from "~/features/note-modal";
 import { MIN_NOTE_WIDTH } from "~/note/ui/constants";
 import { theme } from "~/theme";
@@ -14,7 +14,7 @@ type ClickAction = "open-link" | "open-modal";
 
 // TODO: featureに依存してしまっているので、コンポーネントのpropsからハンドラをもらうようにする。
 const useNoteOverviewAction = (
-  bookId: BookId,
+  bookRef: BookRef,
   noteId: NoteId,
   clickAction: ClickAction = "open-modal",
 ): ((e: React.MouseEvent) => void) => {
@@ -24,10 +24,10 @@ const useNoteOverviewAction = (
         // NOTE: noscript環境でなるべく正しく動くようにLinkのままpreventDefaultしている。
         // これが本当正しいのかはわからない。
         e.preventDefault();
-        void openNoteInModal(bookId, noteId);
+        void openNoteInModal(bookRef, noteId);
       }
     },
-    [bookId, noteId, clickAction],
+    [bookRef, noteId, clickAction],
   );
 };
 
@@ -38,7 +38,11 @@ export const NoteOverview: React.FC<{
 }> = ({ bookId, noteId, clickAction }) => {
   const book = useBook(bookId);
   const note = useNote(noteId);
-  const handleClick = useNoteOverviewAction(bookId, noteId, clickAction);
+  const handleClick = useNoteOverviewAction(
+    book == null ? ("" as BookRef) : bookRefOf(book),
+    noteId,
+    clickAction,
+  );
 
   if (book == null || note == null) return null;
 

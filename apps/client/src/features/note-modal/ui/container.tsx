@@ -2,8 +2,8 @@ import { ModalContainer } from "@acalyle/ui";
 import { type NoteModalInput, modal } from "../model";
 import { NoteModalContent } from "./content";
 
-const renderModalContent = ({ bookId, noteId }: NoteModalInput) => (
-  <NoteModalContent bookId={bookId} noteId={noteId} />
+const renderModalContent = ({ bookRef, noteId }: NoteModalInput) => (
+  <NoteModalContent bookRef={bookRef} noteId={noteId} />
 );
 
 export const NoteModalContainer: React.FC = () => {
