@@ -23,9 +23,8 @@ export const NoteModalContent: React.FC<NoteModalInput> = ({
           })}
         >
           <Link
-            // TODO: ノートのページを追加したらパスを変更
-            to="/books/$book-ref"
-            params={{ "book-ref": bookId }} // "note-id": noteId
+            to="/books/$book-ref/$note-id"
+            params={{ "book-ref": bookId, "note-id": noteId }}
             onClick={close}
             aria-label="view on page"
           >

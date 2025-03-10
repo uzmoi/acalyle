@@ -59,9 +59,8 @@ export const NoteOverview: React.FC<{
       })}
     >
       <Link
-        // TODO: ノートのページを追加したらパスを変更
-        to="/books/$book-ref"
-        params={{ "book-ref": bookRefOf(book) }} // "note-id": noteId
+        to="/books/$book-ref/$note-id"
+        params={{ "book-ref": bookRefOf(book), "note-id": noteId }}
         onClick={handleClick}
         className=":uno: absolute inset-0"
       >
