@@ -8,6 +8,7 @@ export {
   type BookHandle,
   type BookId,
   type BookRef,
+  bookRefFromId,
   bookRefOf,
   useBook,
   useBookByRef,

@@ -1,5 +1,10 @@
 import { acalyle } from "~/app/main";
-import { $book, type BookId, type BookRef } from "~/entities/book";
+import {
+  $book,
+  type BookId,
+  type BookRef,
+  bookRefFromId,
+} from "~/entities/book";
 import CreateBookMutation from "../api/create-book.graphql";
 
 export const createBook = async (
@@ -25,5 +30,5 @@ export const createBook = async (
     thumbnail: data.createBook.thumbnail,
   });
 
-  return bookId;
+  return bookRefFromId(bookId);
 };
