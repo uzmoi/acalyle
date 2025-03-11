@@ -25,7 +25,7 @@ export const NoteTemplateSelectList: React.FC<{
 
   return (
     <div>
-      <p className=":uno cursor-default p-2 text-3">
+      <p className=":uno: cursor-default p-2 text-3">
         {templateNames.length === 0 ?
           "No note template."
         : "Create note from template."}

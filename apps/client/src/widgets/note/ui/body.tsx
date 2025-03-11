@@ -25,8 +25,8 @@ export const NoteBody: React.FC<{
                 ":uno: px-3 py-2px",
                 tabName === tab &&
                   ":uno: border-b-2 border-b-red-600 border-b-solid bg-gray-100 bg-op-10",
-                // 処理順的に優先度がいい感じにならないのでここだけ:uno:を外す
-                tabName === tab && "pb-0",
+                // なぜかわからないが、セレクタの優先度がいい感じにならないのでこれだけ分離
+                tabName === tab && ":uno: pb-0",
               )}
             >
               {tabName}
