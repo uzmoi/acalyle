@@ -5,7 +5,7 @@ import {
   type BookHandle,
   type BookId,
 } from "~/entities/book";
-import type { ID } from "~/lib/graphql";
+import type { ID } from "~/shared/graphql";
 import ChangeBookDescriptionMutation from "../api/change-book-description.graphql";
 import ChangeBookHandleMutation from "../api/change-book-handle.graphql";
 import ChangeBookTitleMutation from "../api/change-book-title.graphql";

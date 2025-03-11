@@ -23,7 +23,7 @@ const config: NitrogqlConfig = {
                     scalarTypes: {
                         Upload: "null",
                         DateTime: "string",
-                        ID: 'import("~/lib/graphql").ID',
+                        ID: 'import("~/shared/graphql").ID',
                     },
                 },
             },

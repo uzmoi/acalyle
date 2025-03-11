@@ -1,6 +1,6 @@
 import { acalyle } from "~/app/main";
 import type { NoteId } from "~/entities/note";
-import type { ID } from "~/lib/graphql";
+import type { ID } from "~/shared/graphql";
 import UpdateNoteContentsMutation from "./update-note-contents.graphql";
 
 export interface UpdateNoteContentsMutationResult {
