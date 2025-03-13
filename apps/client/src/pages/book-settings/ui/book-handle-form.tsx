@@ -1,7 +1,7 @@
 import { Button, ControlGroup, Form, TextInput } from "@acalyle/ui";
 import { useId, useState } from "react";
 import type { BookHandle, BookId } from "~/entities/book";
-import { confirm } from "~/modal";
+import { confirm } from "~/features/modal";
 import { changeBookHandle, useBookHandleStatus } from "../model";
 
 export const BookHandleForm: React.FC<{
