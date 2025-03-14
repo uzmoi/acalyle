@@ -1,0 +1,12 @@
+mutation UpdateNoteTags(
+  $noteId: ID!
+  $removeTags: [String!]!
+  $addTags: [String!]!
+) {
+  removeMemoTags(ids: [$noteId], symbols: $removeTags) {
+    tags
+  }
+  addMemoTags(ids: [$noteId], tags: $addTags) {
+    tags
+  }
+}

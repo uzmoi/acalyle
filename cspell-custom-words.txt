@@ -41,6 +41,7 @@ tsup
 typecheck
 unocss
 uploadables
+upsert
 uzmoi
 Valueable
 vite

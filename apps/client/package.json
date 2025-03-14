@@ -54,6 +54,7 @@
     "@tanstack/router-cli": "^1.114.17",
     "@tanstack/router-devtools": "^1.97.1",
     "@tanstack/router-plugin": "^1.97.1",
+    "@testing-library/react": "^16.2.0",
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18.0.10",
     "@unocss/eslint-config": "^65.4.0",
