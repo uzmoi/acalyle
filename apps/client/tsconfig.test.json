@@ -1,11 +1,6 @@
 {
-    "extends": "@acalyle/tsconfig/tsconfig.web.json",
+    "extends": "./tsconfig.main.json",
     "files": [".storybook/preview.tsx"],
     "include": ["src"],
-    "compilerOptions": {
-        "jsx": "react-jsx",
-        "lib": ["DOM", "DOM.Iterable", "ESNext"],
-        "noEmit": false,
-        "composite": true,
-    },
+    "exclude": [],
 }
