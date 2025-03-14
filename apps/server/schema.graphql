@@ -1,0 +1,165 @@
+type Book implements Node {
+	id: ID!
+	handle: String
+	title: String!
+	description: String!
+	thumbnail: String!
+	createdAt: DateTime!
+	memo(id: ID!): Memo
+	memos(after: String, before: String, first: Int, last: Int, query: String! = ""): MemoConnection!
+	tags: [String!]!
+	tagProps(symbol: String!): [String!]!
+	resources: [String!]!
+	settings: BookSetting!
+}
+
+type BookConnection {
+	"""
+	Information to aid in pagination.
+	"""
+	pageInfo: PageInfo!
+	"""
+	A list of edges.
+	"""
+	edges: [BookEdge!]!
+	"""
+	A list of nodes.
+	"""
+	nodes: [Book!]!
+	totalCount: Int!
+}
+
+"""
+An edge in a connection.
+"""
+type BookEdge {
+	"""
+	The item at the end of the edge
+	"""
+	node: Book!
+	"""
+	A cursor for use in pagination
+	"""
+	cursor: String!
+}
+
+type BookSetting {
+	extensions: [String!]!
+}
+
+
+"""
+Implement the DateTime<Utc> scalar
+
+The input/output is a string in RFC3339 format.
+"""
+scalar DateTime
+
+
+
+
+type Memo implements Node {
+	id: ID!
+	contents: String!
+	tags: [String!]!
+	createdAt: DateTime!
+	updatedAt: DateTime!
+	book: Book!
+}
+
+type MemoConnection {
+	"""
+	Information to aid in pagination.
+	"""
+	pageInfo: PageInfo!
+	"""
+	A list of edges.
+	"""
+	edges: [MemoEdge!]!
+	"""
+	A list of nodes.
+	"""
+	nodes: [Memo!]!
+	totalCount: Int!
+}
+
+"""
+An edge in a connection.
+"""
+type MemoEdge {
+	"""
+	The item at the end of the edge
+	"""
+	node: Memo!
+	"""
+	A cursor for use in pagination
+	"""
+	cursor: String!
+}
+
+input MemoInput {
+	id: ID!
+	contents: String!
+	tags: [String!]!
+	createdAt: DateTime!
+	updatedAt: DateTime!
+}
+
+type Mutation {
+	createBook(title: String!, description: String! = "", thumbnail: Upload): Book!
+	updateBookTitle(id: ID!, title: String!): Book
+	updateBookHandle(id: ID!, handle: String): Book
+	updateBookDescription(id: ID!, description: String!): Book
+	updateBookThumbnail(id: ID!, thumbnail: Upload!): Book
+	uploadResource(bookId: ID!, fileName: String!, file: Upload!): String
+	renameTag(bookId: ID!, newSymbol: String!, oldSymbol: String!): String!
+	deleteBook(id: ID!): ID!
+	createMemo(bookId: ID!, template: String): Memo!
+	importMemos(bookId: ID!, memos: [MemoInput!]!): Boolean!
+	updateMemoContents(id: ID!, contents: String!): Memo
+	addMemoTags(ids: [ID!]!, tags: [String!]!): [Memo!]!
+	removeMemoTags(ids: [ID!]!, symbols: [String!]!): [Memo!]!
+	removeMemo(ids: [ID!]!): [ID!]!
+	transferMemo(memoIds: [ID!]!, bookId: ID!): Boolean!
+}
+
+interface Node {
+	id: ID!
+}
+
+"""
+Information about pagination in a connection
+"""
+type PageInfo {
+	"""
+	When paginating backwards, are there more items?
+	"""
+	hasPreviousPage: Boolean!
+	"""
+	When paginating forwards, are there more items?
+	"""
+	hasNextPage: Boolean!
+	"""
+	When paginating backwards, the cursor to continue.
+	"""
+	startCursor: String
+	"""
+	When paginating forwards, the cursor to continue.
+	"""
+	endCursor: String
+}
+
+type Query {
+	node(id: ID!): Node
+	book(id: ID, handle: String): Book
+	books(after: String, before: String, first: Int, last: Int, query: String! = ""): BookConnection!
+	memo(id: ID!): Memo
+}
+
+
+scalar Upload
+
+schema {
+	query: Query
+	mutation: Mutation
+}
