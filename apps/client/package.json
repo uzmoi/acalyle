@@ -8,13 +8,11 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "precheck": "tsr generate",
     "check": "tsc -p tsconfig.main.json --noEmit",
-    "prelint": "tsr generate",
     "lint": "eslint .",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "codegen": "nitrogql generate",
+    "codegen": "tsr generate && nitrogql generate",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
