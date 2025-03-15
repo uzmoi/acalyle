@@ -1,11 +1,17 @@
 import { cx, style } from "@acalyle/css";
-import { Intersection, List } from "@acalyle/ui";
+import {
+  Button,
+  ControlGroup,
+  Form,
+  Intersection,
+  List,
+  TextInput,
+} from "@acalyle/ui";
 import { Link } from "@tanstack/react-router";
 import { useCallback, useDeferredValue, useState } from "react";
-import { BiBookAdd } from "react-icons/bi";
+import { BiBookAdd, BiRefresh } from "react-icons/bi";
 import { $bookConnection, type BookId, BookOverview } from "~/entities/book";
 import { useConnection } from "~/shared/graphql";
-import { BookSearchBar } from "~/ui/BookSearchBar";
 
 export const BookListPage: React.FC = () => {
   const [query, setQuery] = useState("");
@@ -28,15 +34,26 @@ export const BookListPage: React.FC = () => {
 
   return (
     <main className=":uno: p-5">
-      <div className=":uno: mb-6 flex items-center">
-        <div className=":uno: flex-1">
-          <BookSearchBar
-            query={query}
-            onQueryChange={setQuery}
-            onRefresh={refetchBookConnection}
-          />
-        </div>
-        <Link to="/books/new" className=":uno: ml-4">
+      <div className=":uno: mb-6 flex items-center gap-4">
+        <Form onSubmit={refetchBookConnection} className=":uno: flex-1">
+          <ControlGroup className=":uno: flex">
+            <TextInput
+              type="search"
+              className=":uno: flex-1"
+              placeholder="Find a book"
+              value={query}
+              onValueChange={setQuery}
+            />
+            <Button
+              type="submit"
+              aria-label="Refresh"
+              className=":uno: px-3 text-xl"
+            >
+              <BiRefresh />
+            </Button>
+          </ControlGroup>
+        </Form>
+        <Link to="/books/new">
           <BiBookAdd />
           <span className=":uno: ml-1">New</span>
         </Link>

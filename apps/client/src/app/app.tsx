@@ -2,7 +2,7 @@ import { cx, style } from "@acalyle/css";
 import { vars } from "@acalyle/ui";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { devAppTheme } from "~/dev/theme";
-import { QuickModalContainer } from "~/modal/container";
+import { QuickModalContainer } from "~/features/modal";
 import { routeTree } from "~/routeTree.gen";
 import { theme } from "~/theme";
 import { defaultTheme } from "~/theme/default";

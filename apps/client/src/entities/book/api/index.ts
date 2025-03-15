@@ -1,5 +1,5 @@
 import { acalyle } from "~/app/main";
-import type { ID } from "~/lib/graphql";
+import type { ID } from "~/shared/graphql";
 import type { Book, BookHandle, BookId } from "../model";
 import BookQuery from "./book.graphql";
 

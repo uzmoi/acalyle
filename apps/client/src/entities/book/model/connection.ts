@@ -3,7 +3,7 @@ import { acalyle } from "~/app/main";
 import { type Cursor, GraphqlConnection } from "~/shared/graphql";
 import BookPaginationQuery from "../api/book-pagination.graphql";
 import { $book } from "./store";
-import type { BookId } from "./types";
+import type { BookHandle, BookId } from "./types";
 
 type BookPage = ResultOf<typeof BookPaginationQuery>["books"];
 type BookNode = BookPage["edges"][number]["node"];
@@ -29,6 +29,7 @@ export class BookConnection extends GraphqlConnection<BookNode> {
       $book(book.id as string as BookId).resolve({
         ...book,
         id: book.id as string as BookId,
+        handle: book.handle as BookHandle | null,
       });
     }
   }

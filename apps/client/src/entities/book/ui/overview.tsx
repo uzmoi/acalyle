@@ -56,7 +56,7 @@ export const BookOverview: React.FC<{
             paddingTop: "0.25em",
           })}
         >
-          {book.handle && <p className=":uno: text-xs">@{book.handle}</p>}
+          {book.handle && <p className=":uno: text-xs">{book.handle}</p>}
           <p
             className={style({
               overflow: "hidden",

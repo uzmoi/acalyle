@@ -17,11 +17,10 @@ export const NoteCreateButton: React.FC<{
     (templateName?: string) => {
       if (book == null) return;
 
-      void createNote(book.id, templateName).then(async _noteId => {
+      void createNote(book.id, templateName).then(async noteId => {
         await navigate({
-          // TODO: ノートのページを追加したらパスを変更
-          to: "/books/$book-ref",
-          params: { "book-ref": bookRefOf(book) },
+          to: "/books/$book-ref/$note-id",
+          params: { "book-ref": bookRefOf(book), "note-id": noteId },
         });
       });
     },

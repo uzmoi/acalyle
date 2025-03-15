@@ -1,12 +1,13 @@
 import { $book } from "./store";
 import type { Book, BookHandle, BookId } from "./types";
 
-export type BookRef = BookId | BookHandle;
+export type BookRef = `_${BookId}` | BookHandle;
 
-export const bookRefOf = (book: Book): BookRef =>
-  book.handle ? (`@${book.handle}` as BookHandle) : book.id;
+export const bookRefFromId = (bookId: BookId): BookRef => `_${bookId}`;
+
+export const bookRefOf = (book: Book): BookRef => book.handle ?? `_${book.id}`;
 
 export const $bookByRef = (ref: BookRef) =>
-  ref.startsWith("@") ?
-    $book.byHandle(ref.slice(1) as BookHandle)
-  : $book(ref as BookId);
+  ref.startsWith("_") ?
+    $book(ref.slice(1) as BookId)
+  : $book.byHandle(ref as BookHandle);

@@ -3,11 +3,7 @@
   "experimentalTernaries": true,
   "overrides": [
     {
-      "files": [
-        "apps/client/*",
-        "apps/client/src/{app,book,dev,lib,modal,note,store,theme,ui}/**"
-      ],
-      "excludeFiles": ["apps/client/biome.json"],
+      "files": ["apps/client/src/{app,lib,note,store,theme,ui}/**"],
       "options": { "tabWidth": 4 }
     }
   ]

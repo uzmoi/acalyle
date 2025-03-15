@@ -1,8 +1,7 @@
 import type { ResultOf } from "@graphql-typed-document-node/core";
 import { acalyle } from "~/app/main";
 import type { BookId } from "~/entities/book";
-import type { ID } from "~/lib/graphql";
-import { type Cursor, GraphqlConnection } from "~/shared/graphql";
+import { type Cursor, GraphqlConnection, type ID } from "~/shared/graphql";
 import NotePaginationQuery from "../api/note-pagination.graphql";
 import { $note } from "./store";
 import type { NoteId, NoteTagString } from "./types";

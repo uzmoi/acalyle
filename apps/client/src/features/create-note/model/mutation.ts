@@ -1,7 +1,7 @@
 import { acalyle } from "~/app/main";
 import type { BookId } from "~/entities/book";
 import { $note, type NoteId, type NoteTagString } from "~/entities/note";
-import type { ID } from "~/lib/graphql";
+import type { ID } from "~/shared/graphql";
 import CreateNoteMutation from "../api/create-note.graphql";
 
 export const createNote = async (bookId: BookId, templateName?: string) => {
