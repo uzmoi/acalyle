@@ -49,7 +49,7 @@ export const EditableTags: React.FC<{
         <div
           className={cx(
             ":uno: absolute top-[calc(100%+0.5em)] px-3 py-2 rounded-4",
-            style({ backgroundColor: theme("modal-bg") }),
+            style({ backgroundColor: theme("note-bg") }),
           )}
         >
           <TagUpsertForm
