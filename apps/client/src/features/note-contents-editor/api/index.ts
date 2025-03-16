@@ -9,7 +9,7 @@ export interface UpdateNoteContentsMutationResult {
   updatedAt: string;
 }
 
-export const updateNoteContents = async (
+export const updateNoteContentsMutation = async (
   id: NoteId,
   contents: string,
 ): Promise<UpdateNoteContentsMutationResult | null> => {
@@ -22,18 +22,3 @@ export const updateNoteContents = async (
 
   return data.updateMemoContents;
 };
-
-// const set = async (id: BookId, fields: Partial<Omit<Book, "id">>) => {
-//   const store = $book(id);
-
-//   let loader = store.get();
-
-//   if (loader.status === "pending") {
-//     await loader.promise;
-//     loader = store.get();
-//   }
-
-//   if (loader.status === "fulfilled" && loader.value != null) {
-//     store.resolve({ ...loader.value, ...fields });
-//   }
-// };

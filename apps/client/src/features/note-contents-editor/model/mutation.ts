@@ -1,8 +1,8 @@
 import { $note, type NoteId, type NoteTagString } from "~/entities/note";
-import { updateNoteContents } from "../api";
+import { updateNoteContentsMutation } from "../api";
 
-export const update = async (id: NoteId, contents: string) => {
-  const result = await updateNoteContents(id, contents);
+export const updateNoteContents = async (id: NoteId, contents: string) => {
+  const result = await updateNoteContentsMutation(id, contents);
 
   if (result == null) return null;
 

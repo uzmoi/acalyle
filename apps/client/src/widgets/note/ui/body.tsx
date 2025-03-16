@@ -3,7 +3,7 @@ import { Button, List } from "@acalyle/ui";
 import { useState } from "react";
 import type { NoteId } from "~/entities/note";
 import { NoteContents } from "~/entities/note/ui/contents";
-import { NoteContentsEditor } from "./contents-editor";
+import { NoteContentsEditor } from "~/features/note-contents-editor";
 
 const tabs = ["view", "editor"] as const;
 

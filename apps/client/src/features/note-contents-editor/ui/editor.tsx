@@ -3,7 +3,7 @@ import { Button, ControlGroup, Form, TextArea } from "@acalyle/ui";
 import { useState } from "react";
 import type { NoteId } from "~/entities/note";
 import { theme } from "~/theme";
-import { update as updateNoteContents } from "../model";
+import { updateNoteContents } from "../model";
 
 export const NoteContentsEditor: React.FC<{
   noteId: NoteId;

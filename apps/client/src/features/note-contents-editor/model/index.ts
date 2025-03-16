@@ -1,0 +1,1 @@
+export { updateNoteContents } from "./mutation";
