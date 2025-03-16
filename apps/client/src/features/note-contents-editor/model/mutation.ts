@@ -6,11 +6,20 @@ export const updateNoteContents = async (id: NoteId, contents: string) => {
 
   if (result == null) return null;
 
-  $note(id).resolve({
-    id,
-    contents: result.contents,
-    tags: result.tags as readonly NoteTagString[],
-    createdAt: "1970-01-01T00:00:00Z",
-    updatedAt: result.updatedAt,
-  });
+  const store = $note(id);
+  let loader = store.get();
+
+  if (loader.status === "pending") {
+    await loader.promise;
+    loader = store.get();
+  }
+
+  if (loader.status === "fulfilled" && loader.value != null) {
+    store.resolve({
+      ...loader.value,
+      contents: result.contents,
+      tags: result.tags as readonly NoteTagString[],
+      updatedAt: result.updatedAt,
+    });
+  }
 };
