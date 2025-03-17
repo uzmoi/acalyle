@@ -1,9 +1,0 @@
-mutation AddMemoTags($memoId: ID!, $tags: [String!]!) {
-    addMemoTags(ids: [$memoId], tags: $tags) {
-        id
-        contents
-        tags
-        createdAt
-        updatedAt
-    }
-}
