@@ -29,7 +29,7 @@ export const $book = (id: BookId): Store & PromiseLoaderExt => {
     if (newValue.status === "fulfilled") {
       const handle = newValue.value?.handle;
       if (handle != null) {
-        $handles.setKey(handle as BookHandle, id);
+        $handles.setKey(handle, id);
       }
     }
   });

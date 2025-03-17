@@ -1,8 +1,0 @@
-mutation UpdateNoteContents($noteId: ID!, $contents: String!) {
-    updateMemoContents(id: $noteId, contents: $contents) {
-        contents
-        tags
-        createdAt
-        updatedAt
-    }
-}

@@ -12,23 +12,23 @@ await mkdir("./__generated__", { recursive: true });
 await copyFile(schemaPath, copiedSchemaPath);
 
 const config: NitrogqlConfig = {
-    schema: copiedSchemaPath,
-    documents: "src/**/*.graphql",
-    extensions: {
-        nitrogql: {
-            plugins: ["nitrogql:graphql-scalars-plugin"],
-            generate: {
-                schemaOutput: "src/__generated__/graphql.ts",
-                type: {
-                    scalarTypes: {
-                        Upload: "null",
-                        DateTime: "string",
-                        ID: 'import("~/lib/graphql").ID',
-                    },
-                },
-            },
+  schema: copiedSchemaPath,
+  documents: "src/**/*.graphql",
+  extensions: {
+    nitrogql: {
+      plugins: ["nitrogql:graphql-scalars-plugin"],
+      generate: {
+        schemaOutput: "src/__generated__/graphql.ts",
+        type: {
+          scalarTypes: {
+            Upload: "null",
+            DateTime: "string",
+            ID: 'import("~/shared/graphql").ID',
+          },
         },
+      },
     },
+  },
 };
 
 export default config;

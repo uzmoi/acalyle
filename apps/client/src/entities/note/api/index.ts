@@ -1,5 +1,5 @@
 import { acalyle } from "~/app/main";
-import type { ID } from "~/lib/graphql";
+import type { ID } from "~/shared/graphql";
 import type { Note, NoteId, NoteTagString } from "../model";
 import NoteQuery from "./note.graphql";
 

@@ -3,9 +3,9 @@ import { Button, vars } from "@acalyle/ui";
 import { useStore } from "@nanostores/react";
 import { useCallback } from "react";
 import type { BookId } from "~/entities/book";
-import type { ID } from "~/lib/graphql";
 import { usePromiseLoader } from "~/lib/promise-loader";
 import { noteTemplateStore } from "~/note/store/note";
+import type { ID } from "~/shared/graphql";
 
 export const NoteTemplateSelectList: React.FC<{
   bookId: BookId;
@@ -25,7 +25,7 @@ export const NoteTemplateSelectList: React.FC<{
 
   return (
     <div>
-      <p className=":uno cursor-default p-2 text-3">
+      <p className=":uno: cursor-default p-2 text-3">
         {templateNames.length === 0 ?
           "No note template."
         : "Create note from template."}

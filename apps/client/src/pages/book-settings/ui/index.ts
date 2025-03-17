@@ -1,0 +1,1 @@
+export { BookSettingsPage } from "./page";

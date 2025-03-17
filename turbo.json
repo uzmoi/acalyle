@@ -4,7 +4,7 @@
     "codegen": {
       "dependsOn": ["^build"],
       "inputs": ["src/**/*.graphql", "graphql.config.ts"],
-      "outputs": ["**/__generated__/**", "**/*.d.graphql.ts", "**/*.d.graphql.ts.map"]
+      "outputs": ["**/__generated__/**", "**/*.gen.ts", "**/*.d.graphql.ts", "**/*.d.graphql.ts.map"]
     },
     "build": {
       "dependsOn": ["check"],
