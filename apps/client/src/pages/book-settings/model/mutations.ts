@@ -1,29 +1,10 @@
 import { acalyle } from "~/app/main";
-import {
-  $book,
-  type Book,
-  type BookHandle,
-  type BookId,
-} from "~/entities/book";
+import { $book, type BookHandle, type BookId } from "~/entities/book";
+import { toPromise } from "~/lib/promise-loader";
 import type { ID } from "~/shared/graphql";
 import ChangeBookDescriptionMutation from "../api/change-book-description.graphql";
 import ChangeBookHandleMutation from "../api/change-book-handle.graphql";
 import ChangeBookTitleMutation from "../api/change-book-title.graphql";
-
-const set = async (id: BookId, fields: Partial<Omit<Book, "id">>) => {
-  const store = $book(id);
-
-  let loader = store.get();
-
-  if (loader.status === "pending") {
-    await loader.promise;
-    loader = store.get();
-  }
-
-  if (loader.status === "fulfilled" && loader.value != null) {
-    store.resolve({ ...loader.value, ...fields });
-  }
-};
 
 export const changeBookTitle = async (id: BookId, title: string) => {
   const gql = acalyle.net.gql.bind(acalyle.net);
@@ -37,7 +18,14 @@ export const changeBookTitle = async (id: BookId, title: string) => {
 
   if (book == null) return;
 
-  await set(id, { title: book.title });
+  const store = $book(id);
+  const value = await toPromise(store);
+  if (value != null) {
+    store.resolve({
+      ...value,
+      title: book.title,
+    });
+  }
 };
 
 export const changeBookHandle = async (id: BookId, handle: string | null) => {
@@ -52,7 +40,14 @@ export const changeBookHandle = async (id: BookId, handle: string | null) => {
 
   if (book == null) return;
 
-  await set(id, { handle: book.handle as BookHandle | null });
+  const store = $book(id);
+  const value = await toPromise(store);
+  if (value != null) {
+    store.resolve({
+      ...value,
+      handle: book.handle as BookHandle | null,
+    });
+  }
 };
 
 export const changeBookDescription = async (
@@ -70,5 +65,12 @@ export const changeBookDescription = async (
 
   if (book == null) return;
 
-  await set(id, { description: book.description });
+  const store = $book(id);
+  const value = await toPromise(store);
+  if (value != null) {
+    store.resolve({
+      ...value,
+      description: book.description,
+    });
+  }
 };

@@ -1,4 +1,5 @@
 import { $note, type NoteId, type NoteTagString } from "~/entities/note";
+import { toPromise } from "~/lib/promise-loader";
 import { updateNoteContentsMutation } from "../api";
 
 export const updateNoteContents = async (id: NoteId, contents: string) => {
@@ -7,16 +8,10 @@ export const updateNoteContents = async (id: NoteId, contents: string) => {
   if (result == null) return null;
 
   const store = $note(id);
-  let loader = store.get();
-
-  if (loader.status === "pending") {
-    await loader.promise;
-    loader = store.get();
-  }
-
-  if (loader.status === "fulfilled" && loader.value != null) {
+  const value = await toPromise(store);
+  if (value != null) {
     store.resolve({
-      ...loader.value,
+      ...value,
       contents: result.contents,
       tags: result.tags as readonly NoteTagString[],
       updatedAt: result.updatedAt,

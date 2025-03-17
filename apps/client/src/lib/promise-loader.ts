@@ -1,4 +1,4 @@
-import { type StoreValue, atom } from "nanostores";
+import { type Atom, type StoreValue, atom } from "nanostores";
 
 export type PromiseLoader<T = unknown> =
     | { status: "pending"; promise: PromiseLike<void>; abort?: () => void }
@@ -8,6 +8,28 @@ export type PromiseLoader<T = unknown> =
 export type PromiseLoaderW<T = unknown> =
     | PromiseLoader<T>
     | { status: "unpending" };
+
+export const toPromise = async <T>(
+    store: Atom<PromiseLoaderW<T>>,
+): Promise<T> => {
+    const loader = store.get();
+
+    switch (loader.status) {
+        case "unpending": {
+            throw new Error("Unpending");
+        }
+        case "pending": {
+            await loader.promise;
+            return toPromise(store);
+        }
+        case "fulfilled": {
+            return loader.value;
+        }
+        case "rejected": {
+            throw loader.error;
+        }
+    }
+};
 
 export const usePromiseLoader = <T>(loader: PromiseLoaderW<T>): T => {
     switch (loader.status) {
