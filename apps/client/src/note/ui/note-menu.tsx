@@ -11,7 +11,7 @@ import { removeNote, transferNote } from "~/note/store/note";
 import { confirm, selectBook } from "~/ui/modal";
 
 type MenuAction = {
-    icon: JSX.Element;
+    icon: React.ReactElement;
     text: string;
     disabled?: boolean;
     type?: "danger";

@@ -34,7 +34,8 @@
     "@types/eslint": "^8.44.3",
     "@types/eslint__js": "^8.42.3",
     "@types/esquery": "^1.5.1",
-    "tsup": "^8.0.0",
-    "vitest": "^1.5.3"
+    "@vitest/coverage-v8": "^3.0.9",
+    "tsup": "^8.4.0",
+    "vitest": "^3.0.9"
   }
 }

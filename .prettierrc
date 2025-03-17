@@ -3,7 +3,10 @@
   "experimentalTernaries": true,
   "overrides": [
     {
-      "files": ["apps/client/src/{app,lib,note,store,theme,ui}/**"],
+      "files": [
+        "apps/client/src/{app,lib,note,store,theme,ui}/**",
+        "packages/ui/src/**"
+      ],
       "options": { "tabWidth": 4 }
     }
   ]

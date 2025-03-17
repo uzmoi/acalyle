@@ -56,7 +56,7 @@ describe("class Modal", () => {
             void modal.open();
             await vi.advanceTimersByTimeAsync(0);
             expect(modal.status.get()).toBe("entering");
-            await vi.advanceTimersToNextTimerAsync();
+            await vi.runAllTimersAsync();
             expect(modal.status.get()).toBe("entered");
         });
         test("entering中にcloseするとexitingに移行", async () => {
@@ -70,7 +70,7 @@ describe("class Modal", () => {
             // statusを"entered"にするタスク（中断されているためコールバックはnoop）
             // statusをと"exited"にするタスクの2つタスクが存在する。
             expect(modal.status.get()).toBe("exiting");
-            await vi.advanceTimersToNextTimerAsync();
+            await vi.runAllTimersAsync();
             expect(modal.status.get()).toBe("exited");
         });
         test("close時のstatusの遷移", async () => {
