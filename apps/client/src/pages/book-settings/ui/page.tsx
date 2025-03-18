@@ -8,8 +8,6 @@ export const BookSettingsPage: React.FC<{
 }> = ({ bookRef }) => {
   const book = useBookByRef(bookRef);
 
-  if (book == null) return null;
-
   return (
     <div>
       <BookTitleForm bookId={book.id} currentTitle={book.title} />

@@ -15,8 +15,6 @@ export const NoteCreateButton: React.FC<{
 
   const createNoteFromTemplateOrNone = useCallback(
     (templateName?: string) => {
-      if (book == null) return;
-
       void createNote(book.id, templateName).then(async noteId => {
         await navigate({
           to: "/books/$book-ref/$note-id",
@@ -60,8 +58,7 @@ export const NoteCreateButton: React.FC<{
           }
         >
           <NoteTemplateSelectList
-            // FIXME: non-null ではない
-            bookId={book!.id}
+            bookId={book.id}
             onSelectTemplate={createNoteFromTemplateOrNone}
           />
         </Suspense>

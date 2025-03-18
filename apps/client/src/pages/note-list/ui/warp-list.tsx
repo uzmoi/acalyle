@@ -10,8 +10,7 @@ export const NoteWarpList: React.FC<{
   bookRef: BookRef;
   query: string;
 }> = ({ bookRef, query }) => {
-  // FIXME: non-null ではない
-  const bookId = useBookByRef(bookRef)!.id;
+  const bookId = useBookByRef(bookRef).id;
   const { nodeIds } = useConnection($noteConnection(bookId, query));
 
   const onIntersection = useCallback(

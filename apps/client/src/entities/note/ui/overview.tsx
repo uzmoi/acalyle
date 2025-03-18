@@ -39,12 +39,10 @@ export const NoteOverview: React.FC<{
   const book = useBook(bookId);
   const note = useNote(noteId);
   const handleClick = useNoteOverviewAction(
-    book == null ? ("" as BookRef) : bookRefOf(book),
+    bookRefOf(book),
     noteId,
     clickAction,
   );
-
-  if (book == null || note == null) return null;
 
   return (
     <article

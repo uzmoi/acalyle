@@ -11,10 +11,6 @@ export const BookOverview: React.FC<{
 }> = ({ bookId }) => {
   const book = useBook(bookId);
 
-  if (book == null) {
-    return null;
-  }
-
   return (
     <div
       data-book-id={book.id}
