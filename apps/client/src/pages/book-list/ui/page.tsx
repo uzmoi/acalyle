@@ -2,7 +2,6 @@ import { cx, style } from "@acalyle/css";
 import {
   Button,
   ControlGroup,
-  Form,
   Intersection,
   List,
   TextInput,
@@ -35,7 +34,7 @@ export const BookListPage: React.FC = () => {
   return (
     <main className=":uno: p-5">
       <div className=":uno: mb-6 flex items-center gap-4">
-        <Form onSubmit={refetchBookConnection} className=":uno: flex-1">
+        <form action={refetchBookConnection} className=":uno: flex-1">
           <ControlGroup className=":uno: flex">
             <TextInput
               type="search"
@@ -52,7 +51,7 @@ export const BookListPage: React.FC = () => {
               <BiRefresh />
             </Button>
           </ControlGroup>
-        </Form>
+        </form>
         <Link to="/books/new">
           <BiBookAdd />
           <span className=":uno: ml-1">New</span>

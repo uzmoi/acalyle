@@ -1,5 +1,5 @@
 import { style } from "@acalyle/css";
-import { Button, Form, TextInput } from "@acalyle/ui";
+import { Button, TextInput } from "@acalyle/ui";
 import { useCallback, useId, useState } from "react";
 import type { BookRef } from "~/entities/book";
 import { createBook } from "../model";
@@ -10,8 +10,9 @@ export const CreateBookForm: React.FC<{
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
-  const onSubmit = useCallback(() => {
-    void createBook(title, description).then(onCreatedBook);
+  const action = useCallback(async () => {
+    const bookRef = await createBook(title, description);
+    onCreatedBook?.(bookRef);
   }, [onCreatedBook, title, description]);
 
   const htmlId = useId();
@@ -19,7 +20,7 @@ export const CreateBookForm: React.FC<{
   const descriptionId = `${htmlId}-description`;
 
   return (
-    <Form onSubmit={onSubmit}>
+    <form action={action}>
       <h1>Create a new book</h1>
       <dl>
         <dt className={DTStyle}>
@@ -63,7 +64,7 @@ export const CreateBookForm: React.FC<{
       <div className={style({ marginTop: "1em" })}>
         <Button type="submit">Create book</Button>
       </div>
-    </Form>
+    </form>
   );
 };
 

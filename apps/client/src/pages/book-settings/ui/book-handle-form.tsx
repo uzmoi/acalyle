@@ -1,4 +1,4 @@
-import { Button, ControlGroup, Form, TextInput } from "@acalyle/ui";
+import { Button, ControlGroup, TextInput } from "@acalyle/ui";
 import { useId, useState } from "react";
 import type { BookHandle, BookId } from "~/entities/book";
 import { confirm } from "~/features/modal";
@@ -21,7 +21,7 @@ export const BookHandleForm: React.FC<{
   };
 
   return (
-    <Form onSubmit={() => void commit()}>
+    <form action={commit}>
       <label htmlFor={id} className=":uno: text-xs font-bold">
         Handle
       </label>
@@ -44,6 +44,6 @@ export const BookHandleForm: React.FC<{
           Change
         </Button>
       </ControlGroup>
-    </Form>
+    </form>
   );
 };

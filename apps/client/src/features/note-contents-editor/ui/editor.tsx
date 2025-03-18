@@ -1,5 +1,5 @@
 import { cx, style } from "@acalyle/css";
-import { Button, ControlGroup, Form, TextArea } from "@acalyle/ui";
+import { Button, ControlGroup, TextArea } from "@acalyle/ui";
 import { useState } from "react";
 import type { NoteId } from "~/entities/note";
 import { theme } from "~/theme";
@@ -16,14 +16,13 @@ export const NoteContentsEditor: React.FC<{
     setContents(value);
   };
 
-  const handleSubmit = () => {
-    void updateNoteContents(noteId, contents).then(() => {
-      onEnd?.();
-    });
+  const action = async () => {
+    await updateNoteContents(noteId, contents);
+    onEnd?.();
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <form action={action}>
       <TextArea
         value={contents}
         onValueChange={handleValueChange}
@@ -42,6 +41,6 @@ export const NoteContentsEditor: React.FC<{
         <Button onClick={onEnd}>Cancel</Button>
         <Button type="submit">Save</Button>
       </ControlGroup>
-    </Form>
+    </form>
   );
 };

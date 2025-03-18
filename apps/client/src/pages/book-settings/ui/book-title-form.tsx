@@ -1,4 +1,4 @@
-import { Button, ControlGroup, Form, TextInput } from "@acalyle/ui";
+import { Button, ControlGroup, TextInput } from "@acalyle/ui";
 import { useId, useState } from "react";
 import type { BookId } from "~/entities/book";
 import { changeBookTitle } from "../model";
@@ -9,12 +9,12 @@ export const BookTitleForm: React.FC<{
 }> = ({ bookId, currentTitle }) => {
   const id = useId();
   const [title, setTitle] = useState(currentTitle);
-  const commit = () => {
-    void changeBookTitle(bookId, title);
+  const commit = async () => {
+    await changeBookTitle(bookId, title);
   };
 
   return (
-    <Form onSubmit={commit}>
+    <form action={commit}>
       <label htmlFor={id} className=":uno: text-xs font-bold">
         Title
       </label>
@@ -31,6 +31,6 @@ export const BookTitleForm: React.FC<{
           Change
         </Button>
       </ControlGroup>
-    </Form>
+    </form>
   );
 };
