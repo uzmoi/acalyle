@@ -4,6 +4,7 @@ import "virtual:uno.css";
 
 import type { Preview } from "@storybook/react";
 import { Provider } from "../src/dev/provider";
+import { withTanstackRouter } from "../src/dev/sb-router";
 
 const preview: Preview = {
   parameters: {
@@ -16,7 +17,7 @@ const preview: Preview = {
     },
   },
   tags: ["autodocs"],
-  decorators: [story => <Provider>{story()}</Provider>],
+  decorators: [withTanstackRouter, story => <Provider>{story()}</Provider>],
 };
 
 export default preview;
