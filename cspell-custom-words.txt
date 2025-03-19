@@ -1,10 +1,12 @@
 acalyle
 accum
 appdata
+attributify
 autodocs
 biomejs
 chrono
 codegen
+cond
 cssole
 csstype
 datetime
@@ -18,11 +20,13 @@ fullscreen
 graphiql
 hoge
 icns
+iife
 Importability
 lefthook
 Millis
 nanostores
 nitrogql
+oxlint
 parens
 parsea
 piyo
@@ -36,6 +40,8 @@ rustls
 serde
 sqlx
 tauri
+textnodes
+trunc
 tsbuildinfo
 tsup
 typecheck
