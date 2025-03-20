@@ -121,9 +121,6 @@
   "env": {
     "builtin": true
   },
-  "categories": {
-    "correctness": "off"
-  },
   "ignorePatterns": [
     "**/{dist,coverage,__generated__,storybook-static}/**",
     "**/__*",
@@ -135,18 +132,7 @@
     {
       "files": ["**/*.{ts,mts,cts,tsx}"],
       "rules": {
-        "react/jsx-key": "warn",
         "react/jsx-no-comment-textnodes": "warn",
-        "react/jsx-no-duplicate-props": "warn",
-        "react/jsx-no-target-blank": "warn",
-        "react/jsx-no-undef": "warn",
-        "react/no-children-prop": "warn",
-        "react/no-danger-with-children": "warn",
-        "react/no-direct-mutation-state": "warn",
-        "react/no-find-dom-node": "warn",
-        "react/no-is-mounted": "warn",
-        "react/no-render-return-value": "warn",
-        "react/no-string-refs": "warn",
         "react/no-unescaped-entities": "warn",
         "react/no-unknown-property": "warn",
         "react/react-in-jsx-scope": "off",

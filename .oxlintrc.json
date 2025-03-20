@@ -88,9 +88,6 @@
   "env": {
     "builtin": true
   },
-  "categories": {
-    "correctness": "off"
-  },
   "ignorePatterns": [
     "**/{dist,coverage,__generated__,storybook-static}/**",
     "**/__*",
