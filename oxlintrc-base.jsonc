@@ -6,6 +6,7 @@
   "categories": {
     "correctness": "error",
     "restriction": "error",
+    "suspicious": "warn",
   },
   "rules": {
     // MARK: Correctness
@@ -79,14 +80,25 @@
     "prefer-modern-math-apis": "warn",
     "prefer-number-properties": ["warn", { "checkInfinity": false }],
 
+    // MARK: Suspicious
+    // Source: ESLint
+    "no-extend-native": "error",
+    // Source: import
+    "no-absolute-path": "error",
+    "no-named-as-default-member": "error",
+    // Source: react
+    "react/iframe-missing-sandbox": "error",
+    "react/jsx-no-comment-textnodes": "off",
+    "react/jsx-no-script-url": "error",
+    "react/no-namespace": "error",
+    "react/react-in-jsx-scope": "off",
+
     "no-case-declarations": "error",
     "no-fallthrough": "error",
     "no-inner-declarations": "error",
     "no-prototype-builtins": "error",
     "no-redeclare": "error",
-    "no-unexpected-multiline": "error",
     "unicorn/catch-error-name": "warn",
-    "unicorn/consistent-function-scoping": "warn",
     "unicorn/empty-brace-spaces": "warn",
     "unicorn/error-message": "warn",
     "unicorn/escape-case": "warn",
@@ -114,7 +126,6 @@
     "unicorn/no-zero-fractions": "warn",
     "unicorn/number-literal-case": "warn",
     "unicorn/numeric-separators-style": "warn",
-    "unicorn/prefer-add-event-listener": "warn",
     "unicorn/prefer-array-flat": "warn",
     "unicorn/prefer-array-flat-map": "warn",
     "unicorn/prefer-array-some": "warn",
@@ -145,7 +156,6 @@
     "unicorn/prefer-type-error": "warn",
     "unicorn/require-array-join-separator": "warn",
     "unicorn/require-number-to-fixed-digits-argument": "warn",
-    "unicorn/require-post-message-target-origin": "off",
     "unicorn/switch-case-braces": "warn",
     "unicorn/text-encoding-identifier-case": "warn",
     "unicorn/throw-new-error": "warn",
@@ -168,7 +178,6 @@
           },
         ],
         "no-array-constructor": "error",
-        "@typescript-eslint/no-unnecessary-type-constraint": "error",
         "require-await": "off",
         "@typescript-eslint/adjacent-overload-signatures": "warn",
         "@typescript-eslint/array-type": "warn",
