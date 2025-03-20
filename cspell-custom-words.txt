@@ -27,6 +27,7 @@ Millis
 nanostores
 nitrogql
 oxlint
+oxlintrc
 parens
 parsea
 piyo

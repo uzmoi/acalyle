@@ -1,4 +1,4 @@
-// cspell:ignore astro nonoctal isnan nonconstructor
+// cspell:ignore astro
 // unsupported rule, but in development: constructor-super
 // unsupported rule, but in development: getter-return
 // unsupported rule: no-dupe-args
@@ -116,7 +116,8 @@
 
 {
   "$schema": "../../node_modules/oxlint/configuration_schema.json",
-  "plugins": ["unicorn", "typescript", "react", "import"],
+  "extends": ["../../oxlintrc-base.jsonc"],
+  "plugins": ["react"],
   "env": {
     "builtin": true
   },
@@ -130,221 +131,7 @@
     "**/*.d.ts",
     "**/*.d.*.ts"
   ],
-  "rules": {
-    "for-direction": "error",
-    "no-async-promise-executor": "error",
-    "no-case-declarations": "error",
-    "no-class-assign": "error",
-    "no-compare-neg-zero": "error",
-    "no-cond-assign": "error",
-    "no-const-assign": "error",
-    "no-constant-condition": "error",
-    "no-control-regex": "error",
-    "no-debugger": "error",
-    "no-delete-var": "error",
-    "no-dupe-class-members": "error",
-    "no-dupe-else-if": "error",
-    "no-dupe-keys": "error",
-    "no-duplicate-case": "error",
-    "no-empty": "error",
-    "no-empty-character-class": "error",
-    "no-empty-pattern": "error",
-    "no-ex-assign": "error",
-    "no-extra-boolean-cast": "error",
-    "no-fallthrough": "error",
-    "no-func-assign": "error",
-    "no-global-assign": "error",
-    "no-import-assign": "error",
-    "no-inner-declarations": "error",
-    "no-invalid-regexp": "error",
-    "no-irregular-whitespace": "error",
-    "no-loss-of-precision": "error",
-    "no-nonoctal-decimal-escape": "error",
-    "no-obj-calls": "error",
-    "no-prototype-builtins": "error",
-    "no-redeclare": "error",
-    "no-regex-spaces": "error",
-    "no-self-assign": "error",
-    "no-setter-return": "error",
-    "no-shadow-restricted-names": "error",
-    "no-sparse-arrays": "error",
-    "no-this-before-super": "error",
-    "no-unexpected-multiline": "error",
-    "no-unsafe-finally": "error",
-    "no-unsafe-negation": "error",
-    "no-unsafe-optional-chaining": "error",
-    "no-unused-labels": "error",
-    "no-unused-vars": "error",
-    "no-useless-catch": "error",
-    "no-useless-escape": "error",
-    "no-with": "error",
-    "require-yield": "error",
-    "use-isnan": "error",
-    "valid-typeof": "error",
-    "unicorn/catch-error-name": "warn",
-    "unicorn/consistent-function-scoping": "warn",
-    "unicorn/empty-brace-spaces": "warn",
-    "unicorn/error-message": "warn",
-    "unicorn/escape-case": "warn",
-    "unicorn/explicit-length-check": "warn",
-    "unicorn/filename-case": "warn",
-    "unicorn/new-for-builtins": "warn",
-    "unicorn/no-abusive-eslint-disable": "warn",
-    "unicorn/no-anonymous-default-export": "warn",
-    "unicorn/no-array-for-each": "warn",
-    "unicorn/no-array-reduce": "off",
-    "unicorn/no-await-expression-member": "warn",
-    "unicorn/no-await-in-promise-methods": "warn",
-    "unicorn/no-console-spaces": "warn",
-    "unicorn/no-document-cookie": "warn",
-    "unicorn/no-empty-file": "warn",
-    "unicorn/no-hex-escape": "warn",
-    "unicorn/no-instanceof-array": "warn",
-    "unicorn/no-invalid-remove-event-listener": "warn",
-    "unicorn/no-lonely-if": "warn",
-    "no-negated-condition": "off",
-    "unicorn/no-negated-condition": "warn",
-    "no-nested-ternary": "off",
-    "unicorn/no-nested-ternary": "off",
-    "unicorn/no-new-array": "warn",
-    "unicorn/no-new-buffer": "warn",
-    "unicorn/no-null": "off",
-    "unicorn/no-object-as-default-parameter": "warn",
-    "unicorn/no-process-exit": "warn",
-    "unicorn/no-single-promise-in-promise-methods": "warn",
-    "unicorn/no-static-only-class": "warn",
-    "unicorn/no-thenable": "warn",
-    "unicorn/no-this-assignment": "off",
-    "unicorn/no-typeof-undefined": "warn",
-    "unicorn/no-unnecessary-await": "warn",
-    "unicorn/no-unreadable-array-destructuring": "warn",
-    "unicorn/no-unreadable-iife": "warn",
-    "unicorn/no-useless-fallback-in-spread": "warn",
-    "unicorn/no-useless-length-check": "warn",
-    "unicorn/no-useless-promise-resolve-reject": "warn",
-    "unicorn/no-useless-spread": "warn",
-    "unicorn/no-useless-switch-case": "warn",
-    "unicorn/no-useless-undefined": "warn",
-    "unicorn/no-zero-fractions": "warn",
-    "unicorn/number-literal-case": "warn",
-    "unicorn/numeric-separators-style": "warn",
-    "unicorn/prefer-add-event-listener": "warn",
-    "unicorn/prefer-array-flat": "warn",
-    "unicorn/prefer-array-flat-map": "warn",
-    "unicorn/prefer-array-some": "warn",
-    "unicorn/prefer-blob-reading-methods": "warn",
-    "unicorn/prefer-code-point": "off",
-    "unicorn/prefer-date-now": "warn",
-    "unicorn/prefer-dom-node-append": "warn",
-    "unicorn/prefer-dom-node-dataset": "warn",
-    "unicorn/prefer-dom-node-remove": "warn",
-    "unicorn/prefer-dom-node-text-content": "warn",
-    "unicorn/prefer-event-target": "warn",
-    "unicorn/prefer-includes": "warn",
-    "unicorn/prefer-logical-operator-over-ternary": "warn",
-    "unicorn/prefer-math-trunc": "warn",
-    "unicorn/prefer-modern-dom-apis": "warn",
-    "unicorn/prefer-modern-math-apis": "warn",
-    "unicorn/prefer-native-coercion-functions": "warn",
-    "unicorn/prefer-negative-index": "warn",
-    "unicorn/prefer-node-protocol": "warn",
-    "unicorn/prefer-number-properties": [
-      "warn",
-      {
-        "checkInfinity": false
-      }
-    ],
-    "unicorn/prefer-optional-catch-binding": "warn",
-    "unicorn/prefer-prototype-methods": "warn",
-    "unicorn/prefer-query-selector": "off",
-    "unicorn/prefer-reflect-apply": "warn",
-    "unicorn/prefer-regexp-test": "warn",
-    "unicorn/prefer-set-has": "warn",
-    "unicorn/prefer-set-size": "warn",
-    "unicorn/prefer-spread": "warn",
-    "unicorn/prefer-string-replace-all": "off",
-    "unicorn/prefer-string-slice": "warn",
-    "unicorn/prefer-string-starts-ends-with": "warn",
-    "unicorn/prefer-string-trim-start-end": "warn",
-    "unicorn/prefer-type-error": "warn",
-    "unicorn/require-array-join-separator": "warn",
-    "unicorn/require-number-to-fixed-digits-argument": "warn",
-    "unicorn/require-post-message-target-origin": "off",
-    "unicorn/switch-case-braces": "warn",
-    "unicorn/text-encoding-identifier-case": "warn",
-    "unicorn/throw-new-error": "warn"
-  },
   "overrides": [
-    {
-      "files": ["**/*.{ts,mts,cts,tsx}"],
-      "rules": {
-        "no-const-assign": "off",
-        "no-dupe-class-members": "off",
-        "no-dupe-keys": "off",
-        "no-func-assign": "off",
-        "no-import-assign": "off",
-        "no-new-native-nonconstructor": "off",
-        "no-obj-calls": "off",
-        "no-redeclare": "off",
-        "no-setter-return": "off",
-        "no-this-before-super": "off",
-        "no-unsafe-negation": "off",
-        "no-var": "error",
-        "prefer-rest-params": "error",
-        "prefer-spread": "error",
-        "@typescript-eslint/ban-ts-comment": "error",
-        "@typescript-eslint/ban-types": [
-          "warn",
-          {
-            "extendDefaults": true,
-            "types": {
-              "{}": false
-            }
-          }
-        ],
-        "no-array-constructor": "error",
-        "@typescript-eslint/no-duplicate-enum-values": "error",
-        "@typescript-eslint/no-explicit-any": "error",
-        "@typescript-eslint/no-extra-non-null-assertion": "error",
-        "@typescript-eslint/no-misused-new": "error",
-        "@typescript-eslint/no-namespace": [
-          "warn",
-          {
-            "allowDeclarations": true,
-            "allowDefinitionFiles": true
-          }
-        ],
-        "@typescript-eslint/no-non-null-asserted-optional-chain": "error",
-        "@typescript-eslint/no-this-alias": "error",
-        "@typescript-eslint/no-unnecessary-type-constraint": "error",
-        "@typescript-eslint/no-unsafe-declaration-merging": "error",
-        "no-unused-vars": [
-          "warn",
-          {
-            "varsIgnorePattern": "^_",
-            "argsIgnorePattern": "^_",
-            "caughtErrors": "all"
-          }
-        ],
-        "@typescript-eslint/no-var-requires": "error",
-        "@typescript-eslint/prefer-as-const": "error",
-        "require-await": "off",
-        "@typescript-eslint/triple-slash-reference": "error",
-        "@typescript-eslint/adjacent-overload-signatures": "warn",
-        "@typescript-eslint/array-type": "warn",
-        "@typescript-eslint/ban-tslint-comment": "warn",
-        "@typescript-eslint/consistent-generic-constructors": "warn",
-        "@typescript-eslint/consistent-indexed-object-style": "warn",
-        "@typescript-eslint/consistent-type-definitions": "off",
-        "@typescript-eslint/no-confusing-non-null-assertion": "warn",
-        "no-empty-function": "warn",
-        "@typescript-eslint/no-empty-interface": "warn",
-        "@typescript-eslint/no-inferrable-types": "warn",
-        "@typescript-eslint/prefer-for-of": "warn",
-        "@typescript-eslint/prefer-function-type": "warn",
-        "@typescript-eslint/prefer-namespace-keyword": "warn"
-      }
-    },
     {
       "files": ["**/*.{ts,mts,cts,tsx}"],
       "rules": {
@@ -364,42 +151,6 @@
         "react/no-unknown-property": "warn",
         "react/react-in-jsx-scope": "off",
         "react-hooks/rules-of-hooks": "error"
-      }
-    },
-    {
-      "files": ["**/*.{ts,mts,cts,tsx}"],
-      "rules": {
-        "import/namespace": "error",
-        "import/default": "error",
-        "import/no-named-as-default": "warn",
-        "import/no-named-as-default-member": "warn",
-        "import/no-duplicates": "warn",
-        "sort-imports": "off",
-        "import/no-absolute-path": "error",
-        "import/no-self-import": "warn",
-        "import/no-cycle": [
-          "warn",
-          {
-            "maxDepth": 16,
-            "ignoreExternal": true
-          }
-        ],
-        "import/unambiguous": "warn",
-        "import/first": "warn",
-        "import/max-dependencies": [
-          "warn",
-          {
-            "max": 16
-          }
-        ],
-        "import/no-named-default": "warn",
-        "import/no-default-export": "warn"
-      }
-    },
-    {
-      "files": ["!**/src/**", "**/*.stories.*"],
-      "rules": {
-        "import/no-default-export": "off"
       }
     }
   ]
