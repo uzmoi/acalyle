@@ -224,9 +224,10 @@
       },
     },
     {
-      "files": ["!**/src/**", "**/*.stories.*"],
+      "files": ["**/*.{config,stories}.*", "**/.storybook/**"],
       "rules": {
-        "import/no-default-export": "off",
+        "no-anonymous-default-export": "off",
+        "no-default-export": "off",
       },
     },
   ],
