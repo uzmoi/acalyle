@@ -31,9 +31,11 @@ oxlintrc
 parens
 parsea
 piyo
+plusplus
 precheck
 precodegen
 prelint
+proto
 quasis
 rizzzse
 rustc

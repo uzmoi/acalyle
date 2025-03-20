@@ -5,6 +5,7 @@
   "plugins": ["unicorn", "typescript", "import"],
   "categories": {
     "correctness": "error",
+    "restriction": "error",
   },
   "rules": {
     // MARK: Correctness
@@ -35,13 +36,54 @@
     "prefer-set-size": "warn",
     "prefer-string-starts-ends-with": "warn",
 
+    // MARK: Restriction
+    // Source: ESLint
+    "no-bitwise": "off",
+    "no-console": "warn",
+    "no-div-regex": "warn",
+    "no-empty": "warn",
+    "no-empty-function": "off",
+    "no-eq-null": "off",
+    "no-plusplus": "off",
+    "no-regex-spaces": "warn",
+    // prettier-ignore
+    "no-restricted-globals": [
+      "error",
+      // 使うことがほぼないのにグローバルに存在して名前が単純なせいで間違えて使っても気づきにくい名前
+      "name", "length", "toString", "print",
+      "event", "status", "parent", "origin", "screen",
+      "open", "opener", "close", "closed", "focus", "blur",
+      "top", "stop", "external", "Plugin", "PluginArray",
+    ],
+    "no-undefined": "off",
+    "no-unused-expressions": ["warn", { "enforceForJSX": true }],
+    "no-void": "off",
+    // Source: import
+    "import/no-default-export": "warn",
+    // Source: react
+    "react/jsx-filename-extension": ["error", { "extensions": [".tsx"] }],
+    "react/no-danger": "off",
+    // Source: TypeScript ESLint
+    "explicit-function-return-type": ["warn", { "allowExpressions": true }],
+    "no-empty-object-type": "off",
+    "typescript/no-namespace": [
+      "error",
+      { "allowDeclarations": true, "allowDefinitionFiles": true },
+    ],
+    "no-non-null-assertion": "off",
+    // Source: unicorn
+    "no-array-reduce": "off",
+    "no-length-as-slice-end": "warn",
+    "unicorn/no-nested-ternary": "off",
+    "no-process-exit": "off",
+    "prefer-modern-math-apis": "warn",
+    "prefer-number-properties": ["warn", { "checkInfinity": false }],
+
     "no-case-declarations": "error",
-    "no-empty": "error",
     "no-fallthrough": "error",
     "no-inner-declarations": "error",
     "no-prototype-builtins": "error",
     "no-redeclare": "error",
-    "no-regex-spaces": "error",
     "no-unexpected-multiline": "error",
     "unicorn/catch-error-name": "warn",
     "unicorn/consistent-function-scoping": "warn",
@@ -51,10 +93,6 @@
     "unicorn/explicit-length-check": "warn",
     "unicorn/filename-case": "warn",
     "unicorn/new-for-builtins": "warn",
-    "unicorn/no-abusive-eslint-disable": "warn",
-    "unicorn/no-anonymous-default-export": "warn",
-    "unicorn/no-array-for-each": "warn",
-    "unicorn/no-array-reduce": "off",
     "unicorn/no-await-expression-member": "warn",
     "unicorn/no-console-spaces": "warn",
     "unicorn/no-hex-escape": "warn",
@@ -62,12 +100,9 @@
     "unicorn/no-lonely-if": "warn",
     "no-negated-condition": "off",
     "unicorn/no-negated-condition": "warn",
-    "no-nested-ternary": "off",
-    "unicorn/no-nested-ternary": "off",
     "unicorn/no-new-buffer": "warn",
     "unicorn/no-null": "off",
     "unicorn/no-object-as-default-parameter": "warn",
-    "unicorn/no-process-exit": "warn",
     "unicorn/no-static-only-class": "warn",
     "unicorn/no-this-assignment": "off",
     "unicorn/no-typeof-undefined": "warn",
@@ -95,16 +130,8 @@
     "unicorn/prefer-logical-operator-over-ternary": "warn",
     "unicorn/prefer-math-trunc": "warn",
     "unicorn/prefer-modern-dom-apis": "warn",
-    "unicorn/prefer-modern-math-apis": "warn",
     "unicorn/prefer-native-coercion-functions": "warn",
     "unicorn/prefer-negative-index": "warn",
-    "unicorn/prefer-node-protocol": "warn",
-    "unicorn/prefer-number-properties": [
-      "warn",
-      {
-        "checkInfinity": false,
-      },
-    ],
     "unicorn/prefer-optional-catch-binding": "warn",
     "unicorn/prefer-prototype-methods": "warn",
     "unicorn/prefer-query-selector": "off",
@@ -128,7 +155,6 @@
       "files": ["**/*.{ts,mts,cts,tsx}"],
       "rules": {
         "no-redeclare": "off",
-        "no-var": "error",
         "prefer-rest-params": "error",
         "prefer-spread": "error",
         "@typescript-eslint/ban-ts-comment": "error",
@@ -142,16 +168,7 @@
           },
         ],
         "no-array-constructor": "error",
-        "@typescript-eslint/no-explicit-any": "error",
-        "@typescript-eslint/no-namespace": [
-          "warn",
-          {
-            "allowDeclarations": true,
-            "allowDefinitionFiles": true,
-          },
-        ],
         "@typescript-eslint/no-unnecessary-type-constraint": "error",
-        "@typescript-eslint/no-var-requires": "error",
         "require-await": "off",
         "@typescript-eslint/adjacent-overload-signatures": "warn",
         "@typescript-eslint/array-type": "warn",
@@ -160,7 +177,6 @@
         "@typescript-eslint/consistent-indexed-object-style": "warn",
         "@typescript-eslint/consistent-type-definitions": "off",
         "@typescript-eslint/no-confusing-non-null-assertion": "warn",
-        "no-empty-function": "warn",
         "@typescript-eslint/no-empty-interface": "warn",
         "@typescript-eslint/no-inferrable-types": "warn",
         "@typescript-eslint/prefer-for-of": "warn",
