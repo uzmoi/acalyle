@@ -13,15 +13,15 @@ export type { TypeScriptESLintConfigName } from "./typescript";
 export * from "./util";
 
 export const configs = {
-    recommended,
-    import: importConfig,
-    react,
-    typescript,
-    acalyle: acalyleConfig,
-    testingLibrary,
+  recommended,
+  import: importConfig,
+  react,
+  typescript,
+  acalyle: acalyleConfig,
+  testingLibrary,
 } satisfies Record<
-    string,
-    | Linter.FlatConfig
-    | readonly Linter.FlatConfig[]
-    | ((...args: never) => Linter.FlatConfig | readonly Linter.FlatConfig[])
+  string,
+  | Linter.FlatConfig
+  | readonly Linter.FlatConfig[]
+  | ((...args: never) => Linter.FlatConfig | readonly Linter.FlatConfig[])
 >;
