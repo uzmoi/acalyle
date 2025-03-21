@@ -5,13 +5,12 @@ import { testingLibrary } from "./testing-library";
 import { tsExts } from "./util";
 
 export const react: Linter.FlatConfig[] = [
+  reactPlugin.configs.flat.recommended,
+  reactPlugin.configs.flat["jsx-runtime"],
   {
     files: ["**/*.tsx"],
     languageOptions: {
-      parserOptions: {
-        ecmaFeatures: { jsx: true },
-        jsxPragma: null,
-      },
+      parserOptions: { jsxPragma: null },
     },
   },
   {
@@ -20,13 +19,10 @@ export const react: Linter.FlatConfig[] = [
       react: { version: "detect" },
     },
     plugins: {
-      react: reactPlugin,
       "react-hooks": reactHooks,
     },
     rules: {
-      ...(reactPlugin.configs?.recommended as ESLint.ConfigData).rules,
-      ...(reactPlugin.configs?.["jsx-runtime"] as ESLint.ConfigData).rules,
-      ...(reactHooks.configs?.recommended as ESLint.ConfigData).rules,
+      ...(reactHooks.configs!.recommended as ESLint.ConfigData).rules,
       "react/prop-types": "off",
     },
   },
