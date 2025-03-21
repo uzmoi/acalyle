@@ -43,6 +43,7 @@ const reducer = (state: State | null, action: Action): State | null => {
         tags: state.tags.filter(tag => tag.symbol !== action.tag),
       };
     }
+    // No Default: Returned in all cases.
   }
 };
 

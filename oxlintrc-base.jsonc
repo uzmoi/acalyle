@@ -39,6 +39,7 @@
 
     // MARK: Restriction
     // Source: ESLint
+    "default-case": ["error", { "commentPattern": "^no default:" }],
     "no-bitwise": "off",
     "no-console": "warn",
     "no-div-regex": "warn",
