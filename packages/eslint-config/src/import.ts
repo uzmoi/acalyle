@@ -1,22 +1,21 @@
 import type { ESLint, Linter } from "eslint";
 import importPlugin from "eslint-plugin-import";
-import importAccess from "eslint-plugin-import-access";
+import importAccess from "eslint-plugin-import-access/flat-config";
 import { ERROR, OFF, WARN, error, never, tsExts, warn } from "./util";
 
 export const importConfig: Linter.FlatConfig[] = [
+  importPlugin.flatConfigs.recommended,
+  importPlugin.flatConfigs.typescript,
+  importPlugin.flatConfigs.react,
   {
     files: [`**/*.${tsExts}`],
     plugins: {
-      import: importPlugin,
-      "import-access": { ...importAccess } as ESLint.Plugin,
+      "import-access": importAccess as ESLint.Plugin,
     },
     settings: {
       "import/resolver": "typescript",
     },
     rules: {
-      ...(importPlugin.configs?.recommended as ESLint.ConfigData).rules,
-      ...(importPlugin.configs?.typescript as ESLint.ConfigData).rules,
-      ...(importPlugin.configs?.react as ESLint.ConfigData).rules,
       "sort-imports": OFF,
       "import-access/jsdoc": ERROR,
       "import/no-absolute-path": ERROR,

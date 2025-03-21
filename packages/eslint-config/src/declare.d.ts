@@ -13,9 +13,19 @@ declare module "eslint-plugin-react-hooks" {
 }
 
 declare module "eslint-plugin-import" {
-  import type { ESLint } from "eslint";
+  import type { Linter } from "eslint";
 
-  const exports: ESLint.Plugin;
+  const exports: {
+    flatConfigs: {
+      recommended: Linter.FlatConfig;
+      errors: Linter.FlatConfig;
+      warnings: Linter.FlatConfig;
+      react: Linter.FlatConfig;
+      "react-native": Linter.FlatConfig;
+      electron: Linter.FlatConfig;
+      typescript: Linter.FlatConfig;
+    };
+  };
   export default exports;
 }
 

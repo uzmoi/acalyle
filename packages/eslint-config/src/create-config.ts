@@ -36,6 +36,7 @@ export const createConfig = ({
       reportUnusedDisableDirectives: true,
     },
     languageOptions: {
+      ecmaVersion: "latest",
       parserOptions: {
         ecmaVersion: "latest",
         sourceType: "module",
