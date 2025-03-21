@@ -7,7 +7,7 @@ run = "npx biome check --no-errors-on-unmatched {staged_files}"
 
 [pre-commit.commands.oxlint]
 glob = "*.{ts,tsx}"
-run = "npx oxlint {staged_files}"
+run = "npx oxlint --deny-warnings {staged_files}"
 
 [pre-commit.commands.prettier]
 run = "npx prettier --check --ignore-unknown {staged_files}"
