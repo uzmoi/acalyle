@@ -11,6 +11,7 @@ const preview: Preview = {
       },
     },
   },
+  tags: ["autodocs"],
   decorators: [story => <div style={devTheme}>{story()}</div>],
 };
 

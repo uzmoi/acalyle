@@ -15,6 +15,7 @@ const preview: Preview = {
       },
     },
   },
+  tags: ["autodocs"],
   decorators: [story => <Provider>{story()}</Provider>],
 };
 
