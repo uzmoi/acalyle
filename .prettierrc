@@ -8,6 +8,10 @@
         "packages/ui/src/**"
       ],
       "options": { "tabWidth": 4 }
+    },
+    {
+      "files": [".vscode/*.json"],
+      "options": { "parser": "jsonc" }
     }
   ]
 }
