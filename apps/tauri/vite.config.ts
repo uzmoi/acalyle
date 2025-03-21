@@ -1,4 +1,3 @@
-import { macaronVitePlugin } from "@macaron-css/vite";
 import react from "@vitejs/plugin-react-swc";
 import { defineConfig, splitVendorChunkPlugin } from "vite";
 
@@ -8,7 +7,7 @@ import { defineConfig, splitVendorChunkPlugin } from "vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), macaronVitePlugin(), splitVendorChunkPlugin()],
+  plugins: [react(), splitVendorChunkPlugin()],
   clearScreen: false,
   server: {
     port: 1420,
