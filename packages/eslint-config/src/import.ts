@@ -1,14 +1,13 @@
 import type { ESLint, Linter } from "eslint";
 import importPlugin from "eslint-plugin-import";
 import importAccess from "eslint-plugin-import-access/flat-config";
-import { ERROR, OFF, WARN, error, never, tsExts, warn } from "./util";
+import { ERROR, OFF, WARN, error, never, warn } from "./util";
 
 export const importConfig: Linter.Config[] = [
   importPlugin.flatConfigs.recommended,
   importPlugin.flatConfigs.typescript,
   importPlugin.flatConfigs.react,
   {
-    files: [`**/*.${tsExts}`],
     plugins: {
       "import-access": importAccess as ESLint.Plugin,
     },

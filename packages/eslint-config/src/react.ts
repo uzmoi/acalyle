@@ -1,7 +1,6 @@
 import type { Linter } from "eslint";
 import reactPlugin from "eslint-plugin-react";
 import { testingLibrary } from "./testing-library";
-import { tsExts } from "./util";
 
 export const react: Linter.Config[] = [
   reactPlugin.configs.flat.recommended,
@@ -13,7 +12,6 @@ export const react: Linter.Config[] = [
     },
   },
   {
-    files: [`**/*.${tsExts}`],
     settings: {
       react: { version: "detect" },
     },

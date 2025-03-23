@@ -2,7 +2,7 @@ import eslint from "@eslint/js";
 import type { ESLint, Linter } from "eslint";
 import pureModule from "eslint-plugin-pure-module";
 import unicornPlugin from "eslint-plugin-unicorn";
-import { ERROR, WARN, omit, replaceWarn, tsExts, warn } from "./util";
+import { ERROR, WARN, omit, replaceWarn, warn } from "./util";
 
 export const recommended: Linter.Config[] = [
   {
@@ -43,7 +43,7 @@ export const recommended: Linter.Config[] = [
     },
   },
   {
-    files: [`**/src/**/*.${tsExts}`],
+    files: ["**/src/**"],
     ignores: ["**/*.{test,test-d,stories}.*"],
     plugins: {
       "pure-module": pureModule as unknown as ESLint.Plugin,

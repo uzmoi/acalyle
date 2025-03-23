@@ -1,11 +1,10 @@
 import type { ESLint, Linter } from "eslint";
 import { rules } from "./rules";
-import { WARN, tsExts } from "./util";
+import { WARN } from "./util";
 
 export const acalylePlugin: ESLint.Plugin = { rules };
 
 export const acalyleConfig: Linter.Config = {
-  files: [`**/*.${tsExts}`],
   plugins: {
     acalyle: acalylePlugin,
   },

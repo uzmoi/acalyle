@@ -16,10 +16,12 @@ export const createConfig = ({
   tsProject = ["tsconfig.json", "tsconfig.*.json"],
   react: useReactConfig,
 }: Options = {}): Linter.Config[] => [
+  // minimatch
   globalIgnores([
-    "**/{dist,coverage,__generated__,storybook-static}/**",
+    "**/__generated__/**",
+    "**/*.gen.*",
     "**/__*",
-    "**/*.log",
+    "**/*.!(ts|tsx)",
     "**/*.d.ts",
     "**/*.d.*.ts",
     ...ignores,

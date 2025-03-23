@@ -1,12 +1,12 @@
 import type { ESLint, Linter } from "eslint";
 import eslintPluginTestingLibrary from "eslint-plugin-testing-library";
-import { tsExts, unPartial } from "./util";
+import { unPartial } from "./util";
 
 // cspell:word marko
 export type TestingLibraryLib = "dom" | "angular" | "react" | "vue" | "marko";
 
 export const testingLibrary = (lib: TestingLibraryLib): Linter.Config => ({
-  files: [`**/*.test.${tsExts}`],
+  files: [`**/*.test.*`],
   plugins: {
     "testing-library": eslintPluginTestingLibrary,
   },
