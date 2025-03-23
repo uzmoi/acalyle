@@ -1,4 +1,5 @@
 import type { Linter } from "eslint";
+import { globalIgnores } from "eslint/config";
 import { importConfig } from "./import";
 import { react } from "./react";
 import { recommended } from "./recommended";
@@ -14,17 +15,15 @@ export const createConfig = ({
   ignores = [],
   tsProject = ["tsconfig.json", "tsconfig.*.json"],
   react: useReactConfig,
-}: Options = {}): Linter.FlatConfig[] => [
-  {
-    ignores: [
-      "**/{dist,coverage,__generated__,storybook-static}/**",
-      "**/__*",
-      "**/*.log",
-      "**/*.d.ts",
-      "**/*.d.*.ts",
-      ...ignores,
-    ],
-  },
+}: Options = {}): Linter.Config[] => [
+  globalIgnores([
+    "**/{dist,coverage,__generated__,storybook-static}/**",
+    "**/__*",
+    "**/*.log",
+    "**/*.d.ts",
+    "**/*.d.*.ts",
+    ...ignores,
+  ]),
   ...recommended,
   ...typescript,
   ...(useReactConfig ? react : []),

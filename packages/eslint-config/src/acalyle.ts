@@ -4,7 +4,7 @@ import { WARN, tsExts } from "./util";
 
 export const acalylePlugin: ESLint.Plugin = { rules };
 
-export const acalyleConfig: Linter.FlatConfig = {
+export const acalyleConfig: Linter.Config = {
   files: [`**/*.${tsExts}`],
   plugins: {
     acalyle: acalylePlugin,

@@ -3,7 +3,7 @@ import importPlugin from "eslint-plugin-import";
 import importAccess from "eslint-plugin-import-access/flat-config";
 import { ERROR, OFF, WARN, error, never, tsExts, warn } from "./util";
 
-export const importConfig: Linter.FlatConfig[] = [
+export const importConfig: Linter.Config[] = [
   importPlugin.flatConfigs.recommended,
   importPlugin.flatConfigs.typescript,
   importPlugin.flatConfigs.react,

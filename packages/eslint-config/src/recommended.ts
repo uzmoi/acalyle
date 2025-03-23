@@ -4,7 +4,7 @@ import pureModule from "eslint-plugin-pure-module";
 import unicornPlugin from "eslint-plugin-unicorn";
 import { ERROR, WARN, omit, replaceWarn, tsExts, warn } from "./util";
 
-export const recommended: Linter.FlatConfig[] = [
+export const recommended: Linter.Config[] = [
   {
     ...unicornPlugin.configs["flat/recommended"],
     rules: {

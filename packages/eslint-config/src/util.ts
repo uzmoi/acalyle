@@ -9,11 +9,11 @@ export const OFF = "off";
 export const WARN = "warn";
 export const warn = <T extends unknown[]>(
   ...options: T
-): Linter.RuleLevelAndOptions<T> => [WARN, ...options];
+): Linter.RuleEntry<T> => [WARN, ...options];
 export const ERROR = "error";
 export const error = <T extends unknown[]>(
   ...options: T
-): Linter.RuleLevelAndOptions<T> => [ERROR, ...options];
+): Linter.RuleEntry<T> => [ERROR, ...options];
 
 export const memoize = <T, U>(f: (arg: T) => U) => {
   const cache = new Map<T, U>();

@@ -3,11 +3,11 @@ import tsEslint from "typescript-eslint";
 import { OFF, WARN, replaceWarn, warn } from "./util";
 
 const stylisticTypeChecked = (
-  tsEslint.configs.stylisticTypeChecked as Linter.FlatConfig[]
+  tsEslint.configs.stylisticTypeChecked as Linter.Config[]
 ).at(-1)!;
 
-export const typescript: Linter.FlatConfig[] = [
-  ...(tsEslint.configs.recommendedTypeChecked as Linter.FlatConfig[]),
+export const typescript: Linter.Config[] = [
+  ...(tsEslint.configs.recommendedTypeChecked as Linter.Config[]),
   {
     ...stylisticTypeChecked,
     rules: replaceWarn(stylisticTypeChecked.rules!),

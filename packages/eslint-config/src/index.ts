@@ -20,7 +20,7 @@ export const configs = {
   testingLibrary,
 } satisfies Record<
   string,
-  | Linter.FlatConfig
-  | readonly Linter.FlatConfig[]
-  | ((...args: never) => Linter.FlatConfig | readonly Linter.FlatConfig[])
+  | Linter.Config
+  | readonly Linter.Config[]
+  | ((...args: never) => Linter.Config | readonly Linter.Config[])
 >;

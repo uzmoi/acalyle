@@ -5,7 +5,7 @@ import { tsExts, unPartial } from "./util";
 // cspell:word marko
 export type TestingLibraryLib = "dom" | "angular" | "react" | "vue" | "marko";
 
-export const testingLibrary = (lib: TestingLibraryLib): Linter.FlatConfig => ({
+export const testingLibrary = (lib: TestingLibraryLib): Linter.Config => ({
   files: [`**/*.test.${tsExts}`],
   plugins: {
     "testing-library": eslintPluginTestingLibrary,
