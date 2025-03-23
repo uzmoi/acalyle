@@ -1,5 +1,4 @@
 import type { Linter } from "eslint";
-import { acalyleConfig } from "./acalyle";
 import { importConfig } from "./import";
 import { react } from "./react";
 import { recommended } from "./recommended";
@@ -16,7 +15,6 @@ export const configs = {
   import: importConfig,
   react,
   typescript,
-  acalyle: acalyleConfig,
   testingLibrary,
 } satisfies Record<
   string,

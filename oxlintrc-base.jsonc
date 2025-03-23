@@ -61,6 +61,7 @@
     "no-unused-expressions": ["warn", { "enforceForJSX": true }],
     "no-void": "off",
     // Source: import
+    "import/no-cycle": ["warn", { "maxDepth": 64, "ignoreExternal": true }],
     "import/no-default-export": "warn",
     // Source: react
     "react/jsx-filename-extension": ["error", { "extensions": [".tsx"] }],
@@ -85,8 +86,9 @@
     // Source: ESLint
     "no-extend-native": "error",
     // Source: import
-    "no-absolute-path": "error",
-    "no-named-as-default-member": "error",
+    "import/no-absolute-path": "error",
+    "import/no-duplicates": ["warn", { "preferInline": true }],
+    "import/no-named-as-default-member": "error",
     // Source: react
     "react/iframe-missing-sandbox": "error",
     "react/jsx-no-comment-textnodes": "off",
@@ -95,12 +97,23 @@
     "react/react-in-jsx-scope": "off",
 
     // MARK: Pedantic
+    // Source: import
+    "import/max-dependencies": ["warn", { "max": 16 }],
     // Source: react
     "react/rules-of-hooks": "error",
+
+    // MARK: Style
+    // Source: import
+    "import/first": "warn",
+    "import/no-mutable-exports": "error",
+    "import/no-named-default": "warn",
 
     // MARK: Nursery
     // Source: react
     "react/exhaustive-deps": "error",
+    // Source: import
+    "import/export": "error",
+    "import/named": "error",
 
     "no-case-declarations": "error",
     "no-fallthrough": "error",
@@ -200,36 +213,6 @@
         "@typescript-eslint/prefer-for-of": "warn",
         "@typescript-eslint/prefer-function-type": "warn",
         "@typescript-eslint/prefer-namespace-keyword": "warn",
-      },
-    },
-    {
-      "files": ["**/*.{ts,mts,cts,tsx}"],
-      "rules": {
-        "import/namespace": "error",
-        "import/default": "error",
-        "import/no-named-as-default": "warn",
-        "import/no-named-as-default-member": "warn",
-        "import/no-duplicates": "warn",
-        "sort-imports": "off",
-        "import/no-absolute-path": "error",
-        "import/no-self-import": "warn",
-        "import/no-cycle": [
-          "warn",
-          {
-            "maxDepth": 16,
-            "ignoreExternal": true,
-          },
-        ],
-        "import/unambiguous": "warn",
-        "import/first": "warn",
-        "import/max-dependencies": [
-          "warn",
-          {
-            "max": 16,
-          },
-        ],
-        "import/no-named-default": "warn",
-        "import/no-default-export": "warn",
       },
     },
     {

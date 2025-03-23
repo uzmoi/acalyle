@@ -13,20 +13,17 @@ export const error = <T extends unknown[]>(
   ...options: T
 ): Linter.RuleEntry<T> => [ERROR, ...options];
 
-export const unPartial = <T>(object: Partial<T>): Required<T> =>
-  object as Required<T>;
+export const omit = <T extends object, const K extends PropertyKey>(
+  object: T,
+  keys: readonly K[],
+): Omit<T, K> =>
+  Object.fromEntries(
+    Object.entries(object).filter(([key]) => !keys.includes(key as K)),
+  ) as Omit<T, K>;
 
 type Entry<T extends object> = {
   [P in keyof T]: [key: P, value: T[P]];
 }[keyof T];
-
-export const omit = <T extends object, const K extends PropertyKey>(
-  object: T,
-  keys: readonly K[],
-) =>
-  Object.fromEntries(
-    Object.entries(object).filter(([key]) => !keys.includes(key as K)),
-  ) as Omit<T, K>;
 
 export const mapEntries = <T extends object, U extends object>(
   object: T,

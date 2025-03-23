@@ -2,14 +2,21 @@ import eslint from "@eslint/js";
 import type { ESLint, Linter } from "eslint";
 import pureModule from "eslint-plugin-pure-module";
 import unicornPlugin from "eslint-plugin-unicorn";
+import { acalylePlugin } from "./acalyle";
 import { ERROR, WARN, omit, replaceWarn, warn } from "./util";
 
 export const recommended: Linter.Config[] = [
   {
     ...unicornPlugin.configs["flat/recommended"],
+    plugins: {
+      ...unicornPlugin.configs["flat/recommended"].plugins,
+      acalyle: acalylePlugin,
+    },
     rules: {
       ...eslint.configs.recommended.rules,
+      "acalyle/prefer-string-literal": WARN,
       ...omit(replaceWarn(unicornPlugin.configs["flat/recommended"].rules!), [
+        "unicorn/filename-case",
         "unicorn/import-style",
         "unicorn/no-array-callback-reference",
         "unicorn/no-array-reduce",

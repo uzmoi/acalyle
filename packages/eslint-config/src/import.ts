@@ -4,11 +4,10 @@ import importAccess from "eslint-plugin-import-access/flat-config";
 import { ERROR, OFF, WARN, error, never, warn } from "./util";
 
 export const importConfig: Linter.Config[] = [
-  importPlugin.flatConfigs.recommended,
   importPlugin.flatConfigs.typescript,
-  importPlugin.flatConfigs.react,
   {
     plugins: {
+      ...importPlugin.flatConfigs.recommended.plugins,
       "import-access": importAccess as ESLint.Plugin,
     },
     settings: {
@@ -17,28 +16,32 @@ export const importConfig: Linter.Config[] = [
     rules: {
       "sort-imports": OFF,
       "import-access/jsdoc": ERROR,
-      "import/no-absolute-path": ERROR,
-      "import/no-self-import": WARN,
-      "import/no-cycle": warn({ maxDepth: 16, ignoreExternal: true }),
-      "import/no-useless-path-segments": warn({
-        noUselessIndex: true,
-        commonjs: true,
-      }),
+
+      // errors
+      "import/no-unresolved": ERROR,
+      "import/no-relative-packages": ERROR,
+      "import/no-unassigned-import": error({ allow: ["**/*.css"] }),
       "import/no-extraneous-dependencies": error({
         devDependencies: ["**/*.{test,test-d,stories}.*", "!**/src/**"],
       }),
-      "import/unambiguous": WARN,
-      "import/first": WARN,
-      "import/no-duplicates": WARN,
-      "import/extensions": warn("ignorePackages", {
+      "import/extensions": error("ignorePackages", {
         js: never,
         jsx: never,
         ts: never,
         tsx: never,
       }),
+
+      // warnings
+      "import/no-deprecated": WARN,
+      "import/no-useless-path-segments": warn({
+        noUselessIndex: true,
+        commonjs: true,
+      }),
+      "import/newline-after-import": WARN,
       "import/order": warn({
         groups: [
-          ["builtin", "external"],
+          "builtin",
+          "external",
           "internal",
           "parent",
           "sibling",
@@ -48,16 +51,6 @@ export const importConfig: Linter.Config[] = [
         alphabetize: { order: "asc" },
         ["newlines-between"]: never,
       }),
-      "import/newline-after-import": WARN,
-      "import/max-dependencies": warn({ max: 16 }),
-      "import/no-named-default": WARN,
-      "import/no-default-export": WARN,
-    },
-  },
-  {
-    files: ["!**/src/**", "**/*.stories.*"],
-    rules: {
-      "import/no-default-export": OFF,
     },
   },
 ];
