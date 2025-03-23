@@ -44,13 +44,6 @@ declare module "eslint-plugin-perfectionist" {
   export default exports;
 }
 
-declare module "eslint-plugin-unicorn" {
-  import type { ESLint } from "eslint";
-
-  const exports: ESLint.Plugin;
-  export default exports;
-}
-
 declare module "eslint-plugin-testing-library" {
   import type { ESLint } from "eslint";
 

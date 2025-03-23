@@ -3,50 +3,70 @@ import type { ESLint, Linter } from "eslint";
 import perfectionist from "eslint-plugin-perfectionist";
 import pureModule from "eslint-plugin-pure-module";
 import unicornPlugin from "eslint-plugin-unicorn";
-import { ERROR, OFF, WARN, extendsRules, tsExts, warn } from "./util";
+import {
+  ERROR,
+  WARN,
+  extendsRules,
+  omit,
+  replaceWarn,
+  tsExts,
+  warn,
+} from "./util";
 
 export const recommended: Linter.FlatConfig[] = [
   {
+    ...unicornPlugin.configs["flat/recommended"],
+    rules: omit(replaceWarn(unicornPlugin.configs["flat/recommended"].rules!), [
+      "unicorn/import-style",
+      "unicorn/no-array-callback-reference",
+      "unicorn/no-array-reduce",
+      "unicorn/no-for-loop",
+      "unicorn/no-invalid-fetch-options",
+      "unicorn/no-length-as-slice-end",
+      "unicorn/no-magic-array-flat-depth",
+      "unicorn/no-nested-ternary",
+      "unicorn/no-null",
+      "unicorn/no-this-assignment",
+      "unicorn/prefer-at",
+      "unicorn/prefer-code-point",
+      "unicorn/prefer-global-this",
+      "unicorn/prefer-math-min-max",
+      "unicorn/prefer-module",
+      "unicorn/prefer-query-selector",
+      "unicorn/prefer-string-raw",
+      "unicorn/prefer-string-replace-all",
+      "unicorn/prefer-structured-clone",
+      "unicorn/prevent-abbreviations",
+    ]),
+  },
+  {
     plugins: {
-      unicorn: unicornPlugin,
       perfectionist,
     },
     rules: {
       ...eslint.configs.recommended.rules,
-      ...extendsRules(unicornPlugin, ["recommended"], { warn: true }),
       "unicorn/consistent-destructuring": WARN,
-      "unicorn/import-style": OFF,
-      "unicorn/no-array-callback-reference": OFF,
-      "unicorn/no-array-reduce": OFF,
-      "unicorn/no-for-loop": OFF,
-      "unicorn/no-nested-ternary": OFF,
-      "unicorn/no-null": OFF,
-      "unicorn/no-this-assignment": OFF,
       "unicorn/no-unsafe-regex": ERROR,
       "unicorn/no-unused-properties": WARN,
-      "unicorn/prefer-at": OFF,
-      "unicorn/prefer-code-point": OFF,
-      "unicorn/prefer-module": OFF,
       "unicorn/prefer-number-properties": warn({ checkInfinity: false }),
-      "unicorn/prefer-query-selector": OFF,
-      "unicorn/prefer-string-replace-all": OFF,
-      "unicorn/prevent-abbreviations": OFF,
       "unicorn/template-indent": warn({
-        indent: 4,
+        indent: 2,
         tags: [],
         selectors: ["TaggedTemplateExpression"],
       }),
-      ...extendsRules(perfectionist, ["recommended-natural"], {
-        warn: true,
-      }),
-      "perfectionist/sort-imports": OFF,
-      "perfectionist/sort-interfaces": OFF,
-      "perfectionist/sort-classes": OFF,
-      "perfectionist/sort-jsx-props": OFF,
-      "perfectionist/sort-object-types": OFF,
-      "perfectionist/sort-objects": OFF,
-      "perfectionist/sort-intersection-types": OFF,
-      "perfectionist/sort-union-types": OFF,
+      ...omit(
+        extendsRules(perfectionist, ["recommended-natural"], { warn: true }),
+        [
+          "perfectionist/sort-imports",
+          "perfectionist/sort-interfaces",
+          "perfectionist/sort-classes",
+          "perfectionist/sort-jsx-props",
+          "perfectionist/sort-object-types",
+          "perfectionist/sort-objects",
+          "perfectionist/sort-intersection-types",
+          "perfectionist/sort-union-types",
+        ],
+      ),
     },
   },
   {
