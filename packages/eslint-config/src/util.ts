@@ -1,6 +1,3 @@
-import type { JSONSchema4 } from "@typescript-eslint/utils/json-schema";
-import type { ClassicConfig } from "@typescript-eslint/utils/ts-eslint";
-import type { WeakMeta } from "emnorst";
 import type { Linter } from "eslint";
 
 export const tsExts = "{ts,mts,cts,tsx}";
@@ -105,64 +102,4 @@ export const extendsFlatRules = (
     );
   }
   return result;
-};
-
-export const extendsRules = (
-  plugin: { configs?: Record<string, unknown> },
-  configNames: readonly string[],
-  options: { warn?: boolean | ((configName: string) => boolean) } = {},
-): Linter.RulesRecord => {
-  const rules: Linter.RulesRecord = {};
-  for (const configName of configNames) {
-    const config = {
-      ...(plugin.configs?.[configName] as ClassicConfig.Config),
-    };
-
-    const extendConfigNames = asArray(config.extends).map(name =>
-      name.replace(/^.+\//, ""),
-    );
-    const extendConfigs = extendsRules(plugin, extendConfigNames);
-
-    if (config.overrides) {
-      Object.assign(
-        (config.rules ??= {}),
-        ...config.overrides.map(override => override.rules),
-      );
-    }
-
-    if (
-      config.rules &&
-      (typeof options.warn === "function" ?
-        options.warn(configName)
-      : options.warn)
-    ) {
-      config.rules = replaceWarn(unPartial(config.rules));
-    }
-    Object.assign(rules, extendConfigs, config.rules);
-  }
-  return rules;
-};
-
-// TODO: emnorstのWeakMetaを直す
-export type JSONSchema<T = unknown> = WeakMeta<JSONSchema4, T> & { __?: T };
-
-export type RuleOptions<T> = T extends JSONSchema<infer U> ? U : never;
-
-export const jsonSchema = {
-  object: <T>(properties: {
-    [P in keyof T]: JSONSchema<T[P]>;
-  }): JSONSchema<Partial<T>> => ({ type: "object", properties }),
-  array: <T>(items: JSONSchema<T>): JSONSchema<T[]> => ({
-    type: "array",
-    items,
-  }),
-  boolean: (): JSONSchema<boolean> => ({ type: "boolean" }),
-  string: (schema?: {
-    maxLength?: number;
-    minLength?: number;
-    pattern?: string;
-  }): JSONSchema<string> => ({
-    type: "string",
-    ...schema,
-  }),
 };

@@ -2,18 +2,16 @@ import type { Linter } from "eslint";
 import { importConfig } from "./import";
 import { react } from "./react";
 import { recommended } from "./recommended";
-import { type TypeScriptESLintConfigName, typescript } from "./typescript";
+import { typescript } from "./typescript";
 
 export type Options = Partial<{
   ignores: string[];
-  ts: TypeScriptESLintConfigName[];
   tsProject: string[];
   react: boolean;
 }>;
 
 export const createConfig = ({
   ignores = [],
-  ts = ["recommendedTypeChecked", "stylisticTypeChecked"],
   tsProject = ["tsconfig.json", "tsconfig.*.json"],
   react: useReactConfig,
 }: Options = {}): Linter.FlatConfig[] => [
@@ -28,7 +26,7 @@ export const createConfig = ({
     ],
   },
   ...recommended,
-  typescript(...ts),
+  ...typescript,
   ...(useReactConfig ? react : []),
   ...importConfig,
   {

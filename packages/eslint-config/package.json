@@ -12,8 +12,6 @@
   },
   "dependencies": {
     "@eslint/js": "^8.54.0",
-    "@typescript-eslint/utils": "^7.7.1",
-    "emnorst": "^1.0.0-next.2",
     "eslint-import-resolver-typescript": "^3.9.1",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-import-access": "^2.2.2",
@@ -22,7 +20,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-testing-library": "^6.2.2",
     "eslint-plugin-unicorn": "^56.0.1",
-    "typescript-eslint": "^7.7.1"
+    "typescript-eslint": "^8.27.0"
   },
   "peerDependencies": {
     "eslint": "^8"
