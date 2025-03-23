@@ -94,6 +94,14 @@
     "react/no-namespace": "error",
     "react/react-in-jsx-scope": "off",
 
+    // MARK: Pedantic
+    // Source: react
+    "react/rules-of-hooks": "error",
+
+    // MARK: Nursery
+    // Source: react
+    "react/exhaustive-deps": "error",
+
     "no-case-declarations": "error",
     "no-fallthrough": "error",
     "no-inner-declarations": "error",

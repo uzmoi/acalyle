@@ -13,13 +13,6 @@ declare module "eslint-plugin-react" {
   export default exports;
 }
 
-declare module "eslint-plugin-react-hooks" {
-  import type { ESLint } from "eslint";
-
-  const exports: ESLint.Plugin;
-  export default exports;
-}
-
 declare module "eslint-plugin-import" {
   import type { Linter } from "eslint";
 
