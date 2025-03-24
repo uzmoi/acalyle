@@ -38,6 +38,7 @@ export const usePromiseLoader = <T>(loader: PromiseLoaderW<T>): T => {
             throw new Error("Unpending");
         }
         case "pending": {
+            // eslint-disable-next-line @typescript-eslint/only-throw-error
             throw loader.promise;
         }
         case "fulfilled": {
