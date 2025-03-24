@@ -3,14 +3,13 @@
 import { createConfig, warn } from "@acalyle/eslint-config";
 import unocss from "@unocss/eslint-config/flat";
 
-/** @type {import("eslint").Linter.FlatConfig[]} */
+/** @type {import("eslint").Linter.Config[]} */
 export default [
   ...createConfig({
     react: true,
   }),
-  unocss,
+  /** @type {import("eslint").Linter.Config} */ /** @type {object} */ (unocss),
   {
-    files: ["**/*.{ts,mts,cts,tsx}"],
     rules: {
       "import-access/jsdoc": warn({
         defaultImportability: "package",
