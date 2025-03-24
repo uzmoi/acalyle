@@ -28,6 +28,7 @@ export const toPromise = async <T>(
         case "rejected": {
             throw loader.error;
         }
+        // No Default: Returned in all cases.
     }
 };
 
@@ -37,6 +38,7 @@ export const usePromiseLoader = <T>(loader: PromiseLoaderW<T>): T => {
             throw new Error("Unpending");
         }
         case "pending": {
+            // eslint-disable-next-line @typescript-eslint/only-throw-error
             throw loader.promise;
         }
         case "fulfilled": {
@@ -45,6 +47,7 @@ export const usePromiseLoader = <T>(loader: PromiseLoaderW<T>): T => {
         case "rejected": {
             throw loader.error;
         }
+        // No Default: Returned in all cases.
     }
 };
 

@@ -1,72 +1,75 @@
 import eslint from "@eslint/js";
 import type { ESLint, Linter } from "eslint";
-import perfectionist from "eslint-plugin-perfectionist";
 import pureModule from "eslint-plugin-pure-module";
 import unicornPlugin from "eslint-plugin-unicorn";
-import { ERROR, OFF, WARN, extendsRules, tsExts, warn } from "./util";
+import { acalylePlugin } from "./acalyle";
+import { ERROR, WARN, warn } from "./util";
 
-export const recommended: Linter.FlatConfig[] = [
-    {
-        plugins: {
-            unicorn: unicornPlugin,
-            perfectionist,
-        },
-        rules: {
-            ...eslint.configs.recommended.rules,
-            ...extendsRules(unicornPlugin, ["recommended"], { warn: true }),
-            "unicorn/consistent-destructuring": WARN,
-            "unicorn/import-style": OFF,
-            "unicorn/no-array-callback-reference": OFF,
-            "unicorn/no-array-reduce": OFF,
-            "unicorn/no-for-loop": OFF,
-            "unicorn/no-nested-ternary": OFF,
-            "unicorn/no-null": OFF,
-            "unicorn/no-this-assignment": OFF,
-            "unicorn/no-unsafe-regex": ERROR,
-            "unicorn/no-unused-properties": WARN,
-            "unicorn/prefer-at": OFF,
-            "unicorn/prefer-code-point": OFF,
-            "unicorn/prefer-module": OFF,
-            "unicorn/prefer-number-properties": warn({ checkInfinity: false }),
-            "unicorn/prefer-query-selector": OFF,
-            "unicorn/prefer-string-replace-all": OFF,
-            "unicorn/prevent-abbreviations": OFF,
-            "unicorn/template-indent": warn({
-                indent: 4,
-                tags: [],
-                selectors: ["TaggedTemplateExpression"],
-            }),
-            ...extendsRules(perfectionist, ["recommended-natural"], {
-                warn: true,
-            }),
-            "perfectionist/sort-imports": OFF,
-            "perfectionist/sort-interfaces": OFF,
-            "perfectionist/sort-classes": OFF,
-            "perfectionist/sort-jsx-props": OFF,
-            "perfectionist/sort-object-types": OFF,
-            "perfectionist/sort-objects": OFF,
-            "perfectionist/sort-intersection-types": OFF,
-            "perfectionist/sort-union-types": OFF,
-        },
+export const recommended: Linter.Config[] = [
+  {
+    ...unicornPlugin.configs["flat/recommended"],
+    plugins: {
+      ...unicornPlugin.configs["flat/recommended"].plugins,
+      acalyle: acalylePlugin,
     },
-    {
-        files: [`**/src/**/*.${tsExts}`],
-        ignores: ["**/*.{test,test-d,stories}.*"],
-        plugins: {
-            "pure-module": pureModule as unknown as ESLint.Plugin,
-        },
-        rules: {
-            "pure-module/pure-module": warn({
-                pureFunctions: [
-                    // vite
-                    "import.meta.hot.*",
-                    // zero-runtime css-in-js
-                    "style",
-                    "styled",
-                    "styled.*",
-                    "css",
-                ],
-            }),
-        },
+    rules: {
+      ...eslint.configs.recommended.rules,
+      "acalyle/prefer-string-literal": WARN,
+      "unicorn/better-regex": WARN,
+      "unicorn/consistent-destructuring": WARN,
+      "unicorn/custom-error-definition": WARN,
+      "unicorn/expiring-todo-comments": warn({
+        terms: ["todo", "fixme"],
+        allowWarningComments: false,
+      }),
+      // TODO[eslint-plugin-unicorn@>=57]: ルール追加
+      // "unicorn/no-accessor-recursion": WARN,
+      "unicorn/no-array-method-this-argument": WARN,
+      "unicorn/no-array-push-push": WARN,
+      // "unicorn/no-instanceof-builtins": WARN,
+      "unicorn/no-keyword-prefix": WARN,
+      // "unicorn/no-named-default": WARN,
+      "unicorn/no-negated-condition": WARN,
+      "unicorn/no-unnecessary-polyfills": WARN,
+      "unicorn/no-unsafe-regex": ERROR,
+      "unicorn/no-unused-properties": WARN,
+      "unicorn/prefer-array-find": WARN,
+      "unicorn/prefer-array-index-of": WARN,
+      "unicorn/prefer-default-parameters": WARN,
+      "unicorn/prefer-export-from": WARN,
+      "unicorn/prefer-json-parse-buffer": WARN,
+      "unicorn/prefer-keyboard-event-key": WARN,
+      "unicorn/prefer-number-properties": warn({ checkInfinity: false }),
+      "unicorn/prefer-object-from-entries": WARN,
+      "unicorn/prefer-switch": WARN,
+      "unicorn/prefer-ternary": WARN,
+      "unicorn/prefer-top-level-await": WARN,
+      "unicorn/relative-url-style": WARN,
+      "unicorn/template-indent": warn({
+        indent: 2,
+        tags: [],
+        selectors: ["TaggedTemplateExpression"],
+      }),
     },
+  },
+  {
+    files: ["**/src/**"],
+    ignores: ["**/*.{test,test-d,stories}.*"],
+    plugins: {
+      "pure-module": pureModule as unknown as ESLint.Plugin,
+    },
+    rules: {
+      "pure-module/pure-module": warn({
+        pureFunctions: [
+          // vite
+          "import.meta.hot.*",
+          // zero-runtime css-in-js
+          "style",
+          "styled",
+          "styled.*",
+          "css",
+        ],
+      }),
+    },
+  },
 ];

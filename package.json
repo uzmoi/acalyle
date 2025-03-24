@@ -22,9 +22,10 @@
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "cspell": "^8.3.2",
-    "eslint": "^8.54.0",
+    "eslint": "^9.23.0",
     "globals": "^13.23.0",
     "lefthook": "^1.5.5",
+    "oxlint": "^0.16.1",
     "prettier": "^3.1.0",
     "turbo": "^1.10.16",
     "typescript": "5.8.2"

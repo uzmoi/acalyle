@@ -1,35 +1,22 @@
-import type { ESLint, Linter } from "eslint";
+import type { Linter } from "eslint";
+import { defineConfig } from "eslint/config";
 import reactPlugin from "eslint-plugin-react";
-import reactHooks from "eslint-plugin-react-hooks";
-import { testingLibrary } from "./testing-library";
-import { tsExts } from "./util";
+import testingLibraryPlugin from "eslint-plugin-testing-library";
+import { OFF } from "./util";
 
-export const react: Linter.FlatConfig[] = [
-    {
-        files: ["**/*.tsx"],
-        languageOptions: {
-            parserOptions: {
-                ecmaFeatures: { jsx: true },
-                jsxPragma: null,
-            },
-        },
+export const react: Linter.Config[] = [
+  reactPlugin.configs.flat.recommended,
+  reactPlugin.configs.flat["jsx-runtime"],
+  {
+    settings: {
+      react: { version: "detect" },
     },
-    {
-        files: [`**/*.${tsExts}`],
-        settings: {
-            react: { version: "detect" },
-        },
-        plugins: {
-            react: reactPlugin,
-            "react-hooks": reactHooks,
-        },
-        rules: {
-            ...(reactPlugin.configs?.recommended as ESLint.ConfigData).rules,
-            ...(reactPlugin.configs?.["jsx-runtime"] as ESLint.ConfigData)
-                .rules,
-            ...(reactHooks.configs?.recommended as ESLint.ConfigData).rules,
-            "react/prop-types": "off",
-        },
+    rules: {
+      "react/prop-types": OFF,
     },
-    testingLibrary("react"),
+  },
+  ...defineConfig({
+    files: ["**/*.test.*"],
+    extends: [testingLibraryPlugin.configs["flat/react"]],
+  }),
 ];

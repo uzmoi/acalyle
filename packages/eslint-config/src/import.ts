@@ -1,65 +1,55 @@
 import type { ESLint, Linter } from "eslint";
 import importPlugin from "eslint-plugin-import";
-import importAccess from "eslint-plugin-import-access";
-import { ERROR, OFF, WARN, error, never, tsExts, warn } from "./util";
+import importAccess from "eslint-plugin-import-access/flat-config";
+import { ERROR, OFF, WARN, error, never, warn } from "./util";
 
-export const importConfig: Linter.FlatConfig[] = [
-    {
-        files: [`**/*.${tsExts}`],
-        plugins: {
-            import: importPlugin,
-            "import-access": { ...importAccess } as ESLint.Plugin,
-        },
-        settings: {
-            "import/resolver": "typescript",
-        },
-        rules: {
-            ...(importPlugin.configs?.recommended as ESLint.ConfigData).rules,
-            ...(importPlugin.configs?.typescript as ESLint.ConfigData).rules,
-            ...(importPlugin.configs?.react as ESLint.ConfigData).rules,
-            "sort-imports": OFF,
-            "import-access/jsdoc": ERROR,
-            "import/no-absolute-path": ERROR,
-            "import/no-self-import": WARN,
-            "import/no-cycle": warn({ maxDepth: 16, ignoreExternal: true }),
-            "import/no-useless-path-segments": warn({
-                noUselessIndex: true,
-                commonjs: true,
-            }),
-            "import/no-extraneous-dependencies": error({
-                devDependencies: ["**/*.{test,test-d,stories}.*", "!**/src/**"],
-            }),
-            "import/unambiguous": WARN,
-            "import/first": WARN,
-            "import/no-duplicates": WARN,
-            "import/extensions": warn("ignorePackages", {
-                js: never,
-                jsx: never,
-                ts: never,
-                tsx: never,
-            }),
-            "import/order": warn({
-                groups: [
-                    ["builtin", "external"],
-                    "internal",
-                    "parent",
-                    "sibling",
-                    "index",
-                ],
-                pathGroups: [{ pattern: "~/**", group: "internal" }],
-                alphabetize: { order: "asc" },
-                ["newlines-between"]: never,
-            }),
-            "import/newline-after-import": WARN,
-            "import/max-dependencies": warn({ max: 16 }),
-            "import/no-named-default": WARN,
-            "import/no-default-export": WARN,
-        },
+export const importConfig: Linter.Config[] = [
+  importPlugin.flatConfigs.typescript,
+  {
+    plugins: {
+      ...importPlugin.flatConfigs.recommended.plugins,
+      "import-access": importAccess as ESLint.Plugin,
     },
-    {
-        files: ["!**/src/**", "**/*.stories.*"],
-        rules: {
-            "import/no-default-export": OFF,
-        },
+    settings: {
+      "import/resolver": "typescript",
     },
+    rules: {
+      "sort-imports": OFF,
+      "import-access/jsdoc": ERROR,
+
+      // errors
+      "import/no-unresolved": ERROR,
+      "import/no-relative-packages": ERROR,
+      "import/no-extraneous-dependencies": error({
+        devDependencies: ["**/*.{test,test-d,stories}.*", "!**/src/**"],
+      }),
+      "import/extensions": error("ignorePackages", {
+        js: never,
+        jsx: never,
+        ts: never,
+        tsx: never,
+      }),
+
+      // warnings
+      "import/no-deprecated": WARN,
+      "import/no-useless-path-segments": warn({
+        noUselessIndex: true,
+        commonjs: true,
+      }),
+      "import/newline-after-import": WARN,
+      "import/order": warn({
+        groups: [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index",
+        ],
+        pathGroups: [{ pattern: "~/**", group: "internal" }],
+        alphabetize: { order: "asc" },
+        ["newlines-between"]: never,
+      }),
+    },
+  },
 ];

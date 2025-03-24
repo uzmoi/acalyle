@@ -1,0 +1,15 @@
+{
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
+  "extends": ["../../oxlintrc-base.jsonc"],
+  "plugins": ["react"],
+  "env": {
+    "builtin": true
+  },
+  "ignorePatterns": [
+    "**/{dist,coverage,__generated__,storybook-static}/**",
+    "**/__*",
+    "**/*.log",
+    "**/*.d.ts",
+    "**/*.d.*.ts"
+  ]
+}
