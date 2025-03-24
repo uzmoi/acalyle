@@ -44,6 +44,7 @@ rustls
 serde
 sqlx
 tauri
+testid
 textnodes
 trunc
 tsbuildinfo
