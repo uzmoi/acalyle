@@ -8,7 +8,6 @@
   "scripts": {
     "build": "tsup src/index.ts --format esm --minify-syntax --sourcemap --dts",
     "check": "vitest run --typecheck.only",
-    "lint": "eslint .",
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },
