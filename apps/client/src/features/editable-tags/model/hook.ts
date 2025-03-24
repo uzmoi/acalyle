@@ -53,10 +53,10 @@ export const useEditableTags = () => {
   return [
     state,
     {
-      start(tags: readonly NoteTagString[]) {
+      start(this: void, tags: readonly NoteTagString[]) {
         dispatch({ type: "start", tags });
       },
-      end(noteId: NoteId, tags: readonly NoteTagString[]) {
+      end(this: void, noteId: NoteId, tags: readonly NoteTagString[]) {
         dispatch({ type: "end" });
         if (state != null) {
           const modifiedTags = state.tags.map(
@@ -65,10 +65,10 @@ export const useEditableTags = () => {
           void updateNoteTags(noteId, tagsDiff(tags, modifiedTags));
         }
       },
-      upsertTag(tag: NoteTagString) {
+      upsertTag(this: void, tag: NoteTagString) {
         dispatch({ type: "upsert", tag });
       },
-      removeTag(tag: TagSymbol) {
+      removeTag(this: void, tag: TagSymbol) {
         dispatch({ type: "remove", tag });
       },
     },
