@@ -7,6 +7,7 @@
     "correctness": "error",
     "restriction": "error",
     "suspicious": "warn",
+    "style": "warn",
   },
   "rules": {
     // MARK: Correctness
@@ -143,53 +144,43 @@
     "unicorn/require-number-to-fixed-digits-argument": "warn",
 
     // MARK: Style
+    // Source: ESLint
+    "curly": "off",
+    "func-names": ["warn", "as-needed"],
+    "init-declarations": "off",
+    "max-params": ["warn", { "max": 4 }],
+    "no-continue": "off",
+    "no-labels": "off",
+    "no-magic-numbers": "off",
+    "no-multi-str": "off",
+    "no-nested-ternary": "off",
+    "no-ternary": "off",
+    "sort-imports": "off",
+    "sort-keys": "off",
+    "vars-on-top": "off",
+    "yoda": ["warn", "never", { "exceptRange": true }],
     // Source: import
-    "import/first": "warn",
+    "import/exports-last": "off",
     "import/no-mutable-exports": "error",
-    "import/no-named-default": "warn",
+    "import/no-namespace": "off",
+    // Source: react
+    "react/no-set-state": "off",
     // Source: TypeScript ESLint
     "typescript/adjacent-overload-signatures": "error",
-    "typescript/array-type": "warn",
-    "typescript/consistent-generic-constructors": "warn",
     "typescript/consistent-indexed-object-style": "off",
     "typescript/consistent-type-definitions": "off",
     "typescript/no-empty-interface": "off",
-    "typescript/no-inferrable-types": "warn",
-    "typescript/prefer-for-of": "warn",
-    "typescript/prefer-function-type": "warn",
-    "typescript/prefer-namespace-keyword": "warn",
     // Source: unicorn
-    "unicorn/catch-error-name": "warn",
-    "unicorn/consistent-date-clone": "warn",
-    "unicorn/consistent-existence-index-check": "warn",
-    "unicorn/empty-brace-spaces": "warn",
-    "unicorn/error-message": "warn",
-    "unicorn/filename-case": "warn",
-    "unicorn/no-await-expression-member": "warn",
-    "unicorn/no-console-spaces": "warn",
     "unicorn/no-null": "off",
-    "unicorn/no-unreadable-array-destructuring": "warn",
-    "unicorn/no-zero-fractions": "warn",
     "unicorn/number-literal-case": "off",
     "unicorn/numeric-separators-style": [
       "warn",
       { "hexadecimal": { "groupLength": 4 } },
     ],
-    "unicorn/prefer-array-flat-map": "warn",
-    "unicorn/prefer-dom-node-text-content": "warn",
-    "unicorn/prefer-includes": "warn",
-    "unicorn/prefer-logical-operator-over-ternary": "warn",
-    "unicorn/prefer-modern-dom-apis": "warn",
-    "unicorn/prefer-negative-index": "warn",
-    "unicorn/prefer-optional-catch-binding": "warn",
     "unicorn/prefer-reflect-apply": "off",
-    "unicorn/prefer-spread": "warn",
     "unicorn/prefer-string-raw": "off",
-    "unicorn/prefer-string-trim-start-end": "warn",
-    "unicorn/prefer-structured-clone": "warn",
-    "unicorn/require-array-join-separator": "warn",
+    // XXX: categories.style === "warn"なので不要なはずだが、これがないと何故かデフォルトオプションが"avoid"になる。oxlintのバグ？
     "unicorn/switch-case-braces": "warn",
-    "unicorn/throw-new-error": "warn",
 
     // MARK: Nursery
     // Source: react
