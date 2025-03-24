@@ -24,7 +24,8 @@ export const typescript: Linter.Config[] = [
       "@typescript-eslint/no-array-constructor": OFF,
       "@typescript-eslint/no-confusing-non-null-assertion": OFF,
       "@typescript-eslint/no-duplicate-enum-values": OFF,
-      "@typescript-eslint/no-empty-function": OFF,
+      // oxlintがコンストラクタ引数部分でプロパティー宣言しても警告してくるのでこっちを使う。
+      // "@typescript-eslint/no-empty-function": OFF,
       "@typescript-eslint/no-empty-object-type": OFF,
       "@typescript-eslint/no-explicit-any": OFF,
       "@typescript-eslint/no-extra-non-null-assertion": OFF,

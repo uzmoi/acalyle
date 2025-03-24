@@ -46,7 +46,7 @@
     "no-console": "warn",
     "no-div-regex": "warn",
     "no-empty": "warn",
-    "no-empty-function": "warn",
+    "no-empty-function": "off", // oxlintがコンストラクタでプロパティー宣言してもわかってくれないのでeslintを使う。
     "no-eq-null": "off",
     "no-plusplus": "off",
     "no-regex-spaces": "warn",
@@ -100,7 +100,7 @@
 
     // MARK: Pedantic
     // Source: import
-    "import/max-dependencies": ["warn", { "max": 16 }],
+    "import/max-dependencies": ["warn", { "max": 24 }],
     // Source: react
     "react/rules-of-hooks": "error",
     // Source: TypeScript ESLint
