@@ -20,7 +20,6 @@ export const importConfig: Linter.Config[] = [
       // errors
       "import/no-unresolved": ERROR,
       "import/no-relative-packages": ERROR,
-      "import/no-unassigned-import": error({ allow: ["**/*.css"] }),
       "import/no-extraneous-dependencies": error({
         devDependencies: ["**/*.{test,test-d,stories}.*", "!**/src/**"],
       }),
