@@ -1,6 +1,7 @@
 import type { Linter } from "eslint";
+import { defineConfig } from "eslint/config";
 import reactPlugin from "eslint-plugin-react";
-import { testingLibrary } from "./testing-library";
+import testingLibraryPlugin from "eslint-plugin-testing-library";
 import { OFF } from "./util";
 
 export const react: Linter.Config[] = [
@@ -14,5 +15,8 @@ export const react: Linter.Config[] = [
       "react/prop-types": OFF,
     },
   },
-  testingLibrary("react"),
+  ...defineConfig({
+    files: ["**/*.test.*"],
+    extends: [testingLibraryPlugin.configs["flat/react"]],
+  }),
 ];
