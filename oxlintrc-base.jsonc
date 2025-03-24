@@ -26,6 +26,7 @@
     "no-extra-non-null-assertion": "warn",
     "no-this-alias": "warn",
     "no-useless-empty-export": "warn",
+    "prefer-as-const": "warn",
     // Source: unicorn
     "no-empty-file": "warn",
     "no-single-promise-in-promise-methods": "warn",
@@ -101,6 +102,10 @@
     "import/max-dependencies": ["warn", { "max": 16 }],
     // Source: react
     "react/rules-of-hooks": "error",
+    // Source: TypeScript ESLint
+    "typescript/ban-ts-comment": "error",
+    "typescript/no-unsafe-function-type": "error",
+    "typescript/prefer-ts-expect-error": "error",
     // Source: unicorn
     "unicorn/consistent-empty-array-spread": "warn",
     "unicorn/escape-case": "warn",
@@ -142,6 +147,17 @@
     "import/first": "warn",
     "import/no-mutable-exports": "error",
     "import/no-named-default": "warn",
+    // Source: TypeScript ESLint
+    "typescript/adjacent-overload-signatures": "error",
+    "typescript/array-type": "warn",
+    "typescript/consistent-generic-constructors": "warn",
+    "typescript/consistent-indexed-object-style": "off",
+    "typescript/consistent-type-definitions": "off",
+    "typescript/no-empty-interface": "off",
+    "typescript/no-inferrable-types": "warn",
+    "typescript/prefer-for-of": "warn",
+    "typescript/prefer-function-type": "warn",
+    "typescript/prefer-namespace-keyword": "warn",
     // Source: unicorn
     "unicorn/catch-error-name": "warn",
     "unicorn/consistent-date-clone": "warn",
@@ -190,38 +206,6 @@
     "no-negated-condition": "off",
   },
   "overrides": [
-    {
-      "files": ["**/*.{ts,mts,cts,tsx}"],
-      "rules": {
-        "no-redeclare": "off",
-        "prefer-rest-params": "error",
-        "prefer-spread": "error",
-        "@typescript-eslint/ban-ts-comment": "error",
-        "@typescript-eslint/ban-types": [
-          "warn",
-          {
-            "extendDefaults": true,
-            "types": {
-              "{}": false,
-            },
-          },
-        ],
-        "no-array-constructor": "error",
-        "require-await": "off",
-        "@typescript-eslint/adjacent-overload-signatures": "warn",
-        "@typescript-eslint/array-type": "warn",
-        "@typescript-eslint/ban-tslint-comment": "warn",
-        "@typescript-eslint/consistent-generic-constructors": "warn",
-        "@typescript-eslint/consistent-indexed-object-style": "warn",
-        "@typescript-eslint/consistent-type-definitions": "off",
-        "@typescript-eslint/no-confusing-non-null-assertion": "warn",
-        "@typescript-eslint/no-empty-interface": "warn",
-        "@typescript-eslint/no-inferrable-types": "warn",
-        "@typescript-eslint/prefer-for-of": "warn",
-        "@typescript-eslint/prefer-function-type": "warn",
-        "@typescript-eslint/prefer-namespace-keyword": "warn",
-      },
-    },
     {
       "files": ["**/*.{config,stories}.*", "**/.storybook/**"],
       "rules": {
