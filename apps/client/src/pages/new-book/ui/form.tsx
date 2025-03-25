@@ -4,14 +4,14 @@ import type { BookRef } from "~/entities/book";
 import { createBook } from "../model";
 
 export const CreateBookForm: React.FC<{
-  onCreatedBook: (bookRef: BookRef) => void;
+  onCreatedBook: (bookRef: BookRef) => Promise<void>;
 }> = ({ onCreatedBook }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
   const action = useCallback(async () => {
     const bookRef = await createBook(title, description);
-    onCreatedBook?.(bookRef);
+    await onCreatedBook(bookRef);
   }, [onCreatedBook, title, description]);
 
   const htmlId = useId();
