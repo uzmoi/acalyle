@@ -1,4 +1,4 @@
-export { useBookHandleStatus } from "./handle";
+export { useBookHandleStatus, normalizeBookHandle } from "./handle";
 export {
   changeBookDescription,
   changeBookHandle,

@@ -2,7 +2,11 @@ import { Button, ControlGroup, TextInput } from "@acalyle/ui";
 import { useId, useState } from "react";
 import type { BookHandle, BookId } from "~/entities/book";
 import { confirm } from "~/features/modal";
-import { changeBookHandle, useBookHandleStatus } from "../model";
+import {
+  changeBookHandle,
+  useBookHandleStatus,
+  normalizeBookHandle,
+} from "../model";
 
 export const BookHandleForm: React.FC<{
   bookId: BookId;
@@ -12,12 +16,15 @@ export const BookHandleForm: React.FC<{
   const [handle, setHandle] = useState<string>(currentHandle ?? "");
   const availableStatus = useBookHandleStatus(handle || null);
   const status =
-    handle === (currentHandle ?? "") ? "no-change" : availableStatus;
+    normalizeBookHandle(handle) === (currentHandle ?? "") ?
+      "no-change"
+    : availableStatus;
 
   const action = async (): Promise<void> => {
-    const action = handle === "" ? "削除" : `「${handle}」に変更`;
+    const normalizedHandle = normalizeBookHandle(handle);
+    const action = handle === "" ? "削除" : `「${normalizedHandle}」に変更`;
     if (await confirm(`book handleを${action}しますわ。よろしくて？`)) {
-      await changeBookHandle(bookId, handle || null);
+      await changeBookHandle(bookId, normalizedHandle || null);
     }
   };
 
@@ -39,9 +46,9 @@ export const BookHandleForm: React.FC<{
           {status == null ?
             "ハンドルを無効化します。"
           : status === "available" ?
-            `${handle} は使用できます。`
+            `${normalizeBookHandle(handle)} は使用できます。`
           : status === "unavailable" ?
-            "このハンドルは既に使用されています。"
+            `${normalizeBookHandle(handle)} は既に使用されています。`
           : status === "invalid" ?
             // TODO[2025-06-01]: ハンドルに使用可能な文字をちゃんと決めたら書き直す。
             "ハンドルに使用できるのは英数字とアンダースコア(_)のみです。"
