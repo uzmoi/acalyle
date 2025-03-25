@@ -1,4 +1,3 @@
-import { style } from "@acalyle/css";
 import { Button, TextInput } from "@acalyle/ui";
 import { useCallback, useId, useState } from "react";
 import type { BookRef } from "~/entities/book";
@@ -23,57 +22,40 @@ export const CreateBookForm: React.FC<{
     <form action={action}>
       <h1>Create a new book</h1>
       <dl>
-        <dt className={DTStyle}>
-          <label htmlFor={titleId} className={LabelStyle}>
+        <dt className=":uno: mb-1 mt-4">
+          <label htmlFor={titleId} className=":uno: text-sm font-bold">
             Book title
-            <span className={style({ marginLeft: "0.5em" })}>(required)</span>
+            <span className=":uno: ml-2">(required)</span>
           </label>
         </dt>
         <dd>
           <TextInput
             id={titleId}
-            className={style({
-              width: "100%",
-              minWidth: "16em",
-              maxWidth: "32em",
-            })}
+            className=":uno: max-w-128 min-w-64 w-full"
             value={title}
             onValueChange={setTitle}
             required
             maxLength={32}
           />
         </dd>
-        <dt className={DTStyle}>
-          <label htmlFor={descriptionId} className={LabelStyle}>
+        <dt className=":uno: mb-1 mt-4">
+          <label htmlFor={descriptionId} className=":uno: text-sm font-bold">
             Description
           </label>
         </dt>
         <dd>
           <TextInput
             id={descriptionId}
-            className={style({
-              width: "100%",
-              minWidth: "16em",
-            })}
+            className=":uno: min-w-64 w-full"
             value={description}
             onValueChange={setDescription}
             maxLength={500}
           />
         </dd>
       </dl>
-      <div className={style({ marginTop: "1em" })}>
+      <div className=":uno: mt-4">
         <Button type="submit">Create book</Button>
       </div>
     </form>
   );
 };
-
-const DTStyle = style({
-  marginTop: "1em",
-  marginBottom: "0.25em",
-});
-
-const LabelStyle = style({
-  fontSize: "0.9em",
-  fontWeight: "bold",
-});
