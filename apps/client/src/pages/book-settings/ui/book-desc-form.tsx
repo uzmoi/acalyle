@@ -3,31 +3,44 @@ import { useId, useState } from "react";
 import type { BookId } from "~/entities/book";
 import { changeBookDescription } from "../model";
 
+const MAX_DESCRIPTION_LENGTH = 500;
+
 export const BookDescriptionForm: React.FC<{
   bookId: BookId;
   currentDescription: string;
 }> = ({ bookId, currentDescription }) => {
   const id = useId();
   const [description, setDescription] = useState(currentDescription);
-  const commit = async () => {
+
+  const action = async (): Promise<void> => {
     await changeBookDescription(bookId, description);
   };
 
   return (
-    <form action={commit}>
-      <label htmlFor={id} className=":uno: text-xs font-bold">
+    <form action={action}>
+      <label htmlFor={id} className=":uno: text-sm font-bold">
         Description
       </label>
-      <br />
-      <ControlGroup className=":uno: max-w-3xl w-full inline-flex">
+      <p className=":uno: text-xs text-gray-4">
+        文字数:{" "}
+        <span
+          className=":uno: data-[is-invalid=true]:text-red"
+          data-is-invalid={description.length > MAX_DESCRIPTION_LENGTH}
+        >
+          {description.length} / {MAX_DESCRIPTION_LENGTH}
+        </span>
+      </p>
+      <ControlGroup className=":uno: max-w-4xl flex">
         <TextInput
           id={id}
           value={description}
           onValueChange={setDescription}
-          maxLength={1024}
           className=":uno: flex-grow"
         />
-        <Button type="submit" disabled={description === currentDescription}>
+        <Button
+          type="submit"
+          disabled={description.length > MAX_DESCRIPTION_LENGTH}
+        >
           Change
         </Button>
       </ControlGroup>

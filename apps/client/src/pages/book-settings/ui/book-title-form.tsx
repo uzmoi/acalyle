@@ -9,27 +9,19 @@ export const BookTitleForm: React.FC<{
 }> = ({ bookId, currentTitle }) => {
   const id = useId();
   const [title, setTitle] = useState(currentTitle);
-  const commit = async () => {
+
+  const action = async (): Promise<void> => {
     await changeBookTitle(bookId, title);
   };
 
   return (
-    <form action={commit}>
-      <label htmlFor={id} className=":uno: text-xs font-bold">
+    <form action={action}>
+      <label htmlFor={id} className=":uno: text-sm font-bold">
         Title
       </label>
-      <br />
-      <ControlGroup className=":uno: inline-flex">
-        <TextInput
-          id={id}
-          value={title}
-          onValueChange={setTitle}
-          required
-          maxLength={256}
-        />
-        <Button type="submit" disabled={title === currentTitle}>
-          Change
-        </Button>
+      <ControlGroup className=":uno: flex">
+        <TextInput id={id} value={title} onValueChange={setTitle} required />
+        <Button type="submit">Change</Button>
       </ControlGroup>
     </form>
   );

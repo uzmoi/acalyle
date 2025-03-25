@@ -3,6 +3,8 @@ import { useCallback, useId, useState } from "react";
 import type { BookRef } from "~/entities/book";
 import { createBook } from "../model";
 
+const MAX_DESCRIPTION_LENGTH = 500;
+
 export const CreateBookForm: React.FC<{
   onCreatedBook: (bookRef: BookRef) => Promise<void>;
 }> = ({ onCreatedBook }) => {
@@ -44,17 +46,30 @@ export const CreateBookForm: React.FC<{
           </label>
         </dt>
         <dd>
+          <p className=":uno: text-xs text-gray-4">
+            文字数:{" "}
+            <span
+              className=":uno: data-[is-invalid=true]:text-red"
+              data-is-invalid={description.length > MAX_DESCRIPTION_LENGTH}
+            >
+              {description.length} / {MAX_DESCRIPTION_LENGTH}
+            </span>
+          </p>
           <TextInput
             id={descriptionId}
             className=":uno: min-w-64 w-full"
             value={description}
             onValueChange={setDescription}
-            maxLength={500}
           />
         </dd>
       </dl>
       <div className=":uno: mt-4">
-        <Button type="submit">Create book</Button>
+        <Button
+          type="submit"
+          disabled={description.length > MAX_DESCRIPTION_LENGTH}
+        >
+          Create book
+        </Button>
       </div>
     </form>
   );
