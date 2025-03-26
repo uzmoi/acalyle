@@ -36,6 +36,7 @@ export const BookHandleForm: React.FC<{
       <p className=":uno: text-xs text-gray-4">
         status:{" "}
         <span
+          data-testid="handle_status_message"
           className=":uno: data-[ok=false]:text-red data-[ok=true]:text-green"
           data-ok={
             status === "no-change" ? null : (
