@@ -2,7 +2,7 @@ import type { Linter } from "eslint";
 import { defineConfig } from "eslint/config";
 import reactPlugin from "eslint-plugin-react";
 import testingLibraryPlugin from "eslint-plugin-testing-library";
-import { OFF } from "./util";
+import { OFF, warn, WARN } from "./util";
 
 export const react: Linter.Config[] = [
   reactPlugin.configs.flat.recommended,
@@ -16,7 +16,13 @@ export const react: Linter.Config[] = [
     },
   },
   ...defineConfig({
-    files: ["**/*.test.*"],
     extends: [testingLibraryPlugin.configs["flat/react"]],
+    rules: {
+      "testing-library/consistent-data-testid": warn({
+        testIdPattern: "^[a-z_]+$",
+      }),
+      "testing-library/prefer-explicit-assert": WARN,
+      "testing-library/prefer-user-event": WARN,
+    },
   }),
 ];
