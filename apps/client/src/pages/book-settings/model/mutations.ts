@@ -6,7 +6,10 @@ import ChangeBookDescriptionMutation from "../api/change-book-description.graphq
 import ChangeBookHandleMutation from "../api/change-book-handle.graphql";
 import ChangeBookTitleMutation from "../api/change-book-title.graphql";
 
-export const changeBookTitle = async (id: BookId, title: string) => {
+export const changeBookTitle = async (
+  id: BookId,
+  title: string,
+): Promise<void> => {
   const gql = acalyle.net.gql.bind(acalyle.net);
 
   const { data } = await gql(ChangeBookTitleMutation, {
@@ -28,7 +31,10 @@ export const changeBookTitle = async (id: BookId, title: string) => {
   }
 };
 
-export const changeBookHandle = async (id: BookId, handle: string | null) => {
+export const changeBookHandle = async (
+  id: BookId,
+  handle: string | null,
+): Promise<void> => {
   const gql = acalyle.net.gql.bind(acalyle.net);
 
   const { data } = await gql(ChangeBookHandleMutation, {
@@ -53,7 +59,7 @@ export const changeBookHandle = async (id: BookId, handle: string | null) => {
 export const changeBookDescription = async (
   id: BookId,
   description: string,
-) => {
+): Promise<void> => {
   const gql = acalyle.net.gql.bind(acalyle.net);
 
   const { data } = await gql(ChangeBookDescriptionMutation, {

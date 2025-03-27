@@ -17,10 +17,10 @@ export const EditableTags: React.FC<{
 }> = ({ bookRef, noteId, tags }) => {
   const [state, { start, end, upsertTag, removeTag }] = useEditableTags();
 
-  const onOpen = () => {
+  const onOpen = (): void => {
     start(tags);
   };
-  const onClose = () => {
+  const onClose = (): void => {
     end(noteId, tags);
   };
 

@@ -4,7 +4,10 @@ import { $note, type NoteId, type NoteTagString } from "~/entities/note";
 import type { ID } from "~/shared/graphql";
 import CreateNoteMutation from "../api/create-note.graphql";
 
-export const createNote = async (bookId: BookId, templateName?: string) => {
+export const createNote = async (
+  bookId: BookId,
+  templateName?: string,
+): Promise<NoteId> => {
   const gql = acalyle.net.gql.bind(acalyle.net);
 
   const { data } = await gql(CreateNoteMutation, {

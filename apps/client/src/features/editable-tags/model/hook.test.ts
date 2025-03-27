@@ -20,10 +20,10 @@ describe("useEditableTags", () => {
     {
       const [state, { end: _ }] = result.current;
       expect(state).toEqual({ tags: [NoteTag.fromString("#hoge")] });
-      // TODO: end("<note-id>" as NoteId, tags);
+      // TODO[+msw]: end("<note-id>" as NoteId, tags);
     }
 
-    // TODO: expect(network).not.haveRequest();
+    // TODO[+msw]: expect(network).not.haveRequest();
   });
 
   test("upsert / remove", () => {
@@ -43,13 +43,14 @@ describe("useEditableTags", () => {
       tags: ["@piyo:2", "#fuga"].map(NoteTag.fromString),
     });
 
-    // TODO: end("<note-id>" as NoteId, tags);
-    // TODO: expect(network).haveRequest({
+    // TODO[+msw]: end("<note-id>" as NoteId, tags);
+    // TODO[+msw]: expect(network).haveRequest({
     //   removeTags: ["#hoge", "@piyo:1"],
     //   addTags: ["#fuga", "@piyo:2"],
     // });
   });
 
+  // TODO[+msw]: test
   test.todo("編集後に一定時間経過すると自動保存", async () => {
     const { rerender, result } = renderHook(useEditableTags);
 
@@ -63,6 +64,6 @@ describe("useEditableTags", () => {
 
     await vi.advanceTimersToNextTimerAsync();
 
-    // expect(network).haveRequest({ removeTags: [], addTags: ["#hoge"] });
+    // TODO[+msw]: expect(network).haveRequest({ removeTags: [], addTags: ["#hoge"] });
   });
 });

@@ -10,7 +10,7 @@ class Listenable {
     };
   }
   notifyId = 0;
-  notify() {
+  notify(): void {
     this.notifyId++;
     for (const flash of this.subscriptions) {
       flash();
@@ -74,7 +74,7 @@ export abstract class GraphqlConnection<
   ): Promise<Page<TNode>>;
   protected abstract updateNodes(nodes: readonly TNode[]): void;
 
-  async loadPreviousPage() {
+  async loadPreviousPage(): Promise<void> {
     if (!this.hasPreviousPage) return;
 
     const {
@@ -89,7 +89,7 @@ export abstract class GraphqlConnection<
     this.updateNodes(edges.map(edge => edge.node));
     this.notify();
   }
-  async loadNextPage() {
+  async loadNextPage(): Promise<void> {
     if (!this.hasNextPage) return;
 
     const {

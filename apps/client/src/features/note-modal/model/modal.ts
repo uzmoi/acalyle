@@ -13,6 +13,6 @@ export const open = async (bookRef: BookRef, noteId: NoteId): Promise<void> => {
   await modal.open({ bookRef, noteId });
 };
 
-export const close = () => {
+export const close = (): void => {
   void modal.close();
 };
