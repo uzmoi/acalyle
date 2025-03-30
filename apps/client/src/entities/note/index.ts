@@ -9,4 +9,4 @@ export {
   useNote,
 } from "./model";
 /** @public */
-export { NoteOverview, Tag, TagList } from "./ui";
+export { Tag, TagList } from "./ui";
