@@ -1,18 +1,17 @@
 import { cx, style } from "@acalyle/css";
 import { Button, vars } from "@acalyle/ui";
-import { useStore } from "@nanostores/react";
-import { useCallback } from "react";
+import { memoize } from "es-toolkit";
+import { use, useCallback } from "react";
 import type { BookId } from "~/entities/book";
-import { usePromiseLoader } from "~/lib/promise-loader";
-import { noteTemplateStore } from "~/note/store/note";
-import type { ID } from "~/shared/graphql";
+import { fetchTemplate } from "../api";
+
+const memoizedFetchTemplate = /* #__PURE__ */ memoize(fetchTemplate);
 
 export const NoteTemplateSelectList: React.FC<{
   bookId: BookId;
   onSelectTemplate?: (templateName: string) => void;
 }> = ({ bookId, onSelectTemplate }) => {
-  const store = noteTemplateStore(bookId as string as ID);
-  const templateNames = usePromiseLoader(useStore(store)) ?? [];
+  const templates = use(memoizedFetchTemplate(bookId));
 
   const selectTemplate = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -26,11 +25,11 @@ export const NoteTemplateSelectList: React.FC<{
   return (
     <div>
       <p className=":uno: cursor-default p-2 text-3">
-        {templateNames.length === 0 ?
+        {templates.length === 0 ?
           "No note template."
         : "Create note from template."}
       </p>
-      {templateNames.map(templateName => (
+      {templates.map(templateName => (
         <Button
           key={templateName}
           unstyled
