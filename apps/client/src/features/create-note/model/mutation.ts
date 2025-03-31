@@ -1,30 +1,14 @@
-import { acalyle } from "~/app/main";
 import type { BookId } from "~/entities/book";
-import { $note, type NoteId, type NoteTagString } from "~/entities/note";
-import type { ID } from "~/shared/graphql";
-import CreateNoteMutation from "../api/create-note.graphql";
+import { $note, type NoteId } from "~/entities/note";
+import { createNoteMutation } from "../api";
 
 export const createNote = async (
   bookId: BookId,
   templateName?: string,
 ): Promise<NoteId> => {
-  const gql = acalyle.net.gql.bind(acalyle.net);
+  const note = await createNoteMutation(bookId, templateName);
 
-  const { data } = await gql(CreateNoteMutation, {
-    bookId: bookId as string as ID,
-    templateName,
-  });
+  $note(note.id).resolve(note);
 
-  const note = data.createMemo;
-  const noteId = note.id as string as NoteId;
-
-  $note(noteId).resolve({
-    id: noteId,
-    contents: note.contents,
-    tags: note.tags as NoteTagString[],
-    createdAt: note.createdAt,
-    updatedAt: note.updatedAt,
-  });
-
-  return noteId;
+  return note.id;
 };

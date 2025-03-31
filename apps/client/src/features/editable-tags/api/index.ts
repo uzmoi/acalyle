@@ -4,7 +4,7 @@ import type { ID } from "~/shared/graphql";
 import type { TagsDiff } from "../model";
 import UpdateNoteTagsMutation from "./update-note-tags.graphql";
 
-export const updateNoteTags = async (
+export const updateNoteTagsMutation = async (
   id: NoteId,
   diff: TagsDiff,
 ): Promise<readonly NoteTagString[] | null> => {

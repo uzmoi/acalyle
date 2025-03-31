@@ -2,7 +2,7 @@ import { NoteTag, type TagSymbol } from "@acalyle/core";
 import { nonNullable } from "emnorst";
 import { useReducer } from "react";
 import type { NoteId, NoteTagString } from "~/entities/note";
-import { updateNoteTags } from "../api";
+import { updateNoteTagsMutation } from "../api";
 import { tagsDiff } from "./diff";
 
 export interface State {
@@ -69,7 +69,7 @@ export const useEditableTags = (): readonly [State | null, EditableTagsOps] => {
           const modifiedTags = state.tags.map(
             tag => tag.toString() as NoteTagString,
           );
-          void updateNoteTags(noteId, tagsDiff(tags, modifiedTags));
+          void updateNoteTagsMutation(noteId, tagsDiff(tags, modifiedTags));
         }
       },
       upsertTag(tag) {

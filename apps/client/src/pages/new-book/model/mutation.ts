@@ -1,34 +1,13 @@
-import { acalyle } from "~/app/main";
-import {
-  $book,
-  type BookId,
-  type BookRef,
-  bookRefFromId,
-} from "~/entities/book";
-import CreateBookMutation from "../api/create-book.graphql";
+import { $book, type BookRef, bookRefFromId } from "~/entities/book";
+import { createBookMutation } from "../api";
 
 export const createBook = async (
   title: string,
   description: string,
 ): Promise<BookRef> => {
-  const gql = acalyle.net.gql.bind(acalyle.net);
+  const book = await createBookMutation(title, description);
 
-  const { data } = await gql(CreateBookMutation, {
-    title,
-    description,
-    // { "variables.thumbnail": thumbnail },
-  });
+  $book(book.id).resolve(book);
 
-  const bookId = data.createBook.id as string as BookId;
-
-  $book(bookId).resolve({
-    id: bookId,
-    handle: null,
-    title,
-    description,
-    tags: [],
-    thumbnail: data.createBook.thumbnail,
-  });
-
-  return bookRefFromId(bookId);
+  return bookRefFromId(book.id);
 };
