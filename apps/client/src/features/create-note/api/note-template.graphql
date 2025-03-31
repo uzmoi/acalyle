@@ -1,5 +1,5 @@
 query NoteTemplate($bookId: ID!) {
   book(id: $bookId) {
-    tagProps(symbol: "template")
+    tagProps(symbol: "@template")
   }
 }
