@@ -10,4 +10,12 @@ interface InvalidResponseError {
   name: "InvalidResponseError";
 }
 
-export type GqlFnError = ServerError | NetworkError | InvalidResponseError;
+interface NotFoundError {
+  name: "NotFoundError";
+}
+
+export type GqlFnError =
+  | ServerError
+  | NetworkError
+  | InvalidResponseError
+  | NotFoundError;

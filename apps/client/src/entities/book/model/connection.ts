@@ -1,6 +1,5 @@
 import type { ResultOf } from "@graphql-typed-document-node/core";
-import { acalyle } from "~/app/main";
-import { type Cursor, GraphqlConnection } from "~/shared/graphql";
+import { type Cursor, GraphqlConnection, gql } from "~/shared/graphql";
 import BookPaginationQuery from "../api/book-pagination.graphql";
 import { $book } from "./store";
 import type { BookHandle, BookId } from "./types";
@@ -16,13 +15,12 @@ export class BookConnection extends GraphqlConnection<BookNode> {
     cursor: Cursor | null,
     _dir: "previous" | "next",
   ): Promise<BookPage> {
-    const gql = acalyle.net.gql.bind(acalyle.net);
-    const { data } = await gql(BookPaginationQuery, {
+    const result = await gql(BookPaginationQuery, {
       count: 32,
       cursor,
       query: this.query, // `orderby:updated order:desc ${query}`
     });
-    return data.books;
+    return result.getOrThrow().books;
   }
   protected updateNodes(nodes: readonly BookNode[]): void {
     for (const book of nodes) {

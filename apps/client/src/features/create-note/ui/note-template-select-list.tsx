@@ -9,15 +9,15 @@ const memoizedFetchTemplate = /* #__PURE__ */ memoize(fetchTemplate);
 
 export const NoteTemplateSelectList: React.FC<{
   bookId: BookId;
-  onSelectTemplate?: (templateName: string) => void;
+  onSelectTemplate?: (templateName: string) => Promise<void>;
 }> = ({ bookId, onSelectTemplate }) => {
-  const templates = use(memoizedFetchTemplate(bookId));
+  const templates = use(memoizedFetchTemplate(bookId)).getOrThrow();
 
   const selectTemplate = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       const { templateName } = e.currentTarget.dataset;
       // SAFETY: onClick と一緒に data-template-name を指定している。
-      onSelectTemplate?.(templateName!);
+      void onSelectTemplate?.(templateName!);
     },
     [onSelectTemplate],
   );

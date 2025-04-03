@@ -10,8 +10,8 @@ export const changeBookTitle = async (
   id: BookId,
   title: string,
 ): Promise<void> => {
-  const success = await changeBookTitleMutation(id, title);
-  if (!success) return;
+  const result = await changeBookTitleMutation(id, title);
+  if (result.isErr()) return;
 
   const store = $book(id);
   const value = await toPromise(store);
@@ -24,8 +24,8 @@ export const changeBookHandle = async (
   id: BookId,
   handle: BookHandle | null,
 ): Promise<void> => {
-  const success = await changeBookHandleMutation(id, handle);
-  if (!success) return;
+  const result = await changeBookHandleMutation(id, handle);
+  if (result.isErr()) return;
 
   const store = $book(id);
   const value = await toPromise(store);
@@ -38,8 +38,8 @@ export const changeBookDescription = async (
   id: BookId,
   description: string,
 ): Promise<void> => {
-  const success = await changeBookDescriptionMutation(id, description);
-  if (!success) return;
+  const result = await changeBookDescriptionMutation(id, description);
+  if (result.isErr()) return;
 
   const store = $book(id);
   const value = await toPromise(store);

@@ -14,21 +14,20 @@ export const NoteCreateButton: React.FC<{
   const navigate = useNavigate();
 
   const createNoteFromTemplateOrNone = useCallback(
-    (templateName?: string) => {
-      void createNote(book.id, templateName).then(async noteId => {
-        await navigate({
-          to: "/books/$book-ref/$note-id",
-          params: { "book-ref": bookRefOf(book), "note-id": noteId },
-        });
+    async (templateName?: string) => {
+      const result = await createNote(book.id, templateName);
+      const noteId = result.getOrThrow();
+      await navigate({
+        to: "/books/$book-ref/$note-id",
+        params: { "book-ref": bookRefOf(book), "note-id": noteId },
       });
     },
     [book, navigate],
   );
 
-  const createNoteWithoutTemplate = useCallback(
-    () => createNoteFromTemplateOrNone(),
-    [createNoteFromTemplateOrNone],
-  );
+  const createNoteWithoutTemplate = useCallback(() => {
+    void createNoteFromTemplateOrNone();
+  }, [createNoteFromTemplateOrNone]);
 
   return (
     <Popover className=":uno: inline-block">

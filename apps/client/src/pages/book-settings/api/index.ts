@@ -1,6 +1,6 @@
-import { acalyle } from "~/app/main";
+import { Result } from "@acalyle/fp";
 import type { BookId, BookHandle } from "~/entities/book";
-import type { ID } from "~/shared/graphql";
+import { type ID, gql, type GqlFnError } from "~/shared/graphql";
 import ChangeBookDescriptionMutation from "./change-book-description.graphql";
 import ChangeBookHandleMutation from "./change-book-handle.graphql";
 import ChangeBookTitleMutation from "./change-book-title.graphql";
@@ -8,47 +8,47 @@ import ChangeBookTitleMutation from "./change-book-title.graphql";
 export const changeBookTitleMutation = async (
   id: BookId,
   title: string,
-): Promise<boolean> => {
-  const gql = acalyle.net.gql.bind(acalyle.net);
-
-  const { data } = await gql(ChangeBookTitleMutation, {
+): Promise<Result<string, GqlFnError>> => {
+  const result = await gql(ChangeBookTitleMutation, {
     bookId: id as string as ID,
     title,
   });
 
-  const book = data.updateBookTitle;
-
-  return book != null;
+  return result.flatMap(({ updateBookTitle: book }) =>
+    book == null ?
+      Result.err({ name: "NotFoundError" })
+    : Result.ok(book.title),
+  );
 };
 
 export const changeBookHandleMutation = async (
   id: BookId,
   handle: BookHandle | null,
-): Promise<boolean> => {
-  const gql = acalyle.net.gql.bind(acalyle.net);
-
-  const { data } = await gql(ChangeBookHandleMutation, {
+): Promise<Result<BookHandle | null, GqlFnError>> => {
+  const result = await gql(ChangeBookHandleMutation, {
     bookId: id as string as ID,
     handle,
   });
 
-  const book = data.updateBookHandle;
-
-  return book != null;
+  return result.flatMap(({ updateBookHandle: book }) =>
+    book == null ?
+      Result.err({ name: "NotFoundError" })
+    : Result.ok(book.handle as BookHandle),
+  );
 };
 
 export const changeBookDescriptionMutation = async (
   id: BookId,
   description: string,
-): Promise<boolean> => {
-  const gql = acalyle.net.gql.bind(acalyle.net);
-
-  const { data } = await gql(ChangeBookDescriptionMutation, {
+): Promise<Result<string, GqlFnError>> => {
+  const result = await gql(ChangeBookDescriptionMutation, {
     bookId: id as string as ID,
     description,
   });
 
-  const book = data.updateBookDescription;
-
-  return book != null;
+  return result.flatMap(({ updateBookDescription: book }) =>
+    book == null ?
+      Result.err({ name: "NotFoundError" })
+    : Result.ok(book.description),
+  );
 };

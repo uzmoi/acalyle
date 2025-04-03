@@ -13,7 +13,9 @@ export const CreateBookForm: React.FC<{
 
   const action = useCallback(async () => {
     const bookRef = await createBook(title, description);
-    await onCreatedBook(bookRef);
+    if (bookRef.isOk()) {
+      await onCreatedBook(bookRef.getOrThrow());
+    }
   }, [onCreatedBook, title, description]);
 
   const htmlId = useId();
