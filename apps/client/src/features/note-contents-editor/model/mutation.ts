@@ -1,4 +1,4 @@
-import { $note, type NoteId, type NoteTagString } from "~/entities/note";
+import { $note, type NoteId } from "~/entities/note";
 import { toPromise } from "~/lib/promise-loader";
 import { updateNoteContentsMutation } from "../api";
 
@@ -7,17 +7,12 @@ export const updateNoteContents = async (
   contents: string,
 ): Promise<void> => {
   const result = await updateNoteContentsMutation(id, contents);
-
-  if (result == null) return;
+  if (result.isErr()) return;
 
   const store = $note(id);
   const value = await toPromise(store);
   if (value != null) {
-    store.resolve({
-      ...value,
-      contents: result.contents,
-      tags: result.tags as readonly NoteTagString[],
-      updatedAt: result.updatedAt,
-    });
+    const { contents, tags, updatedAt } = result.getOrThrow();
+    store.resolve({ ...value, contents, tags, updatedAt });
   }
 };
