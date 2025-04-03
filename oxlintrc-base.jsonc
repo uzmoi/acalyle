@@ -2,7 +2,7 @@
 
 {
   "$schema": "./oxlint_jsonc_schema.json",
-  "plugins": ["unicorn", "typescript", "import"],
+  "plugins": ["unicorn", "typescript", "import", "react"],
   "categories": {
     "correctness": "error",
     "restriction": "error",

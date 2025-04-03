@@ -27,7 +27,6 @@ export const recommended: Linter.Config[] = [
       "unicorn/no-array-method-this-argument": WARN,
       "unicorn/no-array-push-push": WARN,
       // "unicorn/no-instanceof-builtins": WARN,
-      "unicorn/no-keyword-prefix": WARN,
       // "unicorn/no-named-default": WARN,
       "unicorn/no-negated-condition": WARN,
       "unicorn/no-unnecessary-polyfills": WARN,

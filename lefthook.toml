@@ -2,9 +2,6 @@
 [pre-commit]
 parallel = true
 
-[pre-commit.commands.biome]
-run = "npx biome check --no-errors-on-unmatched {staged_files}"
-
 [pre-commit.commands.oxlint]
 glob = "*.{ts,tsx}"
 run = "npx oxlint --deny-warnings {staged_files}"
