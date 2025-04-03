@@ -32,20 +32,11 @@ export class ResultBase<out A, out E> {
     readonly ok: boolean,
     readonly value: A | E,
   ) {}
-  isOk(): this is ResultOk<A> {
-    return this.ok;
-  }
-  isErr(): this is ResultErr<E> {
-    return !this.ok;
-  }
   getOk(this: Result<A, E>): Option<A> {
     return this.ok ? Some(this.value) : None;
   }
   getErr(this: Result<A, E>): Option<E> {
     return this.ok ? None : Some(this.value);
-  }
-  getUnion(): A | E {
-    return this.value;
   }
   getOrThrow(this: Result<A, E>): A {
     if (this.ok) return this.value;
