@@ -12,7 +12,7 @@ interface ResultErr<out E> extends ResultBase<never, E> {
 
 export type Result<A, E> = ResultOk<A> | ResultErr<E>;
 
-export class ResultBase<out A, out E> {
+class ResultBase<out A, out E> {
   static try<A>(runner: () => A): Result<A, unknown> {
     try {
       return Ok(runner());
@@ -20,18 +20,14 @@ export class ResultBase<out A, out E> {
       return Err(error);
     }
   }
-  static Err<E>(this: void, error: E): ResultErr<E> {
-    return new ResultBase(false, error) as ResultErr<E>;
-  }
-  static Ok<A>(this: void, value: A): ResultOk<A> {
-    return new ResultBase(true, value) as ResultOk<A>;
-  }
+
   private constructor(ok: true, value: A);
   private constructor(ok: false, value: E);
   private constructor(
     readonly ok: boolean,
     readonly value: A | E,
   ) {}
+
   getOk(this: Result<A, E>): Option<A> {
     return this.ok ? Some(this.value) : None;
   }
@@ -67,4 +63,12 @@ export class ResultBase<out A, out E> {
   }
 }
 
-export const { Ok, Err } = ResultBase;
+export const Result = ResultBase;
+
+export const Ok = <A>(value: A): ResultOk<A> =>
+  // @ts-expect-error: ignore
+  new ResultBase(true, value) as ResultOk<A>;
+
+export const Err = <E>(error: E): ResultErr<E> =>
+  // @ts-expect-error: ignore
+  new ResultBase(false, error) as ResultErr<E>;
