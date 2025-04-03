@@ -21,8 +21,6 @@ class ResultBase<out A, out E> {
     }
   }
 
-  private constructor(ok: true, value: A);
-  private constructor(ok: false, value: E);
   private constructor(
     readonly ok: boolean,
     readonly value: A | E,
