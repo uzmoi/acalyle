@@ -38,44 +38,41 @@ export class ResultBase<out A, out E> {
   isErr(): this is ResultErr<E> {
     return !this.ok;
   }
-  getOk(): Option<A> {
-    return this.isOk() ? Some(this.value) : None;
+  getOk(this: Result<A, E>): Option<A> {
+    return this.ok ? Some(this.value) : None;
   }
-  getErr(): Option<E> {
-    return this.isErr() ? Some(this.value) : None;
+  getErr(this: Result<A, E>): Option<E> {
+    return this.ok ? None : Some(this.value);
   }
   getUnion(): A | E {
     return this.value;
   }
-  getOrThrow(): A {
-    if (this.isOk()) {
-      return this.value;
-    }
+  getOrThrow(this: Result<A, E>): A {
+    if (this.ok) return this.value;
     // eslint-disable-next-line @typescript-eslint/only-throw-error
     throw this.value;
   }
-  match<B, C>(whenOk: (value: A) => B, whenErr: (value: E) => C): B | C {
-    return this.isOk() ? whenOk(this.value) : whenErr(this.value as E);
+  match<B, C>(
+    this: Result<A, E>,
+    ok: (value: A) => B,
+    err: (value: E) => C,
+  ): B | C {
+    return this.ok ? ok(this.value) : err(this.value);
   }
-  map<B>(fn: (value: A) => B): Result<B, E> {
-    return this.isOk() ?
-        Ok(fn(this.value))
-      : (this as ResultBase<unknown, E> as Result<never, E>);
+  map<B>(this: Result<A, E>, fn: (value: A) => B): Result<B, E> {
+    return this.ok ? Ok(fn(this.value)) : this;
   }
-  flatMap<B>(fn: (value: A) => Result<B, E>): Result<B, E> {
-    return this.isOk() ?
-        fn(this.value)
-      : (this as ResultBase<unknown, E> as Result<never, E>);
+  flatMap<B>(this: Result<A, E>, fn: (value: A) => Result<B, E>): Result<B, E> {
+    return this.ok ? fn(this.value) : this;
   }
-  mapE<B>(fn: (value: E) => B): Result<A, B> {
-    return this.isErr() ?
-        Err(fn(this.value))
-      : (this as ResultBase<A, unknown> as Result<A, never>);
+  mapE<B>(this: Result<A, E>, fn: (value: E) => B): Result<A, B> {
+    return this.ok ? this : Err(fn(this.value));
   }
-  flatMapE<B>(fn: (value: E) => Result<A, B>): Result<A, B> {
-    return this.isErr() ?
-        fn(this.value)
-      : (this as ResultBase<A, unknown> as Result<A, never>);
+  flatMapE<B>(
+    this: Result<A, E>,
+    fn: (value: E) => Result<A, B>,
+  ): Result<A, B> {
+    return this.ok ? this : fn(this.value);
   }
 }
 
