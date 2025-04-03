@@ -38,7 +38,7 @@ export class ResultBase<out A, out E> {
   getErr(this: Result<A, E>): Option<E> {
     return this.ok ? None : Some(this.value);
   }
-  getOrThrow(this: Result<A, E>): A {
+  unwrapOrThrow(this: Result<A, E>): A {
     if (this.ok) return this.value;
     // eslint-disable-next-line @typescript-eslint/only-throw-error
     throw this.value;

@@ -22,13 +22,13 @@ export class Option<out A> {
   isSome(): this is Option<A> {
     return this._value !== none;
   }
-  getOrThrow(): A {
+  unwrapOrThrow(): A {
     if (this._value === none) {
       throw new TypeError("None has no value.");
     }
     return this._value;
   }
-  getOrElse<B>(value: ValueOrGetter<B>): A | B {
+  unwrapOrElse<B>(value: ValueOrGetter<B>): A | B {
     return (
       this._value === none ?
         typeof value === "function" ?
