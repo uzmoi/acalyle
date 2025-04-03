@@ -1,16 +1,16 @@
 import { None, type Option, Some } from "./option";
 
-interface ResultOk<out A> extends ResultBase<A, never> {
+interface ResultOk<out A, out E> extends ResultBase<A, E> {
   readonly ok: true;
   readonly value: A;
 }
 
-interface ResultErr<out E> extends ResultBase<never, E> {
+interface ResultErr<out A, out E> extends ResultBase<A, E> {
   readonly ok: false;
   readonly value: E;
 }
 
-export type Result<A, E> = ResultOk<A> | ResultErr<E>;
+export type Result<A, E> = ResultOk<A, E> | ResultErr<A, E>;
 
 class ResultBase<out A, out E> {
   static try<A>(runner: () => A): Result<A, unknown> {
@@ -47,28 +47,28 @@ class ResultBase<out A, out E> {
     return this.ok ? ok(this.value) : err(this.value);
   }
   map<B>(this: Result<A, E>, fn: (value: A) => B): Result<B, E> {
-    return this.ok ? Ok(fn(this.value)) : this;
+    return this.ok ? Ok(fn(this.value)) : (this as Result<never, E>);
   }
   flatMap<B>(this: Result<A, E>, fn: (value: A) => Result<B, E>): Result<B, E> {
-    return this.ok ? fn(this.value) : this;
+    return this.ok ? fn(this.value) : (this as Result<never, E>);
   }
   mapE<B>(this: Result<A, E>, fn: (value: E) => B): Result<A, B> {
-    return this.ok ? this : Err(fn(this.value));
+    return this.ok ? (this as Result<A, never>) : Err(fn(this.value));
   }
   flatMapE<B>(
     this: Result<A, E>,
     fn: (value: E) => Result<A, B>,
   ): Result<A, B> {
-    return this.ok ? this : fn(this.value);
+    return this.ok ? (this as Result<A, never>) : fn(this.value);
   }
 }
 
 export const Result = ResultBase;
 
-export const Ok = <A>(value: A): ResultOk<A> =>
+export const Ok = <A>(value: A): ResultOk<A, never> =>
   // @ts-expect-error: ignore
-  new ResultBase(true, value) as ResultOk<A>;
+  new ResultBase(true, value) as Result<A, never>;
 
-export const Err = <E>(error: E): ResultErr<E> =>
+export const Err = <E>(error: E): ResultErr<never, E> =>
   // @ts-expect-error: ignore
-  new ResultBase(false, error) as ResultErr<E>;
+  new ResultBase(false, error) as Result<never, E>;
