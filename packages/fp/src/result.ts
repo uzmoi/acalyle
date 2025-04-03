@@ -13,6 +13,10 @@ interface ResultErr<out A, out E> extends ResultBase<A, E> {
 export type Result<A, E> = ResultOk<A, E> | ResultErr<A, E>;
 
 class ResultBase<out A, out E> {
+  static {
+    Object.freeze(this.prototype);
+  }
+
   static try<A>(runner: () => A): Result<A, unknown> {
     try {
       return Ok(runner());
@@ -24,7 +28,9 @@ class ResultBase<out A, out E> {
   private constructor(
     readonly ok: boolean,
     readonly value: A | E,
-  ) {}
+  ) {
+    Object.freeze(this);
+  }
 
   getOk(this: Result<A, E>): Option<A> {
     return this.ok ? Some(this.value) : None;

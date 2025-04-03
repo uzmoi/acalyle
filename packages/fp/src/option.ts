@@ -5,6 +5,10 @@ const none = /* #__PURE__ */ Symbol("Option.None");
 type ValueOrGetter<T> = Exclude<T, () => unknown> | (() => T);
 
 export class Option<out A> {
+  static {
+    Object.freeze(this.prototype);
+  }
+
   static None: Option<never> = new Option<never>(none);
   static Some<A>(this: void, value: A): Option<A> {
     return new Option(value);
@@ -15,7 +19,11 @@ export class Option<out A> {
   ): Option<NonNullable<A>> {
     return new Option(value ?? none);
   }
-  private constructor(private readonly _value: A | typeof none) {}
+
+  private constructor(private readonly _value: A | typeof none) {
+    Object.freeze(this);
+  }
+
   isNone(): this is Option<never> {
     return this._value === none;
   }
