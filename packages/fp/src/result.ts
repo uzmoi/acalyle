@@ -1,26 +1,6 @@
 import { Option } from "./option";
 
-type PerformResult<E> = <A>(x: Result<A, E>) => A;
-type DoResultRunner<B, E> = (perform: PerformResult<E>) => Result<B, E>;
-
 export class Result<out A, out E> {
-  static do<A, E>(runner: DoResultRunner<A, E>): Result<A, E> {
-    const perform: PerformResult<unknown> = result => {
-      // getOrThrowのthrowするのをresultにしただけ
-      if (result.isOk()) {
-        return result._value;
-      }
-      throw result;
-    };
-    try {
-      return runner(perform);
-    } catch (error) {
-      if (error instanceof Result && error.isErr()) {
-        return error as Result<never, E>;
-      }
-      throw error;
-    }
-  }
   static try<A>(runner: () => A): Result<A, unknown> {
     try {
       return Result.ok(runner());
