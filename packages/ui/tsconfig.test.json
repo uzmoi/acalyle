@@ -1,10 +1,9 @@
 {
-    "extends": "@acalyle/tsconfig/tsconfig.web.json",
+    "extends": "./tsconfig.main.json",
     "files": [".storybook/preview.tsx"],
     "include": ["src"],
+    "exclude": [],
     "compilerOptions": {
-        "jsx": "react-jsx",
-        "noEmit": false,
-        "composite": true,
-    },
+        "types": ["@testing-library/jest-dom"]
+    }
 }

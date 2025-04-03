@@ -14,7 +14,7 @@ const modals: ModalRenderers = {
   },
 };
 
-const renderModal = (data: ModalInput) => {
+const renderModal = (data: ModalInput): React.ReactNode => {
   return modals[data.type](data.input, result => {
     void data.close(result as never);
   });

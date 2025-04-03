@@ -6,8 +6,8 @@ import { CreateBookForm } from "./form";
 export const NewBookPage: React.FC = () => {
   const navigate = useNavigate();
 
-  const onCreatedBook = (bookRef: BookRef) => {
-    void navigate({
+  const onCreatedBook = async (bookRef: BookRef): Promise<void> => {
+    await navigate({
       to: "/books/$book-ref",
       params: { "book-ref": bookRef },
     });

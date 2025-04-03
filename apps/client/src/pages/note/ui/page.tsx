@@ -1,4 +1,7 @@
+import { cx, style } from "@acalyle/css";
+import { Alert, Catch, vars } from "@acalyle/ui";
 import { Suspense } from "react";
+import { BiError } from "react-icons/bi";
 import type { BookRef } from "~/entities/book";
 import type { NoteId } from "~/entities/note";
 import { FullNote } from "~/widgets/note";
@@ -10,7 +13,25 @@ export const NotePage: React.FC<{
   return (
     <div>
       <Suspense>
-        <FullNote noteId={noteId} />
+        <Catch
+          fallback={
+            // REVIEW: role="alert"ってこういう所で使っていいものなのか
+            <Alert type="error">
+              <BiError
+                className={cx(
+                  ":uno: text-7 mr-1",
+                  style({ color: vars.color.danger }),
+                )}
+              />
+              <span className=":uno: align-middle">Note not found!</span>
+              <p>
+                note id: <span className=":uno: select-all">{noteId}</span>
+              </p>
+            </Alert>
+          }
+        >
+          <FullNote noteId={noteId} />
+        </Catch>
       </Suspense>
     </div>
   );

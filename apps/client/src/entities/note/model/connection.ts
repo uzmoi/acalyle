@@ -1,7 +1,6 @@
 import type { ResultOf } from "@graphql-typed-document-node/core";
-import { acalyle } from "~/app/main";
 import type { BookId } from "~/entities/book";
-import { type Cursor, GraphqlConnection, type ID } from "~/shared/graphql";
+import { gql, type Cursor, GraphqlConnection, type ID } from "~/shared/graphql";
 import NotePaginationQuery from "../api/note-pagination.graphql";
 import { $note } from "./store";
 import type { NoteId, NoteTagString } from "./types";
@@ -22,15 +21,14 @@ export class NoteConnection extends GraphqlConnection<NoteNode> {
     cursor: Cursor | null,
     _dir: "previous" | "next",
   ): Promise<NotePage> {
-    const gql = acalyle.net.gql.bind(acalyle.net);
-    const { data } = await gql(NotePaginationQuery, {
+    const result = await gql(NotePaginationQuery, {
       count: 32,
       cursor,
       bookId: this.bookId as string as ID,
       query: this.query,
     });
     // FIXME: non-null ではない
-    return data.book!.memos;
+    return result.getOrThrow().book!.memos;
   }
   protected updateNodes(nodes: readonly NoteNode[]): void {
     for (const note of nodes) {

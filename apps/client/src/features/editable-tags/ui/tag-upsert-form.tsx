@@ -15,7 +15,6 @@ export const TagUpsertForm: React.FC<{
 
   const book = useBookByRef(bookRef);
   const note = useNote(noteId);
-  if (book == null || note == null) return null;
 
   const candidate = complementNoteTag(tag, {
     // 補完から除外するタグを指定。propがあるタグは書き換えをする可能性があるので含めない（==補完に含める）

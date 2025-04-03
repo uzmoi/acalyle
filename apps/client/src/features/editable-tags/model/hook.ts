@@ -2,7 +2,7 @@ import { NoteTag, type TagSymbol } from "@acalyle/core";
 import { nonNullable } from "emnorst";
 import { useReducer } from "react";
 import type { NoteId, NoteTagString } from "~/entities/note";
-import { updateNoteTags } from "../api";
+import { updateNoteTagsMutation } from "../api";
 import { tagsDiff } from "./diff";
 
 export interface State {
@@ -47,28 +47,35 @@ const reducer = (state: State | null, action: Action): State | null => {
   }
 };
 
-export const useEditableTags = () => {
+interface EditableTagsOps {
+  start: (tags: readonly NoteTagString[]) => void;
+  end: (noteId: NoteId, tags: readonly NoteTagString[]) => void;
+  upsertTag: (tag: NoteTagString) => void;
+  removeTag: (tag: TagSymbol) => void;
+}
+
+export const useEditableTags = (): readonly [State | null, EditableTagsOps] => {
   const [state, dispatch] = useReducer(reducer, null);
 
   return [
     state,
     {
-      start(this: void, tags: readonly NoteTagString[]) {
+      start(tags) {
         dispatch({ type: "start", tags });
       },
-      end(this: void, noteId: NoteId, tags: readonly NoteTagString[]) {
+      end(noteId, tags) {
         dispatch({ type: "end" });
         if (state != null) {
           const modifiedTags = state.tags.map(
             tag => tag.toString() as NoteTagString,
           );
-          void updateNoteTags(noteId, tagsDiff(tags, modifiedTags));
+          void updateNoteTagsMutation(noteId, tagsDiff(tags, modifiedTags));
         }
       },
-      upsertTag(this: void, tag: NoteTagString) {
+      upsertTag(tag) {
         dispatch({ type: "upsert", tag });
       },
-      removeTag(this: void, tag: TagSymbol) {
+      removeTag(tag) {
         dispatch({ type: "remove", tag });
       },
     },

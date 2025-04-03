@@ -1,5 +1,5 @@
 import { style } from "@acalyle/css";
-import { Button, ControlGroup, Form, vars } from "@acalyle/ui";
+import { Button, ControlGroup, vars } from "@acalyle/ui";
 import { useCallback } from "react";
 import { BiError } from "react-icons/bi";
 
@@ -16,7 +16,7 @@ export const ConfirmForm: React.FC<{
   }, [close]);
 
   return (
-    <Form onSubmit={ok} className=":uno: p-5">
+    <form action={ok} className=":uno: p-5">
       <p>
         <BiError
           className={style({
@@ -34,6 +34,6 @@ export const ConfirmForm: React.FC<{
           <Button type="submit">ok</Button>
         </ControlGroup>
       </div>
-    </Form>
+    </form>
   );
 };

@@ -1,12 +1,11 @@
-import { acalyle } from "~/app/main";
-import type { ID } from "~/shared/graphql";
+import { type ID, gql } from "~/shared/graphql";
 import type { Book, BookHandle, BookId } from "../model";
 import BookQuery from "./book.graphql";
 
 export const fetchBook = async (id: BookId): Promise<Book | null> => {
-  const gql = acalyle.net.gql.bind(acalyle.net);
-  const { data } = await gql(BookQuery, { bookId: id as string as ID });
-  const book = data?.book;
+  const result = await gql(BookQuery, { bookId: id as string as ID });
+  const book = result.getOrThrow().book;
+
   if (book == null) return null;
 
   return {
@@ -22,9 +21,9 @@ export const fetchBook = async (id: BookId): Promise<Book | null> => {
 export const fetchBookByHandle = async (
   handle: BookHandle,
 ): Promise<Book | null> => {
-  const gql = acalyle.net.gql.bind(acalyle.net);
-  const { data } = await gql(BookQuery, { handle });
-  const book = data?.book;
+  const result = await gql(BookQuery, { handle });
+  const book = result.getOrThrow().book;
+
   if (book == null) return null;
 
   return {
