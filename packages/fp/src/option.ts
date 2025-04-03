@@ -9,10 +9,6 @@ export class Option<out A> {
     Object.freeze(this.prototype);
   }
 
-  static None: Option<never> = new Option<never>(none);
-  static Some<A>(this: void, value: A): Option<A> {
-    return new Option(value);
-  }
   static from<A>(
     this: void,
     value: A | null | undefined,
@@ -65,4 +61,8 @@ export class Option<out A> {
   }
 }
 
-export const { Some, None } = Option;
+// @ts-expect-error: ignore
+export const None = /* #__PURE__ */ new Option<never>(none) as Option<never>;
+
+// @ts-expect-error: ignore
+export const Some = <A>(value: A): Option<A> => new Option(value) as Option<A>;
