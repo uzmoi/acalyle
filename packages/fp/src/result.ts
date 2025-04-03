@@ -1,17 +1,17 @@
-import { Option } from "./option";
+import { None, type Option, Some } from "./option";
 
 export class Result<out A, out E> {
   static try<A>(runner: () => A): Result<A, unknown> {
     try {
-      return Result.ok(runner());
+      return Ok(runner());
     } catch (error) {
-      return Result.err(error);
+      return Err(error);
     }
   }
-  static err<E>(this: void, error: E): Result<never, E> {
+  static Err<E>(this: void, error: E): Result<never, E> {
     return new Result(false, error);
   }
-  static ok<A>(this: void, value: A): Result<A, never> {
+  static Ok<A>(this: void, value: A): Result<A, never> {
     return new Result(true, value);
   }
   private constructor(ok: true, value: A);
@@ -27,10 +27,10 @@ export class Result<out A, out E> {
     return !this._ok;
   }
   getOk(): Option<A> {
-    return this.isOk() ? Option.some(this._value) : Option.none();
+    return this.isOk() ? Some(this._value) : None;
   }
   getErr(): Option<E> {
-    return this.isErr() ? Option.some(this._value) : Option.none();
+    return this.isErr() ? Some(this._value) : None;
   }
   getUnion(): A | E {
     return this._value;
@@ -46,7 +46,7 @@ export class Result<out A, out E> {
   }
   map<B>(fn: (value: A) => B): Result<B, E> {
     return this.isOk() ?
-        Result.ok(fn(this._value))
+        Ok(fn(this._value))
       : (this as Result<unknown, E> as Result<never, E>);
   }
   flatMap<B>(fn: (value: A) => Result<B, E>): Result<B, E> {
@@ -56,7 +56,7 @@ export class Result<out A, out E> {
   }
   mapE<B>(fn: (value: E) => B): Result<A, B> {
     return this.isErr() ?
-        Result.err(fn(this._value))
+        Err(fn(this._value))
       : (this as Result<A, unknown> as Result<A, never>);
   }
   flatMapE<B>(fn: (value: E) => Result<A, B>): Result<A, B> {
@@ -65,3 +65,5 @@ export class Result<out A, out E> {
       : (this as Result<A, unknown> as Result<A, never>);
   }
 }
+
+export const { Ok, Err } = Result;

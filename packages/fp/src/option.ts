@@ -5,10 +5,8 @@ const none = /* #__PURE__ */ Symbol("Option.None");
 type ValueOrGetter<T> = Exclude<T, () => unknown> | (() => T);
 
 export class Option<out A> {
-  static none(this: void): Option<never> {
-    return new Option<never>(none);
-  }
-  static some<A>(this: void, value: A): Option<A> {
+  static None: Option<never> = new Option<never>(none);
+  static Some<A>(this: void, value: A): Option<A> {
     return new Option(value);
   }
   static from<A>(
@@ -49,12 +47,14 @@ export class Option<out A> {
     );
   }
   map<B>(fn: (value: A) => B): Option<B> {
-    return this._value === none ? Option.none() : Option.some(fn(this._value));
+    return this._value === none ? None : Some(fn(this._value));
   }
   flatMap<B>(fn: (value: A) => Option<B>): Option<B> {
-    return this._value === none ? Option.none() : fn(this._value);
+    return this._value === none ? None : fn(this._value);
   }
   flat<B>(this: Option<Option<B>>): Option<B> {
     return this.flatMap(identify);
   }
 }
+
+export const { Some, None } = Option;
