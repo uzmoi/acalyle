@@ -36,7 +36,7 @@ export class Option<out A> {
     }
     return this._value;
   }
-  unwrapOrElse<B>(value: ValueOrGetter<B>): A | B {
+  unwrapOr<B>(value: ValueOrGetter<B>): A | B {
     return (
       this._value === none ?
         typeof value === "function" ?
@@ -45,7 +45,7 @@ export class Option<out A> {
       : this._value
     );
   }
-  orElse<B>(option: ValueOrGetter<Option<B>>): Option<A | B> {
+  or<B>(option: ValueOrGetter<Option<B>>): Option<A | B> {
     return (
       this._value === none ?
         typeof option === "function" ?
