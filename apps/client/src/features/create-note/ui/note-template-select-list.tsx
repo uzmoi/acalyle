@@ -11,7 +11,7 @@ export const NoteTemplateSelectList: React.FC<{
   bookId: BookId;
   onSelectTemplate?: (templateName: string) => Promise<void>;
 }> = ({ bookId, onSelectTemplate }) => {
-  const templates = use(memoizedFetchTemplate(bookId)).getOrThrow();
+  const templates = use(memoizedFetchTemplate(bookId)).unwrapOrThrow();
 
   const selectTemplate = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {

@@ -1,4 +1,4 @@
-import { Result } from "@acalyle/fp";
+import { Err, Ok, type Result } from "@acalyle/fp";
 import type { BookId } from "~/entities/book";
 import type { Note, NoteId, NoteTagString } from "~/entities/note";
 import { gql, type ID, type GqlFnError } from "~/shared/graphql";
@@ -12,11 +12,13 @@ export const fetchTemplate = async (
     bookId: bookId as string as ID,
   });
 
-  return result.flatMap(data =>
-    data.book == null ?
-      Result.err({ name: "NotFoundError" })
-    : Result.ok(data.book.tagProps),
-  );
+  return result.flatMap(({ book }) => {
+    if (book == null) {
+      return Err({ name: "NotFoundError" } as const);
+    }
+
+    return Ok(book.tagProps);
+  });
 };
 
 export const createNoteMutation = async (
@@ -28,15 +30,11 @@ export const createNoteMutation = async (
     templateName,
   });
 
-  return result.map(data => {
-    const note = data.createMemo;
-
-    return {
-      id: note.id as string as NoteId,
-      contents: note.contents,
-      tags: note.tags as NoteTagString[],
-      createdAt: note.createdAt,
-      updatedAt: note.updatedAt,
-    };
-  });
+  return result.map(({ createMemo: note }) => ({
+    id: note.id as string as NoteId,
+    contents: note.contents,
+    tags: note.tags as NoteTagString[],
+    createdAt: note.createdAt,
+    updatedAt: note.updatedAt,
+  }));
 };

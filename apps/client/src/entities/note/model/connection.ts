@@ -28,7 +28,7 @@ export class NoteConnection extends GraphqlConnection<NoteNode> {
       query: this.query,
     });
     // FIXME: non-null ではない
-    return result.getOrThrow().book!.memos;
+    return result.unwrapOrThrow().book!.memos;
   }
   protected updateNodes(nodes: readonly NoteNode[]): void {
     for (const note of nodes) {
