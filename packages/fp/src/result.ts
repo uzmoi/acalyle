@@ -52,16 +52,19 @@ class ResultBase<out A, out E> {
   map<B>(this: Result<A, E>, fn: (value: A) => B): Result<B, E> {
     return this.ok ? Ok(fn(this.value)) : (this as Result<never, E>);
   }
-  flatMap<B>(this: Result<A, E>, fn: (value: A) => Result<B, E>): Result<B, E> {
+  flatMap<B, F>(
+    this: Result<A, E>,
+    fn: (value: A) => Result<B, F>,
+  ): Result<B, E | F> {
     return this.ok ? fn(this.value) : (this as Result<never, E>);
   }
   mapE<B>(this: Result<A, E>, fn: (value: E) => B): Result<A, B> {
     return this.ok ? (this as Result<A, never>) : Err(fn(this.value));
   }
-  flatMapE<B>(
+  flatMapE<B, F>(
     this: Result<A, E>,
-    fn: (value: E) => Result<A, B>,
-  ): Result<A, B> {
+    fn: (value: E) => Result<B, F>,
+  ): Result<A | B, F> {
     return this.ok ? (this as Result<A, never>) : fn(this.value);
   }
 }
