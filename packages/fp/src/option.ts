@@ -62,7 +62,6 @@ export class Option<out A> {
 }
 
 // @ts-expect-error: ignore
-export const None = /* #__PURE__ */ new Option<never>(none) as Option<never>;
-
-// @ts-expect-error: ignore
 export const Some = <A>(value: A): Option<A> => new Option(value) as Option<A>;
+
+export const None = /* #__PURE__ */ Some(none as never);
