@@ -40,8 +40,7 @@ class ResultBase<out A, out E> {
   }
   unwrap(this: Result<A, E>): A {
     if (this.ok) return this.value;
-    // eslint-disable-next-line @typescript-eslint/only-throw-error
-    throw this.value;
+    throw new TypeError("Called unwrap on `Err`", { cause: this.value });
   }
   match<B, C>(
     this: Result<A, E>,
