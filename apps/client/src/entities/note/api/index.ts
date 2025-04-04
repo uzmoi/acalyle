@@ -4,7 +4,7 @@ import NoteQuery from "./note.graphql";
 
 export const fetchNote = async (id: NoteId): Promise<Note | null> => {
   const result = await gql(NoteQuery, { noteId: id as string as ID });
-  const note = result.unwrapOrThrow().memo;
+  const note = result.unwrap().memo;
 
   if (note == null) return null;
 

@@ -26,7 +26,7 @@ export class Option<out A> {
   isSome(): this is Option<A> {
     return this._value !== none;
   }
-  unwrapOrThrow(): A {
+  unwrap(): A {
     if (this._value === none) {
       throw new TypeError("None has no value.");
     }

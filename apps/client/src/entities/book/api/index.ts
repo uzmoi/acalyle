@@ -4,7 +4,7 @@ import BookQuery from "./book.graphql";
 
 export const fetchBook = async (id: BookId): Promise<Book | null> => {
   const result = await gql(BookQuery, { bookId: id as string as ID });
-  const book = result.unwrapOrThrow().book;
+  const book = result.unwrap().book;
 
   if (book == null) return null;
 
@@ -22,7 +22,7 @@ export const fetchBookByHandle = async (
   handle: BookHandle,
 ): Promise<Book | null> => {
   const result = await gql(BookQuery, { handle });
-  const book = result.unwrapOrThrow().book;
+  const book = result.unwrap().book;
 
   if (book == null) return null;
 

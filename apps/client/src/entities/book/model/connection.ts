@@ -20,7 +20,7 @@ export class BookConnection extends GraphqlConnection<BookNode> {
       cursor,
       query: this.query, // `orderby:updated order:desc ${query}`
     });
-    return result.unwrapOrThrow().books;
+    return result.unwrap().books;
   }
   protected updateNodes(nodes: readonly BookNode[]): void {
     for (const book of nodes) {
