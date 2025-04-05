@@ -30,6 +30,11 @@ class ResultBase<out A, out E> {
     Object.freeze(this);
   }
 
+  toString(): string {
+    const value = String(this.value);
+    return this.ok ? `Ok(${value})` : `Err(${value})`;
+  }
+
   unwrap(this: Result<A, E>): A {
     if (this.ok) return this.value;
     throw new TypeError("Called unwrap on `Err`", { cause: this.value });

@@ -18,6 +18,10 @@ export class Option<out A> {
     Object.freeze(this);
   }
 
+  toString(): string {
+    return this._value === none ? "None" : `Some(${String(this._value)})`;
+  }
+
   isNone(): this is Option<never> {
     return this._value === none;
   }
