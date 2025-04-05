@@ -1,5 +1,3 @@
-import { identify } from "emnorst";
-
 const none = /* #__PURE__ */ Symbol("Option.None");
 
 type ValueOrGetter<T> = Exclude<T, () => unknown> | (() => T);
@@ -55,9 +53,6 @@ export class Option<out A> {
   }
   flatMap<B>(fn: (value: A) => Option<B>): Option<B> {
     return this._value === none ? None : fn(this._value);
-  }
-  flat<B>(this: Option<Option<B>>): Option<B> {
-    return this.flatMap(identify);
   }
 }
 

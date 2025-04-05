@@ -11,9 +11,6 @@
     "test": "vitest",
     "coverage": "vitest run --coverage --passWithNoTests"
   },
-  "dependencies": {
-    "emnorst": "^1.0.0-next.2"
-  },
   "devDependencies": {
     "@acalyle/eslint-config": "*",
     "@acalyle/tsconfig": "*",
