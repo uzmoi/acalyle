@@ -52,6 +52,11 @@ export class Option<out A> {
       : this
     );
   }
+  filter<B extends A>(predicate: (value: A) => value is B): Option<B> {
+    return this._value !== none && predicate(this._value) ?
+        (this as Option<A> as Option<B>)
+      : None;
+  }
   map<B>(fn: (value: A) => B): Option<B> {
     return this._value === none ? None : Some(fn(this._value));
   }
