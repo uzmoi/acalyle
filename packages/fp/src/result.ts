@@ -43,7 +43,7 @@ class ResultBase<out A, out E> {
   ): Result<B, E | F> {
     return this.ok ? fn(this.value) : (this as Result<never, E>);
   }
-  mapE<B>(this: Result<A, E>, fn: (value: E) => B): Result<A, B> {
+  mapErr<F>(this: Result<A, E>, fn: (value: E) => F): Result<A, F> {
     return this.ok ? (this as Result<A, never>) : Err(fn(this.value));
   }
 }
