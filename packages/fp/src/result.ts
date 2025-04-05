@@ -39,8 +39,14 @@ class ResultBase<out A, out E> {
     if (this.ok) return this.value;
     throw new TypeError("Called unwrap on `Err`", { cause: this.value });
   }
+  unwrapOr<B>(this: Result<A, E>, value: B): A | B {
+    return this.ok ? this.value : value;
+  }
   map<B>(this: Result<A, E>, fn: (value: A) => B): Result<B, E> {
     return this.ok ? Ok(fn(this.value)) : (this as Result<never, E>);
+  }
+  mapOr<B, C>(this: Result<A, E>, value: B, fn: (value: A) => C): B | C {
+    return this.ok ? fn(this.value) : value;
   }
   flatMap<B, F>(
     this: Result<A, E>,

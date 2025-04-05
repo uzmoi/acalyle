@@ -55,6 +55,9 @@ export class Option<out A> {
   map<B>(fn: (value: A) => B): Option<B> {
     return this._value === none ? None : Some(fn(this._value));
   }
+  mapOr<B, C>(value: B, fn: (value: A) => C): B | C {
+    return this._value === none ? value : fn(this._value);
+  }
   flatMap<B>(fn: (value: A) => Option<B>): Option<B> {
     return this._value === none ? None : fn(this._value);
   }
