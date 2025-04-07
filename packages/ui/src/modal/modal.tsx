@@ -4,9 +4,9 @@ import { useStore } from "@nanostores/react";
 import { timeout } from "emnorst";
 import { type ReadableAtom, atom } from "nanostores";
 import { useEffect } from "react";
+import { center } from "../base/style-utilities";
+import type { TransitionStatus } from "../base/use-transition-status";
 import { vars } from "../theme";
-import { center } from "./style-utilities";
-import type { TransitionStatus } from "./use-transition-status";
 
 const TRANSITION_DURATION = 200;
 

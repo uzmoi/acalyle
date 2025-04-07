@@ -3,9 +3,9 @@ import { useStore } from "@nanostores/react";
 import { timeout } from "emnorst";
 import { atom, onMount } from "nanostores";
 import { createContext, useCallback, useContext, useId } from "react";
+import { useTransitionStatus } from "../base/use-transition-status";
 import { Button } from "../control/button";
 import { vars } from "../theme/theme";
-import { useTransitionStatus } from "./use-transition-status";
 
 const PopoverStore = /* #__PURE__ */ atom<string | null>(null);
 

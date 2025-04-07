@@ -3,7 +3,6 @@ import { Button } from "../control";
 import { Popover, closePopover } from "./popover";
 
 export default {
-  title: "Base/Popover",
   component: Popover,
   render: props => (
     <Popover>

@@ -4,7 +4,6 @@ import { Button } from "../control";
 import { Modal, ModalContainer } from "./modal";
 
 const meta: Meta<typeof ModalContainer<() => void>> = {
-  title: "Base/Modal",
   component: ModalContainer,
   parameters: {
     layout: "fullscreen",
