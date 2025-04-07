@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react-swc";
 import wywInJS from "@wyw-in-js/vite";
 import dts from "vite-plugin-dts";
 import { coverageConfigDefaults, defineConfig } from "vitest/config";
-import { dependencies } from "./package.json";
+import packageJson from "./package.json" with { type: "json" };
 
 const isStorybook = process.argv[1]?.includes("storybook");
 
@@ -32,7 +32,7 @@ export default defineConfig({
       formats: ["es"],
     },
     rollupOptions: {
-      external: [/^react(?![^/])/, ...Object.keys(dependencies)],
+      external: [/^react(?![^/])/, ...Object.keys(packageJson.dependencies)],
     },
   },
   test: {
