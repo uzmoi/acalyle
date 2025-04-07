@@ -3,17 +3,17 @@ import { fn } from "@storybook/test";
 import { TextArea } from "./textarea";
 
 const meta: Meta<typeof TextArea> = {
-    title: "Control/TextArea",
-    component: TextArea,
-    argTypes: {
-        value: { type: "string" },
-    },
-    args: {
-        value: undefined,
-        defaultValue: "お前のギターの\nせいでバンドが\n死んでいる",
-        onChange: fn(),
-        onValueChange: fn(),
-    },
+  title: "Control/TextArea",
+  component: TextArea,
+  argTypes: {
+    value: { type: "string" },
+  },
+  args: {
+    value: undefined,
+    defaultValue: "お前のギターの\nせいでバンドが\n死んでいる",
+    onChange: fn(),
+    onValueChange: fn(),
+  },
 };
 
 export default meta;
@@ -21,19 +21,19 @@ export default meta;
 type Story = StoryObj<typeof TextArea>;
 
 export const Solid: Story = {
-    args: {
-        variant: "solid",
-    },
+  args: {
+    variant: "solid",
+  },
 };
 
 export const Outline: Story = {
-    args: {
-        variant: "outline",
-    },
+  args: {
+    variant: "outline",
+  },
 };
 
 export const Unstyled: Story = {
-    args: {
-        variant: "unstyled",
-    },
+  args: {
+    variant: "unstyled",
+  },
 };

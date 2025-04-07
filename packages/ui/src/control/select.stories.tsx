@@ -5,19 +5,19 @@ import { Select } from "./select";
 const options = ["hoge", "fuga", "piyo"];
 
 const meta: Meta<typeof Select> = {
-    title: "Control/Select",
-    component: Select,
-    render: props => (
-        <Select {...props}>
-            {options.map(option => (
-                <Select.Option key={option}>{option}</Select.Option>
-            ))}
-        </Select>
-    ),
-    args: {
-        onChange: fn(),
-        onValueChange: fn(),
-    },
+  title: "Control/Select",
+  component: Select,
+  render: props => (
+    <Select {...props}>
+      {options.map(option => (
+        <Select.Option key={option}>{option}</Select.Option>
+      ))}
+    </Select>
+  ),
+  args: {
+    onChange: fn(),
+    onValueChange: fn(),
+  },
 };
 
 export default meta;
@@ -25,19 +25,19 @@ export default meta;
 type Story = StoryObj<typeof Select>;
 
 export const solid: Story = {
-    args: {
-        variant: "solid",
-    },
+  args: {
+    variant: "solid",
+  },
 };
 
 export const outline: Story = {
-    args: {
-        variant: "outline",
-    },
+  args: {
+    variant: "outline",
+  },
 };
 
 export const unstyled: Story = {
-    args: {
-        variant: "unstyled",
-    },
+  args: {
+    variant: "unstyled",
+  },
 };

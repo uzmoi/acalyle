@@ -9,130 +9,130 @@ import { useTransitionStatus } from "./use-transition-status";
 
 const PopoverStore = /* #__PURE__ */ atom<string | null>(null);
 
-export const closePopover = () => {
-    PopoverStore.set(null);
+export const closePopover = (): void => {
+  PopoverStore.set(null);
 };
 
 // eslint-disable-next-line pure-module/pure-module
 onMount(PopoverStore, () => {
-    window.addEventListener("click", closePopover);
-    return () => {
-        window.removeEventListener("click", closePopover);
-    };
+  window.addEventListener("click", closePopover);
+  return () => {
+    window.removeEventListener("click", closePopover);
+  };
 });
 
 const PopoverIdContext = /* #__PURE__ */ createContext<string | undefined>(
-    undefined,
+  undefined,
 );
 
 export const Popover: React.FC<React.ComponentPropsWithoutRef<"div">> & {
-    Button: typeof PopoverButton;
-    Content: typeof PopoverContent;
+  Button: typeof PopoverButton;
+  Content: typeof PopoverContent;
 } = ({ className, children, ...restProps }) => {
-    const popoverId = useId();
+  const popoverId = useId();
 
-    return (
-        <div
-            {...restProps}
-            className={cx(style({ position: "relative" }), className)}
-        >
-            <PopoverIdContext.Provider value={popoverId}>
-                {children}
-            </PopoverIdContext.Provider>
-        </div>
-    );
+  return (
+    <div
+      {...restProps}
+      className={cx(style({ position: "relative" }), className)}
+    >
+      <PopoverIdContext.Provider value={popoverId}>
+        {children}
+      </PopoverIdContext.Provider>
+    </div>
+  );
 };
 
 const PopoverButton: React.FC<
-    Omit<
-        React.ComponentPropsWithoutRef<typeof Button>,
-        "aria-expanded" | "aria-controls"
-    >
+  Omit<
+    React.ComponentPropsWithoutRef<typeof Button>,
+    "aria-expanded" | "aria-controls"
+  >
 > = ({ onClick, children, ...restProps }) => {
-    const popoverId = useContext(PopoverIdContext);
-    const openedPopoverId = useStore(PopoverStore);
-    const isOpen = popoverId === openedPopoverId;
+  const popoverId = useContext(PopoverIdContext);
+  const openedPopoverId = useStore(PopoverStore);
+  const isOpen = popoverId === openedPopoverId;
 
-    const actualOnClick = useCallback(
-        (e: React.MouseEvent<HTMLButtonElement>) => {
-            e.stopPropagation();
-            onClick?.(e);
-            PopoverStore.set(
-                PopoverStore.get() === popoverId ? null : popoverId ?? null,
-            );
-        },
-        [onClick, popoverId],
-    );
+  const actualOnClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation();
+      onClick?.(e);
+      PopoverStore.set(
+        PopoverStore.get() === popoverId ? null : (popoverId ?? null),
+      );
+    },
+    [onClick, popoverId],
+  );
 
-    return (
-        <Button
-            {...restProps}
-            aria-expanded={isOpen}
-            aria-controls={popoverId}
-            onClick={actualOnClick}
-        >
-            {children}
-        </Button>
-    );
+  return (
+    <Button
+      {...restProps}
+      aria-expanded={isOpen}
+      aria-controls={popoverId}
+      onClick={actualOnClick}
+    >
+      {children}
+    </Button>
+  );
 };
 
 // eslint-disable-next-line pure-module/pure-module
 Popover.Button = PopoverButton;
 if (import.meta.env.DEV) {
-    // eslint-disable-next-line pure-module/pure-module
-    Popover.Button.displayName = "Popover.Button";
+  // eslint-disable-next-line pure-module/pure-module
+  Popover.Button.displayName = "Popover.Button";
 }
 
 const TRANSITION_DURATION = 200;
-const transition = () => timeout(TRANSITION_DURATION);
+const transition = (): Promise<void> => timeout(TRANSITION_DURATION);
 
 const PopoverContent: React.FC<
-    {
-        closeOnClick?: boolean;
-    } & Omit<React.ComponentPropsWithoutRef<"div">, "id">
+  {
+    closeOnClick?: boolean;
+  } & Omit<React.ComponentPropsWithoutRef<"div">, "id">
 > = ({ closeOnClick, onClick, className, children, ...restProps }) => {
-    const popoverId = useContext(PopoverIdContext);
-    const openedPopoverId = useStore(PopoverStore);
-    const isOpen = popoverId === openedPopoverId;
-    const status = useTransitionStatus({ show: isOpen, transition });
+  const popoverId = useContext(PopoverIdContext);
+  const openedPopoverId = useStore(PopoverStore);
+  const isOpen = popoverId === openedPopoverId;
+  const status = useTransitionStatus({ show: isOpen, transition });
 
-    const actualOnClick =
-        closeOnClick ? onClick : (
-            (e: React.MouseEvent<HTMLDivElement>) => {
-                e.stopPropagation();
-                onClick?.(e);
-            }
-        );
-
-    return (
-        <div
-            {...restProps}
-            id={popoverId}
-            data-open={isOpen}
-            data-status={status}
-            className={cx(
-                style({
-                    position: "absolute",
-                    zIndex: vars.zIndex.popover,
-                    backgroundColor: vars.color.bg.block,
-                    borderRadius: vars.radius.block,
-                    boxShadow: "0 0 2em #111",
-                    transition: `opacity ${TRANSITION_DURATION}ms`,
-                    '&[data-open="false"]': { opacity: 0 },
-                    '&[data-status="exited"]': { visibility: "hidden" },
-                }),
-                className,
-            )}
-            onClick={actualOnClick}
-        >
-            {status === "exited" || children}
-        </div>
+  const actualOnClick =
+    closeOnClick ? onClick : (
+      (e: React.MouseEvent<HTMLDivElement>) => {
+        e.stopPropagation();
+        onClick?.(e);
+      }
     );
+
+  return (
+    <div
+      {...restProps}
+      id={popoverId}
+      data-open={isOpen}
+      data-status={status}
+      className={cx(
+        style({
+          position: "absolute",
+          zIndex: vars.zIndex.popover,
+          backgroundColor: vars.color.bg.block,
+          borderRadius: vars.radius.block,
+          boxShadow: "0 0 2em #111",
+          transition: `opacity ${TRANSITION_DURATION}ms`,
+          '&[data-open="false"]': { opacity: 0 },
+          '&[data-status="exited"]': { visibility: "hidden" },
+        }),
+        className,
+      )}
+      onClick={actualOnClick}
+    >
+      {status === "exited" || children}
+    </div>
+  );
 };
 
 // eslint-disable-next-line pure-module/pure-module
 Popover.Content = PopoverContent;
 if (import.meta.env.DEV) {
-    // eslint-disable-next-line pure-module/pure-module
-    Popover.Content.displayName = "Popover.Content";
+  // eslint-disable-next-line pure-module/pure-module
+  Popover.Content.displayName = "Popover.Content";
 }

@@ -3,12 +3,12 @@ import { fn } from "@storybook/test";
 import { FileInput } from "./file-input";
 
 const meta: Meta<typeof FileInput> = {
-    title: "Control/FileInput",
-    component: FileInput,
-    args: {
-        onChange: fn(),
-        onFileChange: fn<[File | FileList]>(),
-    },
+  title: "Control/FileInput",
+  component: FileInput,
+  args: {
+    onChange: fn(),
+    onFileChange: fn<[File | FileList]>(),
+  },
 };
 
 export default meta;
@@ -16,11 +16,11 @@ export default meta;
 type Story = StoryObj<typeof FileInput>;
 
 export const Single: Story = {
-    args: {},
+  args: {},
 };
 
 export const Multi: Story = {
-    args: {
-        multiple: true,
-    },
+  args: {
+    multiple: true,
+  },
 };

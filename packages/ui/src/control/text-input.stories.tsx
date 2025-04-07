@@ -3,12 +3,12 @@ import { fn } from "@storybook/test";
 import { TextInput } from "./text-input";
 
 const meta: Meta<typeof TextInput> = {
-    title: "Control/TextInput",
-    component: TextInput,
-    args: {
-        onChange: fn(),
-        onValueChange: fn(),
-    },
+  title: "Control/TextInput",
+  component: TextInput,
+  args: {
+    onChange: fn(),
+    onValueChange: fn(),
+  },
 };
 
 export default meta;
@@ -16,19 +16,19 @@ export default meta;
 type Story = StoryObj<typeof TextInput>;
 
 export const solid: Story = {
-    args: {
-        variant: "solid",
-    },
+  args: {
+    variant: "solid",
+  },
 };
 
 export const outline: Story = {
-    args: {
-        variant: "outline",
-    },
+  args: {
+    variant: "outline",
+  },
 };
 
 export const unstyled: Story = {
-    args: {
-        variant: "unstyled",
-    },
+  args: {
+    variant: "unstyled",
+  },
 };

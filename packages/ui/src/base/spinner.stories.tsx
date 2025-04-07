@@ -2,12 +2,12 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Spinner } from "./spinner";
 
 export default {
-    title: "Base/Spinner",
-    component: Spinner,
+  title: "Base/Spinner",
+  component: Spinner,
 } satisfies Meta<typeof Spinner>;
 
 type Story = StoryObj<typeof Spinner>;
 
 export const Default: Story = {
-    decorators: [story => <div style={{ "--size": "2em" }}>{story()}</div>],
+  decorators: [story => <div style={{ "--size": "2em" }}>{story()}</div>],
 };
