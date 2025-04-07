@@ -6,6 +6,5 @@
         "verbatimModuleSyntax": false,
         "resolveJsonModule": true,
         "types": ["node"],
-        "lib": ["ES2015"],
     },
 }
