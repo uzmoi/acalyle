@@ -13,8 +13,8 @@ export const CreateBookForm: React.FC<{
 
   const action = useCallback(async () => {
     const bookRef = await createBook(title, description);
-    if (bookRef.isOk()) {
-      await onCreatedBook(bookRef.getOrThrow());
+    if (bookRef.ok) {
+      await onCreatedBook(bookRef.value);
     }
   }, [onCreatedBook, title, description]);
 

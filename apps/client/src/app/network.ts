@@ -1,10 +1,10 @@
-import { Result } from "@acalyle/fp";
+import { Err, Ok, Result } from "@acalyle/fp";
 import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import type { JsonValue } from "emnorst";
 import { print } from "graphql";
 import type { JsonValueable } from "../lib/types";
 
-const jsonBlob = (json: JsonValueable) =>
+const jsonBlob = (json: JsonValueable): Blob =>
     new Blob([JSON.stringify(json)], { type: "application/json" });
 
 export const graphqlBodyInit = (
@@ -55,11 +55,9 @@ export class Network {
         documentNode: TypedDocumentNode<R, V>,
         variables?: V,
     ): Promise<GraphQLResult<R>> {
-        return this.graphql(documentNode, variables as unknown as V).then(
-            result => {
-                return result.getOrThrow();
-            },
-        );
+        return this.graphql(documentNode, variables!).then(result => {
+            return result.unwrap();
+        });
     }
     async graphql<R, V extends Record<string, JsonValueable>>(
         documentNode: TypedDocumentNode<R, V>,
@@ -71,7 +69,7 @@ export class Network {
             method: "POST",
             body: graphqlBodyInit(query, variables),
         }).catch(error => {
-            return Result.err<NetworkError>({
+            return Err<NetworkError>({
                 type: "network_error",
                 error: error instanceof Error ? error : null,
             });
@@ -84,13 +82,13 @@ export class Network {
         if (res.ok) {
             try {
                 const result = await (res.json() as Promise<JsonValue>);
-                return Result.ok(result as unknown as GraphQLResult<R>);
+                return Ok(result as unknown as GraphQLResult<R>);
             } catch {
-                return Result.err({ type: "invalid_json" });
+                return Err<NetworkError>({ type: "invalid_json" });
             }
         } else {
             const errorResponseBody = await res.text();
-            return Result.err({
+            return Err<NetworkError>({
                 type: "http_error",
                 status: res.status,
                 body: errorResponseBody,

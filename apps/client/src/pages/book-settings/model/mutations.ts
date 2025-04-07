@@ -11,7 +11,7 @@ export const changeBookTitle = async (
   title: string,
 ): Promise<void> => {
   const result = await changeBookTitleMutation(id, title);
-  if (result.isErr()) return;
+  if (!result.ok) return;
 
   const store = $book(id);
   const value = await toPromise(store);
@@ -25,7 +25,7 @@ export const changeBookHandle = async (
   handle: BookHandle | null,
 ): Promise<void> => {
   const result = await changeBookHandleMutation(id, handle);
-  if (result.isErr()) return;
+  if (!result.ok) return;
 
   const store = $book(id);
   const value = await toPromise(store);
@@ -39,7 +39,7 @@ export const changeBookDescription = async (
   description: string,
 ): Promise<void> => {
   const result = await changeBookDescriptionMutation(id, description);
-  if (result.isErr()) return;
+  if (!result.ok) return;
 
   const store = $book(id);
   const value = await toPromise(store);

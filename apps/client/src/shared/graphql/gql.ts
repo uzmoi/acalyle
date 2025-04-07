@@ -15,7 +15,7 @@ export const gql = async <
   const result = await gql(document, variables);
   return result
     .map(result => result.data)
-    .mapE((error): GqlFnError => {
+    .mapErr((error): GqlFnError => {
       switch (error.type) {
         case "network_error": {
           return { name: "NetworkError" };

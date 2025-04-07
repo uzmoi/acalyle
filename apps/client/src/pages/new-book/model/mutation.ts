@@ -9,9 +9,10 @@ export const createBook = async (
 ): Promise<Result<BookRef, GqlFnError>> => {
   const result = await createBookMutation(title, description);
 
-  return result.map(book => {
+  if (result.ok) {
+    const book = result.value;
     $book(book.id).resolve(book);
+  }
 
-    return bookRefFromId(book.id);
-  });
+  return result.map(book => bookRefFromId(book.id));
 };

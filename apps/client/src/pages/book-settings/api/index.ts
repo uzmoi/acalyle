@@ -1,4 +1,4 @@
-import { Result } from "@acalyle/fp";
+import { Err, Ok, type Result } from "@acalyle/fp";
 import type { BookId, BookHandle } from "~/entities/book";
 import { type ID, gql, type GqlFnError } from "~/shared/graphql";
 import ChangeBookDescriptionMutation from "./change-book-description.graphql";
@@ -15,9 +15,7 @@ export const changeBookTitleMutation = async (
   });
 
   return result.flatMap(({ updateBookTitle: book }) =>
-    book == null ?
-      Result.err({ name: "NotFoundError" })
-    : Result.ok(book.title),
+    book == null ? Err({ name: "NotFoundError" } as const) : Ok(book.title),
   );
 };
 
@@ -32,8 +30,8 @@ export const changeBookHandleMutation = async (
 
   return result.flatMap(({ updateBookHandle: book }) =>
     book == null ?
-      Result.err({ name: "NotFoundError" })
-    : Result.ok(book.handle as BookHandle),
+      Err({ name: "NotFoundError" } as const)
+    : Ok(book.handle as BookHandle),
   );
 };
 
@@ -48,7 +46,7 @@ export const changeBookDescriptionMutation = async (
 
   return result.flatMap(({ updateBookDescription: book }) =>
     book == null ?
-      Result.err({ name: "NotFoundError" })
-    : Result.ok(book.description),
+      Err({ name: "NotFoundError" } as const)
+    : Ok(book.description),
   );
 };

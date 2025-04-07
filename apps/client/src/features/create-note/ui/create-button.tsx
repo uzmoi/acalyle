@@ -16,7 +16,7 @@ export const NoteCreateButton: React.FC<{
   const createNoteFromTemplateOrNone = useCallback(
     async (templateName?: string) => {
       const result = await createNote(book.id, templateName);
-      const noteId = result.getOrThrow();
+      const noteId = result.unwrap();
       await navigate({
         to: "/books/$book-ref/$note-id",
         params: { "book-ref": bookRefOf(book), "note-id": noteId },

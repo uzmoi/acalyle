@@ -7,12 +7,12 @@ export const updateNoteContents = async (
   contents: string,
 ): Promise<void> => {
   const result = await updateNoteContentsMutation(id, contents);
-  if (result.isErr()) return;
+  if (!result.ok) return;
 
   const store = $note(id);
   const value = await toPromise(store);
   if (value != null) {
-    const { contents, tags, updatedAt } = result.getOrThrow();
+    const { contents, tags, updatedAt } = result.value;
     store.resolve({ ...value, contents, tags, updatedAt });
   }
 };

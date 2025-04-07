@@ -10,9 +10,10 @@ export const createNote = async (
 ): Promise<Result<NoteId, GqlFnError>> => {
   const result = await createNoteMutation(bookId, templateName);
 
-  return result.map(note => {
+  if (result.ok) {
+    const note = result.value;
     $note(note.id).resolve(note);
+  }
 
-    return note.id;
-  });
+  return result.map(noe => noe.id);
 };
