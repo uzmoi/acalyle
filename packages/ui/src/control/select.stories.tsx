@@ -25,19 +25,9 @@ export default meta;
 type Story = StoryObj<typeof Select>;
 
 export const solid: Story = {
-  args: {
-    variant: "solid",
-  },
-};
-
-export const outline: Story = {
-  args: {
-    variant: "outline",
-  },
+  args: {},
 };
 
 export const unstyled: Story = {
-  args: {
-    variant: "unstyled",
-  },
+  args: { unstyled: true },
 };

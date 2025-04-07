@@ -21,19 +21,9 @@ export default meta;
 type Story = StoryObj<typeof TextArea>;
 
 export const Solid: Story = {
-  args: {
-    variant: "solid",
-  },
-};
-
-export const Outline: Story = {
-  args: {
-    variant: "outline",
-  },
+  args: {},
 };
 
 export const Unstyled: Story = {
-  args: {
-    variant: "unstyled",
-  },
+  args: { unstyled: true },
 };
