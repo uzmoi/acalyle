@@ -2,7 +2,8 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { Modal, ModalContainer } from "./modal";
+import { ModalContainer } from "./container";
+import { Modal } from "./modal";
 
 describe("ModalContainer", () => {
   afterEach(() => {

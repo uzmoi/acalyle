@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 import { Button } from "../control";
-import { Modal, ModalContainer } from "./modal";
+import { Modal } from "./modal";
+import { ModalContainer } from "./container";
 
 const meta: Meta<typeof ModalContainer<() => void>> = {
   component: ModalContainer,
