@@ -1,11 +1,18 @@
 import { useEffect, useRef } from "react";
 
-export const Intersection: React.FC<
-  {
-    onIntersection: (entry: IntersectionObserverEntry) => void;
-  } & IntersectionObserverInit &
-    React.ComponentPropsWithoutRef<"div">
-> = ({ onIntersection, root, rootMargin, threshold, ...restProps }) => {
+export interface IntersectionProps
+  extends IntersectionObserverInit,
+    React.ComponentProps<"div"> {
+  onIntersection: (entry: IntersectionObserverEntry) => void;
+}
+
+export const Intersection: React.FC<IntersectionProps> = ({
+  onIntersection,
+  root,
+  rootMargin,
+  threshold,
+  ...restProps
+}) => {
   const el = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

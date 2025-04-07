@@ -2,15 +2,18 @@ import { cx, style } from "@acalyle/css";
 import { vars } from "../theme";
 import { base, reset } from "./base";
 
-export const Button: React.FC<
-  {
-    unstyled?: boolean;
-  } & React.ComponentPropsWithoutRef<"button">
-> = ({ unstyled, className, ...restProps }) => {
+export interface ButtonProps extends React.ComponentProps<"button"> {
+  unstyled?: boolean;
+}
+
+export const Button: React.FC<ButtonProps> = ({
+  unstyled,
+  className,
+  ...restProps
+}) => {
   return (
     <button
       type="button"
-      {...restProps}
       className={cx(
         reset,
         !unstyled && base,
@@ -24,6 +27,7 @@ export const Button: React.FC<
         }),
         className,
       )}
+      {...restProps}
     />
   );
 };

@@ -2,12 +2,12 @@ import { cx, style } from "@acalyle/css";
 import { vars } from "../theme";
 import { base, reset } from "./base";
 
-export const Select: React.FC<
-  {
-    unstyled?: boolean;
-    onValueChange?: (value: string) => void;
-  } & React.ComponentPropsWithoutRef<"select">
-> & {
+export interface SelectProps extends React.ComponentProps<"select"> {
+  unstyled?: boolean;
+  onValueChange?: (value: string) => void;
+}
+
+export const Select: React.FC<SelectProps> & {
   Group: SelectOptionGroupComponent;
   Option: SelectOptionComponent;
 } = ({
@@ -36,9 +36,7 @@ export const Select: React.FC<
   );
 };
 
-type SelectOptionGroupComponent = React.FC<
-  React.ComponentPropsWithoutRef<"optgroup">
->;
+type SelectOptionGroupComponent = React.FC<React.ComponentProps<"optgroup">>;
 // eslint-disable-next-line pure-module/pure-module
 Select.Group = ({ ...restProps }) => {
   return <optgroup {...restProps} />;
@@ -49,7 +47,7 @@ if (import.meta.env.DEV) {
   Select.Group.displayName = "Select.Group";
 }
 
-type SelectOptionComponent = React.FC<React.ComponentPropsWithoutRef<"option">>;
+type SelectOptionComponent = React.FC<React.ComponentProps<"option">>;
 // eslint-disable-next-line pure-module/pure-module
 Select.Option = ({ className, ...restProps }) => {
   return (

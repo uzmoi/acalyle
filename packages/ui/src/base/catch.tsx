@@ -1,14 +1,17 @@
 import { Component } from "react";
 
-type CatchProps = {
+export interface CatchProps {
   children?: React.ReactNode;
   fallback?:
     | React.ReactNode
     | ((error: unknown, recover: () => void) => React.ReactNode);
   onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
-};
+}
 
-type State = { didCatch: boolean; error: unknown };
+interface State {
+  didCatch: boolean;
+  error: unknown;
+}
 
 export class Catch extends Component<CatchProps, State> {
   state: State = { didCatch: false, error: null };

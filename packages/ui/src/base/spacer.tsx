@@ -1,9 +1,14 @@
-export const Spacer: React.FC<
-  {
-    size?: number | string;
-    axis?: "horizontal" | "vertical";
-  } & React.ComponentPropsWithoutRef<"div">
-> = ({ size, axis = "vertical", style, ...restProps }) => {
+export interface SpacerProps extends React.ComponentProps<"div"> {
+  size?: number | string;
+  axis?: "horizontal" | "vertical";
+}
+
+export const Spacer: React.FC<SpacerProps> = ({
+  size,
+  axis = "vertical",
+  style,
+  ...restProps
+}) => {
   return (
     <div
       style={

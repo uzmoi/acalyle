@@ -1,11 +1,15 @@
 import { cx, style } from "@acalyle/css";
 import { vars } from "../theme";
 
-export const Alert: React.FC<
-  {
-    type: "error" | "warning" | "success";
-  } & Omit<React.ComponentPropsWithoutRef<"div">, "role">
-> = ({ type, className, ...restProps }) => {
+export interface AlertProps extends Omit<React.ComponentProps<"div">, "role"> {
+  type: "error" | "warning" | "success";
+}
+
+export const Alert: React.FC<AlertProps> = ({
+  type,
+  className,
+  ...restProps
+}) => {
   return (
     <div
       {...restProps}

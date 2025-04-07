@@ -32,26 +32,16 @@ type OmitPropNames = (
   | "formTarget"
 );
 
-// prettier-ignore
-type TextInputType = (
-  | "text"
-  | "search"
-  | "password"
-  | "url"
-  | "email"
-  | "tel"
-);
+export interface TextInputProps
+  extends Omit<React.ComponentProps<"input">, OmitPropNames> {
+  type?: "text" | "search" | "password" | "url" | "email" | "tel";
+  unstyled?: boolean;
+  value?: string;
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
+}
 
-export const TextInput: React.FC<
-  {
-    type?: TextInputType;
-    unstyled?: boolean;
-    value?: string;
-    defaultValue?: string;
-    onValueChange?: (value: string) => void;
-  } & Omit<React.ComponentPropsWithoutRef<"input">, OmitPropNames>
-> = ({
-  type = "text",
+export const TextInput: React.FC<TextInputProps> = ({
   unstyled,
   onChange,
   onValueChange,
@@ -67,10 +57,10 @@ export const TextInput: React.FC<
 
   return (
     <input
-      {...restProps}
       onChange={handleChange}
-      type={type}
+      type="text"
       className={cx(reset, !unstyled && base, className)}
+      {...restProps}
       autoComplete="off"
       autoCapitalize="off"
       autoCorrect="off"

@@ -25,7 +25,9 @@ const PopoverIdContext = /* #__PURE__ */ createContext<string | undefined>(
   undefined,
 );
 
-export const Popover: React.FC<React.ComponentPropsWithoutRef<"div">> & {
+export interface PopoverProps extends React.ComponentProps<"div"> {}
+
+export const Popover: React.FC<PopoverProps> & {
   Button: typeof PopoverButton;
   Content: typeof PopoverContent;
 } = ({ className, children, ...restProps }) => {
@@ -43,12 +45,17 @@ export const Popover: React.FC<React.ComponentPropsWithoutRef<"div">> & {
   );
 };
 
-const PopoverButton: React.FC<
-  Omit<
-    React.ComponentPropsWithoutRef<typeof Button>,
+export interface PopoverButtonProps
+  extends Omit<
+    React.ComponentProps<typeof Button>,
     "aria-expanded" | "aria-controls"
-  >
-> = ({ onClick, children, ...restProps }) => {
+  > {}
+
+const PopoverButton: React.FC<PopoverButtonProps> = ({
+  onClick,
+  children,
+  ...restProps
+}) => {
   const popoverId = useContext(PopoverIdContext);
   const openedPopoverId = useStore(PopoverStore);
   const isOpen = popoverId === openedPopoverId;
@@ -86,11 +93,18 @@ if (import.meta.env.DEV) {
 const TRANSITION_DURATION = 200;
 const transition = (): Promise<void> => timeout(TRANSITION_DURATION);
 
-const PopoverContent: React.FC<
-  {
-    closeOnClick?: boolean;
-  } & Omit<React.ComponentPropsWithoutRef<"div">, "id">
-> = ({ closeOnClick, onClick, className, children, ...restProps }) => {
+export interface PopoverContentProps
+  extends Omit<React.ComponentProps<"div">, "id"> {
+  closeOnClick?: boolean;
+}
+
+const PopoverContent: React.FC<PopoverContentProps> = ({
+  closeOnClick,
+  onClick,
+  className,
+  children,
+  ...restProps
+}) => {
   const popoverId = useContext(PopoverIdContext);
   const openedPopoverId = useStore(PopoverStore);
   const isOpen = popoverId === openedPopoverId;

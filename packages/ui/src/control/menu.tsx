@@ -2,14 +2,14 @@ import { cx, style } from "@acalyle/css";
 import { vars } from "../theme/theme";
 import { Button } from "./button";
 
-export const Menu: React.FC<React.ComponentPropsWithoutRef<"div">> & {
+export const Menu: React.FC<React.ComponentProps<"div">> & {
   Item: typeof MenuItem;
 } = ({ ...restProps }) => {
   return <div {...restProps} role="menu" />;
 };
 
 const MenuItem: React.FC<
-  Omit<React.ComponentPropsWithoutRef<typeof Button>, "variant">
+  Omit<React.ComponentProps<typeof Button>, "variant">
 > = ({ className, ...restProps }) => {
   return (
     <Button

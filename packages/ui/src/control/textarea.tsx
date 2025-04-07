@@ -5,12 +5,12 @@ import { base } from "./base";
 
 const ZeroWidthSpace = "\u200B";
 
-export const TextArea: React.FC<
-  {
-    unstyled?: boolean;
-    onValueChange?: (value: string) => void;
-  } & React.ComponentPropsWithoutRef<"textarea">
-> = ({
+export interface TextAreaProps extends React.ComponentProps<"textarea"> {
+  unstyled?: boolean;
+  onValueChange?: (value: string) => void;
+}
+
+export const TextArea: React.FC<TextAreaProps> = ({
   unstyled,
   value,
   defaultValue,

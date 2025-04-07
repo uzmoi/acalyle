@@ -39,25 +39,25 @@ type OmitPropNames = (
   | "formTarget"
 );
 
-// prettier-ignore
-type FileInputProps = (
-    | {
-        multiple?: false;
-        onFileChange?: (file: File) => void;
+export type FileInputProps = (
+  | {
+      multiple?: false;
+      onFileChange?: (file: File) => void;
     }
-    | {
-        multiple: true;
-        onFileChange?: (fileList: FileList) => void;
+  | {
+      multiple: true;
+      onFileChange?: (fileList: FileList) => void;
     }
-) & {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    _ref?: React.Ref<HTMLInputElement>;
-};
+) &
+  Omit<React.ComponentProps<"input">, OmitPropNames>;
 
-export const FileInput: React.FC<
-  FileInputProps & Omit<React.ComponentPropsWithoutRef<"input">, OmitPropNames>
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-> = ({ onChange, onFileChange, multiple, className, _ref, ...restProps }) => {
+export const FileInput: React.FC<FileInputProps> = ({
+  onChange,
+  onFileChange,
+  multiple,
+  className,
+  ...restProps
+}) => {
   const handleChange =
     (onChange ?? onFileChange) &&
     ((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,7 +74,6 @@ export const FileInput: React.FC<
 
   return (
     <input
-      ref={_ref}
       {...restProps}
       onChange={handleChange}
       type="file"
