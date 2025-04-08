@@ -1,14 +1,10 @@
-// eslint-disable-next-line testing-library/no-manual-cleanup
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { ModalContainer } from "./container";
 import { Modal } from "./modal";
 
 describe("ModalContainer", () => {
-  afterEach(() => {
-    cleanup();
-  });
   test("confirm", async () => {
     const modal = Modal.create(false);
     const renderModal = (): React.ReactElement => (
@@ -22,9 +18,10 @@ describe("ModalContainer", () => {
       </div>
     );
     render(<ModalContainer modal={modal} render={renderModal} />);
+    const user = userEvent.setup();
 
     const promise = modal.open();
-    fireEvent.click(await screen.findByText("Ok"));
+    await user.click(await screen.findByText("Ok"));
     expect(await promise).toBe(true);
   });
   test("esc", async () => {
