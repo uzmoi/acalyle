@@ -38,9 +38,7 @@ export const Popover: React.FC<PopoverProps> & {
       {...restProps}
       className={cx(style({ position: "relative" }), className)}
     >
-      <PopoverIdContext.Provider value={popoverId}>
-        {children}
-      </PopoverIdContext.Provider>
+      <PopoverIdContext value={popoverId}>{children}</PopoverIdContext>
     </div>
   );
 };
