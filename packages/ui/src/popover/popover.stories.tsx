@@ -1,12 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { fn } from "@storybook/test";
 import { Button } from "../control";
-import { Popover, closePopover } from "./popover";
+import {
+  Popover,
+  closePopover,
+  type PopoverContentProps,
+  type PopoverProps,
+} from "./popover";
 
 export default {
   component: Popover,
   render: props => (
-    <Popover>
-      <Popover.Button>open</Popover.Button>
+    <Popover onOpen={props.onOpen} onClose={props.onClose}>
+      <Popover.Button aria-haspopup>open</Popover.Button>
       <Popover.Content
         style={{ padding: "1em" }}
         closeOnClick={props.closeOnClick}
@@ -17,10 +23,12 @@ export default {
     </Popover>
   ),
   args: {
+    onOpen: fn(),
+    onClose: fn(),
     closeOnClick: false,
   },
-} satisfies Meta<typeof Popover.Content>;
+} satisfies Meta<PopoverProps & PopoverContentProps>;
 
-type Story = StoryObj<typeof Popover>;
+type Story = StoryObj<PopoverProps & PopoverContentProps>;
 
 export const Default: Story = {};

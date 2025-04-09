@@ -1,8 +1,14 @@
 import { cx, style } from "@acalyle/css";
 import { useStore } from "@nanostores/react";
 import { timeout } from "emnorst";
-import { atom, onMount } from "nanostores";
-import { createContext, useCallback, useContext, useId } from "react";
+import { atom, onMount, onSet } from "nanostores";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useId,
+} from "react";
 import { useTransitionStatus } from "../base/use-transition-status";
 import { Button } from "../control/button";
 import { vars } from "../theme/theme";
@@ -25,13 +31,32 @@ const PopoverIdContext = /* #__PURE__ */ createContext<string | undefined>(
   undefined,
 );
 
-export interface PopoverProps extends React.ComponentProps<"div"> {}
+export interface PopoverProps extends React.ComponentProps<"div"> {
+  onOpen?: () => void;
+  onClose?: () => void;
+}
 
 export const Popover: React.FC<PopoverProps> & {
   Button: typeof PopoverButton;
   Content: typeof PopoverContent;
-} = ({ className, children, ...restProps }) => {
+} = ({ className, onOpen, onClose, children, ...restProps }) => {
   const popoverId = useId();
+
+  useEffect(() => {
+    if (onOpen == null && onClose == null) return;
+
+    return onSet(PopoverStore, ({ newValue: openedPopoverId }) => {
+      const prevPopoverId = PopoverStore.get();
+
+      if (prevPopoverId !== popoverId && openedPopoverId === popoverId) {
+        onOpen?.();
+      }
+
+      if (prevPopoverId === popoverId && openedPopoverId !== popoverId) {
+        onClose?.();
+      }
+    });
+  }, [popoverId, onOpen, onClose]);
 
   return (
     <div
