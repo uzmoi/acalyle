@@ -9,21 +9,23 @@ import { TRANSITION_DURATION, type Modal } from "./modal";
 
 export type ModalSize = "content" | "max";
 
-const transition = (): Promise<void> => timeout(TRANSITION_DURATION);
-
-export const ModalContainer: <T>(props: {
+export interface ModalContainerProps<T> {
   modal: Modal<T, unknown>;
   render: (data: T) => React.ReactNode;
   size?: ModalSize;
   className?: string;
   onClickBackdrop?: React.MouseEventHandler<HTMLDivElement>;
-}) => React.ReactElement | null = ({
+}
+
+const transition = (): Promise<void> => timeout(TRANSITION_DURATION);
+
+export const ModalContainer = <T,>({
   modal,
   render,
   size,
   className,
   onClickBackdrop,
-}) => {
+}: ModalContainerProps<T>): React.ReactElement | null => {
   const handleClickBackdrop = (e: React.MouseEvent<HTMLDivElement>): void => {
     if (e.target !== e.currentTarget) return;
     onClickBackdrop?.(e);
