@@ -1,11 +1,15 @@
 import { cx, style } from "@acalyle/css";
 import { useStore } from "@nanostores/react";
+import { timeout } from "emnorst";
 import { useEffect } from "react";
 import { center } from "../base/style-utilities";
+import { useTransitionStatus } from "../base/use-transition-status";
 import { vars } from "../theme";
 import { TRANSITION_DURATION, type Modal } from "./modal";
 
 export type ModalSize = "content" | "max";
+
+const transition = (): Promise<void> => timeout(TRANSITION_DURATION);
 
 export const ModalContainer: <T>(props: {
   modal: Modal<T, unknown>;
@@ -40,7 +44,8 @@ export const ModalContainer: <T>(props: {
   }, [modal]);
 
   const data = useStore(modal.data);
-  const status = useStore(modal.status);
+
+  const status = useTransitionStatus({ show: !!data?.show, transition });
 
   return (
     <div
