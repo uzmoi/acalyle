@@ -14,6 +14,10 @@ import { Button } from "../control/button";
 import { vars } from "../theme/theme";
 import { $popover } from "./store";
 
+// 全ては wyw-in-js のせい。
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const __vite_ssr_import_meta__ = { env: { DEV: true } };
+
 const PopoverIdContext = /* #__PURE__ */ createContext<string | undefined>(
   undefined,
 );
