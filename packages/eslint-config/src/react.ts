@@ -25,4 +25,10 @@ export const react: Linter.Config[] = [
       "testing-library/prefer-user-event": WARN,
     },
   }),
+  {
+    files: ["**/*.stories.*"],
+    rules: {
+      "testing-library/prefer-screen-queries": OFF,
+    },
+  },
 ];

@@ -21,7 +21,7 @@ export const createConfig = ({
     "**/__generated__/**",
     "**/*.gen.*",
     "**/__*",
-    "**/*.!(?(test.)@(ts|tsx))",
+    "**/*.!(?(test.|stories.)@(ts|tsx))",
     "**/*.d.ts",
     "**/*.d.*.ts",
     ...ignores,
