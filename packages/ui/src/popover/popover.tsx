@@ -1,7 +1,7 @@
 import { cx, style } from "@acalyle/css";
 import { useStore } from "@nanostores/react";
 import { timeout } from "emnorst";
-import { atom, onMount, onSet } from "nanostores";
+import { onSet } from "nanostores";
 import {
   createContext,
   useCallback,
@@ -12,20 +12,7 @@ import {
 import { useTransitionStatus } from "../base/use-transition-status";
 import { Button } from "../control/button";
 import { vars } from "../theme/theme";
-
-const PopoverStore = /* #__PURE__ */ atom<string | null>(null);
-
-export const closePopover = (): void => {
-  PopoverStore.set(null);
-};
-
-// eslint-disable-next-line pure-module/pure-module
-onMount(PopoverStore, () => {
-  window.addEventListener("click", closePopover);
-  return () => {
-    window.removeEventListener("click", closePopover);
-  };
-});
+import { $popover } from "./store";
 
 const PopoverIdContext = /* #__PURE__ */ createContext<string | undefined>(
   undefined,
@@ -45,8 +32,8 @@ export const Popover: React.FC<PopoverProps> & {
   useEffect(() => {
     if (onOpen == null && onClose == null) return;
 
-    return onSet(PopoverStore, ({ newValue: openedPopoverId }) => {
-      const prevPopoverId = PopoverStore.get();
+    return onSet($popover, ({ newValue: openedPopoverId }) => {
+      const prevPopoverId = $popover.get();
 
       if (prevPopoverId !== popoverId && openedPopoverId === popoverId) {
         onOpen?.();
@@ -80,16 +67,14 @@ const PopoverButton: React.FC<PopoverButtonProps> = ({
   ...restProps
 }) => {
   const popoverId = useContext(PopoverIdContext);
-  const openedPopoverId = useStore(PopoverStore);
+  const openedPopoverId = useStore($popover);
   const isOpen = popoverId === openedPopoverId;
 
   const actualOnClick = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
       onClick?.(e);
-      PopoverStore.set(
-        PopoverStore.get() === popoverId ? null : (popoverId ?? null),
-      );
+      $popover.set($popover.get() === popoverId ? null : (popoverId ?? null));
     },
     [onClick, popoverId],
   );
@@ -129,7 +114,7 @@ const PopoverContent: React.FC<PopoverContentProps> = ({
   ...restProps
 }) => {
   const popoverId = useContext(PopoverIdContext);
-  const openedPopoverId = useStore(PopoverStore);
+  const openedPopoverId = useStore($popover);
   const isOpen = popoverId === openedPopoverId;
   const status = useTransitionStatus({ show: isOpen, transition });
 

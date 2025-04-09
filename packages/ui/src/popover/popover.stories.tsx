@@ -6,7 +6,7 @@ import {
   closePopover,
   type PopoverContentProps,
   type PopoverProps,
-} from "./popover";
+} from ".";
 
 export default {
   component: Popover,
