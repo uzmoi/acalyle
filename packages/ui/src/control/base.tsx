@@ -21,9 +21,8 @@ export const reset = style({
 export const base = style({
   padding: "0.2em 0.8em",
 
-  borderRadius: vars.radius.control,
   selectors: {
-    [`.${group} > & + &`]: { marginLeft: "1px" },
+    [`.${group} > & + &`]: { marginLeft: "2px" },
     [`.${group} > &`]: { borderRadius: 0 },
     [`.${group} > &:first-child`]: {
       borderRadius: `${vars.radius.control} 0 0 ${vars.radius.control}`,
@@ -31,18 +30,18 @@ export const base = style({
     [`.${group} > &:last-child`]: {
       borderRadius: `0 ${vars.radius.control} ${vars.radius.control} 0`,
     },
-    [`.${group} > &:only-child`]: {
+    [`.${group} > &:only-child, &`]: {
       borderRadius: vars.radius.control,
     },
   },
 
   backgroundColor: vars.color.bg.inline,
-  borderBottom: `2px solid ${vars.color.fg.__}`,
-  transition: "border-bottom-color 400ms",
-  "&:focus-visible": {
-    borderBottomColor: "lightgreen",
+  border: `1px solid ${vars.color.fg.__}`,
+  transition: "0.25s",
+  '&:user-invalid, &:user-valid[aria-invalid="true"]': {
+    borderColor: vars.color.danger,
   },
-  '&:invalid, &[aria-invalid="true"]': {
-    borderBottomColor: vars.color.danger,
+  "&:focus-visible": {
+    borderColor: "lightgreen",
   },
 });
