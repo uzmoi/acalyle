@@ -65,15 +65,12 @@ export interface PopoverButtonProps
     "aria-expanded" | "aria-controls"
   > {}
 
-const PopoverButton: React.FC<PopoverButtonProps> = ({
-  onClick,
-  children,
-  ...restProps
-}) => {
+const PopoverButton: React.FC<PopoverButtonProps> = props => {
   const popoverId = useContext(PopoverIdContext);
   const openedPopoverId = useStore($popover);
   const isOpen = popoverId === openedPopoverId;
 
+  const { onClick } = props;
   const actualOnClick = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
@@ -85,13 +82,11 @@ const PopoverButton: React.FC<PopoverButtonProps> = ({
 
   return (
     <Button
-      {...restProps}
+      {...props}
       aria-expanded={isOpen}
       aria-controls={popoverId}
       onClick={actualOnClick}
-    >
-      {children}
-    </Button>
+    />
   );
 };
 

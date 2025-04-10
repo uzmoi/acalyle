@@ -10,14 +10,7 @@ export interface SelectProps extends React.ComponentProps<"select"> {
 export const Select: React.FC<SelectProps> & {
   Group: SelectOptionGroupComponent;
   Option: SelectOptionComponent;
-} = ({
-  unstyled,
-  onChange,
-  onValueChange,
-  className,
-  children,
-  ...restProps
-}) => {
+} = ({ unstyled, onChange, onValueChange, className, ...restProps }) => {
   const handleChange =
     (onChange ?? onValueChange) &&
     ((e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -30,9 +23,7 @@ export const Select: React.FC<SelectProps> & {
       {...restProps}
       onChange={handleChange}
       className={cx(reset, !unstyled && base, className)}
-    >
-      {children}
-    </select>
+    />
   );
 };
 

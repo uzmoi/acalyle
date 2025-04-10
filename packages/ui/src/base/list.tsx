@@ -32,8 +32,8 @@ export const List: React.FC<ListProps> & {
 
 type ListItemComponent = React.FC<React.ComponentProps<"li">>;
 // eslint-disable-next-line pure-module/pure-module
-List.Item = ({ ...restProps }) => {
-  return <li {...restProps} />;
+List.Item = props => {
+  return <li {...props} />;
 };
 
 if (import.meta.env.DEV) {

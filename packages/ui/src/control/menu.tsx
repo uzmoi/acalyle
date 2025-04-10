@@ -4,16 +4,16 @@ import { Button } from "./button";
 
 export const Menu: React.FC<React.ComponentProps<"div">> & {
   Item: typeof MenuItem;
-} = ({ ...restProps }) => {
-  return <div {...restProps} role="menu" />;
+} = props => {
+  return <div {...props} role="menu" />;
 };
 
 const MenuItem: React.FC<
   Omit<React.ComponentProps<typeof Button>, "variant">
-> = ({ className, ...restProps }) => {
+> = props => {
   return (
     <Button
-      {...restProps}
+      {...props}
       role="menuitem"
       unstyled
       className={cx(
@@ -32,7 +32,7 @@ const MenuItem: React.FC<
             backgroundColor: "#fff2",
           },
         }),
-        className,
+        props.className,
       )}
     />
   );

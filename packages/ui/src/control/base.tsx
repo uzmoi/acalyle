@@ -1,11 +1,8 @@
 import { cx, style } from "@acalyle/css";
 import { vars } from "../theme";
 
-export const ControlGroup: React.FC<{
-  children?: React.ReactNode;
-  className?: string;
-}> = ({ className, children }) => {
-  return <div className={cx(group, className)}>{children}</div>;
+export const ControlGroup: React.FC<React.ComponentProps<"div">> = props => {
+  return <div {...props} className={cx(group, props.className)} />;
 };
 
 const group = style({ display: "inline-block" });
