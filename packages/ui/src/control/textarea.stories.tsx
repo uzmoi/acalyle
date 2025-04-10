@@ -3,7 +3,6 @@ import { fn } from "@storybook/test";
 import { TextArea } from "./textarea";
 
 const meta: Meta<typeof TextArea> = {
-  title: "Control/TextArea",
   component: TextArea,
   argTypes: {
     value: { type: "string" },

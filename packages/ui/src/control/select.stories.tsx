@@ -5,7 +5,6 @@ import { Select } from "./select";
 const options = ["hoge", "fuga", "piyo"];
 
 const meta: Meta<typeof Select> = {
-  title: "Control/Select",
   component: Select,
   render: props => (
     <Select {...props}>

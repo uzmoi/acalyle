@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Alert } from "./alert";
 
 export default {
-  title: "Base/Alert",
   component: Alert,
   args: {
     children: "Alert",

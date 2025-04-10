@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Menu } from "./menu";
 
 export default {
-  title: "Control/Menu",
   component: Menu,
   render: props => (
     <Menu {...props}>

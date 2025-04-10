@@ -3,7 +3,6 @@ import { fn } from "@storybook/test";
 import { FileInput } from "./file-input";
 
 const meta: Meta<typeof FileInput> = {
-  title: "Control/FileInput",
   component: FileInput,
   args: {
     onChange: fn(),

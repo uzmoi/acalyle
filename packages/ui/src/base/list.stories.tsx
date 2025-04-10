@@ -4,7 +4,6 @@ import { List } from "./list";
 const items = ["hoge", "fuga", "piyo"];
 
 export default {
-  title: "Base/List",
   component: List,
   render: props => (
     <List {...props}>
