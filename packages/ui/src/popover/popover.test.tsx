@@ -1,11 +1,11 @@
 import {
+  act,
   render,
   screen,
   within,
   type RenderResult,
 } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import { timeout } from "emnorst";
 import { describe, expect, test, vi } from "vitest";
 import {
   closePopover,
@@ -48,8 +48,9 @@ describe("開閉動作", () => {
     await user.click(button);
 
     // Act
-    closePopover();
-    await timeout(1);
+    act(() => {
+      closePopover();
+    });
 
     // Assert
     expect(screen.queryByText("content")).toBeNull();
