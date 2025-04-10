@@ -56,6 +56,20 @@ describe("開閉動作", () => {
     expect(screen.queryByText("content")).toBeNull();
   });
 
+  test("Escape を押すと閉じる", async () => {
+    // Arrange
+    renderPopover();
+    const user = userEvent.setup();
+    const button = screen.getByRole("button");
+    await user.click(button);
+
+    // Act
+    await user.keyboard("[Escape]");
+
+    // Assert
+    expect(screen.queryByText("content")).toBeNull();
+  });
+
   test("開いている状態で <Popover.Button /> を押すと閉じる", async () => {
     // Arrange
     renderPopover();
