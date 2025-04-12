@@ -1,45 +1,52 @@
 import { Semaphore } from "@acalyle/util";
-import { timeout } from "emnorst";
 import { type ReadableAtom, atom } from "nanostores";
 
-export const TRANSITION_DURATION = 200;
-
-type ModalData<T, U> =
+type ModalData<TData, TResult> =
   | {
       show: true;
-      data: T;
-      resolve(result: U): void;
-      reject(): void;
+      data: TData;
+      resolve(result: TResult): void;
     }
-  | { show: false; data: T };
+  | {
+      show: false;
+      data: TData;
+      resolve: () => void;
+    };
 
-export class Modal<out Data = void, out Result = void> {
+export class Modal<out TData = void, out TResult = void> {
   static create<T = void, R = void>(): Modal<T, R | undefined>;
   static create<T = void, R = void>(defaultValue: R): Modal<T, R>;
   // oxlint-disable-next-line explicit-function-return-type
   static create(defaultValue?: unknown) {
     return new Modal(defaultValue);
   }
-  private constructor(private readonly _default: Result) {}
+  private constructor(private readonly _default: TResult) {}
   private readonly _mutex = Semaphore.mutex();
-  private readonly _$data = atom<ModalData<Data, Result> | undefined>();
-  get data(): ReadableAtom<{ show: boolean; data: Data } | undefined> {
+  private readonly _$data = atom<ModalData<TData, TResult> | undefined>();
+  get data(): ReadableAtom<{ show: boolean; data: TData } | undefined> {
     return this._$data;
   }
-  open(data: Data): Promise<Result> {
+  open(data: TData): Promise<TResult> {
     return this._mutex.use(() => {
-      return new Promise<Result>((resolve, reject) => {
-        this._$data.set({ show: true, data, resolve, reject });
+      return new Promise<TResult>(resolve => {
+        this._$data.set({ show: true, data, resolve });
       });
     });
   }
-  async close(result: Result = this._default): Promise<void> {
+  async close(result: TResult = this._default): Promise<void> {
     const data = this._$data.get();
     if (!data?.show) return;
 
     data.resolve(result);
-    this._$data.set({ show: false, data: data.data });
-    await timeout(TRANSITION_DURATION);
-    this._$data.set(undefined);
+    return new Promise(resolve => {
+      this._$data.set({ show: false, data: data.data, resolve });
+    });
   }
+  onExited = (): void => {
+    const data = this._$data.get();
+    if (data == null || data.show) return;
+
+    data.resolve();
+    this._$data.set(undefined);
+  };
 }

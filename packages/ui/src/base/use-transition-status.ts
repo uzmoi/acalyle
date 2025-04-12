@@ -6,6 +6,8 @@ export type UseTransitionStatusOptions = {
   enter?: boolean;
   exit?: boolean;
   transition: (signal: AbortSignal) => PromiseLike<void>;
+  onEntered?: () => void;
+  onExited?: () => void;
 };
 
 export type TransitionStatus = "entering" | "entered" | "exiting" | "exited";
@@ -16,6 +18,8 @@ export const useTransitionStatus = ({
   enter = true,
   exit = true,
   transition,
+  onEntered,
+  onExited,
 }: UseTransitionStatusOptions): TransitionStatus => {
   const [isEntered, setIsEntered] = useState(show && !appear);
 
@@ -27,6 +31,7 @@ export const useTransitionStatus = ({
         if (!ac.signal.aborted) {
           ac.abort();
           setIsEntered(show);
+          (show ? onEntered : onExited)?.();
         }
       };
       void transition(ac.signal).then(onTransitionEnd, onTransitionEnd);
@@ -35,8 +40,9 @@ export const useTransitionStatus = ({
       };
     } else {
       setIsEntered(show);
+      (show ? onEntered : onExited)?.();
     }
-  }, [isInTransition, show, transition]);
+  }, [isInTransition, show, transition, onEntered, onExited]);
 
   return `${show ? "enter" : "exit"}${isInTransition ? "ing" : "ed"}`;
 };

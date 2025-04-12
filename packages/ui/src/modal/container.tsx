@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { center } from "../base/style-utilities";
 import { useTransitionStatus } from "../base/use-transition-status";
 import { vars } from "../theme";
-import { TRANSITION_DURATION, type Modal } from "./modal";
+import type { Modal } from "./modal";
 
 export type ModalSize = "content" | "max";
 
@@ -17,6 +17,7 @@ export interface ModalContainerProps<T> {
   onClickBackdrop?: React.MouseEventHandler<HTMLDivElement>;
 }
 
+const TRANSITION_DURATION = 200;
 const transition = (): Promise<void> => timeout(TRANSITION_DURATION);
 
 export const ModalContainer = <T,>({
@@ -47,7 +48,11 @@ export const ModalContainer = <T,>({
 
   const data = useStore(modal.data);
 
-  const status = useTransitionStatus({ show: !!data?.show, transition });
+  const status = useTransitionStatus({
+    show: !!data?.show,
+    transition,
+    onExited: modal.onExited,
+  });
 
   return (
     <div
