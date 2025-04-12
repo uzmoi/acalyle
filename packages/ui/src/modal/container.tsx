@@ -1,10 +1,10 @@
 import { cx, style } from "@acalyle/css";
-import { useStore } from "@nanostores/react";
 import { timeout } from "emnorst";
 import { useEffect } from "react";
 import { center } from "../base/style-utilities";
 import { useTransitionStatus } from "../base/use-transition-status";
 import { vars } from "../theme";
+import { useModalContainer } from "./hook";
 import type { Modal } from "./modal";
 
 export type ModalSize = "content" | "max";
@@ -46,10 +46,10 @@ export const ModalContainer = <T,>({
     };
   }, [modal]);
 
-  const data = useStore(modal.data);
+  const state = useModalContainer(modal);
 
   const status = useTransitionStatus({
-    show: !!data?.show,
+    show: state?.type === "open",
     transition,
     onExited: modal.onExited,
   });
@@ -78,7 +78,7 @@ export const ModalContainer = <T,>({
       data-testid="modal_backdrop"
       onClick={handleClickBackdrop}
     >
-      {data ?
+      {state && (
         <div
           className={cx(
             style({
@@ -92,9 +92,9 @@ export const ModalContainer = <T,>({
             size === "max" && style({ width: "100%", height: "100%" }),
           )}
         >
-          {render(data.data)}
+          {render(state.data)}
         </div>
-      : null}
+      )}
     </div>
   );
 };
