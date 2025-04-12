@@ -22,21 +22,26 @@ describe("ModalContainer", () => {
 
     const promise = modal.open();
     await user.click(await screen.findByText("Ok"));
-    expect(await promise).toBe(true);
-  });
-  test("esc", async () => {
-    const modal = Modal.create(false);
-    const { container } = render(
-      <ModalContainer modal={modal} render={() => null} />,
-    );
-    const user = userEvent.setup();
 
-    void modal.open();
-    await user.click(container);
+    await expect(promise).resolves.toBe(true);
+  });
+
+  test("Escape を押すと閉じる", async () => {
+    // Arrange
+    const modal = Modal.create("default");
+    const renderModalContent = (): React.ReactElement => (
+      <div data-testid="content" />
+    );
+    render(<ModalContainer modal={modal} render={renderModalContent} />);
+    const user = userEvent.setup();
+    const promise = modal.open();
+
+    // Act
     await user.keyboard("[Escape]");
-    // eslint-disable-next-line testing-library/no-node-access
-    const rootEl = container.firstChild as HTMLElement;
-    expect(rootEl.dataset.status).toBe("exiting");
+
+    // Assert
+    await expect(promise).resolves.toBe("default");
+    expect(screen.queryByTestId("content")).toBeNull();
   });
 });
 
