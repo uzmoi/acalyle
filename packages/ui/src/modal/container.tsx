@@ -75,6 +75,7 @@ export const ModalContainer = <T,>({
         }),
         className,
       )}
+      data-testid="modal_backdrop"
       onClick={handleClickBackdrop}
     >
       {data ?
