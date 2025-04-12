@@ -11,7 +11,7 @@ export type ModalSize = "content" | "max";
 
 export interface ModalContainerProps<T> {
   modal: Modal<T, unknown>;
-  render: (data: T) => React.ReactNode;
+  render: (data: NoInfer<T>) => React.ReactNode;
   size?: ModalSize;
   className?: string;
   onClickBackdrop?: React.MouseEventHandler<HTMLDivElement>;
