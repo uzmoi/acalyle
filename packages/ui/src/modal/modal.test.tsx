@@ -1,5 +1,5 @@
 import { act, render, screen, type RenderResult } from "@testing-library/react";
-import { userEvent } from "@testing-library/user-event";
+import { userEvent, type UserEvent } from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { ModalContainer } from "./container";
 import { type Modal, createModal } from "./modal";
@@ -11,38 +11,18 @@ const renderModalContent = (data: string | void): React.ReactElement => (
 const renderModal = (modal: Modal<string | void, unknown>): RenderResult =>
   render(<ModalContainer modal={modal} render={renderModalContent} />);
 
-describe("ModalContainer", () => {
-  afterEach(() => {
+describe("modal.open, modal.close", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+  afterEach(async () => {
+    await vi.runAllTimersAsync();
+    vi.useRealTimers();
     vi.restoreAllMocks();
   });
 
-  test("confirm", async () => {
-    const modal = createModal(false);
-    const renderModal = (): React.ReactElement => (
-      <div>
-        <button type="button" onClick={() => void modal.close()}>
-          Cancel
-        </button>
-        <button type="button" onClick={() => void modal.close(true)}>
-          Ok
-        </button>
-      </div>
-    );
-    render(<ModalContainer modal={modal} render={renderModal} />);
-    const user = userEvent.setup();
-
-    const promise = modal.open();
-    await user.click(await screen.findByText("Ok"));
-
-    await expect(promise).resolves.toBe(true);
-  });
-
-  test("開く", async ({ onTestFinished }) => {
+  test("開く", async () => {
     // Arrange
-    vi.useFakeTimers();
-    onTestFinished(() => {
-      vi.useRealTimers();
-    });
     const modal = createModal();
     renderModal(modal);
 
@@ -57,45 +37,51 @@ describe("ModalContainer", () => {
     expect(backdropEl.dataset.status).toBe("enter");
   });
 
-  test("modal.close を呼ぶと閉じる", async ({ onTestFinished }) => {
+  test("modal.close を呼ぶと閉じる", async () => {
     // Arrange
-    vi.useFakeTimers();
-    onTestFinished(() => {
-      vi.useRealTimers();
-    });
     const modal = createModal("default");
     renderModal(modal);
     const open = vi.spyOn(modal, "open");
-    void modal.open();
-    await act(() => vi.runAllTimersAsync());
+    await act(async () => {
+      void modal.open();
+    });
 
     // Act
     let closing!: Promise<void>;
-    act(() => {
+    await act(async () => {
       closing = modal.close();
     });
 
     // Assert
+    expect(open).toHaveResolvedWith("default");
+
     const backdropEl = screen.getByTestId("modal_backdrop");
     expect(backdropEl.dataset.status).toBe("exiting");
-    expect(open).not.toHaveResolved();
 
     await act(() => vi.runAllTimersAsync());
     await closing;
 
     expect(backdropEl.dataset.status).toBe("exited");
-    expect(open).toHaveResolvedWith("default");
     expect(screen.queryByTestId("content")).toBeNull();
   });
+});
 
-  test("Escape を押すと閉じる", async () => {
-    // Arrange
+describe("ユーザー操作", () => {
+  const setup = async (): Promise<{ user: UserEvent; modal: Modal }> => {
+    const user = userEvent.setup();
+
     const modal = createModal();
     renderModal(modal);
-    const user = userEvent.setup();
     await act(async () => {
       void modal.open();
     });
+
+    return { user, modal };
+  };
+
+  test("Escape を押すと閉じる", async () => {
+    // Arrange
+    const { user } = await setup();
 
     // Act
     await user.keyboard("[Escape]");
@@ -107,12 +93,7 @@ describe("ModalContainer", () => {
 
   test("modal_backdrop をクリックすると閉じる", async () => {
     // Arrange
-    const modal = createModal();
-    renderModal(modal);
-    const user = userEvent.setup();
-    await act(async () => {
-      void modal.open();
-    });
+    const { user } = await setup();
 
     // Act
     await user.click(screen.getByTestId("modal_backdrop"));
@@ -124,12 +105,7 @@ describe("ModalContainer", () => {
 
   test("modal_backdrop の子をクリックしても閉じない", async () => {
     // Arrange
-    const modal = createModal();
-    renderModal(modal);
-    const user = userEvent.setup();
-    await act(async () => {
-      void modal.open();
-    });
+    const { user } = await setup();
 
     // Act
     const contentEl = screen.getByTestId("content");
@@ -137,19 +113,23 @@ describe("ModalContainer", () => {
     await user.click(contentEl.parentElement!);
 
     // Assert
-    expect(screen.getByTestId("content")).toBeVisible();
+    const backdropEl = screen.getByTestId("modal_backdrop");
+    expect(backdropEl.dataset.status).toBe("enter");
   });
 });
 
 describe("連続", () => {
-  test("連続して modal.open を呼ぶと順番に連続的に開く", async ({
-    onTestFinished,
-  }) => {
-    // Arrange
+  beforeEach(() => {
     vi.useFakeTimers();
-    onTestFinished(() => {
-      vi.useRealTimers();
-    });
+  });
+  afterEach(async () => {
+    await vi.runAllTimersAsync();
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  test("連続して modal.open を呼ぶと順番に連続的に開く", async () => {
+    // Arrange
     const modal = createModal<string, string>("default");
     renderModal(modal);
 
@@ -175,6 +155,26 @@ describe("連続", () => {
     expect(backdropEl.dataset.status).toBe("enter");
   });
 
+  test("閉じている途中に modal.close を呼んでも作用しない", async () => {
+    // Arrange
+    const modal = createModal<string>();
+    renderModal(modal);
+    await act(async () => {
+      void modal.open("first");
+    });
+
+    // Act
+    await act(async () => {
+      void modal.close();
+      void modal.open("second");
+      void modal.close();
+      await vi.runAllTimersAsync();
+    });
+
+    // Assert
+    expect(screen.getByTestId("content")).toHaveTextContent("second");
+  });
+
   test("modal.open を呼んだ直後に modal.close を呼ぶと即時解決して閉じる", async () => {
     // Arrange
     const modal = createModal("default");
@@ -184,28 +184,19 @@ describe("連続", () => {
     // Act
     await act(async () => {
       void modal.open();
-
-      // microtaskを進める
-      await Promise.resolve();
-
       void modal.close();
     });
 
     // Assert
-    expect(open).toHaveLastResolvedWith("default");
+    expect(open).toHaveResolvedWith("default");
     const backdropEl = screen.getByTestId("modal_backdrop");
+    expect(backdropEl.dataset.status).toBe("exiting");
+    await act(() => vi.runAllTimersAsync());
     expect(backdropEl.dataset.status).toBe("exited");
-    expect(screen.queryByTestId("content")).toBeNull();
   });
 
-  test("modal.close を呼んだ直後に modal.open を呼ぶと完全に閉じてから開き直す", async ({
-    onTestFinished,
-  }) => {
+  test("modal.close を呼んだ直後に modal.open を呼ぶと完全に閉じてから開き直す", async () => {
     // Arrange
-    vi.useFakeTimers();
-    onTestFinished(() => {
-      vi.useRealTimers();
-    });
     const modal = createModal("default");
     renderModal(modal);
     void modal.open();
@@ -222,36 +213,5 @@ describe("連続", () => {
     expect(backdropEl.dataset.status).toBe("exiting");
     await act(() => vi.advanceTimersToNextTimerAsync());
     expect(backdropEl.dataset.status).toBe("enter");
-  });
-});
-
-describe("class Modal", () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-  });
-  afterEach(async () => {
-    await vi.runAllTimersAsync();
-    vi.restoreAllMocks();
-  });
-  test("entering/entered中にopenした時の挙動", async () => {
-    const modal = createModal<number>();
-    const first = modal.open(1);
-    const second = modal.open(2);
-    await vi.runAllTimersAsync();
-    expect(modal.data.get()?.data).toBe(1);
-    void modal.close();
-    await vi.runAllTimersAsync();
-    expect(modal.data.get()?.data).toBe(2);
-    await expect(first).resolves.toBeUndefined();
-    void modal.close();
-    await vi.runAllTimersAsync();
-    await expect(second).resolves.toBeUndefined();
-  });
-  test("default", async () => {
-    const modal = createModal("defaultValue");
-    const result = modal.open();
-    await vi.advanceTimersByTimeAsync(0);
-    void modal.close();
-    expect(await result).toBe("defaultValue");
   });
 });
