@@ -171,6 +171,8 @@ describe("連続", () => {
 
     expect(backdropEl.dataset.status).toBe("enter");
     expect(screen.getByTestId("content")).toHaveTextContent("second");
+    await act(() => vi.runAllTimersAsync());
+    expect(backdropEl.dataset.status).toBe("enter");
   });
 
   test("modal.open を呼んだ直後に modal.close を呼ぶと即時解決して閉じる", async () => {
@@ -218,8 +220,6 @@ describe("連続", () => {
     // Assert
     const backdropEl = screen.getByTestId("modal_backdrop");
     expect(backdropEl.dataset.status).toBe("exiting");
-    await act(() => vi.advanceTimersToNextTimerAsync());
-    expect(backdropEl.dataset.status).toBe("exited");
     await act(() => vi.advanceTimersToNextTimerAsync());
     expect(backdropEl.dataset.status).toBe("enter");
   });
