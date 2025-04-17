@@ -26,5 +26,17 @@ export const useModalContainer = <TData, TResult>(
     });
   }, [modal]);
 
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent): void => {
+      if (e.key === "Escape") {
+        void modal.close();
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.addEventListener("keydown", onKeyDown);
+    };
+  }, [modal]);
+
   return [state, state?.type ?? "closed"];
 };

@@ -1,5 +1,4 @@
 import { cx, style } from "@acalyle/css";
-import { useEffect } from "react";
 import { center } from "../base/style-utilities";
 import { vars } from "../theme";
 import { useModalContainer } from "./hook";
@@ -30,18 +29,6 @@ export const ModalContainer = <T,>({
     if (e.defaultPrevented) return;
     void modal.close();
   };
-
-  useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent): void => {
-      if (e.key === "Escape") {
-        void modal.close();
-      }
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => {
-      window.addEventListener("keydown", onKeyDown);
-    };
-  }, [modal]);
 
   const [state, status] = useModalContainer(modal);
 
