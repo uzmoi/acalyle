@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 import { Button } from "../control";
-import { Modal } from "./modal";
 import { ModalContainer } from "./container";
+import { createModal } from "./modal";
 
 const meta: Meta<typeof ModalContainer<() => void>> = {
   component: ModalContainer,
@@ -40,14 +40,14 @@ type Story = StoryObj<typeof ModalContainer>;
 
 export const Max: Story = {
   args: {
-    modal: Modal.create(),
+    modal: createModal(),
     size: "max",
   },
 };
 
 export const Content: Story = {
   args: {
-    modal: Modal.create(),
+    modal: createModal(),
     size: "content",
   },
 };

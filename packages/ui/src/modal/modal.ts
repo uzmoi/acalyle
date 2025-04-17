@@ -1,18 +1,20 @@
 import { Semaphore } from "@acalyle/util";
 
+interface CreateModal {
+  <T = void, R = void>(): Modal<T, R | undefined>;
+  <T = void, R = void>(defaultValue: R): Modal<T, R>;
+}
+
+export const createModal: CreateModal = (defaultValue?) =>
+  new Modal(defaultValue);
+
 interface Container<TData> {
   open(data: TData): void;
   close(): Promise<void>;
 }
 
 export class Modal<out TData = void, out TResult = void> {
-  static create<T = void, R = void>(): Modal<T, R | undefined>;
-  static create<T = void, R = void>(defaultValue: R): Modal<T, R>;
-  // oxlint-disable-next-line explicit-function-return-type
-  static create(defaultValue?: unknown) {
-    return new Modal(defaultValue);
-  }
-  private constructor(private readonly _default: TResult) {}
+  constructor(private readonly _default: TResult) {}
   private readonly _mutex = Semaphore.mutex();
 
   private _container: Container<TData> | undefined;

@@ -2,7 +2,7 @@ import { act, render, screen, type RenderResult } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { ModalContainer } from "./container";
-import { Modal } from "./modal";
+import { type Modal, createModal } from "./modal";
 
 const renderModalContent = (data: string | void): React.ReactElement => (
   <div data-testid="content">{data ?? null}</div>
@@ -17,7 +17,7 @@ describe("ModalContainer", () => {
   });
 
   test("confirm", async () => {
-    const modal = Modal.create(false);
+    const modal = createModal(false);
     const renderModal = (): React.ReactElement => (
       <div>
         <button type="button" onClick={() => void modal.close()}>
@@ -43,7 +43,7 @@ describe("ModalContainer", () => {
     onTestFinished(() => {
       vi.useRealTimers();
     });
-    const modal = Modal.create();
+    const modal = createModal();
     renderModal(modal);
 
     // Act
@@ -63,7 +63,7 @@ describe("ModalContainer", () => {
     onTestFinished(() => {
       vi.useRealTimers();
     });
-    const modal = Modal.create("default");
+    const modal = createModal("default");
     renderModal(modal);
     const open = vi.spyOn(modal, "open");
     void modal.open();
@@ -90,7 +90,7 @@ describe("ModalContainer", () => {
 
   test("Escape を押すと閉じる", async () => {
     // Arrange
-    const modal = Modal.create();
+    const modal = createModal();
     renderModal(modal);
     const user = userEvent.setup();
     await act(async () => {
@@ -107,7 +107,7 @@ describe("ModalContainer", () => {
 
   test("modal_backdrop をクリックすると閉じる", async () => {
     // Arrange
-    const modal = Modal.create();
+    const modal = createModal();
     renderModal(modal);
     const user = userEvent.setup();
     await act(async () => {
@@ -124,7 +124,7 @@ describe("ModalContainer", () => {
 
   test("modal_backdrop の子をクリックしても閉じない", async () => {
     // Arrange
-    const modal = Modal.create();
+    const modal = createModal();
     renderModal(modal);
     const user = userEvent.setup();
     await act(async () => {
@@ -150,7 +150,7 @@ describe("連続", () => {
     onTestFinished(() => {
       vi.useRealTimers();
     });
-    const modal = Modal.create<string, string>("default");
+    const modal = createModal<string, string>("default");
     renderModal(modal);
 
     // Act
@@ -175,7 +175,7 @@ describe("連続", () => {
 
   test("modal.open を呼んだ直後に modal.close を呼ぶと即時解決して閉じる", async () => {
     // Arrange
-    const modal = Modal.create("default");
+    const modal = createModal("default");
     const open = vi.spyOn(modal, "open");
     renderModal(modal);
 
@@ -204,7 +204,7 @@ describe("連続", () => {
     onTestFinished(() => {
       vi.useRealTimers();
     });
-    const modal = Modal.create("default");
+    const modal = createModal("default");
     renderModal(modal);
     void modal.open();
     await act(() => vi.runAllTimersAsync());
@@ -234,7 +234,7 @@ describe("class Modal", () => {
     vi.restoreAllMocks();
   });
   test("entering/entered中にopenした時の挙動", async () => {
-    const modal = Modal.create<number>();
+    const modal = createModal<number>();
     const first = modal.open(1);
     const second = modal.open(2);
     await vi.runAllTimersAsync();
@@ -248,7 +248,7 @@ describe("class Modal", () => {
     await expect(second).resolves.toBeUndefined();
   });
   test("default", async () => {
-    const modal = Modal.create("defaultValue");
+    const modal = createModal("defaultValue");
     const result = modal.open();
     await vi.advanceTimersByTimeAsync(0);
     void modal.close();

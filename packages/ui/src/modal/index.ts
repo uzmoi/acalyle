@@ -1,2 +1,2 @@
 export * from "./container";
-export * from "./modal";
+export { type Modal, createModal } from "./modal";
