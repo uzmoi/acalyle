@@ -1,17 +1,9 @@
 import { Semaphore } from "@acalyle/util";
-import { type ReadableAtom, atom } from "nanostores";
 
-type ModalData<TData, TResult> =
-  | {
-      show: true;
-      data: TData;
-      resolve(result: TResult): void;
-    }
-  | {
-      show: false;
-      data: TData;
-      resolve: () => void;
-    };
+interface Container<TData> {
+  open(data: TData): void;
+  close(): Promise<void>;
+}
 
 export class Modal<out TData = void, out TResult = void> {
   static create<T = void, R = void>(): Modal<T, R | undefined>;
@@ -22,31 +14,46 @@ export class Modal<out TData = void, out TResult = void> {
   }
   private constructor(private readonly _default: TResult) {}
   private readonly _mutex = Semaphore.mutex();
-  private readonly _$data = atom<ModalData<TData, TResult> | undefined>();
-  get data(): ReadableAtom<{ show: boolean; data: TData } | undefined> {
-    return this._$data;
+
+  private _container: Container<TData> | undefined;
+  /** @internal */
+  registerContainer(container: Container<TData>): () => void {
+    if (this._container != null) {
+      throw new Error("複数のcontainerを登録できません。");
+    }
+    this._container = container;
+    return () => {
+      this._container = undefined;
+    };
   }
+
+  private _resolve:
+    | { bivarianceHack(result: TResult): void }["bivarianceHack"]
+    | undefined;
+
   open(data: TData): Promise<TResult> {
     return this._mutex.use(() => {
+      if (this._container == null) {
+        throw new Error("containerが登録されていません。");
+      }
+
+      this._container.open(data);
+
       return new Promise<TResult>(resolve => {
-        this._$data.set({ show: true, data, resolve });
+        this._resolve = resolve;
       });
     });
   }
   async close(result: TResult = this._default): Promise<void> {
-    const data = this._$data.get();
-    if (!data?.show) return;
+    if (this._container == null) {
+      throw new Error("containerが登録されていません。");
+    }
 
-    data.resolve(result);
-    return new Promise(resolve => {
-      this._$data.set({ show: false, data: data.data, resolve });
-    });
+    if (this._resolve == null) return;
+
+    this._resolve(result);
+    this._resolve = undefined;
+
+    await this._container.close();
   }
-  onExited = (): void => {
-    const data = this._$data.get();
-    if (data == null || data.show) return;
-
-    data.resolve();
-    this._$data.set(undefined);
-  };
 }

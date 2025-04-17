@@ -54,9 +54,7 @@ describe("ModalContainer", () => {
     // Assert
     expect(screen.getByTestId("content")).toBeVisible();
     const backdropEl = screen.getByTestId("modal_backdrop");
-    expect(backdropEl.dataset.status).toBe("entering");
-    await act(() => vi.runAllTimersAsync());
-    expect(backdropEl.dataset.status).toBe("entered");
+    expect(backdropEl.dataset.status).toBe("enter");
   });
 
   test("modal.close を呼ぶと閉じる", async ({ onTestFinished }) => {
@@ -82,7 +80,7 @@ describe("ModalContainer", () => {
     expect(backdropEl.dataset.status).toBe("exiting");
     expect(open).not.toHaveResolved();
 
-    vi.runAllTimers();
+    await act(() => vi.runAllTimersAsync());
     await closing;
 
     expect(backdropEl.dataset.status).toBe("exited");
@@ -103,7 +101,8 @@ describe("ModalContainer", () => {
     await user.keyboard("[Escape]");
 
     // Assert
-    expect(screen.queryByTestId("content")).toBeNull();
+    const backdropEl = screen.getByTestId("modal_backdrop");
+    expect(backdropEl.dataset.status).toBe("exiting");
   });
 
   test("modal_backdrop をクリックすると閉じる", async () => {
@@ -119,7 +118,8 @@ describe("ModalContainer", () => {
     await user.click(screen.getByTestId("modal_backdrop"));
 
     // Assert
-    expect(screen.queryByTestId("content")).toBeNull();
+    const backdropEl = screen.getByTestId("modal_backdrop");
+    expect(backdropEl.dataset.status).toBe("exiting");
   });
 
   test("modal_backdrop の子をクリックしても閉じない", async () => {
@@ -162,18 +162,14 @@ describe("連続", () => {
     // Assert
     const backdropEl = screen.getByTestId("modal_backdrop");
 
-    expect(backdropEl.dataset.status).toBe("entering");
-    await act(() => vi.runAllTimersAsync());
-    expect(backdropEl.dataset.status).toBe("entered");
+    expect(backdropEl.dataset.status).toBe("enter");
     expect(screen.getByTestId("content")).toHaveTextContent("first");
 
-    act(() => {
+    await act(async () => {
       void modal.close();
     });
-    // FIXME[2025-10-01]: 前のモーダルが一回消えてから再表示される
-    await act(() => vi.runAllTimersAsync());
 
-    expect(backdropEl.dataset.status).toBe("entered");
+    expect(backdropEl.dataset.status).toBe("enter");
     expect(screen.getByTestId("content")).toHaveTextContent("second");
   });
 
@@ -225,9 +221,7 @@ describe("連続", () => {
     await act(() => vi.advanceTimersToNextTimerAsync());
     expect(backdropEl.dataset.status).toBe("exited");
     await act(() => vi.advanceTimersToNextTimerAsync());
-    expect(backdropEl.dataset.status).toBe("entering");
-    await act(() => vi.advanceTimersToNextTimerAsync());
-    expect(backdropEl.dataset.status).toBe("entered");
+    expect(backdropEl.dataset.status).toBe("enter");
   });
 });
 

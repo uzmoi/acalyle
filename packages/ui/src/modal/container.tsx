@@ -1,8 +1,6 @@
 import { cx, style } from "@acalyle/css";
-import { timeout } from "emnorst";
 import { useEffect } from "react";
 import { center } from "../base/style-utilities";
-import { useTransitionStatus } from "../base/use-transition-status";
 import { vars } from "../theme";
 import { useModalContainer } from "./hook";
 import type { Modal } from "./modal";
@@ -18,7 +16,6 @@ export interface ModalContainerProps<T> {
 }
 
 const TRANSITION_DURATION = 200;
-const transition = (): Promise<void> => timeout(TRANSITION_DURATION);
 
 export const ModalContainer = <T,>({
   modal,
@@ -46,17 +43,11 @@ export const ModalContainer = <T,>({
     };
   }, [modal]);
 
-  const state = useModalContainer(modal);
-
-  const status = useTransitionStatus({
-    show: state?.type === "open",
-    transition,
-    onExited: modal.onExited,
-  });
+  const [state, status] = useModalContainer(modal);
 
   return (
     <div
-      data-open={status.startsWith("enter")}
+      data-open={status === "enter"}
       data-status={status}
       className={cx(
         style({
