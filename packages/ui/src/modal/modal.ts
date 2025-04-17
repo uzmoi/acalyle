@@ -31,8 +31,9 @@ export class Modal<out TData = void, out TResult = void> {
     resolve(this: void, result: TResult): void;
   }[] = [];
 
-  private _resolve:
-    | { bivarianceHack(result: TResult): void }["bivarianceHack"]
+  private _current:
+    | { open: true; resolve(result: TResult): void }
+    | { open: false }
     | undefined;
 
   open(data: TData): Promise<TResult> {
@@ -41,9 +42,9 @@ export class Modal<out TData = void, out TResult = void> {
         throw new Error("containerが登録されていません。");
       }
 
-      if (this._resolve == null) {
+      if (this._current == null) {
         this._container.open(data);
-        this._resolve = resolve;
+        this._current = { open: true, resolve };
       } else {
         this._queue.push({ data, resolve });
       }
@@ -54,11 +55,12 @@ export class Modal<out TData = void, out TResult = void> {
       throw new Error("containerが登録されていません。");
     }
 
-    if (this._resolve == null) return;
+    if (!this._current?.open) return;
 
-    this._resolve(result);
+    this._current.resolve(result);
 
     if (this._queue.length === 0) {
+      this._current = { open: false };
       await this._container.close();
     }
 
@@ -66,9 +68,9 @@ export class Modal<out TData = void, out TResult = void> {
       const { data, resolve } = this._queue.shift()!;
 
       this._container.open(data);
-      this._resolve = resolve;
+      this._current = { open: true, resolve };
     } else {
-      this._resolve = undefined;
+      this._current = undefined;
     }
   }
 }
