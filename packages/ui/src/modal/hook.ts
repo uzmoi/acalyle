@@ -34,7 +34,7 @@ export const useModalContainer = <TData, TResult>(
     };
     window.addEventListener("keydown", onKeyDown);
     return () => {
-      window.addEventListener("keydown", onKeyDown);
+      window.removeEventListener("keydown", onKeyDown);
     };
   }, [modal]);
 
