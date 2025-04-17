@@ -3,22 +3,22 @@ import { useEffect, useState } from "react";
 import type { Modal } from "./modal";
 
 export type State<TData> =
-  | { type: "enter"; data: TData }
-  | { type: "exiting"; data: TData }
+  | { type: "open"; data: TData }
+  | { type: "closing"; data: TData }
   | null;
 
 export const useModalContainer = <TData, TResult>(
   modal: Modal<TData, TResult>,
-): [State<TData>, "enter" | "exiting" | "exited"] => {
+): [State<TData>, "open" | "closing" | "closed"] => {
   const [state, setState] = useState<State<TData>>(null);
 
   useEffect(() => {
     return modal.registerContainer({
       open(data: TData) {
-        setState({ type: "enter", data });
+        setState({ type: "open", data });
       },
       async close() {
-        setState(state => state && { type: "exiting", data: state.data });
+        setState(state => state && { type: "closing", data: state.data });
         // TRANSITION_DURATION
         await timeout(200);
         setState(null);
@@ -26,5 +26,5 @@ export const useModalContainer = <TData, TResult>(
     });
   }, [modal]);
 
-  return [state, state?.type ?? "exited"];
+  return [state, state?.type ?? "closed"];
 };

@@ -11,6 +11,11 @@ const renderModalContent = (data: string | void): React.ReactElement => (
 const renderModal = (modal: Modal<string | void, unknown>): RenderResult =>
   render(<ModalContainer modal={modal} render={renderModalContent} />);
 
+const getModalStatus = (): string | undefined => {
+  const backdropEl = screen.getByTestId("modal_backdrop");
+  return backdropEl.dataset.modalStatus;
+};
+
 describe("modal.open, modal.close", () => {
   beforeEach(() => {
     vi.useFakeTimers();
@@ -33,8 +38,7 @@ describe("modal.open, modal.close", () => {
 
     // Assert
     expect(screen.getByTestId("content")).toBeVisible();
-    const backdropEl = screen.getByTestId("modal_backdrop");
-    expect(backdropEl.dataset.status).toBe("enter");
+    expect(getModalStatus()).toBe("open");
   });
 
   test("modal.close を呼ぶと閉じる", async () => {
@@ -55,13 +59,12 @@ describe("modal.open, modal.close", () => {
     // Assert
     expect(open).toHaveResolvedWith("default");
 
-    const backdropEl = screen.getByTestId("modal_backdrop");
-    expect(backdropEl.dataset.status).toBe("exiting");
+    expect(getModalStatus()).toBe("closing");
 
     await act(() => vi.runAllTimersAsync());
     await closing;
 
-    expect(backdropEl.dataset.status).toBe("exited");
+    expect(getModalStatus()).toBe("closed");
     expect(screen.queryByTestId("content")).toBeNull();
   });
 });
@@ -87,8 +90,7 @@ describe("ユーザー操作", () => {
     await user.keyboard("[Escape]");
 
     // Assert
-    const backdropEl = screen.getByTestId("modal_backdrop");
-    expect(backdropEl.dataset.status).toBe("exiting");
+    expect(getModalStatus()).toBe("closing");
   });
 
   test("modal_backdrop をクリックすると閉じる", async () => {
@@ -99,8 +101,7 @@ describe("ユーザー操作", () => {
     await user.click(screen.getByTestId("modal_backdrop"));
 
     // Assert
-    const backdropEl = screen.getByTestId("modal_backdrop");
-    expect(backdropEl.dataset.status).toBe("exiting");
+    expect(getModalStatus()).toBe("closing");
   });
 
   test("modal_backdrop の子をクリックしても閉じない", async () => {
@@ -113,8 +114,7 @@ describe("ユーザー操作", () => {
     await user.click(contentEl.parentElement!);
 
     // Assert
-    const backdropEl = screen.getByTestId("modal_backdrop");
-    expect(backdropEl.dataset.status).toBe("enter");
+    expect(getModalStatus()).toBe("open");
   });
 });
 
@@ -140,19 +140,17 @@ describe("連続", () => {
     });
 
     // Assert
-    const backdropEl = screen.getByTestId("modal_backdrop");
-
-    expect(backdropEl.dataset.status).toBe("enter");
+    expect(getModalStatus()).toBe("open");
     expect(screen.getByTestId("content")).toHaveTextContent("first");
 
     await act(async () => {
       void modal.close();
     });
 
-    expect(backdropEl.dataset.status).toBe("enter");
+    expect(getModalStatus()).toBe("open");
     expect(screen.getByTestId("content")).toHaveTextContent("second");
     await act(() => vi.runAllTimersAsync());
-    expect(backdropEl.dataset.status).toBe("enter");
+    expect(getModalStatus()).toBe("open");
   });
 
   test("閉じている途中に modal.close を呼んでも作用しない", async () => {
@@ -189,10 +187,9 @@ describe("連続", () => {
 
     // Assert
     expect(open).toHaveResolvedWith("default");
-    const backdropEl = screen.getByTestId("modal_backdrop");
-    expect(backdropEl.dataset.status).toBe("exiting");
+    expect(getModalStatus()).toBe("closing");
     await act(() => vi.runAllTimersAsync());
-    expect(backdropEl.dataset.status).toBe("exited");
+    expect(getModalStatus()).toBe("closed");
   });
 
   test("modal.close を呼んだ直後に modal.open を呼ぶと完全に閉じてから開き直す", async () => {
@@ -209,9 +206,8 @@ describe("連続", () => {
     });
 
     // Assert
-    const backdropEl = screen.getByTestId("modal_backdrop");
-    expect(backdropEl.dataset.status).toBe("exiting");
+    expect(getModalStatus()).toBe("closing");
     await act(() => vi.advanceTimersToNextTimerAsync());
-    expect(backdropEl.dataset.status).toBe("enter");
+    expect(getModalStatus()).toBe("open");
   });
 });

@@ -47,8 +47,8 @@ export const ModalContainer = <T,>({
 
   return (
     <div
-      data-open={status === "enter"}
-      data-status={status}
+      data-open={status === "open"}
+      data-modal-status={status}
       className={cx(
         style({
           position: "fixed",
@@ -60,7 +60,7 @@ export const ModalContainer = <T,>({
           '&[data-open="false"]': {
             opacity: 0,
           },
-          '&[data-status="exited"]': {
+          '&[data-modal-status="closed"]': {
             visibility: "hidden",
           },
         }),
