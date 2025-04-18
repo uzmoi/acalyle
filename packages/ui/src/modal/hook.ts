@@ -14,10 +14,17 @@ export const useModalContainer = <TData, TResult>(
 
   useEffect(() => {
     return modal.registerContainer({
-      open(data: TData) {
+      async open(data: TData) {
+        // XXX: なんでかわからんが同期的にsetStateすると無視される場合があり、その対策。
+        await Promise.resolve();
+
         setState({ type: "open", data });
       },
       async close() {
+        // open直後にcloseすると順番が入れ替わるので同じく待つ。
+        // あと、closeの側にも同じ問題があるかもしれないので。
+        await Promise.resolve();
+
         setState(state => state && { type: "closing", data: state.data });
         // TRANSITION_DURATION
         await timeout(200);

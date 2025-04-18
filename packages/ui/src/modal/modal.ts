@@ -7,7 +7,7 @@ export const createModal: CreateModal = (defaultValue?) =>
   new Modal(defaultValue);
 
 interface Container<TData> {
-  open(data: TData): void;
+  open(data: TData): Promise<void>;
   close(): Promise<void>;
 }
 
@@ -43,7 +43,7 @@ export class Modal<out TData = void, out TResult = void> {
       }
 
       if (this._current == null) {
-        this._container.open(data);
+        void this._container.open(data);
         this._current = { open: true, resolve };
       } else {
         this._queue.push({ data, resolve });
@@ -67,7 +67,7 @@ export class Modal<out TData = void, out TResult = void> {
     if (this._queue.length > 0) {
       const { data, resolve } = this._queue.shift()!;
 
-      this._container.open(data);
+      void this._container.open(data);
       this._current = { open: true, resolve };
     } else {
       this._current = undefined;

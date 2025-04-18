@@ -198,7 +198,7 @@ describe("連続", () => {
     await act(() => vi.runAllTimersAsync());
 
     // Act
-    act(() => {
+    await act(async () => {
       void modal.close();
       void modal.open();
     });
