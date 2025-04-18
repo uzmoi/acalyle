@@ -1,5 +1,5 @@
 import { timeout } from "emnorst";
-import { useEffect, useState } from "react";
+import { useDebugValue, useEffect, useState } from "react";
 import type { Modal } from "./modal";
 
 export type State<TData> =
@@ -44,6 +44,8 @@ export const useModalContainer = <TData, TResult>(
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [modal]);
+
+  useDebugValue(state);
 
   return [state, state?.type ?? "closed"];
 };
