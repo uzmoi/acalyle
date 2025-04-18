@@ -1,15 +1,10 @@
 import { cx, style } from "@acalyle/css";
-import { center } from "../base/style-utilities";
-import { vars } from "../theme";
 import { useModalContainer } from "./hook";
 import type { Modal } from "./modal";
-
-export type ModalSize = "content" | "max";
 
 export interface ModalContainerProps<T> {
   modal: Modal<T, unknown>;
   render: (data: NoInfer<T>) => React.ReactNode;
-  size?: ModalSize;
   className?: string;
   onClickBackdrop?: React.MouseEventHandler<HTMLDivElement>;
 }
@@ -19,7 +14,6 @@ const TRANSITION_DURATION = 200;
 export const ModalContainer = <T,>({
   modal,
   render,
-  size,
   className,
   onClickBackdrop,
 }: ModalContainerProps<T>): React.ReactElement | null => {
@@ -55,23 +49,7 @@ export const ModalContainer = <T,>({
       data-testid="modal_backdrop"
       onClick={handleClickBackdrop}
     >
-      {state && (
-        <div
-          className={cx(
-            style({
-              ...center(),
-              maxWidth: "min(calc(100vw - min(8em, 20%)), 72em)",
-              maxHeight: "calc(100dvh - 4em)",
-              backgroundColor: vars.color.bg.layout,
-              borderRadius: vars.radius.layout,
-              boxShadow: "0 0 2em #111",
-            }),
-            size === "max" && style({ width: "100%", height: "100%" }),
-          )}
-        >
-          {render(state.data)}
-        </div>
-      )}
+      {state && render(state.data)}
     </div>
   );
 };

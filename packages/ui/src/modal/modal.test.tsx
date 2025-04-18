@@ -109,9 +109,7 @@ describe("ユーザー操作", () => {
     const { user } = await setup();
 
     // Act
-    const contentEl = screen.getByTestId("content");
-    // eslint-disable-next-line testing-library/no-node-access
-    await user.click(contentEl.parentElement!);
+    await user.click(screen.getByTestId("content"));
 
     // Assert
     expect(getModalStatus()).toBe("open");
