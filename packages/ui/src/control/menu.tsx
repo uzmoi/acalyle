@@ -1,5 +1,5 @@
 import { cx, style } from "@acalyle/css";
-import { vars } from "../theme/theme";
+import { theme } from "../theme";
 import { Button } from "./button";
 
 export const Menu: React.FC<React.ComponentProps<"div">> & {
@@ -26,7 +26,7 @@ const MenuItem: React.FC<
           textAlign: "start",
           transition: "background-color 200ms, color 200ms",
           "& + &": {
-            borderTop: `1px solid ${vars.color.fg.mute}`,
+            borderTop: `1px solid ${theme("control-outline")}`,
           },
           "&:enabled:is(:hover, :focus)": {
             backgroundColor: "#fff2",

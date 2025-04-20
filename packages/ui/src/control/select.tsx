@@ -1,5 +1,5 @@
 import { cx, style } from "@acalyle/css";
-import { vars } from "../theme";
+import { theme } from "../theme";
 import { base, reset } from "./base";
 
 export interface SelectProps extends React.ComponentProps<"select"> {
@@ -29,8 +29,8 @@ export const Select: React.FC<SelectProps> & {
 
 type SelectOptionGroupComponent = React.FC<React.ComponentProps<"optgroup">>;
 // eslint-disable-next-line pure-module/pure-module
-Select.Group = ({ ...restProps }) => {
-  return <optgroup {...restProps} />;
+Select.Group = props => {
+  return <optgroup {...props} />;
 };
 
 if (import.meta.env.DEV) {
@@ -40,11 +40,14 @@ if (import.meta.env.DEV) {
 
 type SelectOptionComponent = React.FC<React.ComponentProps<"option">>;
 // eslint-disable-next-line pure-module/pure-module
-Select.Option = ({ className, ...restProps }) => {
+Select.Option = props => {
   return (
     <option
-      {...restProps}
-      className={cx(style({ backgroundColor: vars.color.bg.block }), className)}
+      {...props}
+      className={cx(
+        style({ backgroundColor: theme("control-bg") }),
+        props.className,
+      )}
     />
   );
 };

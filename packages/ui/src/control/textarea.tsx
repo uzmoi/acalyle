@@ -1,6 +1,6 @@
 import { cx, style } from "@acalyle/css";
 import { useRef } from "react";
-import { vars } from "../theme";
+import { theme } from "../theme";
 import { base } from "./base";
 
 const ZeroWidthSpace = "\u200B";
@@ -38,7 +38,7 @@ export const TextArea: React.FC<TextAreaProps> = ({
           position: "relative",
           overflowWrap: "break-word",
           whiteSpace: "pre-wrap",
-          "--caret-color": vars.color.fg.__,
+          "--caret-color": theme("control-text"),
         }),
         className,
       )}

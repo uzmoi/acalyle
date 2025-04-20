@@ -1,5 +1,5 @@
 import { cx, style } from "@acalyle/css";
-import { vars } from "../theme";
+import { theme } from "../theme";
 import { base, reset } from "./base";
 
 export interface ButtonProps extends React.ComponentProps<"button"> {
@@ -20,8 +20,20 @@ export const Button: React.FC<ButtonProps> = ({
         style({
           fontWeight: "bold",
           cursor: "pointer",
+          "&:hover": {
+            color: theme("control:hover-text"),
+            background: theme("control:hover-bg"),
+            borderColor: theme("control:hover-outline"),
+          },
+          "&:active": {
+            color: theme("control:active-text"),
+            background: theme("control:active-bg"),
+            borderColor: theme("control:active-outline"),
+          },
           "&:disabled": {
-            color: vars.color.fg.mute,
+            color: theme("control:disabled-text"),
+            background: theme("control:disabled-bg"),
+            borderColor: theme("control:disabled-outline"),
             cursor: "not-allowed",
           },
         }),

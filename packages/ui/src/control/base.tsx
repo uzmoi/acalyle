@@ -1,5 +1,6 @@
+/* eslint-disable pure-module/pure-module */
 import { cx, style } from "@acalyle/css";
-import { vars } from "../theme";
+import { theme } from "../theme";
 
 export const ControlGroup: React.FC<React.ComponentProps<"div">> = props => {
   return <div {...props} className={cx(group, props.className)} />;
@@ -25,23 +26,28 @@ export const base = style({
     [`.${group} > & + &`]: { marginLeft: "2px" },
     [`.${group} > &`]: { borderRadius: 0 },
     [`.${group} > &:first-child`]: {
-      borderRadius: `${vars.radius.control} 0 0 ${vars.radius.control}`,
+      borderRadius: `${theme("control-radius")} 0 0 ${theme("control-radius")}`,
     },
     [`.${group} > &:last-child`]: {
-      borderRadius: `0 ${vars.radius.control} ${vars.radius.control} 0`,
+      borderRadius: `0 ${theme("control-radius")} ${theme("control-radius")} 0`,
     },
     [`.${group} > &:only-child, &`]: {
-      borderRadius: vars.radius.control,
+      borderRadius: theme("control-radius"),
     },
   },
 
-  backgroundColor: vars.color.bg.inline,
-  border: `1px solid ${vars.color.fg.__}`,
+  color: theme("control-text"),
+  background: theme("control-bg"),
+  border: `1px solid ${theme("control-outline")}`,
   transition: "0.25s",
   '&:user-invalid, &:user-valid[aria-invalid="true"]': {
-    borderColor: vars.color.danger,
+    color: theme("control:invalid-text"),
+    background: theme("control:invalid-bg"),
+    borderColor: theme("control:invalid-outline"),
   },
   "&:focus-visible": {
-    borderColor: "lightgreen",
+    color: theme("control:focus-text"),
+    background: theme("control:focus-bg"),
+    borderColor: theme("control:focus-outline"),
   },
 });

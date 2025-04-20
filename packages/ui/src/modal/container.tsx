@@ -1,4 +1,5 @@
 import { cx, style } from "@acalyle/css";
+import { theme } from "../theme";
 import { useModalContainer } from "./hook";
 import type { Modal } from "./modal";
 
@@ -33,7 +34,7 @@ export const ModalContainer = <T,>({
         style({
           position: "fixed",
           inset: 0,
-          backgroundColor: "#0008",
+          background: theme("modal-backdrop"),
           backdropFilter: "blur(1px)",
           transition: `opacity ${TRANSITION_DURATION}ms`,
           opacity: 0,

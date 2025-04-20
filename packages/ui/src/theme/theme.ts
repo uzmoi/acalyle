@@ -18,6 +18,33 @@ const createGlobalThemeContract = <T extends Tokens>(
   return tokens as unknown as MapLeafNodes<T, VarFunction>;
 };
 
+export interface Theme {
+  control: ControlTheme & { radius: string };
+  "control:focus": ControlTheme;
+  "control:hover": ControlTheme;
+  "control:active": ControlTheme;
+  "control:invalid": ControlTheme;
+  "control:disabled": ControlTheme;
+  modal: ModalTheme;
+  popover: PopoverTheme;
+}
+
+export interface ControlTheme {
+  text: string;
+  bg: string;
+  outline: string;
+}
+
+export interface ModalTheme {
+  backdrop: string;
+}
+
+export interface PopoverTheme {
+  bg: string;
+  radius: string;
+  outline: string;
+}
+
 export const vars = /* #__PURE__ */ createGlobalThemeContract(
   {
     color: {

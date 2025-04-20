@@ -11,7 +11,7 @@ import {
 } from "react";
 import { useTransitionStatus } from "../base/use-transition-status";
 import { Button } from "../control/button";
-import { vars } from "../theme/theme";
+import { theme } from "../theme";
 import { $popover } from "./store";
 
 // 全ては wyw-in-js のせい。
@@ -134,9 +134,8 @@ const PopoverContent: React.FC<PopoverContentProps> = ({
       className={cx(
         style({
           position: "absolute",
-          zIndex: vars.zIndex.popover,
-          backgroundColor: vars.color.bg.block,
-          borderRadius: vars.radius.block,
+          background: theme("popover-bg"),
+          borderRadius: theme("popover-radius"),
           boxShadow: "0 0 2em #111",
           transition: `opacity ${TRANSITION_DURATION}ms`,
           '&[data-open="false"]': { opacity: 0 },
