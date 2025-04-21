@@ -36,6 +36,10 @@ export class Modal<out TData = void, out TResult = void> {
     | { open: false }
     | undefined;
 
+  isOpen(): boolean {
+    return !!this._current?.open;
+  }
+
   open(data: TData): Promise<TResult> {
     return new Promise<TResult>(resolve => {
       if (this._container == null) {

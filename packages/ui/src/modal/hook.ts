@@ -35,7 +35,9 @@ export const useModalContainer = <TData, TResult>(
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent): void => {
-      if (e.key === "Escape") {
+      if (!e.defaultPrevented && e.key === "Escape" && modal.isOpen()) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
         void modal.close();
       }
     };

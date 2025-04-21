@@ -9,7 +9,7 @@ export const closePopover = (): void => {
 // eslint-disable-next-line pure-module/pure-module
 onMount($popover, () => {
   const onKeyDown = (e: KeyboardEvent): void => {
-    if (!e.defaultPrevented && e.key === "Escape") {
+    if (!e.defaultPrevented && e.key === "Escape" && $popover.get() != null) {
       e.preventDefault();
       e.stopImmediatePropagation();
       closePopover();
