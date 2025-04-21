@@ -1,6 +1,6 @@
 import "./reset";
 
-import { createTheme, vars } from ".";
+import { createLegacyTheme as createTheme, vars } from ".";
 
 export const devTheme = /* #__PURE__ */ createTheme<typeof vars>("acalyle", {
   color: {

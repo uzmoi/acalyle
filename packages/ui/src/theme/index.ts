@@ -1,3 +1,3 @@
-export * from "./create";
-export { varName, theme, createTheme as createTheme_ } from "./helpers";
+export { createTheme as createLegacyTheme } from "./create";
+export { varName, theme, createTheme } from "./helpers";
 export * from "./theme";
