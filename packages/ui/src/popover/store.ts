@@ -18,7 +18,7 @@ onMount($popover, () => {
   window.addEventListener("keydown", onKeyDown);
   window.addEventListener("click", closePopover);
   return () => {
-    window.addEventListener("keydown", onKeyDown);
+    window.removeEventListener("keydown", onKeyDown);
     window.removeEventListener("click", closePopover);
   };
 });
