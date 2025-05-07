@@ -8,7 +8,10 @@ import {
 } from "react-icons/bi";
 import type { ID } from "~/lib/graphql";
 import { removeNote, transferNote } from "~/note/store/note";
-import { confirm, selectBook } from "~/ui/modal";
+
+const confirm = (_text: string): Promise<boolean> => Promise.resolve(false);
+
+const selectBook = (): Promise<ID | void> => Promise.resolve();
 
 type MenuAction = {
     icon: React.ReactElement;
