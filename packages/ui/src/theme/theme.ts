@@ -1,4 +1,11 @@
-import type { MapLeafNodes } from "./create";
+import type { Primitive } from "emnorst";
+
+type MapLeafNodes<Obj, LeafType> = {
+  [Prop in keyof Obj]: Obj[Prop] extends Primitive ? LeafType
+  : Obj[Prop] extends Record<string | number, unknown> ?
+    MapLeafNodes<Obj[Prop], LeafType>
+  : never;
+};
 
 type VarFunction = `var(--${string})`;
 type Tokens = { [_ in string]: Tokens | string | null };
