@@ -3,7 +3,7 @@ import type { IfUnion } from "emnorst";
 import type { Theme } from "./theme";
 
 export const varName = (key: string): string =>
-  import.meta.env.DEV ? key : hash(key);
+  import.meta.env.DEV ? key.replace(":", "-") : hash(key);
 
 export const theme = <
   S extends keyof Theme,
@@ -23,7 +23,8 @@ export const createTheme = (theme: Theme): Record<`--${string}`, string> => {
     theme as unknown as Record<keyof Theme, Record<string, string>>,
   )) {
     for (const [key, value] of Object.entries(vars)) {
-      style[`--${varName(`${scope}-${key}`)}`] = value;
+      const name = `--${varName(`${scope}-${key}`)}` as const;
+      style[name] = value;
     }
   }
 
