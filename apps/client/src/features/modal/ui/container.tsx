@@ -1,4 +1,6 @@
-import { ModalContainer } from "@acalyle/ui";
+import { cx, style } from "@acalyle/css";
+import { center, ModalContainer } from "@acalyle/ui";
+import { theme } from "~/theme";
 import { type ModalInput, type Modals, modal } from "../model";
 import { ConfirmForm } from "./confirm";
 
@@ -14,12 +16,19 @@ const modals: ModalRenderers = {
   },
 };
 
-const renderModal = (data: ModalInput): React.ReactNode => {
-  return modals[data.type](data.input, result => {
-    void data.close(result as never);
-  });
-};
+const renderModal = (data: ModalInput): React.ReactNode => (
+  <div
+    className={cx(
+      ":uno: rounded shadow-lg",
+      style({ ...center(), backgroundColor: theme("app-bg") }),
+    )}
+  >
+    {modals[data.type](data.input, result => {
+      void data.close(result as never);
+    })}
+  </div>
+);
 
 export const QuickModalContainer: React.FC = () => {
-  return <ModalContainer modal={modal} render={renderModal} size="content" />;
+  return <ModalContainer modal={modal} render={renderModal} />;
 };

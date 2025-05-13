@@ -1,30 +1,37 @@
 import { useEffect, useRef } from "react";
 
-export const Intersection: React.FC<
-    {
-        onIntersection: (entry: IntersectionObserverEntry) => void;
-    } & IntersectionObserverInit &
-        React.ComponentPropsWithoutRef<"div">
-> = ({ onIntersection, root, rootMargin, threshold, ...restProps }) => {
-    const el = useRef<HTMLDivElement>(null);
+export interface IntersectionProps
+  extends IntersectionObserverInit,
+    React.ComponentProps<"div"> {
+  onIntersection: (entry: IntersectionObserverEntry) => void;
+}
 
-    useEffect(() => {
-        if (el.current == null) return;
+export const Intersection: React.FC<IntersectionProps> = ({
+  onIntersection,
+  root,
+  rootMargin,
+  threshold,
+  ...restProps
+}) => {
+  const el = useRef<HTMLDivElement>(null);
 
-        const observer = new IntersectionObserver(
-            entries => {
-                for (const entry of entries) {
-                    onIntersection(entry);
-                }
-            },
-            { root, rootMargin, threshold },
-        );
+  useEffect(() => {
+    if (el.current == null) return;
 
-        observer.observe(el.current);
-        return () => {
-            observer.disconnect();
-        };
-    }, [el, onIntersection, root, rootMargin, threshold]);
+    const observer = new IntersectionObserver(
+      entries => {
+        for (const entry of entries) {
+          onIntersection(entry);
+        }
+      },
+      { root, rootMargin, threshold },
+    );
 
-    return <div ref={el} {...restProps} />;
+    observer.observe(el.current);
+    return () => {
+      observer.disconnect();
+    };
+  }, [el, onIntersection, root, rootMargin, threshold]);
+
+  return <div ref={el} {...restProps} />;
 };

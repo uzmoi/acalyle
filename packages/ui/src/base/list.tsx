@@ -2,36 +2,41 @@ import { cx, style } from "@acalyle/css";
 
 export type ListVariant = "default" | "unstyled";
 
-export const List: React.FC<
-    (
-        | (React.ComponentPropsWithoutRef<"ul"> & { ordered?: false })
-        | (React.ComponentPropsWithoutRef<"ol"> & { ordered: true })
-    ) & {
-        variant?: ListVariant;
-    }
-> & {
-    Item: ListItemComponent;
-} = ({ ordered, variant = "unstyled", className, ...restProps }) => {
-    const Component = ordered ? "ol" : "ul";
-    return (
-        <Component
-            {...restProps}
-            className={cx(
-                variant === "unstyled" &&
-                    style({ paddingLeft: 0, listStyle: "none" }),
-                className,
-            )}
-        />
-    );
+interface UnorderedListProps extends React.ComponentProps<"ul"> {
+  ordered?: false;
+}
+
+interface OrderedListProps extends React.ComponentProps<"ol"> {
+  ordered: true;
+}
+
+export type ListProps = (UnorderedListProps | OrderedListProps) & {
+  variant?: ListVariant;
 };
 
-type ListItemComponent = React.FC<React.ComponentPropsWithoutRef<"li">>;
+export const List: React.FC<ListProps> & {
+  Item: ListItemComponent;
+} = ({ ordered, variant = "unstyled", className, ...restProps }) => {
+  // ref の型が合わなくなるので ul に偽装
+  const Component = ordered ? ("ol" as string as "ul") : "ul";
+  return (
+    <Component
+      {...restProps}
+      className={cx(
+        variant === "unstyled" && style({ paddingLeft: 0, listStyle: "none" }),
+        className,
+      )}
+    />
+  );
+};
+
+type ListItemComponent = React.FC<React.ComponentProps<"li">>;
 // eslint-disable-next-line pure-module/pure-module
-List.Item = ({ ...restProps }) => {
-    return <li {...restProps} />;
+List.Item = props => {
+  return <li {...props} />;
 };
 
 if (import.meta.env.DEV) {
-    // eslint-disable-next-line pure-module/pure-module
-    List.Item.displayName = "List.Item";
+  // eslint-disable-next-line pure-module/pure-module
+  List.Item.displayName = "List.Item";
 }

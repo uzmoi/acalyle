@@ -1,4 +1,4 @@
-import { Modal } from "@acalyle/ui";
+import { createModal } from "@acalyle/ui";
 
 export interface Modals {
   confirm(input: { message: string }): boolean;
@@ -10,7 +10,7 @@ export type ModalInput = {
   : never;
 }[keyof Modals];
 
-export const modal = /* #__PURE__ */ Modal.create<ModalInput, unknown>();
+export const modal = /* #__PURE__ */ createModal<ModalInput, unknown>();
 
 export const openModal = <T extends keyof Modals>(
   type: T,

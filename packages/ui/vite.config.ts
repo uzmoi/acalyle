@@ -3,18 +3,26 @@ import react from "@vitejs/plugin-react-swc";
 import wywInJS from "@wyw-in-js/vite";
 import dts from "vite-plugin-dts";
 import { coverageConfigDefaults, defineConfig } from "vitest/config";
-import { dependencies } from "./package.json";
+import packageJson from "./package.json" with { type: "json" };
 
 const isStorybook = process.argv[1]?.includes("storybook");
+
+type WyWinJS = typeof import("@wyw-in-js/vite").default;
 
 export default defineConfig({
   plugins: [
     react(),
-    (wywInJS as unknown as typeof import("@wyw-in-js/vite").default)({
+    (wywInJS as unknown as WyWinJS)({
       include: ["**/*.{ts,tsx}"],
-      babelOptions: { presets: ["@babel/preset-typescript"] },
+      babelOptions: {
+        presets: ["@babel/preset-typescript"],
+        plugins: ["transform-vite-meta-env"],
+      },
       sourceMap: true,
       tagResolver,
+      features: {
+        dangerousCodeRemover: ["**/*", "!**/src/theme/*"],
+      } as NonNullable<Parameters<WyWinJS>[0]>["features"],
       classNameSlug: (hash, title, { name }) =>
         `${title === "className" ? name : title}__${hash}`,
     }),
@@ -32,7 +40,7 @@ export default defineConfig({
       formats: ["es"],
     },
     rollupOptions: {
-      external: [/^react(?![^/])/, ...Object.keys(dependencies)],
+      external: [/^react(?![^/])/, ...Object.keys(packageJson.dependencies)],
     },
   },
   test: {
