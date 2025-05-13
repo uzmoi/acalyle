@@ -1,6 +1,12 @@
 import { createTheme, theme } from "../src";
 
 export const devTheme = createTheme({
+  paper: {
+    bg: "#EEEEEE",
+    outline: "#DDDDDD",
+    radius: "0.25rem",
+    shadow: "#11111122",
+  },
   control: {
     text: "#10141A",
     bg: "#DDDDDD",
@@ -34,10 +40,5 @@ export const devTheme = createTheme({
   },
   modal: {
     backdrop: "#0004",
-  },
-  popover: {
-    bg: "#EEEEEE",
-    outline: "#DDDDDD",
-    radius: "0.25rem",
   },
 });

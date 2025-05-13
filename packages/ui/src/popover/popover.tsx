@@ -134,9 +134,10 @@ const PopoverContent: React.FC<PopoverContentProps> = ({
       className={cx(
         style({
           position: "absolute",
-          background: theme("popover-bg"),
-          borderRadius: theme("popover-radius"),
-          boxShadow: "0 0 2em #111",
+          background: theme("paper-bg"),
+          border: `1px solid ${theme("paper-outline")}`,
+          borderRadius: theme("paper-radius"),
+          boxShadow: `2px 2px 12px ${theme("paper-shadow")}`,
           transition: `opacity ${TRANSITION_DURATION}ms`,
           '&[data-open="false"]': { opacity: 0 },
           '&[data-status="exited"]': { visibility: "hidden" },

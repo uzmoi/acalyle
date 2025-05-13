@@ -26,6 +26,7 @@ const createGlobalThemeContract = <T extends Tokens>(
 };
 
 export interface Theme {
+  paper: PaperTheme;
   control: ControlTheme & { radius: string };
   "control:focus": ControlTheme;
   "control:hover": ControlTheme;
@@ -33,7 +34,13 @@ export interface Theme {
   "control:invalid": ControlTheme;
   "control:disabled": ControlTheme;
   modal: ModalTheme;
-  popover: PopoverTheme;
+}
+
+export interface PaperTheme {
+  bg: string;
+  radius: string;
+  outline: string;
+  shadow: string;
 }
 
 export interface ControlTheme {
@@ -44,12 +51,6 @@ export interface ControlTheme {
 
 export interface ModalTheme {
   backdrop: string;
-}
-
-export interface PopoverTheme {
-  bg: string;
-  radius: string;
-  outline: string;
 }
 
 export const vars = /* #__PURE__ */ createGlobalThemeContract(
