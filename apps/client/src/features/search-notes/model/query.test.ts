@@ -13,6 +13,13 @@ describe("parser", () => {
     [""],
     ["hoge", h.word("hoge")],
     ["hoge fuga", h.word("hoge"), h.word("fuga")],
+    ['" ', h.word('"')],
+    // quote
+    ['""'],
+    ['" "', h.word(" ")],
+    ['"a"b', h.word('"a"b')],
+    ['a"b"', h.word('a"b"')],
+    ['"\\""', h.word('"')],
   ] satisfies Case[])("parse %o", (queryString, ...items) => {
     expect(parseQuery(queryString)).toEqual({ items });
   });
