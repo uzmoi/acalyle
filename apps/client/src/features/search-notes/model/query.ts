@@ -4,13 +4,16 @@ export interface Query {
 
 export type QueryItem = { type: "word"; value: string };
 
+const queryRe = /"(?:\\.|[^\\])*"(?!\P{White_Space})|\P{White_Space}+/gv;
+const unescapeRe = /\\(.)/gv;
+
 export const parseQuery = (query: string): Query => {
   const items = query
-    .match(/"(?:\\.|[^\\])*"(?!\P{White_Space})|\P{White_Space}+/gv)
+    .match(queryRe)
     ?.map<QueryItem>(part => {
       // quote
       if (part.length >= 2 && part.startsWith('"') && part.endsWith('"')) {
-        const value = part.slice(1, -1).replaceAll(/\\(.)/gv, "$1");
+        const value = part.slice(1, -1).replaceAll(unescapeRe, "$1");
 
         return { type: "word", value };
       }
