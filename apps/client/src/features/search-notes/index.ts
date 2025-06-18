@@ -1,2 +1,2 @@
 /** @public */
-export {} from "./model";
+export { SearchBox } from "./ui";
