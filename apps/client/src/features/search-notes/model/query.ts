@@ -2,9 +2,13 @@ export interface Query {
   items: QueryItem[];
 }
 
-export type QueryItem = { type: "word"; value: string };
+export type QueryItem =
+  | { type: "word"; value: string }
+  | { type: "ignore"; value: string };
 
-const queryRe = /"(?:\\.|[^\\])*"(?!\P{White_Space})|\P{White_Space}+/gv;
+const wsRe = /^\p{White_Space}/v;
+const queryRe =
+  /"(?:\\.|[^\\])*"(?!\P{White_Space})|\P{White_Space}+|\p{White_Space}+/gv;
 const unescapeRe = /\\(.)/gv;
 
 export const parseQuery = (query: string): Query => {
@@ -16,6 +20,12 @@ export const parseQuery = (query: string): Query => {
         const value = part.slice(1, -1).replaceAll(unescapeRe, "$1");
 
         return { type: "word", value };
+      }
+
+      // white space
+      // eslint-disable-next-line @typescript-eslint/prefer-string-starts-ends-with
+      if (wsRe.test(part)) {
+        return { type: "ignore", value: part };
       }
 
       return { type: "word", value: part };
