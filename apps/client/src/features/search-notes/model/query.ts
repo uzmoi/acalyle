@@ -4,11 +4,13 @@ export interface Query {
 
 export type QueryItem =
   | { type: "word"; value: string }
+  | { type: "tag"; symbol: string; prop: string | null }
   | { type: "ignore"; value: string };
 
 const wsRe = /^\p{White_Space}/v;
 const queryRe =
   /"(?:\\.|[^\\])*"(?!\P{White_Space})|\P{White_Space}+|\p{White_Space}+/gv;
+const tagHeadRe = /^[!#$%&*+=?@^~-]/;
 const unescapeRe = /\\(.)/gv;
 
 export const parseQuery = (query: string): Query => {
@@ -28,9 +30,19 @@ export const parseQuery = (query: string): Query => {
         return { type: "ignore", value: part };
       }
 
+      // tag
+      if (tagHeadRe.test(part)) {
+        const index = part.indexOf(":");
+        return {
+          type: "tag",
+          symbol: index === -1 ? part : part.slice(0, index),
+          prop: index === -1 ? null : part.slice(index + 1),
+        };
+      }
+
       return { type: "word", value: part };
     })
-    .filter(item => item.value !== "");
+    .filter(item => item.type !== "word" || item.value !== "");
 
   return { items: items ?? [] };
 };

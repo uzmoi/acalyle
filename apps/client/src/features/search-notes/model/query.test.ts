@@ -8,6 +8,11 @@ const h = {
     value: expect.any(String) as string,
   } satisfies QueryItem,
   word: (value: string): QueryItem => ({ type: "word", value }),
+  tag: (symbol: string, prop?: string): QueryItem => ({
+    type: "tag",
+    symbol,
+    prop: prop ?? null,
+  }),
 };
 
 describe("parser", () => {
@@ -24,6 +29,10 @@ describe("parser", () => {
     ['"a"b', h.word('"a"b')],
     ['a"b"', h.word('a"b"')],
     ['"\\""', h.word('"')],
+    ['"#tag"', h.word("#tag")],
+    // tag
+    ["#tag", h.tag("#tag")],
+    ["@hoge:fuga", h.tag("@hoge", "fuga")],
   ] satisfies Case[])("parse %o", (queryString, ...items) => {
     expect(parseQuery(queryString)).toEqual({ items });
   });
