@@ -17,12 +17,9 @@ export type QueryItem =
       exclude: boolean;
       symbol: string;
       prop: string | null;
-    }
-  | { type: "ignore"; value: string };
+    };
 
-const wsRe = /^\p{White_Space}/v;
-const queryRe =
-  /"(?:\\.|[^\\])*"(?!\P{White_Space})|\P{White_Space}+|\p{White_Space}+/gv;
+const queryRe = /"(?:\\.|[^\\])*"(?!\P{White_Space})|\P{White_Space}+/gv;
 const tagHeadRe = /^[!#$%&*+=?@^~]/;
 const unescapeRe = /\\(.)/gv;
 
@@ -44,12 +41,6 @@ export const parseQuery = (query: string): Query => {
         const value = part.slice(1, -1).replaceAll(unescapeRe, "$1");
 
         return { type: "word", start, end, exclude, value };
-      }
-
-      // white space
-      // eslint-disable-next-line @typescript-eslint/prefer-string-starts-ends-with
-      if (wsRe.test(part)) {
-        return { type: "ignore", value: part };
       }
 
       // tag

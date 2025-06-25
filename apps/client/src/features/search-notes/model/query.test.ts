@@ -3,10 +3,6 @@ import { parseQuery, type QueryItem } from "./query";
 
 // query item helper
 const h = {
-  ignore: {
-    type: "ignore",
-    value: expect.any(String) as string,
-  } satisfies QueryItem,
   word: (value: string, exclude = false): Partial<QueryItem> => ({
     type: "word",
     value,
@@ -30,8 +26,8 @@ describe("parser", () => {
   test.each([
     [""],
     ["hoge", h.word("hoge")],
-    ["hoge fuga", h.word("hoge"), h.ignore, h.word("fuga")],
-    ['" ', h.word('"'), h.ignore],
+    ["hoge fuga", h.word("hoge"), h.word("fuga")],
+    ['" ', h.word('"')],
     ["-", h.word("-")],
     ["-hoge", h.word("hoge", true)],
     ["--hoge", h.word("-hoge", true)],
