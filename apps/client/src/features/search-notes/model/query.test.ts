@@ -7,11 +7,16 @@ const h = {
     type: "ignore",
     value: expect.any(String) as string,
   } satisfies QueryItem,
-  word: (value: string): QueryItem => ({ type: "word", value }),
-  tag: (symbol: string, prop?: string): QueryItem => ({
+  word: (value: string, exclude = false): QueryItem => ({
+    type: "word",
+    value,
+    exclude,
+  }),
+  tag: (symbol: string, prop?: string, exclude = false): QueryItem => ({
     type: "tag",
     symbol,
     prop: prop ?? null,
+    exclude,
   }),
 };
 
@@ -23,6 +28,9 @@ describe("parser", () => {
     ["hoge", h.word("hoge")],
     ["hoge fuga", h.word("hoge"), h.ignore, h.word("fuga")],
     ['" ', h.word('"'), h.ignore],
+    ["-", h.word("-")],
+    ["-hoge", h.word("hoge", true)],
+    ["--hoge", h.word("-hoge", true)],
     // quote
     ['""'],
     ['" "', h.word(" ")],
@@ -30,9 +38,12 @@ describe("parser", () => {
     ['a"b"', h.word('a"b"')],
     ['"\\""', h.word('"')],
     ['"#tag"', h.word("#tag")],
+    ['-"a"', h.word("a", true)],
     // tag
     ["#tag", h.tag("#tag")],
     ["@hoge:fuga", h.tag("@hoge", "fuga")],
+    ["-#tag", h.tag("#tag", undefined, true)],
+    ["-@hoge:fuga", h.tag("@hoge", "fuga", true)],
   ] satisfies Case[])("parse %o", (queryString, ...items) => {
     expect(parseQuery(queryString)).toEqual({ items });
   });
