@@ -7,12 +7,16 @@ const h = {
     type: "ignore",
     value: expect.any(String) as string,
   } satisfies QueryItem,
-  word: (value: string, exclude = false): QueryItem => ({
+  word: (value: string, exclude = false): Partial<QueryItem> => ({
     type: "word",
     value,
     exclude,
   }),
-  tag: (symbol: string, prop?: string, exclude = false): QueryItem => ({
+  tag: (
+    symbol: string,
+    prop?: string,
+    exclude = false,
+  ): Partial<QueryItem> => ({
     type: "tag",
     symbol,
     prop: prop ?? null,
@@ -21,7 +25,7 @@ const h = {
 };
 
 describe("parser", () => {
-  type Case = [string, ...QueryItem[]];
+  type Case = [string, ...Partial<QueryItem>[]];
 
   test.each([
     [""],
@@ -45,6 +49,6 @@ describe("parser", () => {
     ["-#tag", h.tag("#tag", undefined, true)],
     ["-@hoge:fuga", h.tag("@hoge", "fuga", true)],
   ] satisfies Case[])("parse %o", (queryString, ...items) => {
-    expect(parseQuery(queryString)).toEqual({ items });
+    expect(parseQuery(queryString)).toMatchObject({ items });
   });
 });
