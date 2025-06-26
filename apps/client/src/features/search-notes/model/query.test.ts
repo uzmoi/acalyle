@@ -39,7 +39,7 @@ describe("parser", () => {
     ["-#tag", h.tag("#tag", null, { exclude: true })],
     ["-@hoge:fuga", h.tag("@hoge", "fuga", { exclude: true })],
   ] satisfies Case[])("parse %o", (queryString, ...items) => {
-    expect(parseQuery(queryString)).toMatchObject({ items });
+    expect(parseQuery(queryString).toArray()).toMatchObject(items);
   });
 });
 

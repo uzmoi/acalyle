@@ -1,7 +1,3 @@
-export interface Query {
-  items: QueryItem[];
-}
-
 export type QueryItem =
   | {
       type: "word";
@@ -25,8 +21,10 @@ const queryRe =
 const tagHeadRe = /^[!#$%&*+=?@^~]/;
 const unescapeRe = /\\(.)/gv;
 
-export const parseQuery = (query: string): Query => {
-  const items = query
+export const parseQuery = (
+  query: string,
+): IteratorObject<QueryItem, undefined> =>
+  query
     .matchAll(queryRe)
     .map<QueryItem>(match => {
       let part = match[0];
@@ -62,9 +60,6 @@ export const parseQuery = (query: string): Query => {
     })
     .filter(item => item.type !== "word" || item.value !== "");
 
-  return { items: [...items] };
-};
-
 export type QueryToken =
   | { type: "ignore"; content: string }
   | { type: "word"; exclude: boolean; quoted: boolean; content: string }
@@ -74,7 +69,7 @@ export const lexQuery = (query: string): QueryToken[] => {
   const tokens: QueryToken[] = [];
   let ignoreStartIndex = 0;
 
-  for (const item of parseQuery(query).items) {
+  for (const item of parseQuery(query)) {
     tokens.push({
       type: "ignore",
       content: query.slice(ignoreStartIndex, item.start),

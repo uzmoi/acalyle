@@ -1,7 +1,1 @@
-export {
-  parseQuery,
-  lexQuery,
-  type Query,
-  type QueryItem,
-  type QueryToken,
-} from "./query";
+export { parseQuery, lexQuery, type QueryItem, type QueryToken } from "./query";
