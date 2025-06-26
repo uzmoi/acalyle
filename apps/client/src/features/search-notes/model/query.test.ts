@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { parseQuery, type QueryItem } from "./query";
+import { parseQuery, lexQuery, type QueryItem, type QueryToken } from "./query";
 
 // query item helper
 const h = {
@@ -41,4 +41,34 @@ describe("parser", () => {
   ] satisfies Case[])("parse %o", (queryString, ...items) => {
     expect(parseQuery(queryString)).toMatchObject({ items });
   });
+});
+
+// query token helper
+const t = {
+  ignore: (): QueryToken => ({
+    type: "ignore",
+    content: expect.stringMatching(/ */) as string,
+  }),
+  word: (
+    content: string,
+    { quoted = false, exclude = false } = {},
+  ): QueryToken => ({ type: "word", exclude, quoted, content }),
+  tag: (
+    symbol: string,
+    prop: string | null,
+    { exclude = false } = {},
+  ): QueryToken => ({ type: "tag", exclude, symbol, prop }),
+};
+
+test("lexQuery", () => {
+  expect(lexQuery('hoge -"\\\\" #tag -@tag:prop ')).toMatchObject([
+    t.ignore(),
+    t.word("hoge"),
+    t.ignore(),
+    t.word('"\\\\"', { exclude: true, quoted: true }),
+    t.ignore(),
+    t.tag("#tag", null),
+    t.ignore(),
+    t.tag("@tag", "prop", { exclude: true }),
+  ]);
 });

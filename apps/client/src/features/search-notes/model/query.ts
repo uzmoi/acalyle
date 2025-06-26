@@ -64,3 +64,35 @@ export const parseQuery = (query: string): Query => {
 
   return { items: [...items] };
 };
+
+export type QueryToken =
+  | { type: "ignore"; content: string }
+  | { type: "word"; exclude: boolean; quoted: boolean; content: string }
+  | { type: "tag"; exclude: boolean; symbol: string; prop: string | null };
+
+export const lexQuery = (query: string): QueryToken[] => {
+  const tokens: QueryToken[] = [];
+  let ignoreStartIndex = 0;
+
+  for (const item of parseQuery(query).items) {
+    tokens.push({
+      type: "ignore",
+      content: query.slice(ignoreStartIndex, item.start),
+    });
+
+    ignoreStartIndex = item.end;
+
+    tokens.push(
+      item.type === "word" ?
+        {
+          type: "word",
+          exclude: item.exclude,
+          quoted: item.quoted,
+          content: query.slice(item.start + +item.exclude, item.end),
+        }
+      : item,
+    );
+  }
+
+  return tokens;
+};
