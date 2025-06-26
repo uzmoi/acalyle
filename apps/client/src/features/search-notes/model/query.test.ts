@@ -6,22 +6,12 @@ const h = {
   word: (
     value: string,
     { quoted = false, exclude = false } = {},
-  ): Partial<QueryItem> => ({
-    type: "word",
-    exclude,
-    value,
-    quoted,
-  }),
+  ): Partial<QueryItem> => ({ type: "word", exclude, quoted, value }),
   tag: (
     symbol: string,
-    prop?: string,
+    prop: string | null,
     { exclude = false } = {},
-  ): Partial<QueryItem> => ({
-    type: "tag",
-    exclude,
-    symbol,
-    prop: prop ?? null,
-  }),
+  ): Partial<QueryItem> => ({ type: "tag", exclude, symbol, prop }),
 };
 
 describe("parser", () => {
@@ -44,9 +34,9 @@ describe("parser", () => {
     ['"#tag"', h.word("#tag", { quoted: true })],
     ['-"a"', h.word("a", { quoted: true, exclude: true })],
     // tag
-    ["#tag", h.tag("#tag")],
+    ["#tag", h.tag("#tag", null)],
     ["@hoge:fuga", h.tag("@hoge", "fuga")],
-    ["-#tag", h.tag("#tag", undefined, { exclude: true })],
+    ["-#tag", h.tag("#tag", null, { exclude: true })],
     ["-@hoge:fuga", h.tag("@hoge", "fuga", { exclude: true })],
   ] satisfies Case[])("parse %o", (queryString, ...items) => {
     expect(parseQuery(queryString)).toMatchObject({ items });
