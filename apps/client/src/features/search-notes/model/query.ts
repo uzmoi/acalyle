@@ -9,6 +9,7 @@ export type QueryItem =
       end: number;
       exclude: boolean;
       value: string;
+      quoted: boolean;
     }
   | {
       type: "tag";
@@ -19,7 +20,8 @@ export type QueryItem =
       prop: string | null;
     };
 
-const queryRe = /"(?:\\.|[^\\])*"(?!\P{White_Space})|\P{White_Space}+/gv;
+const queryRe =
+  /-?('(?:\\.|[^\\'])*'|"(?:\\.|[^\\"])*")(?!\P{White_Space})|\P{White_Space}+/gv;
 const tagHeadRe = /^[!#$%&*+=?@^~]/;
 const unescapeRe = /\\(.)/gv;
 
@@ -36,11 +38,11 @@ export const parseQuery = (query: string): Query => {
         part = part.slice(1);
       }
 
-      // quote
-      if (part.length >= 2 && part.startsWith('"') && part.endsWith('"')) {
+      // quoted
+      if (match[1] != null) {
         const value = part.slice(1, -1).replaceAll(unescapeRe, "$1");
 
-        return { type: "word", start, end, exclude, value };
+        return { type: "word", start, end, exclude, value, quoted: true };
       }
 
       // tag
@@ -56,7 +58,7 @@ export const parseQuery = (query: string): Query => {
         };
       }
 
-      return { type: "word", start, end, exclude, value: part };
+      return { type: "word", start, end, exclude, value: part, quoted: false };
     })
     .filter(item => item.type !== "word" || item.value !== "");
 

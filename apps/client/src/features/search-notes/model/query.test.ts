@@ -3,20 +3,24 @@ import { parseQuery, type QueryItem } from "./query";
 
 // query item helper
 const h = {
-  word: (value: string, exclude = false): Partial<QueryItem> => ({
+  word: (
+    value: string,
+    { quoted = false, exclude = false } = {},
+  ): Partial<QueryItem> => ({
     type: "word",
-    value,
     exclude,
+    value,
+    quoted,
   }),
   tag: (
     symbol: string,
     prop?: string,
-    exclude = false,
+    { exclude = false } = {},
   ): Partial<QueryItem> => ({
     type: "tag",
+    exclude,
     symbol,
     prop: prop ?? null,
-    exclude,
   }),
 };
 
@@ -27,23 +31,23 @@ describe("parser", () => {
     [""],
     ["hoge", h.word("hoge")],
     ["hoge fuga", h.word("hoge"), h.word("fuga")],
-    ['" ', h.word('"')],
     ["-", h.word("-")],
-    ["-hoge", h.word("hoge", true)],
-    ["--hoge", h.word("-hoge", true)],
+    ["-hoge", h.word("hoge", { exclude: true })],
+    ["--hoge", h.word("-hoge", { exclude: true })],
     // quote
     ['""'],
-    ['" "', h.word(" ")],
+    ['" "', h.word(" ", { quoted: true })],
     ['"a"b', h.word('"a"b')],
     ['a"b"', h.word('a"b"')],
-    ['"\\""', h.word('"')],
-    ['"#tag"', h.word("#tag")],
-    ['-"a"', h.word("a", true)],
+    ['" ', h.word('"')],
+    ['"\\""', h.word('"', { quoted: true })],
+    ['"#tag"', h.word("#tag", { quoted: true })],
+    ['-"a"', h.word("a", { quoted: true, exclude: true })],
     // tag
     ["#tag", h.tag("#tag")],
     ["@hoge:fuga", h.tag("@hoge", "fuga")],
-    ["-#tag", h.tag("#tag", undefined, true)],
-    ["-@hoge:fuga", h.tag("@hoge", "fuga", true)],
+    ["-#tag", h.tag("#tag", undefined, { exclude: true })],
+    ["-@hoge:fuga", h.tag("@hoge", "fuga", { exclude: true })],
   ] satisfies Case[])("parse %o", (queryString, ...items) => {
     expect(parseQuery(queryString)).toMatchObject({ items });
   });
