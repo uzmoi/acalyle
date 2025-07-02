@@ -1,21 +1,27 @@
 import { describe, expect, test } from "vitest";
-import { parseQuery, lexQuery, type QueryItem, type QueryToken } from "./query";
+import {
+  parseQuery,
+  lexQuery,
+  type QueryItem,
+  type QueryToken,
+  printServerQuery,
+} from "./query";
 
 // query item helper
 const h = {
   word: (
     value: string,
     { quoted = false, exclude = false } = {},
-  ): Partial<QueryItem> => ({ type: "word", exclude, quoted, value }),
+  ): QueryItem => ({ type: "word", exclude, quoted, value }),
   tag: (
     symbol: string,
     prop: string | null,
     { exclude = false } = {},
-  ): Partial<QueryItem> => ({ type: "tag", exclude, symbol, prop }),
+  ): QueryItem => ({ type: "tag", exclude, symbol, prop }),
 };
 
 describe("parser", () => {
-  type Case = [string, ...Partial<QueryItem>[]];
+  type Case = [string, ...QueryItem[]];
 
   test.each([
     [""],
@@ -40,6 +46,14 @@ describe("parser", () => {
     ["-@hoge:fuga", h.tag("@hoge", "fuga", { exclude: true })],
   ] satisfies Case[])("parse %o", (queryString, ...items) => {
     expect(parseQuery(queryString).toArray()).toMatchObject(items);
+  });
+});
+
+describe("printServerQuery", () => {
+  test("hoge fuga", () => {
+    expect(printServerQuery([h.word("hoge"), h.word("fuga")])).toBe(
+      '"hoge" "fuga"',
+    );
   });
 });
 

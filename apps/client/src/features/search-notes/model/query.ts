@@ -1,16 +1,17 @@
+interface Range {
+  start: number;
+  end: number;
+}
+
 export type QueryItem =
   | {
       type: "word";
-      start: number;
-      end: number;
       exclude: boolean;
       value: string;
       quoted: boolean;
     }
   | {
       type: "tag";
-      start: number;
-      end: number;
       exclude: boolean;
       symbol: string;
       prop: string | null;
@@ -23,10 +24,10 @@ const unescapeRe = /\\(.)/gv;
 
 export const parseQuery = (
   query: string,
-): IteratorObject<QueryItem, undefined> =>
+): IteratorObject<QueryItem & Range, undefined> =>
   query
     .matchAll(queryRe)
-    .map<QueryItem>(match => {
+    .map<QueryItem & Range>(match => {
       let part = match[0];
       const start = match.index;
       const end = start + part.length;
@@ -59,6 +60,23 @@ export const parseQuery = (
       return { type: "word", start, end, exclude, value: part, quoted: false };
     })
     .filter(item => item.type !== "word" || item.value !== "");
+
+const printServerQueryItem = (item: QueryItem): string => {
+  switch (item.type) {
+    case "word": {
+      return `"${item.value.replaceAll(/[\s":\\]/g, "\\$&")}"`;
+    }
+    case "tag": {
+      return item.symbol + (item.prop == null ? "" : `:${item.prop}`);
+    }
+    // No Default: Returned in all cases.
+  }
+};
+
+export const printServerQuery = (query: readonly QueryItem[]): string =>
+  query
+    .map(item => (item.exclude ? "-" : "") + printServerQueryItem(item))
+    .join(" ");
 
 export type QueryToken =
   | { type: "ignore"; content: string }
