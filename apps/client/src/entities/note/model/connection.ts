@@ -1,14 +1,10 @@
-import type { ResultOf } from "@graphql-typed-document-node/core";
 import type { BookId } from "~/entities/book";
-import { gql, type Cursor, GraphqlConnection, type ID } from "~/shared/graphql";
-import NotePaginationQuery from "../api/note-pagination.graphql";
+import { type Cursor, GraphqlConnection } from "~/shared/graphql";
+import { fetchNotePagination, type NotePage } from "../api";
 import { $note } from "./store";
 import type { NoteId, NoteTagString } from "./types";
 
-type NotePage = NonNullable<
-  ResultOf<typeof NotePaginationQuery>["book"]
->["memos"];
-type NoteNode = NotePage["edges"][number]["node"];
+type NoteNode = NotePage["nodes"][number];
 
 export class NoteConnection extends GraphqlConnection<NoteNode> {
   constructor(
@@ -19,16 +15,16 @@ export class NoteConnection extends GraphqlConnection<NoteNode> {
   }
   protected async fetchPage(
     cursor: Cursor | null,
-    _dir: "previous" | "next",
+    dir: "previous" | "next",
   ): Promise<NotePage> {
-    const result = await gql(NotePaginationQuery, {
-      count: 32,
+    const result = await fetchNotePagination(
+      this.bookId,
       cursor,
-      bookId: this.bookId as string as ID,
-      query: this.query,
-    });
+      this.query,
+      dir,
+    );
     // FIXME: non-null ではない
-    return result.unwrap().book!.memos;
+    return result.unwrap()!;
   }
   protected updateNodes(nodes: readonly NoteNode[]): void {
     for (const note of nodes) {
