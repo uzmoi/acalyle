@@ -1,9 +1,7 @@
 /** @public */
 export {
   $note,
-  $noteConnection,
   type Note,
-  type NoteConnection,
   type NoteId,
   type NoteTagString,
   useNote,

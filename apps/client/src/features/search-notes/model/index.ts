@@ -1,3 +1,4 @@
+export { $noteConnection } from "./connection";
 export {
   parseQuery,
   lexQuery,
