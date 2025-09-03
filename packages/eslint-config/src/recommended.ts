@@ -18,10 +18,7 @@ export const recommended: Linter.Config[] = [
       "unicorn/better-regex": WARN,
       "unicorn/consistent-destructuring": WARN,
       "unicorn/custom-error-definition": WARN,
-      "unicorn/expiring-todo-comments": warn({
-        terms: ["todo", "fixme"],
-        allowWarningComments: false,
-      }),
+      "unicorn/expiring-todo-comments": ERROR,
       // TODO[eslint-plugin-unicorn@>=57]: ルール追加
       // "unicorn/no-accessor-recursion": WARN,
       "unicorn/no-array-method-this-argument": WARN,
