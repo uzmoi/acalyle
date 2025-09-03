@@ -1,4 +1,4 @@
-import type { Result } from "@acalyle/fp";
+import type { Result } from "@uzmoi/ut/fp";
 import { $book, type BookRef, bookRefFromId } from "~/entities/book";
 import type { GqlFnError } from "~/shared/graphql";
 import { createBookMutation } from "../api";

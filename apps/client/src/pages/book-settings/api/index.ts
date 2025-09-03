@@ -1,4 +1,4 @@
-import { Err, Ok, type Result } from "@acalyle/fp";
+import { Err, Ok, type Result } from "@uzmoi/ut/fp";
 import type { BookId, BookHandle } from "~/entities/book";
 import { type ID, gql, type GqlFnError } from "~/shared/graphql";
 import ChangeBookDescriptionMutation from "./change-book-description.graphql";

@@ -1,5 +1,5 @@
-import { Err, Ok, Result } from "@acalyle/fp";
 import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
+import { Err, Ok, Result } from "@uzmoi/ut/fp";
 import type { JsonValue } from "@uzmoi/ut/types";
 import { print, type OperationDefinitionNode } from "graphql";
 import { logger } from "../logger";

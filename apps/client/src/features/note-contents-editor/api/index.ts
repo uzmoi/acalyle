@@ -1,4 +1,4 @@
-import { Err, Ok, Result } from "@acalyle/fp";
+import { Err, Ok, Result } from "@uzmoi/ut/fp";
 import type { NoteId, NoteTagString } from "~/entities/note";
 import { gql, type ID, type GqlFnError } from "~/shared/graphql";
 import UpdateNoteContentsMutation from "./update-note-contents.graphql";
