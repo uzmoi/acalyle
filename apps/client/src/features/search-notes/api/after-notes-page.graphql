@@ -1,0 +1,24 @@
+query AfterNotesPage(
+  $bookId: ID!
+  $count: Int!
+  $cursor: String
+  $query: String!
+) {
+  book(id: $bookId) {
+    memos(first: $count, after: $cursor, query: $query) {
+      nodes {
+        id
+        contents
+        tags
+        createdAt
+        updatedAt
+      }
+      pageInfo {
+        hasPreviousPage
+        hasNextPage
+        startCursor
+        endCursor
+      }
+    }
+  }
+}

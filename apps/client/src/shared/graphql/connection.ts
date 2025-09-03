@@ -29,10 +29,9 @@ interface Edge<TNode> {
   node: TNode;
 }
 
-interface Page<TNode> {
-  pageInfo: Omit<PageInfo, "__typename">;
-  edges: readonly Edge<TNode>[];
-}
+type Page<TNode> =
+  | { pageInfo: Omit<PageInfo, "__typename">; edges: readonly Edge<TNode>[] }
+  | { pageInfo: Omit<PageInfo, "__typename">; nodes: readonly TNode[] };
 
 export interface ConnectionSnapshot<TId> {
   nodeIds: TId[];
@@ -77,32 +76,40 @@ export abstract class GraphqlConnection<
   async loadPreviousPage(): Promise<void> {
     if (!this.hasPreviousPage) return;
 
-    const {
-      pageInfo: { hasPreviousPage, startCursor },
-      edges,
-    } = await this.fetchPage(this.startCursor, "previous");
-    this.hasPreviousPage = hasPreviousPage && startCursor != null;
-    this.startCursor = startCursor as Cursor | null;
+    const page = await this.fetchPage(this.startCursor, "previous");
 
-    this.nodeIds.splice(0, 0, ...edges.map(edge => edge.node.id));
+    {
+      const { hasPreviousPage, startCursor } = page.pageInfo;
+      this.hasPreviousPage = hasPreviousPage && startCursor != null;
+      this.startCursor = startCursor as Cursor | null;
+    }
 
-    this.updateNodes(edges.map(edge => edge.node));
+    const nodes =
+      "nodes" in page ? page.nodes : page.edges.map(edge => edge.node);
+
+    this.nodeIds.splice(0, 0, ...nodes.map(node => node.id));
+
+    this.updateNodes(nodes);
     this.notify();
   }
   async loadNextPage(): Promise<void> {
     if (!this.hasNextPage) return;
 
-    const {
-      pageInfo: { hasNextPage, endCursor },
-      edges,
-    } = await this.fetchPage(this.endCursor, "next");
-    this.hasNextPage = hasNextPage && endCursor != null;
-    this.endCursor = endCursor as Cursor | null;
+    const page = await this.fetchPage(this.endCursor, "next");
+
+    {
+      const { hasNextPage, endCursor } = page.pageInfo;
+      this.hasNextPage = hasNextPage && endCursor != null;
+      this.endCursor = endCursor as Cursor | null;
+    }
+
+    const nodes =
+      "nodes" in page ? page.nodes : page.edges.map(edge => edge.node);
 
     const length = this.nodeIds.length;
-    this.nodeIds.splice(length, 0, ...edges.map(edge => edge.node.id));
+    this.nodeIds.splice(length, 0, ...nodes.map(node => node.id));
 
-    this.updateNodes(edges.map(edge => edge.node));
+    this.updateNodes(nodes);
     this.notify();
   }
 }
