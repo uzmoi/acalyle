@@ -1,6 +1,5 @@
 import { createLogFunction, cssole } from "@acalyle/cssole";
 import { BasicLogLevel, type Transport } from "@acalyle/logger";
-import { DateTime } from "@rizzzse/datetime";
 
 interface LevelConfig {
   name: string;
@@ -24,16 +23,11 @@ export const simpleConsoleTransport: Transport<
   readonly unknown[],
   BasicLogLevel
 > = {
-  transport({ level, name, message, timeStamp }) {
+  transport({ level, name, message }) {
     const levelConfig = levelTable[level];
     const consoleFn = console[levelConfig.fn];
     const log = createLogFunction(consoleFn);
     log([
-      cssole.style({ color: "gray" }),
-      cssole.string(
-        DateTime.fromMillis(timeStamp).toString().replace("T", " "),
-      ),
-      cssole.string(" "),
       cssole.style({
         ...(levelConfig.color && { color: levelConfig.color }),
         ...(levelConfig.bgColor && { backgroundColor: levelConfig.bgColor }),
