@@ -80,17 +80,13 @@ export const INPUT_BASE_CLASS_NAME = style({
   "&:focus-visible": {
     color: theme("control:focus-text"),
     background: theme("control:focus-bg"),
-    [`--${varName("control-outline")}` as "--outline"]: theme(
-      "control:focus-outline",
-    ),
+    [varName("control-outline") as "--"]: theme("control:focus-outline"),
     outlineColor: theme("control-outline"),
   },
   // 本来は &[aria-invalid]:not([aria-invalid=""], [aria-invalid="false"])
   '&:user-invalid, &[aria-invalid="true"]': {
     color: theme("control:invalid-text"),
     background: theme("control:invalid-bg"),
-    [`--${varName("control-outline")}` as "--outline"]: theme(
-      "control:invalid-outline",
-    ),
+    [varName("control-outline") as "--"]: theme("control:invalid-outline"),
   },
 });
