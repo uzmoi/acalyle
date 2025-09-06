@@ -10,6 +10,7 @@ export const CreateBookForm: React.FC<{
 }> = ({ onCreatedBook }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const descriptionLength = [...description].length; // code points length
 
   const action = useCallback(async () => {
     const bookRef = await createBook(title, description);
@@ -51,16 +52,16 @@ export const CreateBookForm: React.FC<{
           <TextInput
             id={descriptionId}
             className=":uno: w-full"
-            aria-invalid={description.length > MAX_DESCRIPTION_LENGTH}
+            aria-invalid={descriptionLength > MAX_DESCRIPTION_LENGTH}
             value={description}
             onValueChange={setDescription}
           />
           <p className=":uno: mt-1 text-xs text-gray-4">
             <span
               className=":uno: data-[is-invalid=true]:text-red"
-              data-is-invalid={description.length > MAX_DESCRIPTION_LENGTH}
+              data-is-invalid={descriptionLength > MAX_DESCRIPTION_LENGTH}
             >
-              {description.length} / {MAX_DESCRIPTION_LENGTH} 文字
+              {descriptionLength} / {MAX_DESCRIPTION_LENGTH} 文字
             </span>
           </p>
         </dd>
@@ -69,7 +70,7 @@ export const CreateBookForm: React.FC<{
         <Button
           type="submit"
           className=":uno: bg-green-7"
-          disabled={description.length > MAX_DESCRIPTION_LENGTH}
+          disabled={descriptionLength > MAX_DESCRIPTION_LENGTH}
         >
           Create book
         </Button>

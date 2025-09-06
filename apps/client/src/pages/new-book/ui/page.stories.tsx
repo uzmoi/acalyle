@@ -36,9 +36,9 @@ export const Invalid: Story = {
 
     const descriptionInputEl = canvas.getByLabelText("Description");
     await userEvent.click(descriptionInputEl);
-    await userEvent.paste("a".repeat(500));
-    await expect(descriptionInputEl).toHaveAttribute("aria-invalid", "false");
+    await userEvent.paste("a".repeat(500 - 1) + "𩇔"); // <- surrogate pair character
+    await expect(descriptionInputEl).toBeValid();
     await userEvent.keyboard("b");
-    await expect(descriptionInputEl).toHaveAttribute("aria-invalid", "true");
+    await expect(descriptionInputEl).not.toBeValid();
   },
 };
