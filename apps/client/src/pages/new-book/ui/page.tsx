@@ -14,12 +14,15 @@ export const NewBookPage: React.FC = () => {
   };
 
   return (
-    <div className=":uno: px-8 py-4">
-      <Link to="/books" className=":uno: color-inherit decoration-none">
+    <div className=":uno: mx-auto w-screen-md px-8 py-4">
+      <Link
+        to="/books"
+        className=":uno: text-sm color-inherit decoration-none transition-colors hover:text-indigo"
+      >
         <BiLeftArrowAlt />
-        <span className=":uno: ml-1 align-middle">Return to books</span>
+        <span className=":uno: ml-1 align-bottom">Return to books</span>
       </Link>
-      <hr className=":uno: my-2 border-gray-7 border-none border-t-solid" />
+      <hr className=":uno: mb-3 mt-1 border-gray-7 border-none border-t-solid" />
       <CreateBookForm onCreatedBook={onCreatedBook} />
     </div>
   );
