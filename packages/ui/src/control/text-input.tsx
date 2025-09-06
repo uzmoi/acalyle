@@ -39,6 +39,8 @@ export interface TextInputProps
   value?: string;
   defaultValue?: string;
   onValueChange?: (value: string) => void;
+  /** @deprecated */
+  maxLength?: number;
 }
 
 export const TextInput: React.FC<TextInputProps> = ({
