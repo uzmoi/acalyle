@@ -1,5 +1,5 @@
 import { cx } from "@acalyle/css";
-import { base, reset } from "./base";
+import { INPUT_BASE_CLASS_NAME, reset } from "./base";
 
 // prettier-ignore
 type OmitPropNames = (
@@ -59,7 +59,7 @@ export const TextInput: React.FC<TextInputProps> = ({
     <input
       onChange={handleChange}
       type="text"
-      className={cx(reset, !unstyled && base, className)}
+      className={cx(reset, !unstyled && INPUT_BASE_CLASS_NAME, className)}
       {...restProps}
       autoComplete="off"
       autoCapitalize="off"
