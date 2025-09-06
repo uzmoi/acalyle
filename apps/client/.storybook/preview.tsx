@@ -3,6 +3,8 @@ import "@acalyle/ui/dist/style.css";
 import "virtual:uno.css";
 
 import type { Preview } from "@storybook/react";
+import { faker } from "@faker-js/faker";
+import { xxHash32 } from "js-xxhash";
 import { Provider } from "../src/dev/provider";
 import { withTanstackRouter } from "../src/dev/sb-router";
 
@@ -18,6 +20,9 @@ const preview: Preview = {
   },
   tags: ["autodocs"],
   decorators: [withTanstackRouter, story => <Provider>{story()}</Provider>],
+  beforeEach({ id }) {
+    faker.seed(xxHash32(id));
+  },
 };
 
 export default preview;
