@@ -6,14 +6,13 @@ import {
   useSearch,
 } from "@tanstack/react-router";
 import * as v from "valibot";
-import { $bookConnection } from "~/entities/book";
-import { BookListPage } from "~/pages/book-list";
+import { BookListPage, fetchBooksPage } from "~/pages/book-list";
 
 const RouteComponent: React.FC = () => {
   const { query } = useSearch({ from: Route.id });
-  const { connection } = useLoaderData({ from: Route.id });
+  const booksPage = useLoaderData({ from: Route.id });
 
-  return <BookListPage initialQuery={query} connection={connection} />;
+  return <BookListPage initialQuery={query} booksPage={booksPage} />;
 };
 
 export const Route = createFileRoute("/books/")({
@@ -25,8 +24,6 @@ export const Route = createFileRoute("/books/")({
     return search;
   },
   async loader({ deps }) {
-    const connection = $bookConnection(deps.query ?? "");
-    await connection.loadNextPage();
-    return { connection };
+    return fetchBooksPage(deps.query ?? "");
   },
 });

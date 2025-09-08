@@ -9,14 +9,13 @@ import {
 import { Link, useRouter } from "@tanstack/react-router";
 import { startTransition, useCallback } from "react";
 import { BiBookAdd, BiRefresh } from "react-icons/bi";
-import type { BookId, BookConnection } from "~/entities/book";
-import { useConnection } from "~/shared/graphql";
+import type { BooksPage } from "../api";
 import { BookOverview } from "./overview";
 
 export const BookListPage: React.FC<{
   initialQuery?: string | undefined;
-  connection: BookConnection;
-}> = ({ initialQuery, connection }) => {
+  booksPage: BooksPage;
+}> = ({ initialQuery, booksPage }) => {
   const router = useRouter();
   const setQuery = (query: string): void => {
     startTransition(async () => {
@@ -24,25 +23,20 @@ export const BookListPage: React.FC<{
     });
   };
 
-  const { nodeIds } = useConnection(connection);
+  const onIntersection = useCallback((entry: IntersectionObserverEntry) => {
+    if (entry.isIntersecting) {
+      // void connection.loadNextPage();
+    }
+  }, []);
 
-  const onIntersection = useCallback(
-    (entry: IntersectionObserverEntry) => {
-      if (entry.isIntersecting) {
-        void connection.loadNextPage();
-      }
-    },
-    [connection],
-  );
-
-  const refetchBookConnection = useCallback(() => {
+  const refetch = useCallback(() => {
     void router.invalidate();
   }, [router]);
 
   return (
     <main className=":uno: mx-auto max-w-screen-xl px-8 py-4">
       <div className=":uno: mb-6 flex items-center gap-4">
-        <form action={refetchBookConnection} className=":uno: flex-1">
+        <form action={refetch} className=":uno: flex-1">
           <ControlGroup className=":uno: flex">
             <TextInput
               type="search"
@@ -71,9 +65,9 @@ export const BookListPage: React.FC<{
           style({ gridTemplateColumns: "repeat(auto-fit, minmax(32em, 1fr))" }),
         )}
       >
-        {nodeIds.map(bookId => (
-          <List.Item key={bookId}>
-            <BookOverview bookId={bookId as string as BookId} />
+        {booksPage.books.map(book => (
+          <List.Item key={book.id}>
+            <BookOverview book={book} />
           </List.Item>
         ))}
       </List>

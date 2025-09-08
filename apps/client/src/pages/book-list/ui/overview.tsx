@@ -2,15 +2,13 @@ import { cx, style } from "@acalyle/css";
 import { visuallyHidden } from "@acalyle/ui";
 import { Link } from "@tanstack/react-router";
 import { identify } from "emnorst";
-import { type BookId, bookRefOf, useBook } from "~/entities/book";
+import { type Book, bookRefOf } from "~/entities/book";
 import { theme } from "~/theme";
 import { BookThumbnail } from "./thumbnail";
 
 export const BookOverview: React.FC<{
-  bookId: BookId;
-}> = ({ bookId }) => {
-  const book = useBook(bookId);
-
+  book: Book;
+}> = ({ book }) => {
   return (
     <div
       data-book-id={book.id}
