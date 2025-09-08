@@ -54,6 +54,7 @@ unocss
 uploadables
 upsert
 uzmoi
+valibot
 Valueable
 vite
 warplist

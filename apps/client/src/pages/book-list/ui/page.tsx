@@ -6,30 +6,41 @@ import {
   List,
   TextInput,
 } from "@acalyle/ui";
-import { Link } from "@tanstack/react-router";
-import { useCallback, useDeferredValue, useState } from "react";
+import { Link, useRouter } from "@tanstack/react-router";
+import { startTransition, useCallback } from "react";
 import { BiBookAdd, BiRefresh } from "react-icons/bi";
-import { $bookConnection, type BookId, BookOverview } from "~/entities/book";
+import {
+  type BookId,
+  BookOverview,
+  type BookConnection,
+} from "~/entities/book";
 import { useConnection } from "~/shared/graphql";
 
-export const BookListPage: React.FC = () => {
-  const [query, setQuery] = useState("");
-  const deferredQuery = useDeferredValue(query);
+export const BookListPage: React.FC<{
+  initialQuery?: string | undefined;
+  connection: BookConnection;
+}> = ({ initialQuery, connection }) => {
+  const router = useRouter();
+  const setQuery = (query: string): void => {
+    startTransition(async () => {
+      await router.navigate({ to: "/books", search: { query } });
+    });
+  };
 
-  const { nodeIds } = useConnection($bookConnection(deferredQuery ?? ""));
+  const { nodeIds } = useConnection(connection);
 
   const onIntersection = useCallback(
     (entry: IntersectionObserverEntry) => {
       if (entry.isIntersecting) {
-        void $bookConnection(deferredQuery).loadNextPage();
+        void connection.loadNextPage();
       }
     },
-    [deferredQuery],
+    [connection],
   );
 
   const refetchBookConnection = useCallback(() => {
-    // void $bookConnection(deferredQuery).refetch();
-  }, []);
+    void router.invalidate();
+  }, [router]);
 
   return (
     <main className=":uno: p-5">
@@ -40,7 +51,7 @@ export const BookListPage: React.FC = () => {
               type="search"
               className=":uno: flex-1"
               placeholder="Find a book"
-              value={query}
+              defaultValue={initialQuery}
               onValueChange={setQuery}
             />
             <Button
