@@ -9,12 +9,9 @@ import {
 import { Link, useRouter } from "@tanstack/react-router";
 import { startTransition, useCallback } from "react";
 import { BiBookAdd, BiRefresh } from "react-icons/bi";
-import {
-  type BookId,
-  BookOverview,
-  type BookConnection,
-} from "~/entities/book";
+import type { BookId, BookConnection } from "~/entities/book";
 import { useConnection } from "~/shared/graphql";
+import { BookOverview } from "./overview";
 
 export const BookListPage: React.FC<{
   initialQuery?: string | undefined;

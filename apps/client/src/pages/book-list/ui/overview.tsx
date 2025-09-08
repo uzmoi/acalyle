@@ -2,8 +2,8 @@ import { cx, style } from "@acalyle/css";
 import { visuallyHidden } from "@acalyle/ui";
 import { Link } from "@tanstack/react-router";
 import { identify } from "emnorst";
+import { type BookId, bookRefOf, useBook } from "~/entities/book";
 import { theme } from "~/theme";
-import { type BookId, bookRefOf, useBook } from "../model";
 import { BookThumbnail } from "./thumbnail";
 
 export const BookOverview: React.FC<{
