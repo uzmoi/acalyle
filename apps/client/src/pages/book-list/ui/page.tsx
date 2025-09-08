@@ -43,7 +43,7 @@ export const BookListPage: React.FC<{
   }, [router]);
 
   return (
-    <main className=":uno: p-5">
+    <main className=":uno: mx-auto max-w-screen-xl px-8 py-4">
       <div className=":uno: mb-6 flex items-center gap-4">
         <form action={refetchBookConnection} className=":uno: flex-1">
           <ControlGroup className=":uno: flex">
@@ -51,15 +51,15 @@ export const BookListPage: React.FC<{
               type="search"
               className=":uno: flex-1"
               placeholder="Find a book"
-              defaultValue={initialQuery}
+              defaultValue={initialQuery ?? ""}
               onValueChange={setQuery}
             />
-            <Button
-              type="submit"
-              aria-label="Refresh"
-              className=":uno: px-3 text-xl"
-            >
-              <BiRefresh />
+            <Button type="submit" className=":uno: px-1 line-height-none">
+              <BiRefresh
+                title="Refresh"
+                size="20"
+                className=":uno: align-top"
+              />
             </Button>
           </ControlGroup>
         </form>
@@ -70,7 +70,7 @@ export const BookListPage: React.FC<{
       </div>
       <List
         className={cx(
-          ":uno: grid gap-x-5 gap-y-4",
+          ":uno: grid gap-x-5 gap-y-3",
           style({ gridTemplateColumns: "repeat(auto-fit, minmax(32em, 1fr))" }),
         )}
       >
