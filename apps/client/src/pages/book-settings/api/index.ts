@@ -14,9 +14,10 @@ export const changeBookTitleMutation = async (
     title,
   });
 
-  return result.flatMap(({ updateBookTitle: book }) =>
-    book == null ? Err({ name: "NotFoundError" } as const) : Ok(book.title),
-  );
+  if (!result.ok) return result;
+  const book = result.value.updateBookTitle;
+
+  return book == null ? Err({ name: "NotFoundError" }) : Ok(book.title);
 };
 
 export const changeBookHandleMutation = async (
@@ -28,11 +29,12 @@ export const changeBookHandleMutation = async (
     handle,
   });
 
-  return result.flatMap(({ updateBookHandle: book }) =>
-    book == null ?
-      Err({ name: "NotFoundError" } as const)
-    : Ok(book.handle as BookHandle),
-  );
+  if (!result.ok) return result;
+  const book = result.value.updateBookHandle;
+
+  return book == null ?
+      Err({ name: "NotFoundError" })
+    : Ok(book.handle as BookHandle);
 };
 
 export const changeBookDescriptionMutation = async (
@@ -44,9 +46,8 @@ export const changeBookDescriptionMutation = async (
     description,
   });
 
-  return result.flatMap(({ updateBookDescription: book }) =>
-    book == null ?
-      Err({ name: "NotFoundError" } as const)
-    : Ok(book.description),
-  );
+  if (!result.ok) return result;
+  const book = result.value.updateBookDescription;
+
+  return book == null ? Err({ name: "NotFoundError" }) : Ok(book.description);
 };

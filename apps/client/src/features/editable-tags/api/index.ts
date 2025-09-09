@@ -15,13 +15,12 @@ export const updateNoteTagsMutation = async (
     removeTags: [...diff.removed],
   });
 
-  return result.flatMap(result => {
-    const note = result.addMemoTags[0];
+  if (!result.ok) return result;
+  const note = result.value.addMemoTags[0];
 
-    if (note == null) {
-      return Err({ name: "NotFoundError" } as const);
-    }
+  if (note == null) {
+    return Err({ name: "NotFoundError" });
+  }
 
-    return Ok(note.tags as NoteTagString[]);
-  });
+  return Ok(note.tags as NoteTagString[]);
 };
