@@ -6,8 +6,7 @@ import {
   useLoaderData,
   useParams,
 } from "@tanstack/react-router";
-import { type BookRef, $bookByRef } from "~/entities/book";
-import { toPromise } from "~/lib/promise-loader";
+import { type BookRef, fetchBookByRef } from "~/entities/book";
 
 const LayoutComponent: React.FC = () => {
   const { book } = useLoaderData({ from: Route.fullPath });
@@ -38,8 +37,7 @@ export const Route = /* #__PURE__ */ createFileRoute("/books/$book-ref")({
   notFoundComponent: ErrorComponent,
   async loader({ params }) {
     const bookRef = params["book-ref"] as BookRef;
-    const store = $bookByRef(bookRef);
-    const book = await toPromise(store);
+    const book = await fetchBookByRef(bookRef);
     if (book == null) {
       // eslint-disable-next-line @typescript-eslint/only-throw-error
       throw notFound();
