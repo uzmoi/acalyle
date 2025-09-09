@@ -1,11 +1,10 @@
-import { createFileRoute, useParams } from "@tanstack/react-router";
-import type { BookRef } from "~/entities/book";
+import { createFileRoute, useLoaderData } from "@tanstack/react-router";
 import { BookSettingsPage } from "~/pages/book-settings";
 
 const RouteComponent: React.FC = () => {
-  const { "book-ref": bookRef } = useParams({ from: Route.fullPath });
+  const { book } = useLoaderData({ from: Route.parentRoute.id });
 
-  return <BookSettingsPage bookRef={bookRef as BookRef} />;
+  return <BookSettingsPage book={book} />;
 };
 
 // eslint-disable-next-line pure-module/pure-module

@@ -3,14 +3,13 @@ import { Button, ControlGroup, Popover, Spinner } from "@acalyle/ui";
 import { useNavigate } from "@tanstack/react-router";
 import { Suspense, useCallback } from "react";
 import { BiCaretDown } from "react-icons/bi";
-import { type BookRef, bookRefOf, useBookByRef } from "~/entities/book";
+import { type Book, bookRefOf } from "~/entities/book";
 import { createNote } from "../model";
 import { NoteTemplateSelectList } from "./note-template-select-list";
 
 export const NoteCreateButton: React.FC<{
-  bookRef: BookRef;
-}> = ({ bookRef }) => {
-  const book = useBookByRef(bookRef);
+  book: Book;
+}> = ({ book }) => {
   const navigate = useNavigate();
 
   const createNoteFromTemplateOrNone = useCallback(

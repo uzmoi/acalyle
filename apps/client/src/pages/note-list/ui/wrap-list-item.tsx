@@ -2,7 +2,7 @@ import { cx, style } from "@acalyle/css";
 import { visuallyHidden } from "@acalyle/ui";
 import { Link } from "@tanstack/react-router";
 import { useCallback } from "react";
-import type { BookRef } from "~/entities/book";
+import { type Book, bookRefOf } from "~/entities/book";
 import { type NoteId, useNote, TagList } from "~/entities/note";
 // eslint-disable-next-line import-access/jsdoc
 import { NoteContents } from "~/entities/note/ui/contents";
@@ -10,9 +10,9 @@ import { openNoteInModal } from "~/features/note-modal";
 import { theme } from "~/theme";
 
 export const NoteWarpListItem: React.FC<{
-  bookRef: BookRef;
+  book: Book;
   noteId: NoteId;
-}> = ({ bookRef, noteId }) => {
+}> = ({ book, noteId }) => {
   const note = useNote(noteId);
 
   const handleClickLink = useCallback(
@@ -20,9 +20,9 @@ export const NoteWarpListItem: React.FC<{
       // NOTE: noscript環境でなるべく正しく動くようにLinkのままpreventDefaultしている。
       // これが本当正しいのかはわからない。
       e.preventDefault();
-      void openNoteInModal(bookRef, noteId);
+      void openNoteInModal(bookRefOf(book), noteId);
     },
-    [bookRef, noteId],
+    [book, noteId],
   );
 
   return (
@@ -38,7 +38,7 @@ export const NoteWarpListItem: React.FC<{
     >
       <Link
         to="/books/$book-ref/$note-id"
-        params={{ "book-ref": bookRef, "note-id": noteId }}
+        params={{ "book-ref": bookRefOf(book), "note-id": noteId }}
         onClick={handleClickLink}
         className=":uno: absolute inset-0"
       >

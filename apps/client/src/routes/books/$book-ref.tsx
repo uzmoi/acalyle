@@ -2,13 +2,15 @@ import {
   Link,
   Outlet,
   createFileRoute,
+  notFound,
+  useLoaderData,
   useParams,
 } from "@tanstack/react-router";
-import { type BookRef, useBookByRef } from "~/entities/book";
+import { type BookRef, $bookByRef } from "~/entities/book";
+import { toPromise } from "~/lib/promise-loader";
 
 const LayoutComponent: React.FC = () => {
-  const { "book-ref": bookRef } = useParams({ from: Route.fullPath });
-  const book = useBookByRef(bookRef as BookRef);
+  const { book } = useLoaderData({ from: Route.fullPath });
 
   return (
     <div className=":uno: px-8 py-4">
@@ -20,7 +22,7 @@ const LayoutComponent: React.FC = () => {
   );
 };
 
-const ErrorComponent = () => {
+const ErrorComponent: React.FC = () => {
   const { "book-ref": bookRef } = useParams({ from: Route.fullPath });
 
   return (
@@ -33,5 +35,15 @@ const ErrorComponent = () => {
 
 export const Route = /* #__PURE__ */ createFileRoute("/books/$book-ref")({
   component: LayoutComponent,
-  errorComponent: ErrorComponent,
+  notFoundComponent: ErrorComponent,
+  async loader({ params }) {
+    const bookRef = params["book-ref"] as BookRef;
+    const store = $bookByRef(bookRef);
+    const book = await toPromise(store);
+    if (book == null) {
+      // eslint-disable-next-line @typescript-eslint/only-throw-error
+      throw notFound();
+    }
+    return { book };
+  },
 });

@@ -2,12 +2,12 @@ import { cx, style } from "@acalyle/css";
 import { Alert, Catch, vars } from "@acalyle/ui";
 import { Suspense } from "react";
 import { BiError } from "react-icons/bi";
-import type { BookRef } from "~/entities/book";
+import type { Book } from "~/entities/book";
 import type { NoteId } from "~/entities/note";
 import { FullNote } from "~/widgets/note";
 
 export const NotePage: React.FC<{
-  bookRef: BookRef;
+  book: Book;
   noteId: NoteId;
 }> = ({ noteId }) => {
   return (

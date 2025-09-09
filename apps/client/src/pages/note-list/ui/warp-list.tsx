@@ -1,26 +1,25 @@
 import { cx, style } from "@acalyle/css";
 import { Intersection } from "@acalyle/ui";
 import { useCallback } from "react";
-import { type BookRef, useBookByRef } from "~/entities/book";
+import type { Book } from "~/entities/book";
 import type { NoteId } from "~/entities/note";
 import { $noteConnection } from "~/features/search-notes";
 import { useConnection } from "~/shared/graphql";
 import { NoteWarpListItem } from "./wrap-list-item";
 
 export const NoteWarpList: React.FC<{
-  bookRef: BookRef;
+  book: Book;
   query: string;
-}> = ({ bookRef, query }) => {
-  const bookId = useBookByRef(bookRef).id;
-  const { nodeIds } = useConnection($noteConnection(bookId, query));
+}> = ({ book, query }) => {
+  const { nodeIds } = useConnection($noteConnection(book.id, query));
 
   const onIntersection = useCallback(
     (entry: IntersectionObserverEntry) => {
       if (entry.isIntersecting) {
-        void $noteConnection(bookId, query).loadNextPage();
+        void $noteConnection(book.id, query).loadNextPage();
       }
     },
-    [bookId, query],
+    [book.id, query],
   );
 
   return (
@@ -36,7 +35,7 @@ export const NoteWarpList: React.FC<{
         {nodeIds.map(noteId => (
           <NoteWarpListItem
             key={noteId}
-            bookRef={bookRef}
+            book={book}
             noteId={noteId as string as NoteId}
           />
         ))}
