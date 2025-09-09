@@ -1,10 +1,10 @@
 import { type ReadableAtom, map, onMount, onSet } from "nanostores";
-import { derived } from "~/lib/derived";
 import {
   type PromiseLoaderExt,
   type PromiseLoaderW,
   createPromiseLoaderAtom,
 } from "~/lib/promise-loader";
+import { derived } from "~/shared/store";
 import { fetchBook, fetchBookByHandle } from "../api";
 import type { Book, BookHandle, BookId } from "./types";
 
