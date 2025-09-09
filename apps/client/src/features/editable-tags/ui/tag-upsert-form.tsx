@@ -2,18 +2,17 @@ import { NoteTag, type TagSymbol } from "@acalyle/core";
 import { Form, List, TextInput } from "@acalyle/ui";
 import { nonNullable } from "emnorst";
 import { useState } from "react";
-import { type BookRef, useBookByRef } from "~/entities/book";
+import type { Book } from "~/entities/book";
 import { type NoteId, type NoteTagString, useNote } from "~/entities/note";
 import { complementNoteTag } from "../model";
 
 export const TagUpsertForm: React.FC<{
-  bookRef: BookRef;
+  book: Book;
   noteId: NoteId;
   onUpsert?: (tag: NoteTagString) => void;
-}> = ({ bookRef, noteId, onUpsert }) => {
+}> = ({ book, noteId, onUpsert }) => {
   const [tag, setTag] = useState("");
 
-  const book = useBookByRef(bookRef);
   const note = useNote(noteId);
 
   const candidate = complementNoteTag(tag, {

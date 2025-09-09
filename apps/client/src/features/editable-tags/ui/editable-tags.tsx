@@ -1,7 +1,7 @@
 import { cx, style } from "@acalyle/css";
 import { Button, List } from "@acalyle/ui";
 import { BiSolidEdit, BiX } from "react-icons/bi";
-import type { BookRef } from "~/entities/book";
+import type { Book } from "~/entities/book";
 import { type NoteId, type NoteTagString, TagList } from "~/entities/note";
 import { theme } from "~/theme";
 import { useEditableTags } from "../model";
@@ -11,10 +11,10 @@ import { TagUpsertForm } from "./tag-upsert-form";
 // TODO: symbolが一致するタグがあったら一致するタグをハイライトする。
 
 export const EditableTags: React.FC<{
-  bookRef: BookRef;
+  book: Book;
   noteId: NoteId;
   tags: readonly NoteTagString[];
-}> = ({ bookRef, noteId, tags }) => {
+}> = ({ book, noteId, tags }) => {
   const [state, { start, end, upsertTag, removeTag }] = useEditableTags();
 
   const onOpen = (): void => {
@@ -52,11 +52,7 @@ export const EditableTags: React.FC<{
             style({ backgroundColor: theme("note-bg") }),
           )}
         >
-          <TagUpsertForm
-            bookRef={bookRef}
-            noteId={noteId}
-            onUpsert={upsertTag}
-          />
+          <TagUpsertForm book={book} noteId={noteId} onUpsert={upsertTag} />
           <Button onClick={onClose}>save</Button>
         </div>
       )}
