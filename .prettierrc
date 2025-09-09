@@ -3,10 +3,6 @@
   "experimentalTernaries": true,
   "overrides": [
     {
-      "files": ["apps/client/src/{app,lib,theme,ui}/**"],
-      "options": { "tabWidth": 4 }
-    },
-    {
       "files": [".vscode/*.json"],
       "options": { "parser": "jsonc" }
     }

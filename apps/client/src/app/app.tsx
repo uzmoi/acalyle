@@ -7,31 +7,31 @@ import { theme } from "~/theme";
 import { defaultTheme } from "~/theme/default";
 
 const router = /* #__PURE__ */ createRouter({
-    routeTree,
-    defaultPreload: "intent",
+  routeTree,
+  defaultPreload: "intent",
 });
 
 declare module "@tanstack/react-router" {
-    interface Register {
-        router: typeof router;
-    }
+  interface Register {
+    router: typeof router;
+  }
 }
 
 export const App: React.FC = () => {
-    return (
-        <div
-            className={cx(
-                defaultTheme,
-                style({
-                    minHeight: "100%",
-                    fontFamily: vars.font.sans,
-                    color: theme("app-text"),
-                    backgroundColor: theme("app-bg"),
-                }),
-            )}
-        >
-            <RouterProvider router={router} />
-            <QuickModalContainer />
-        </div>
-    );
+  return (
+    <div
+      className={cx(
+        defaultTheme,
+        style({
+          minHeight: "100%",
+          fontFamily: vars.font.sans,
+          color: theme("app-text"),
+          backgroundColor: theme("app-bg"),
+        }),
+      )}
+    >
+      <RouterProvider router={router} />
+      <QuickModalContainer />
+    </div>
+  );
 };
