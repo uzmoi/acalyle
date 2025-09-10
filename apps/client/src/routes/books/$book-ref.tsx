@@ -37,7 +37,9 @@ export const Route = /* #__PURE__ */ createFileRoute("/books/$book-ref")({
   notFoundComponent: ErrorComponent,
   async loader({ params }) {
     const bookRef = params["book-ref"] as BookRef;
-    const book = await fetchBookByRef(bookRef);
+    const result = await fetchBookByRef(bookRef);
+    // FIXME: unwrap
+    const book = result.unwrap();
     if (book == null) {
       // eslint-disable-next-line @typescript-eslint/only-throw-error
       throw notFound();

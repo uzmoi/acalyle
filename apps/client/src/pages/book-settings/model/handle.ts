@@ -18,7 +18,8 @@ export type BookHandleStatus =
   | "invalid"
   | "loading"
   | "available"
-  | "unavailable";
+  | "unavailable"
+  | "unknown";
 
 export const useBookHandleStatus = (
   initial: string | null,
@@ -33,8 +34,10 @@ export const useBookHandleStatus = (
     if (!isValidBookHandle(handle)) return "invalid";
     const normalizedHandle = normalizeBookHandle(handle);
     if (normalizedHandle === initial) return "no-change";
-    const book = await fetchBookByHandle(normalizedHandle);
-    return book == null ? "available" : "unavailable";
+    const result = await fetchBookByHandle(normalizedHandle);
+    return result.mapOr("unknown", book =>
+      book == null ? "available" : "unavailable",
+    );
   }, "no-change");
 
   const update = (handle: string): void => {
