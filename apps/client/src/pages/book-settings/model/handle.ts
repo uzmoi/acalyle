@@ -1,6 +1,5 @@
-import { useStore } from "@nanostores/react";
-import { atom } from "nanostores";
-import { $book, type BookHandle } from "~/entities/book";
+import { startTransition, useActionState, useState } from "react";
+import { type BookHandle, fetchBookByHandle } from "~/entities/book";
 
 export const normalizeBookHandle = (handle: string): BookHandle => {
   return handle.toLowerCase().replaceAll(/[^_a-z]/g, "_") as BookHandle;
@@ -14,28 +13,36 @@ export const isValidBookHandle = (handle: string): boolean => {
   return (0 < length && length <= 256) && /^[\w-]+$/.test(handle);
 };
 
-const $fulfilledNull = /* #__PURE__ */ atom({
-  status: "fulfilled",
-  value: null,
-});
-
 export type BookHandleStatus =
+  | "no-change"
   | "invalid"
   | "loading"
   | "available"
   | "unavailable";
 
 export const useBookHandleStatus = (
-  handle: string | null,
-): BookHandleStatus | null => {
-  const isValid = handle != null && isValidBookHandle(handle);
-  const handleLoader = useStore(
-    isValid ? $book.byHandle(normalizeBookHandle(handle)) : $fulfilledNull,
-  );
+  initial: string | null,
+): [string, BookHandleStatus | null, (x: string) => void] => {
+  const [handle, setHandle] = useState<string>(initial ?? "");
 
-  if (handle == null) return null;
-  if (!isValid) return "invalid";
-  if (handleLoader.status !== "fulfilled") return "loading";
+  const [state, dispatch, isPending] = useActionState<
+    Exclude<BookHandleStatus, "loading"> | null,
+    string
+  >(async (_, handle) => {
+    if (handle === "") return null;
+    if (!isValidBookHandle(handle)) return "invalid";
+    const normalizedHandle = normalizeBookHandle(handle);
+    if (normalizedHandle === initial) return "no-change";
+    const book = await fetchBookByHandle(normalizedHandle);
+    return book == null ? "available" : "unavailable";
+  }, "no-change");
 
-  return handleLoader.value == null ? "available" : "unavailable";
+  const update = (handle: string): void => {
+    setHandle(handle);
+    startTransition(() => {
+      dispatch(handle);
+    });
+  };
+
+  return [handle, isPending ? "loading" : state, update];
 };

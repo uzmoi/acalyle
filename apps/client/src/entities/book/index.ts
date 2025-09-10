@@ -1,4 +1,6 @@
 /** @public */
+export { fetchBookByHandle } from "./api";
+/** @public */
 export {
   $book,
   type Book,
