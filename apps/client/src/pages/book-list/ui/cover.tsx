@@ -6,7 +6,7 @@ import { type Book, bookRefOf } from "~/entities/book";
 import { theme } from "~/theme";
 import { BookThumbnail } from "./thumbnail";
 
-export const BookOverview: React.FC<{
+export const BookCover: React.FC<{
   book: Book;
 }> = ({ book }) => {
   return (

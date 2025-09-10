@@ -10,7 +10,7 @@ import { Link, useRouter } from "@tanstack/react-router";
 import { startTransition, useCallback } from "react";
 import { BiBookAdd, BiRefresh } from "react-icons/bi";
 import type { BooksPage } from "../api";
-import { BookOverview } from "./overview";
+import { BookCover } from "./cover";
 
 export const BookListPage: React.FC<{
   initialQuery?: string | undefined;
@@ -67,7 +67,7 @@ export const BookListPage: React.FC<{
       >
         {booksPage.books.map(book => (
           <List.Item key={book.id}>
-            <BookOverview book={book} />
+            <BookCover book={book} />
           </List.Item>
         ))}
       </List>
