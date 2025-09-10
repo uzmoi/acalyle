@@ -1,5 +1,5 @@
 import type { Brand } from "@uzmoi/ut/types";
-import type { PageInfo } from "~/__generated__/graphql";
+import type { PageInfo } from "./schema.gen";
 
 class Listenable {
   subscriptions = new Set<() => void>();
