@@ -1,10 +1,13 @@
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
+import { Ok } from "@uzmoi/ut/fp";
 import { describe, expect, test, vi } from "vitest";
-import type { BookId } from "~/entities/book";
-import * as featuresModalModule from "~/features/modal";
-import * as modelModule from "../model";
+import { type BookId, type Book, fetchBookByHandle } from "~/entities/book";
+import { confirm } from "~/features/modal";
+import { changeBookHandle } from "../model";
 import { BookHandleForm } from "./book-handle-form";
+
+vi.mock("~/entities/book");
 
 describe("ok", () => {
   test("no-change", async () => {
@@ -29,7 +32,7 @@ describe("ok", () => {
 
   test("unavailable", async () => {
     const bookId = "<book-id>" as BookId;
-    vi.spyOn(modelModule, "useBookHandleStatus").mockReturnValue("unavailable");
+    vi.mocked(fetchBookByHandle).mockResolvedValue(Ok({} as Book));
 
     render(<BookHandleForm bookId={bookId} currentHandle={null} />);
 
@@ -41,7 +44,7 @@ describe("ok", () => {
 
   test("available", async () => {
     const bookId = "<book-id>" as BookId;
-    vi.spyOn(modelModule, "useBookHandleStatus").mockReturnValue("available");
+    vi.mocked(fetchBookByHandle).mockResolvedValue(Ok(null));
 
     render(<BookHandleForm bookId={bookId} currentHandle={null} />);
 
@@ -52,11 +55,14 @@ describe("ok", () => {
   });
 });
 
+vi.mock("~/features/modal");
+vi.mock("../model", { spy: true });
+
 test("submit", async () => {
   const bookId = "<book-id>" as BookId;
-  vi.spyOn(modelModule, "useBookHandleStatus").mockReturnValue("available");
-  vi.spyOn(featuresModalModule, "confirm").mockResolvedValue(true);
-  const changeBookHandle = vi.spyOn(modelModule, "changeBookHandle");
+  vi.mocked(fetchBookByHandle).mockResolvedValue(Ok(null));
+  vi.mocked(confirm).mockResolvedValue(true);
+  vi.mocked(changeBookHandle).mockResolvedValue(void 0);
 
   render(<BookHandleForm bookId={bookId} currentHandle={null} />);
 
