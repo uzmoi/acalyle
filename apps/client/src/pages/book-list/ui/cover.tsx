@@ -22,7 +22,7 @@ export const BookCover: React.FC<{
         }),
       )}
     >
-      <BookThumbnail src={book.thumbnail} className=":uno: flex-none" />
+      <BookThumbnail thumbnail={book.thumbnail} className=":uno: flex-none" />
       <div className=":uno: relative flex-1 overflow-hidden px-4 py-2">
         <Link
           to="/books/$book-ref"
