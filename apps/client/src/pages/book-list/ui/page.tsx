@@ -1,11 +1,5 @@
 import { cx, style } from "@acalyle/css";
-import {
-  Button,
-  ControlGroup,
-  Intersection,
-  List,
-  TextInput,
-} from "@acalyle/ui";
+import { Button, ControlGroup, List, TextInput } from "@acalyle/ui";
 import { Link, useRouter } from "@tanstack/react-router";
 import { startTransition, useCallback } from "react";
 import { BiBookAdd, BiRefresh } from "react-icons/bi";
@@ -22,12 +16,6 @@ export const BookListPage: React.FC<{
       await router.navigate({ to: "/books", search: { query } });
     });
   };
-
-  const onIntersection = useCallback((entry: IntersectionObserverEntry) => {
-    if (entry.isIntersecting) {
-      // void connection.loadNextPage();
-    }
-  }, []);
 
   const refetch = useCallback(() => {
     void router.invalidate();
@@ -71,7 +59,6 @@ export const BookListPage: React.FC<{
           </List.Item>
         ))}
       </List>
-      <Intersection onIntersection={onIntersection} rootMargin="25% 0px" />
       {/* {isLoading && (
         <div className=":uno: ml-50% mt-4 inline-block translate-x--50%">
           <span className=":uno: mr-16 h-4 align-top">Loading...</span>
