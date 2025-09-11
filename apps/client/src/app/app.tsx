@@ -2,9 +2,9 @@ import { cx, style } from "@acalyle/css";
 import { vars } from "@acalyle/ui";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { QuickModalContainer } from "~/features/modal";
-import { routeTree } from "~/routeTree.gen";
 import { theme } from "~/theme";
 import { defaultTheme } from "~/theme/default";
+import { routeTree } from "./routeTree.gen";
 
 const router = /* #__PURE__ */ createRouter({
   routeTree,
