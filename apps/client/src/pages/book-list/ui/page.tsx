@@ -1,15 +1,15 @@
-import { cx, style } from "@acalyle/css";
-import { Button, ControlGroup, List, TextInput } from "@acalyle/ui";
+import { style } from "@acalyle/css";
+import { Button, ControlGroup, Spinner, TextInput } from "@acalyle/ui";
 import { Link, useRouter } from "@tanstack/react-router";
-import { startTransition, useCallback } from "react";
+import { startTransition, Suspense, useCallback } from "react";
 import { BiBookAdd, BiRefresh } from "react-icons/bi";
 import type { BooksPage } from "../api";
-import { BookCover } from "./cover";
+import { BookShelf } from "./shelf";
 
 export const BookListPage: React.FC<{
   initialQuery?: string | undefined;
-  booksPage: BooksPage;
-}> = ({ initialQuery, booksPage }) => {
+  page: Promise<BooksPage>;
+}> = ({ initialQuery, page }) => {
   const router = useRouter();
   const setQuery = (query: string): void => {
     startTransition(async () => {
@@ -47,24 +47,16 @@ export const BookListPage: React.FC<{
           <span className=":uno: ml-1">New</span>
         </Link>
       </div>
-      <List
-        className={cx(
-          ":uno: grid gap-x-5 gap-y-3",
-          style({ gridTemplateColumns: "repeat(auto-fit, minmax(32em, 1fr))" }),
-        )}
+      <Suspense
+        fallback={
+          <div className=":uno: ml-50% mt-4 inline-block translate-x--50%">
+            <span className=":uno: mr-16 h-4 align-top">Loading...</span>
+            <Spinner className={style({ "--size": "1.5em" })} />
+          </div>
+        }
       >
-        {booksPage.books.map(book => (
-          <List.Item key={book.id}>
-            <BookCover book={book} />
-          </List.Item>
-        ))}
-      </List>
-      {/* {isLoading && (
-        <div className=":uno: ml-50% mt-4 inline-block translate-x--50%">
-          <span className=":uno: mr-16 h-4 align-top">Loading...</span>
-          <Spinner className={style({ "--size": "1.5em" })} />
-        </div>
-      )} */}
+        <BookShelf books={page.then(page => page.books)} />
+      </Suspense>
       {/* {error && (
         <Alert type="error">
           <BiError

@@ -18,7 +18,7 @@ export const Default: Story = {
   loaders: ({ id }) => {
     faker.seed(xxHash32(id));
     return {
-      booksPage: {
+      page: Promise.resolve({
         books: faker.helpers.multiple((): Book => {
           const id = faker.string.nanoid(16) as BookId;
           const title = faker.book.title();
@@ -34,9 +34,15 @@ export const Default: Story = {
           return { id, title, handle, description, thumbnail, tags: [] };
         }),
         pageInfo: {},
-      },
+      }),
     };
   },
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   args: {} as any, // oxlint-disable-line no-explicit-any
+};
+
+export const Loading: Story = {
+  args: {
+    page: new Promise(() => {}),
+  },
 };
