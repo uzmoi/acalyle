@@ -10,7 +10,6 @@ import { withTanstackRouter } from "../src/dev/sb-router";
 
 const preview: Preview = {
   parameters: {
-    layout: "centered",
     controls: {
       matchers: {
         color: /(background|color)$/i,
@@ -18,7 +17,6 @@ const preview: Preview = {
       },
     },
   },
-  tags: ["autodocs"],
   decorators: [withTanstackRouter, story => <Provider>{story()}</Provider>],
   beforeEach({ id }) {
     faker.seed(xxHash32(id));
