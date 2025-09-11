@@ -1,6 +1,6 @@
-import { Button, ControlGroup, TextInput } from "@acalyle/ui";
+import { Button, ControlGroup, TextInput, visuallyHidden } from "@acalyle/ui";
 import { Link, useRouter } from "@tanstack/react-router";
-import { startTransition, Suspense, useCallback } from "react";
+import { startTransition, Suspense, useCallback, useId } from "react";
 import { BiBookAdd, BiRefresh } from "react-icons/bi";
 import type { BooksPage } from "../api";
 import { BookShelf } from "./shelf";
@@ -21,12 +21,18 @@ export const BookListPage: React.FC<{
     void router.invalidate();
   }, [router]);
 
+  const id = useId();
+
   return (
     <main className=":uno: mx-auto max-w-screen-xl px-8 py-4">
       <div className=":uno: mb-6 flex items-center gap-4">
         <form action={refetch} className=":uno: flex-1">
+          <label htmlFor={id} className={visuallyHidden}>
+            Search Books
+          </label>
           <ControlGroup className=":uno: flex">
             <TextInput
+              id={id}
               type="search"
               className=":uno: flex-1"
               placeholder="Find a book"
