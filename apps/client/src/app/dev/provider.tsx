@@ -1,7 +1,7 @@
 import { cx, style } from "@acalyle/css";
 import { vars } from "@acalyle/ui";
+import { theme } from "~/theme";
 import { defaultTheme } from "~/theme/default";
-import { theme } from "../theme";
 
 export const Provider: React.FC<{
   children: React.ReactNode;

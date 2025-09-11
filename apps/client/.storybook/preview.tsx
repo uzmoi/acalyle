@@ -5,8 +5,8 @@ import "virtual:uno.css";
 import type { Preview } from "@storybook/react";
 import { faker } from "@faker-js/faker";
 import { xxHash32 } from "js-xxhash";
-import { Provider } from "../src/dev/provider";
-import { withTanstackRouter } from "../src/dev/sb-router";
+import { Provider } from "../src/app/dev/provider";
+import { withTanstackRouter } from "../src/app/dev/sb-router";
 
 const preview: Preview = {
   parameters: {
