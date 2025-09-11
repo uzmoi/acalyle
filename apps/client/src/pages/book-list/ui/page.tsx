@@ -1,10 +1,10 @@
-import { style } from "@acalyle/css";
-import { Button, ControlGroup, Spinner, TextInput } from "@acalyle/ui";
+import { Button, ControlGroup, TextInput } from "@acalyle/ui";
 import { Link, useRouter } from "@tanstack/react-router";
 import { startTransition, Suspense, useCallback } from "react";
 import { BiBookAdd, BiRefresh } from "react-icons/bi";
 import type { BooksPage } from "../api";
 import { BookShelf } from "./shelf";
+import { BookShelfSkeleton } from "./shelf-skeleton";
 
 export const BookListPage: React.FC<{
   initialQuery?: string | undefined;
@@ -47,14 +47,7 @@ export const BookListPage: React.FC<{
           <span className=":uno: ml-1">New</span>
         </Link>
       </div>
-      <Suspense
-        fallback={
-          <div className=":uno: ml-50% mt-4 inline-block translate-x--50%">
-            <span className=":uno: mr-16 h-4 align-top">Loading...</span>
-            <Spinner className={style({ "--size": "1.5em" })} />
-          </div>
-        }
-      >
+      <Suspense fallback={<BookShelfSkeleton />}>
         <BookShelf books={page.then(page => page.books)} />
       </Suspense>
       {/* {error && (
