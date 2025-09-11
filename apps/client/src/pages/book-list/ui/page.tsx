@@ -1,8 +1,8 @@
-import { Button, ControlGroup, TextInput, visuallyHidden } from "@acalyle/ui";
-import { Link, useRouter } from "@tanstack/react-router";
-import { startTransition, Suspense, useCallback, useId } from "react";
-import { BiBookAdd, BiRefresh } from "react-icons/bi";
+import { Link } from "@tanstack/react-router";
+import { Suspense } from "react";
+import { BiBookAdd } from "react-icons/bi";
 import type { BooksPage } from "../api";
+import { SearchBar } from "./search-bar";
 import { BookShelf } from "./shelf";
 import { BookShelfSkeleton } from "./shelf-skeleton";
 
@@ -10,44 +10,10 @@ export const BookListPage: React.FC<{
   initialQuery?: string | undefined;
   page: Promise<BooksPage>;
 }> = ({ initialQuery, page }) => {
-  const router = useRouter();
-  const setQuery = (query: string): void => {
-    startTransition(async () => {
-      await router.navigate({ to: "/books", search: { query } });
-    });
-  };
-
-  const refetch = useCallback(() => {
-    void router.invalidate();
-  }, [router]);
-
-  const id = useId();
-
   return (
     <main className=":uno: mx-auto max-w-screen-xl px-8 py-4">
       <div className=":uno: mb-6 flex items-center gap-4">
-        <form action={refetch} className=":uno: flex-1">
-          <label htmlFor={id} className={visuallyHidden}>
-            Search Books
-          </label>
-          <ControlGroup className=":uno: flex">
-            <TextInput
-              id={id}
-              type="search"
-              className=":uno: flex-1"
-              placeholder="Find a book"
-              defaultValue={initialQuery ?? ""}
-              onValueChange={setQuery}
-            />
-            <Button type="submit" className=":uno: px-1 line-height-none">
-              <BiRefresh
-                title="Refresh"
-                size="20"
-                className=":uno: align-top"
-              />
-            </Button>
-          </ControlGroup>
-        </form>
+        <SearchBar initialQuery={initialQuery} />
         <Link to="/books/new">
           <BiBookAdd />
           <span className=":uno: ml-1">New</span>
