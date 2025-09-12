@@ -56,13 +56,8 @@ export const CreateBookForm: React.FC<{
             value={description}
             onValueChange={setDescription}
           />
-          <p className=":uno: mt-1 text-xs text-gray-4">
-            <span
-              className=":uno: data-[is-invalid=true]:text-red"
-              data-is-invalid={descriptionLength > MAX_DESCRIPTION_LENGTH}
-            >
-              {descriptionLength} / {MAX_DESCRIPTION_LENGTH} 文字
-            </span>
+          <p className=":uno: mt-1 text-xs text-gray [[aria-invalid=true]+&]:text-red">
+            {descriptionLength} / {MAX_DESCRIPTION_LENGTH} 文字
           </p>
         </dd>
       </dl>
