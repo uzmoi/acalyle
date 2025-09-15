@@ -22,6 +22,7 @@ export const useBookHandleStatus = (
     if (handle === "") return null;
     if (!isValidBookHandle(handle)) return "invalid";
     const normalizedHandle = normalizeBookHandle(handle);
+    if (normalizedHandle === "") return null;
     if (normalizedHandle === initial) return "no-change";
     const result = await fetchBookByHandle(normalizedHandle);
     return result.mapOr("unknown", book =>
