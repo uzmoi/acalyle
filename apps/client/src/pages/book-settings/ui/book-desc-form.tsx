@@ -1,9 +1,8 @@
 import { Button, ControlGroup, TextInput } from "@acalyle/ui";
 import { useId, useState } from "react";
 import type { BookId } from "~/entities/book";
+import { MAX_DESCRIPTION_LENGTH } from "~/features/book-form";
 import { changeBookDescription } from "../model";
-
-const MAX_DESCRIPTION_LENGTH = 500;
 
 export const BookDescriptionForm: React.FC<{
   bookId: BookId;

@@ -1,17 +1,6 @@
 import { startTransition, useActionState, useState } from "react";
-import { type BookHandle, fetchBookByHandle } from "~/entities/book";
-
-export const normalizeBookHandle = (handle: string): BookHandle => {
-  return handle.toLowerCase().replaceAll(/[^_a-z]/g, "_") as BookHandle;
-};
-
-export const isValidBookHandle = (handle: string): boolean => {
-  const length = handle.length;
-
-  // yoda
-  // prettier-ignore
-  return (0 < length && length <= 256) && /^[\w-]+$/.test(handle);
-};
+import { fetchBookByHandle } from "~/entities/book";
+import { normalizeBookHandle, isValidBookHandle } from "~/features/book-form";
 
 export type BookHandleStatus =
   | "no-change"

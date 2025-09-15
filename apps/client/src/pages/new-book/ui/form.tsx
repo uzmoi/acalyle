@@ -1,9 +1,8 @@
 import { Button, TextInput } from "@acalyle/ui";
 import { useCallback, useId, useState } from "react";
 import type { BookRef } from "~/entities/book";
+import { MAX_DESCRIPTION_LENGTH } from "~/features/book-form";
 import { createBook } from "../model";
-
-const MAX_DESCRIPTION_LENGTH = 500;
 
 export const CreateBookForm: React.FC<{
   onCreatedBook: (bookRef: BookRef) => Promise<void>;
