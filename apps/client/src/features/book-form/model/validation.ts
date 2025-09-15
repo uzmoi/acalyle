@@ -1,17 +1,25 @@
+import { remove as removeAccents } from "remove-accents";
 import type { BookHandle } from "~/entities/book";
 
 export const MAX_HANDLE_LENGTH = 100;
 
-export const isValidBookHandle = (handle: string): boolean => {
-  const length = handle.length;
+const HANDLE_INVALID_CHARACTER_RE = /[^\d_a-z]/;
+const HANDLE_LEADING_INVALID_CHARACTERS_RE = /^[^\d_a-z]+/;
+const HANDLE_TRAILING_INVALID_CHARACTERS_RE = /[^\d_a-z]+$/;
+const HANDLE_INVALID_CHARACTERS_RE = /[^\d_a-z]+/g;
 
-  // yoda
-  // prettier-ignore
-  return (0 < length && length <= 256) && /^[\w-]+$/.test(handle);
-};
+export const isValidBookHandle = (handle: string): handle is BookHandle =>
+  handle !== "" &&
+  handle.length <= MAX_HANDLE_LENGTH &&
+  !HANDLE_INVALID_CHARACTER_RE.test(handle);
 
-export const normalizeBookHandle = (handle: string): BookHandle => {
-  return handle.toLowerCase().replaceAll(/[^_a-z]/g, "_") as BookHandle;
+export const normalizeBookHandle = (handle: string): BookHandle | "" => {
+  return removeAccents(handle.normalize("NFKC"))
+    .toLowerCase()
+    .replace(HANDLE_LEADING_INVALID_CHARACTERS_RE, "")
+    .replace(HANDLE_TRAILING_INVALID_CHARACTERS_RE, "")
+    .replaceAll(HANDLE_INVALID_CHARACTERS_RE, "_")
+    .slice(0, MAX_HANDLE_LENGTH) as BookHandle;
 };
 
 export const MAX_TITLE_LENGTH = 100;
