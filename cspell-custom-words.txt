@@ -1,7 +1,5 @@
 acalyle
 accum
-appdata
-attributify
 autodocs
 biomejs
 chrono
@@ -55,7 +53,6 @@ uploadables
 upsert
 uzmoi
 valibot
-Valueable
 vite
 warplist
 xxhash
