@@ -8,7 +8,7 @@
     "editor.defaultFormatter": "rust-lang.rust-analyzer",
   },
   "[toml]": {
-    "editor.defaultFormatter": "tamasfe.even-better-toml", // cspell:ignore tamasfe
+    "editor.defaultFormatter": "tombi-toml.tombi",
   },
   "files.watcherExclude": {
     "**/routeTree.gen.ts": true,

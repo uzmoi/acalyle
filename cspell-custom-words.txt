@@ -44,6 +44,7 @@ sqlx
 tauri
 testid
 textnodes
+tombi
 trunc
 tsbuildinfo
 tsup

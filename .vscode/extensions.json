@@ -6,5 +6,6 @@
     "tauri-apps.tauri-vscode",
     "rust-lang.rust-analyzer",
     "streetsidesoftware.code-spell-checker",
+    "tombi-toml.tombi",
   ],
 }
