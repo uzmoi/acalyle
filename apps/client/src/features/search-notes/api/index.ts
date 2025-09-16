@@ -1,5 +1,5 @@
-import type { Result } from "@acalyle/fp";
 import type { ResultOf } from "@graphql-typed-document-node/core";
+import type { Result } from "@uzmoi/ut/fp";
 import type { BookId } from "~/entities/book";
 import { gql, type GqlFnError, type Cursor, type ID } from "~/shared/graphql";
 import AfterNotesPageQuery from "./after-notes-page.graphql";

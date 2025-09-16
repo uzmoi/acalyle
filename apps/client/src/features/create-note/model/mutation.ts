@@ -1,4 +1,4 @@
-import type { Result } from "@acalyle/fp";
+import type { Result } from "@uzmoi/ut/fp";
 import type { BookId } from "~/entities/book";
 import { $note, type NoteId } from "~/entities/note";
 import type { GqlFnError } from "~/shared/graphql";

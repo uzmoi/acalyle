@@ -18,7 +18,7 @@ const config: NitrogqlConfig = {
     nitrogql: {
       plugins: ["nitrogql:graphql-scalars-plugin"],
       generate: {
-        schemaOutput: "src/__generated__/graphql.ts",
+        schemaOutput: "src/shared/graphql/schema.gen.ts",
         type: {
           scalarTypes: {
             Upload: "null",

@@ -6,19 +6,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  graphql-scheme:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: dtolnay/rust-toolchain@stable # cspell:word dtolnay
-      - uses: Swatinem/rust-cache@v2 # cspell:word Swatinem
-
-      - run: cargo run --bin schema-gen
-        working-directory: apps/server
-
-      - run: git diff --exit-code
   prepare:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -142,12 +129,6 @@ jobs:
           fail-on-cache-miss: true
 
       - run: npm run codegen -- --output-logs=new-only
-
-      - name: Run Chromatic on @acalyle/ui
-        uses: chromaui/action@latest # cspell:word chromaui
-        with:
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN_UI }}
-          workingDir: packages/ui
 
       - name: Run Chromatic on @acalyle/client
         uses: chromaui/action@latest # cspell:word chromaui

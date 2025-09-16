@@ -1,7 +1,6 @@
 import type { NoteTag } from "@acalyle/core";
 import { style } from "@acalyle/css";
-import { vars } from "@acalyle/ui";
-import { theme } from "~/theme";
+import { vars, theme } from "@acalyle/ui";
 
 export const Tag: React.FC<{
   tag: NoteTag;

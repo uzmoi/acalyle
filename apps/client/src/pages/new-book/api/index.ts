@@ -1,4 +1,4 @@
-import type { Result } from "@acalyle/fp";
+import type { Result } from "@uzmoi/ut/fp";
 import type { BookId, Book } from "~/entities/book";
 import { gql, type GqlFnError } from "~/shared/graphql";
 import CreateBookMutation from "./create-book.graphql";

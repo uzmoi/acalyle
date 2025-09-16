@@ -21,6 +21,9 @@ export const react: Linter.Config[] = [
       "testing-library/consistent-data-testid": warn({
         testIdPattern: "^[a-z_]+$",
       }),
+      "testing-library/no-debugging-utils": warn({
+        utilsToCheckFor: { debug: false },
+      }),
       "testing-library/prefer-explicit-assert": WARN,
       "testing-library/prefer-user-event": WARN,
     },

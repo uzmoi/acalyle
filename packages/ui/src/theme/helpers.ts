@@ -2,8 +2,8 @@ import hash from "@emotion/hash";
 import type { IfUnion } from "emnorst";
 import type { Theme } from "./theme";
 
-export const varName = (key: string): string =>
-  import.meta.env.DEV ? key.replace(":", "-") : hash(key);
+export const varName = (key: string): `--${string}` =>
+  `--${import.meta.env.DEV ? key.replace(":", "-") : hash(key).slice(-5)}`;
 
 export const theme = <
   S extends keyof Theme,
@@ -13,8 +13,8 @@ export const theme = <
   defaultValue?: string,
 ): `var(--${string})` =>
   defaultValue ?
-    `var(--${varName(key)}, ${defaultValue})`
-  : `var(--${varName(key)})`;
+    `var(${varName(key)}, ${defaultValue})`
+  : `var(${varName(key)})`;
 
 export const createTheme = (theme: Theme): Record<`--${string}`, string> => {
   const style: Record<`--${string}`, string> = {};
@@ -23,8 +23,7 @@ export const createTheme = (theme: Theme): Record<`--${string}`, string> => {
     theme as unknown as Record<keyof Theme, Record<string, string>>,
   )) {
     for (const [key, value] of Object.entries(vars)) {
-      const name = `--${varName(`${scope}-${key}`)}` as const;
-      style[name] = value;
+      style[varName(`${scope}-${key}`)] = value;
     }
   }
 

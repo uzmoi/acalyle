@@ -1,15 +1,15 @@
 import { Button, TextInput } from "@acalyle/ui";
 import { useCallback, useId, useState } from "react";
 import type { BookRef } from "~/entities/book";
+import { MAX_DESCRIPTION_LENGTH } from "~/features/book-form";
 import { createBook } from "../model";
-
-const MAX_DESCRIPTION_LENGTH = 500;
 
 export const CreateBookForm: React.FC<{
   onCreatedBook: (bookRef: BookRef) => Promise<void>;
 }> = ({ onCreatedBook }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const descriptionLength = [...description].length; // code points length
 
   const action = useCallback(async () => {
     const bookRef = await createBook(title, description);
@@ -24,7 +24,7 @@ export const CreateBookForm: React.FC<{
 
   return (
     <form action={action}>
-      <h1>Create a new book</h1>
+      <h1 className=":uno: text-xl">Create a new book</h1>
       <dl>
         <dt className=":uno: mb-1 mt-4">
           <label htmlFor={titleId} className=":uno: text-sm font-bold">
@@ -35,7 +35,7 @@ export const CreateBookForm: React.FC<{
         <dd>
           <TextInput
             id={titleId}
-            className=":uno: max-w-128 min-w-64 w-full"
+            className=":uno: w-full"
             value={title}
             onValueChange={setTitle}
             required
@@ -48,27 +48,23 @@ export const CreateBookForm: React.FC<{
           </label>
         </dt>
         <dd>
-          <p className=":uno: text-xs text-gray-4">
-            文字数:{" "}
-            <span
-              className=":uno: data-[is-invalid=true]:text-red"
-              data-is-invalid={description.length > MAX_DESCRIPTION_LENGTH}
-            >
-              {description.length} / {MAX_DESCRIPTION_LENGTH}
-            </span>
-          </p>
           <TextInput
             id={descriptionId}
-            className=":uno: min-w-64 w-full"
+            className=":uno: w-full"
+            aria-invalid={descriptionLength > MAX_DESCRIPTION_LENGTH}
             value={description}
             onValueChange={setDescription}
           />
+          <p className=":uno: mt-1 text-xs text-gray [[aria-invalid=true]+&]:text-red">
+            {descriptionLength} / {MAX_DESCRIPTION_LENGTH} 文字
+          </p>
         </dd>
       </dl>
-      <div className=":uno: mt-4">
+      <div className=":uno: mt-4 text-end">
         <Button
           type="submit"
-          disabled={description.length > MAX_DESCRIPTION_LENGTH}
+          className=":uno: bg-green-7"
+          disabled={descriptionLength > MAX_DESCRIPTION_LENGTH}
         >
           Create book
         </Button>

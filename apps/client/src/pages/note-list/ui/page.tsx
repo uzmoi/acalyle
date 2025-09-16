@@ -1,13 +1,13 @@
 import { useDeferredValue, useState } from "react";
-import type { BookRef } from "~/entities/book";
+import type { Book } from "~/entities/book";
 import { NoteCreateButton } from "~/features/create-note";
 import { NoteModalContainer } from "~/features/note-modal";
 import { SearchBox } from "~/features/search-notes";
 import { NoteWarpList } from "./warp-list";
 
 export const NoteListPage: React.FC<{
-  bookRef: BookRef;
-}> = ({ bookRef }) => {
+  book: Book;
+}> = ({ book }) => {
   const [query, setQuery] = useState("");
   const deferredQuery = useDeferredValue(query);
 
@@ -15,9 +15,9 @@ export const NoteListPage: React.FC<{
     <div>
       <div className=":uno: mb-4 flex gap-4">
         <SearchBox query={query} setQuery={setQuery} />
-        <NoteCreateButton bookRef={bookRef} />
+        <NoteCreateButton book={book} />
       </div>
-      <NoteWarpList bookRef={bookRef} query={`-@relate:* ${deferredQuery}`} />
+      <NoteWarpList book={book} query={`-@relate:* ${deferredQuery}`} />
       <NoteModalContainer />
     </div>
   );

@@ -1,4 +1,4 @@
-import { Err, Ok, Result } from "@acalyle/fp";
+import { Err, Ok, Result } from "@uzmoi/ut/fp";
 import type { NoteId, NoteTagString } from "~/entities/note";
 import { gql, type ID, type GqlFnError } from "~/shared/graphql";
 import UpdateNoteContentsMutation from "./update-note-contents.graphql";
@@ -18,12 +18,16 @@ export const updateNoteContentsMutation = async (
     contents,
   });
 
-  return result.flatMap(({ updateMemoContents: note }) => {
-    if (note == null) {
-      return Err({ name: "NotFoundError" } as const);
-    }
+  if (!result.ok) return result;
+  const note = result.value.updateMemoContents;
 
-    const { contents, tags, updatedAt } = note;
-    return Ok({ contents, tags: tags as NoteTagString[], updatedAt });
+  if (note == null) {
+    return Err({ name: "NotFoundError" });
+  }
+
+  return Ok({
+    contents: note.contents,
+    tags: note.tags as NoteTagString[],
+    updatedAt: note.updatedAt,
   });
 };
