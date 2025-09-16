@@ -5,8 +5,7 @@ import "virtual:uno.css";
 import type { Preview } from "@storybook/react-vite";
 import { faker } from "@faker-js/faker";
 import { xxHash32 } from "js-xxhash";
-import { Provider } from "../src/app/dev/provider";
-import { withTanstackRouter } from "../src/app/dev/sb-router";
+import { withThemeProvider, withTanstackRouter } from "../src/app/dev";
 
 const preview: Preview = {
   parameters: {
@@ -17,7 +16,7 @@ const preview: Preview = {
       },
     },
   },
-  decorators: [withTanstackRouter, story => <Provider>{story()}</Provider>],
+  decorators: [withTanstackRouter, withThemeProvider],
   beforeEach({ id }) {
     faker.seed(xxHash32(id));
   },

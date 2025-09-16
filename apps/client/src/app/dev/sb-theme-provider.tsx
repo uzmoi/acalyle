@@ -1,9 +1,10 @@
+import type { Preview } from "@storybook/react-vite";
 import { cx, style } from "@acalyle/css";
 import { vars } from "@acalyle/ui";
 import { theme } from "~/theme";
 import { defaultTheme } from "~/theme/default";
 
-export const Provider: React.FC<{
+const Provider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   return (
@@ -22,3 +23,12 @@ export const Provider: React.FC<{
     </div>
   );
 };
+
+type SbDecorator = Exclude<
+  Preview["decorators"],
+  readonly unknown[] | undefined
+>;
+
+export const withThemeProvider: SbDecorator = story => (
+  <Provider>{story()}</Provider>
+);
