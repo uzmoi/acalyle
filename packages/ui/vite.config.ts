@@ -7,7 +7,7 @@ import packageJson from "./package.json" with { type: "json" };
 
 const isStorybook = process.argv[1]?.includes("storybook");
 
-type WyWinJS = typeof import("@wyw-in-js/vite").default;
+type WyWinJS = typeof wywInJS.default;
 
 export default defineConfig({
   plugins: [
@@ -22,7 +22,7 @@ export default defineConfig({
       tagResolver,
       features: {
         dangerousCodeRemover: ["**/*", "!**/src/theme/*"],
-      } as NonNullable<Parameters<WyWinJS>[0]>["features"],
+      } as NonNullable<NonNullable<Parameters<WyWinJS>[0]>["features"]>,
       classNameSlug: (hash, title, { name }) =>
         `${title === "className" ? name : title}__${hash}`,
     }),
