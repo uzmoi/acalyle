@@ -16,10 +16,7 @@ export const Default: Story = {};
 
 export const Filled: Story = {
   async play({ canvas }) {
-    await userEvent.type(
-      canvas.getByLabelText("Book title", { exact: false }),
-      faker.book.title(),
-    );
+    await userEvent.type(canvas.getByLabelText(/title/), faker.book.title());
     await userEvent.type(
       canvas.getByLabelText("Description"),
       faker.lorem.sentence(),
@@ -29,10 +26,7 @@ export const Filled: Story = {
 
 export const Invalid: Story = {
   async play({ canvas }) {
-    await userEvent.type(
-      canvas.getByLabelText("Book title", { exact: false }),
-      faker.book.title(),
-    );
+    await userEvent.type(canvas.getByLabelText(/title/), faker.book.title());
 
     const descriptionInputEl = canvas.getByLabelText("Description");
     await userEvent.click(descriptionInputEl);
