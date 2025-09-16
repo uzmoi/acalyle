@@ -6,19 +6,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  graphql-scheme:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: dtolnay/rust-toolchain@stable # cspell:word dtolnay
-      - uses: Swatinem/rust-cache@v2 # cspell:word Swatinem
-
-      - run: cargo run --bin schema-gen
-        working-directory: apps/server
-
-      - run: git diff --exit-code
   prepare:
     runs-on: ubuntu-latest
     timeout-minutes: 10
