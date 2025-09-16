@@ -1,6 +1,5 @@
 import { cx, style } from "@acalyle/css";
-import { ModalContainer } from "@acalyle/ui";
-import { theme } from "~/theme";
+import { ModalContainer, theme } from "@acalyle/ui";
 import { type NoteModalInput, modal } from "../model";
 import { NoteModalContent } from "./content";
 

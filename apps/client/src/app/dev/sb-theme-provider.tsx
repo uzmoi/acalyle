@@ -1,16 +1,15 @@
-import type { Preview } from "@storybook/react-vite";
 import { cx, style } from "@acalyle/css";
-import { vars } from "@acalyle/ui";
-import { theme } from "~/theme";
-import { defaultTheme } from "~/theme/default";
+import { theme, vars } from "@acalyle/ui";
+import type { Preview } from "@storybook/react-vite";
+import { defaultThemeClassName } from "../theme";
 
-const Provider: React.FC<{
+const ThemeProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   return (
     <div
       className={cx(
-        defaultTheme,
+        defaultThemeClassName,
         style({
           minHeight: "100%",
           fontFamily: vars.font.sans,
@@ -30,5 +29,5 @@ type SbDecorator = Exclude<
 >;
 
 export const withThemeProvider: SbDecorator = story => (
-  <Provider>{story()}</Provider>
+  <ThemeProvider>{story()}</ThemeProvider>
 );

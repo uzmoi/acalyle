@@ -1,5 +1,5 @@
 import { cx, style } from "@acalyle/css";
-import { theme } from "~/theme";
+import { theme } from "@acalyle/ui";
 import { resolveResource } from "../model";
 
 const COLOR_THUMBNAIL_PREFIX = "color:";

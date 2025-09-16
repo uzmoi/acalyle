@@ -1,8 +1,7 @@
 import { cx, style } from "@acalyle/css";
-import { Button, ControlGroup, TextArea } from "@acalyle/ui";
+import { Button, ControlGroup, TextArea, theme } from "@acalyle/ui";
 import { useState } from "react";
 import type { NoteId } from "~/entities/note";
-import { theme } from "~/theme";
 import { updateNoteContents } from "../model";
 
 export const NoteContentsEditor: React.FC<{
@@ -12,11 +11,11 @@ export const NoteContentsEditor: React.FC<{
 }> = ({ noteId, initialValue, onEnd }) => {
   const [contents, setContents] = useState(initialValue);
 
-  const handleValueChange = (value: string) => {
+  const handleValueChange = (value: string): void => {
     setContents(value);
   };
 
-  const action = async () => {
+  const action = async (): Promise<void> => {
     await updateNoteContents(noteId, contents);
     onEnd?.();
   };

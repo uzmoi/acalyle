@@ -1,10 +1,9 @@
 import { cx, style } from "@acalyle/css";
-import { vars } from "@acalyle/ui";
+import { theme, vars } from "@acalyle/ui";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { QuickModalContainer } from "~/features/modal";
-import { theme } from "~/theme";
-import { defaultTheme } from "~/theme/default";
 import { routeTree } from "./routeTree.gen";
+import { defaultThemeClassName } from "./theme";
 
 const router = /* #__PURE__ */ createRouter({
   routeTree,
@@ -21,7 +20,7 @@ export const App: React.FC = () => {
   return (
     <div
       className={cx(
-        defaultTheme,
+        defaultThemeClassName,
         style({
           minHeight: "100%",
           fontFamily: vars.font.sans,

@@ -1,5 +1,5 @@
 import { cx, style } from "@acalyle/css";
-import { theme } from "~/theme";
+import { theme } from "@acalyle/ui";
 
 export const NoteContents: React.FC<{
   contents: string;

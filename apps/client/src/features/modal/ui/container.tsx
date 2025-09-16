@@ -1,6 +1,5 @@
 import { cx, style } from "@acalyle/css";
-import { center, ModalContainer } from "@acalyle/ui";
-import { theme } from "~/theme";
+import { center, ModalContainer, theme } from "@acalyle/ui";
 import { type ModalInput, type Modals, modal } from "../model";
 import { ConfirmForm } from "./confirm";
 

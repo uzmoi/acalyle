@@ -1,9 +1,8 @@
 import { cx, style } from "@acalyle/css";
-import { Button, List } from "@acalyle/ui";
+import { Button, List, theme } from "@acalyle/ui";
 import { BiSolidEdit, BiX } from "react-icons/bi";
 import type { Book } from "~/entities/book";
 import { type NoteId, type NoteTagString, TagList } from "~/entities/note";
-import { theme } from "~/theme";
 import { useEditableTags } from "../model";
 import { TagUpsertForm } from "./tag-upsert-form";
 

@@ -1,9 +1,8 @@
 import { cx, style } from "@acalyle/css";
-import { visuallyHidden } from "@acalyle/ui";
+import { theme, visuallyHidden } from "@acalyle/ui";
 import { Link } from "@tanstack/react-router";
 import { identify } from "emnorst";
 import { type Book, bookRefOf } from "~/entities/book";
-import { theme } from "~/theme";
 import { BookThumbnail } from "./thumbnail";
 
 export const BookCover: React.FC<{

@@ -1,10 +1,3 @@
-export interface Theme {
-  app: AppTheme;
-  bookOverview: BookOverviewTheme;
-  note: NoteTheme;
-  tag: TagTheme;
-}
-
 export interface AppTheme {
   text: string;
   bg: string;
@@ -26,4 +19,13 @@ export interface TagTheme {
   text: string;
   bg: string;
   outline: string;
+}
+
+declare module "@acalyle/ui" {
+  interface Theme {
+    app: AppTheme;
+    bookOverview: BookOverviewTheme;
+    note: NoteTheme;
+    tag: TagTheme;
+  }
 }
