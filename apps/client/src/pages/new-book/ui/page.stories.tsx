@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
-import type { Meta, StoryObj } from "@storybook/react";
-import { expect, userEvent } from "@storybook/test";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, userEvent } from "storybook/test";
 import { NewBookPage } from "./page";
 
 const meta = {

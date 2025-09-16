@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { xxHash32 } from "js-xxhash";
 import type { Book, BookId, BookHandle } from "~/entities/book";
 import { BookListPage } from "./page";

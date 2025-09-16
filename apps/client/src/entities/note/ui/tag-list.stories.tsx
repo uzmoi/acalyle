@@ -1,5 +1,5 @@
 import { style } from "@acalyle/css";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { NoteTagString } from "../model";
 import { TagList } from "./tag-list";
 

@@ -2,7 +2,7 @@ import "@acalyle/ui/dist/style.css";
 // eslint-disable-next-line import/no-unresolved
 import "virtual:uno.css";
 
-import type { Preview } from "@storybook/react";
+import type { Preview } from "@storybook/react-vite";
 import { faker } from "@faker-js/faker";
 import { xxHash32 } from "js-xxhash";
 import { Provider } from "../src/app/dev/provider";
