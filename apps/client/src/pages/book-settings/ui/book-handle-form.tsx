@@ -1,5 +1,7 @@
 import { Button } from "@acalyle/ui";
-import type { BookHandle, BookId } from "~/entities/book";
+import { useNavigate } from "@tanstack/react-router";
+import { startTransition } from "react";
+import { type BookHandle, type BookId, bookRefFromId } from "~/entities/book";
 import {
   normalizeBookHandle,
   useBookHandleStatus,
@@ -12,6 +14,7 @@ export const BookHandleForm: React.FC<{
   bookId: BookId;
   currentHandle: BookHandle | null;
 }> = ({ bookId, currentHandle }) => {
+  const navigate = useNavigate();
   const [handle, status, setHandle] = useBookHandleStatus(currentHandle);
 
   const action = async (): Promise<void> => {
@@ -19,6 +22,12 @@ export const BookHandleForm: React.FC<{
     const action = handle === "" ? "削除" : `「${normalizedHandle}」に変更`;
     if (await confirm(`book handleを${action}しますわ。よろしくて？`)) {
       await changeBookHandle(bookId, normalizedHandle || null);
+      startTransition(async () => {
+        await navigate({
+          to: "/books/$book-ref/settings",
+          params: { "book-ref": normalizedHandle || bookRefFromId(bookId) },
+        });
+      });
     }
   };
 
