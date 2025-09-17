@@ -14,7 +14,6 @@ const ThemeProvider: React.FC<{
           minHeight: "100%",
           fontFamily: vars.font.sans,
           color: theme("app-text"),
-          backgroundColor: theme("app-bg"),
         }),
       )}
     >

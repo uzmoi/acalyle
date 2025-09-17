@@ -5,7 +5,12 @@ import "virtual:uno.css";
 import type { Preview } from "@storybook/react-vite";
 import { faker } from "@faker-js/faker";
 import { xxHash32 } from "js-xxhash";
-import { withThemeProvider, withTanstackRouter } from "../src/app/dev";
+import {
+  withThemeProvider,
+  withTanstackRouter,
+  lightBg,
+  darkBg,
+} from "../src/app/dev";
 
 const preview: Preview = {
   parameters: {
@@ -15,6 +20,15 @@ const preview: Preview = {
         date: /Date$/,
       },
     },
+    backgrounds: {
+      options: {
+        light: { name: "Light", value: lightBg },
+        dark: { name: "Dark", value: darkBg },
+      },
+    },
+  },
+  initialGlobals: {
+    backgrounds: { value: "dark" },
   },
   decorators: [withTanstackRouter, withThemeProvider],
   beforeEach({ id }) {
