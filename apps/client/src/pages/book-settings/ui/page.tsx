@@ -7,7 +7,7 @@ export const BookSettingsPage: React.FC<{
   book: Book;
 }> = ({ book }) => {
   return (
-    <div>
+    <div className=":uno: flex flex-col gap-4">
       <BookTitleForm bookId={book.id} currentTitle={book.title} />
       <BookHandleForm bookId={book.id} currentHandle={book.handle} />
       <BookDescriptionForm
