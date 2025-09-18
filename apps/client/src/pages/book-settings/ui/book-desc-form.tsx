@@ -15,7 +15,7 @@ export const BookDescriptionForm: React.FC<{
   };
 
   return (
-    <form action={action} className=":uno: max-w-4xl flex items-end gap-4">
+    <form action={action} className=":uno: flex items-end gap-4">
       <DescriptionField value={description} onChange={setDescription} />
       <Button
         type="submit"
