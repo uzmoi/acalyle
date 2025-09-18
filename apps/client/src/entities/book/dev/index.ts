@@ -13,5 +13,5 @@ export const createRandomBook = (): Book => {
       faker.image.dataUri({ width: 96, height: 96 })
     : `color:${faker.color.lch({ format: "css" })}`;
 
-  return { id, title, handle, description, thumbnail, tags: [] };
+  return { id, title, handle, description, thumbnail };
 };

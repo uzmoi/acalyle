@@ -5,6 +5,5 @@ query Book($bookId: ID, $handle: String) {
     title
     description
     thumbnail
-    tags
   }
 }

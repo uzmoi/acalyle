@@ -1,4 +1,4 @@
-import { NoteTag, type TagSymbol } from "@acalyle/core";
+import { NoteTag } from "@acalyle/core";
 import { Form, List, TextInput } from "@acalyle/ui";
 import { nonNullable } from "emnorst";
 import { useState } from "react";
@@ -10,7 +10,7 @@ export const TagUpsertForm: React.FC<{
   book: Book;
   noteId: NoteId;
   onUpsert?: (tag: NoteTagString) => void;
-}> = ({ book, noteId, onUpsert }) => {
+}> = ({ book: _, noteId, onUpsert }) => {
   const [tag, setTag] = useState("");
 
   const note = useNote(noteId);
@@ -24,7 +24,7 @@ export const TagUpsertForm: React.FC<{
         .filter(tag => tag.prop == null)
         .map(tag => tag.symbol),
     ),
-    tagSymbolsInBook: book.tags as readonly TagSymbol[],
+    tagSymbolsInBook: [], // TODO: どこかで取得する。
   });
 
   return (

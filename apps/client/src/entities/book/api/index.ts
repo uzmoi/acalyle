@@ -21,7 +21,6 @@ const adjustType = (book: GqlBook | null): Book | null => {
     title: book.title,
     description: book.description,
     thumbnail: book.thumbnail,
-    tags: book.tags,
   };
 };
 
