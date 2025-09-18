@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { xxHash32 } from "js-xxhash";
-import type { Book, BookId, BookHandle } from "~/entities/book";
+import { createRandomBook } from "~/entities/book/dev";
 import { BookListPage } from "./page";
 
 const meta = {
@@ -19,20 +19,7 @@ export const Default: Story = {
     faker.seed(xxHash32(id));
     return {
       page: Promise.resolve({
-        books: faker.helpers.multiple((): Book => {
-          const id = faker.string.nanoid(16) as BookId;
-          const title = faker.book.title();
-          const handle = title
-            .toLowerCase()
-            .replaceAll(/\W/g, "-") as BookHandle;
-          const description = faker.lorem.sentence();
-          const thumbnail =
-            faker.datatype.boolean() ?
-              faker.image.dataUri({ width: 96, height: 96 })
-            : `color:${faker.color.lch({ format: "css" })}`;
-
-          return { id, title, handle, description, thumbnail, tags: [] };
-        }),
+        books: faker.helpers.multiple(() => createRandomBook()),
         pageInfo: {},
       }),
     };
