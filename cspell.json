@@ -1,13 +1,19 @@
 {
-    "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
-    "dictionaries": ["custom-words"],
-    "useGitignore": true,
-    "ignorePaths": ["package-lock.json", ".git", "*.icns", "biome.json"],
-    "enableGlobDot": true,
-    "dictionaryDefinitions": [
-        {
-            "name": "custom-words",
-            "path": "./cspell-custom-words.txt"
-        }
-    ]
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "dictionaries": ["custom-words"],
+  "useGitignore": true,
+  "ignorePaths": [
+    "package-lock.json",
+    "pnpm-lock.yaml",
+    ".git",
+    "*.icns",
+    "biome.json"
+  ],
+  "enableGlobDot": true,
+  "dictionaryDefinitions": [
+    {
+      "name": "custom-words",
+      "path": "./cspell-custom-words.txt"
+    }
+  ]
 }
