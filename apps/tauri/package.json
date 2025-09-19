@@ -9,9 +9,9 @@
     "tauri": "tauri"
   },
   "dependencies": {
-    "@acalyle/client": "*",
-    "@acalyle/router": "*",
-    "@acalyle/ui": "*",
+    "@acalyle/client": "workspace:*",
+    "@acalyle/router": "workspace:*",
+    "@acalyle/ui": "workspace:*",
     "@nanostores/react": "^0.4.1",
     "@tauri-apps/api": "^1.2.0",
     "nanostores": "^0.7.4",

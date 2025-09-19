@@ -13,23 +13,13 @@ jobs:
       turbo-hash: ${{ steps.turbo-hash.outputs.hash }}
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
-
-      - id: npm-cache
-        uses: actions/cache/restore@v4
         with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: ${{ runner.os }}-node-
+          cache: pnpm
 
-      - if: steps.npm-cache.outputs.cache-hit != 'true'
-        run: npm install
-
-      - if: steps.npm-cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        run: pnpm install
 
       - id: turbo-hash
         run: |
@@ -51,15 +41,14 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
           node-version: latest
+          cache: pnpm
 
-      - uses: actions/cache/restore@v4
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          fail-on-cache-miss: true
+      - name: Install dependencies
+        run: pnpm install
 
       - uses: actions/cache/restore@v4
         with:
@@ -86,13 +75,13 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
-
-      - uses: actions/cache/restore@v4
         with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          fail-on-cache-miss: true
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
 
       - uses: actions/cache/restore@v4
         with:
@@ -112,13 +101,13 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
-
-      - uses: actions/cache/restore@v4
         with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          fail-on-cache-miss: true
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
 
       - uses: actions/cache/restore@v4
         with:

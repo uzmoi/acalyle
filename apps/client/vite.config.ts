@@ -14,7 +14,7 @@ type WyWinJS = typeof wywInJS.default;
 export default defineConfig({
   plugins: [
     TanStackRouterVite(),
-    react(),
+    { ...react(), enforce: "post" }, // wyw-in-js が '/@react-refresh' を読もうとして失敗するので対策。
     unocss(),
     (wywInJS as unknown as WyWinJS)({
       include: ["**/*.{ts,tsx}"],
@@ -25,7 +25,7 @@ export default defineConfig({
       sourceMap: true,
       tagResolver,
       features: {
-        dangerousCodeRemover: ["**/*", "!**/src/theme/*"],
+        dangerousCodeRemover: ["**/*"],
       } as NonNullable<NonNullable<Parameters<WyWinJS>[0]>["features"]>,
       classNameSlug: (hash, title, { name }) =>
         `${title === "className" ? name : title}__${hash}`,
