@@ -31,7 +31,6 @@ export const HandleField: React.FC<{
       <p className=":uno: mb-1 text-xs text-gray-4">
         status:{" "}
         <span
-          data-testid="handle_status_message"
           className=":uno: data-[ok=false]:text-red data-[ok=true]:text-green"
           data-ok={ok}
         >
