@@ -20,6 +20,9 @@
     "spell": "cspell --no-progress ."
   },
   "devDependencies": {
+    "@acalyle/eslint-config": "workspace:*",
+    "@acalyle/tsconfig": "workspace:*",
+    "@types/node": "^24.5.2",
     "cspell": "^8.3.2",
     "eslint": "^9.23.0",
     "globals": "^13.23.0",

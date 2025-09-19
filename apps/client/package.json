@@ -49,6 +49,7 @@
     "@faker-js/faker": "^9.9.0",
     "@graphql-typed-document-node/core": "^3.2.0",
     "@nitrogql/cli": "^1.7.0",
+    "@nitrogql/esbuild-register": "^1.7.2",
     "@nitrogql/rollup-plugin": "^1.7.0",
     "@storybook/addon-a11y": "^9.1.6",
     "@storybook/addon-docs": "^9.1.6",
