@@ -1,18 +1,10 @@
+import type { ResultOf } from "@graphql-typed-document-node/core";
 import type { Result } from "@uzmoi/ut/fp";
 import { type ID, gql, type GqlFnError } from "~/shared/graphql";
 import type { Book, BookHandle, BookId } from "../model";
 import BookQuery from "./book.graphql";
 
-interface GqlBook {
-  id: ID;
-  handle: string | null;
-  title: string;
-  description: string;
-  thumbnail: string;
-  tags: string[];
-}
-
-const adjustType = (book: GqlBook | null): Book | null => {
+const adjustType = (book: ResultOf<typeof BookQuery>["book"]): Book | null => {
   if (book == null) return null;
 
   return {
