@@ -31,6 +31,13 @@ const preview: Preview = {
     backgrounds: { value: "dark" },
   },
   decorators: [withTanstackRouter, withThemeProvider],
+  render(args, { component, loaded }) {
+    const Component = component!;
+    return <Component {...args} {...loaded.args} />;
+  },
+  loaders({ id }) {
+    faker.seed(xxHash32(id));
+  },
   beforeEach({ id }) {
     faker.seed(xxHash32(id));
   },
