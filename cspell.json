@@ -2,13 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
   "dictionaries": ["custom-words"],
   "useGitignore": true,
-  "ignorePaths": [
-    "package-lock.json",
-    "pnpm-lock.yaml",
-    ".git",
-    "*.icns",
-    "biome.json"
-  ],
+  "ignorePaths": ["pnpm-lock.yaml", ".git", "*.icns", "biome.json"],
   "enableGlobDot": true,
   "dictionaryDefinitions": [
     {

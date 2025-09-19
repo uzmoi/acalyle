@@ -4,10 +4,6 @@
   "name": "acalyle",
   "type": "module",
   "version": "0.1.0",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "scripts": {
     "codegen": "turbo run codegen",
     "build": "turbo run build",
