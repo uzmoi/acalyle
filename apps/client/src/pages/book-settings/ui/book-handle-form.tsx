@@ -1,7 +1,12 @@
-import { Button, ControlGroup, TextInput } from "@acalyle/ui";
-import { useId } from "react";
-import type { BookHandle, BookId } from "~/entities/book";
-import { normalizeBookHandle, useBookHandleStatus } from "~/features/book-form";
+import { Button } from "@acalyle/ui";
+import { useNavigate } from "@tanstack/react-router";
+import { startTransition } from "react";
+import { type BookHandle, type BookId, bookRefFromId } from "~/entities/book";
+import {
+  normalizeBookHandle,
+  useBookHandleStatus,
+  HandleField,
+} from "~/features/book-form";
 import { confirm } from "~/features/modal";
 import { changeBookHandle } from "../model";
 
@@ -9,7 +14,7 @@ export const BookHandleForm: React.FC<{
   bookId: BookId;
   currentHandle: BookHandle | null;
 }> = ({ bookId, currentHandle }) => {
-  const id = useId();
+  const navigate = useNavigate();
   const [handle, status, setHandle] = useBookHandleStatus(currentHandle);
 
   const action = async (): Promise<void> => {
@@ -17,52 +22,24 @@ export const BookHandleForm: React.FC<{
     const action = handle === "" ? "削除" : `「${normalizedHandle}」に変更`;
     if (await confirm(`book handleを${action}しますわ。よろしくて？`)) {
       await changeBookHandle(bookId, normalizedHandle || null);
+      startTransition(async () => {
+        await navigate({
+          to: "/books/$book-ref/settings",
+          params: { "book-ref": normalizedHandle || bookRefFromId(bookId) },
+        });
+      });
     }
   };
 
   return (
-    <form action={action}>
-      <label htmlFor={id} className=":uno: text-sm font-bold">
-        Handle
-      </label>
-      <p className=":uno: text-xs text-gray-4">
-        status:{" "}
-        <span
-          data-testid="handle_status_message"
-          className=":uno: data-[ok=false]:text-red data-[ok=true]:text-green"
-          data-ok={
-            status === "no-change" ? null : (
-              status == null || status === "available"
-            )
-          }
-        >
-          {status == null ?
-            "ハンドルを無効化します。"
-          : status === "available" ?
-            `${normalizeBookHandle(handle)} は使用できます。`
-          : status === "unavailable" ?
-            `${normalizeBookHandle(handle)} は既に使用されています。`
-          : status === "invalid" ?
-            // TODO: ハンドルに使用可能な文字をちゃんと決めたら書き直す。
-            "ハンドルに使用できるのは英数字とアンダースコア(_)のみです。"
-          : status}
-        </span>
-      </p>
-      <ControlGroup className=":uno: flex">
-        <TextInput
-          id={id}
-          value={handle}
-          onValueChange={setHandle}
-          minLength={1}
-          aria-invalid={status === "invalid" || status === "unavailable"}
-        />
-        <Button
-          type="submit"
-          disabled={status === "invalid" || status === "unavailable"}
-        >
-          Change
-        </Button>
-      </ControlGroup>
+    <form action={action} className=":uno: flex items-end gap-4">
+      <HandleField value={handle} status={status} onChange={setHandle} />
+      <Button
+        type="submit"
+        disabled={status === "invalid" || status === "unavailable"}
+      >
+        Change
+      </Button>
     </form>
   );
 };

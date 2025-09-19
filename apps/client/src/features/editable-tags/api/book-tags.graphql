@@ -1,0 +1,5 @@
+query BookTags($bookId: ID!) {
+  book(id: $bookId) {
+    tags
+  }
+}

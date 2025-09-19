@@ -10,5 +10,4 @@ export interface Book {
   title: string;
   description: string;
   thumbnail: string;
-  tags: readonly string[];
 }

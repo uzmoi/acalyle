@@ -29,7 +29,6 @@ export const fetchBooksPage = async (query: string): Promise<BooksPage> => {
       title: book.title,
       description: book.description,
       thumbnail: book.thumbnail,
-      tags: [],
     };
   });
 

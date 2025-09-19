@@ -8,3 +8,5 @@ export {
   type BookHandleStatus,
   useBookHandleStatus,
 } from "./model";
+/** @public */
+export { DescriptionField, HandleField, TitleField } from "./ui";

@@ -1,14 +1,13 @@
-import { Button, ControlGroup, TextInput } from "@acalyle/ui";
-import { useId, useState } from "react";
+import { Button } from "@acalyle/ui";
+import { useState } from "react";
 import type { BookId } from "~/entities/book";
-import { MAX_DESCRIPTION_LENGTH } from "~/features/book-form";
+import { MAX_DESCRIPTION_LENGTH, DescriptionField } from "~/features/book-form";
 import { changeBookDescription } from "../model";
 
 export const BookDescriptionForm: React.FC<{
   bookId: BookId;
   currentDescription: string;
 }> = ({ bookId, currentDescription }) => {
-  const id = useId();
   const [description, setDescription] = useState(currentDescription);
 
   const action = async (): Promise<void> => {
@@ -16,33 +15,15 @@ export const BookDescriptionForm: React.FC<{
   };
 
   return (
-    <form action={action}>
-      <label htmlFor={id} className=":uno: text-sm font-bold">
-        Description
-      </label>
-      <p className=":uno: text-xs text-gray-4">
-        文字数:{" "}
-        <span
-          className=":uno: data-[is-invalid=true]:text-red"
-          data-is-invalid={description.length > MAX_DESCRIPTION_LENGTH}
-        >
-          {description.length} / {MAX_DESCRIPTION_LENGTH}
-        </span>
-      </p>
-      <ControlGroup className=":uno: max-w-4xl flex">
-        <TextInput
-          id={id}
-          value={description}
-          onValueChange={setDescription}
-          className=":uno: flex-grow"
-        />
-        <Button
-          type="submit"
-          disabled={description.length > MAX_DESCRIPTION_LENGTH}
-        >
-          Change
-        </Button>
-      </ControlGroup>
+    <form action={action} className=":uno: flex items-end gap-4">
+      <DescriptionField value={description} onChange={setDescription} />
+      <Button
+        type="submit"
+        className=":uno: mb-5"
+        disabled={description.length > MAX_DESCRIPTION_LENGTH}
+      >
+        Change
+      </Button>
     </form>
   );
 };
