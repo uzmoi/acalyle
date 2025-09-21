@@ -23,6 +23,7 @@ iframe
 iife
 Importability
 lefthook
+markuplint
 Millis
 nanostores
 nitrogql
