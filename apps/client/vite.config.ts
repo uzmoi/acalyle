@@ -14,22 +14,25 @@ type WyWinJS = typeof wywInJS.default;
 export default defineConfig({
   plugins: [
     TanStackRouterVite(),
-    { ...react(), enforce: "post" }, // wyw-in-js が '/@react-refresh' を読もうとして失敗するので対策。
+    react(),
     unocss(),
-    (wywInJS as unknown as WyWinJS)({
-      include: ["**/*.{ts,tsx}"],
-      babelOptions: {
-        presets: ["@babel/preset-typescript"],
-        plugins: ["transform-vite-meta-env"],
-      },
-      sourceMap: true,
-      tagResolver,
-      features: {
-        dangerousCodeRemover: ["**/*"],
-      } as NonNullable<NonNullable<Parameters<WyWinJS>[0]>["features"]>,
-      classNameSlug: (hash, title, { name }) =>
-        `${title === "className" ? name : title}__${hash}`,
-    }),
+    {
+      ...(wywInJS as unknown as WyWinJS)({
+        include: ["**/*.{ts,tsx}"],
+        babelOptions: {
+          presets: ["@babel/preset-typescript"],
+          plugins: ["transform-vite-meta-env"],
+        },
+        sourceMap: true,
+        tagResolver,
+        features: {
+          dangerousCodeRemover: ["**/*"],
+        } as NonNullable<NonNullable<Parameters<WyWinJS>[0]>["features"]>,
+        classNameSlug: (hash, title, { name }) =>
+          `${title === "className" ? name : title}__${hash}`,
+      }),
+      enforce: "pre", // '/@react-refresh' を読もうとして失敗するので対策。
+    },
     nitrogql({ include: ["**/*.graphql"] }),
     !isStorybook &&
       dts({ tsconfigPath: "tsconfig.main.json", rollupTypes: true }),
