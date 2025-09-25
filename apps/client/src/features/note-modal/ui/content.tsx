@@ -1,8 +1,8 @@
 import { style } from "@acalyle/css";
 import { Button } from "@acalyle/ui";
 import { Link } from "@tanstack/react-router";
-import { Suspense } from "react";
 import { BiExpandAlt, BiX } from "react-icons/bi";
+import { useNote } from "~/entities/note";
 import { FullNote } from "~/widgets/note";
 import { type NoteModalInput, close } from "../model";
 
@@ -10,6 +10,8 @@ export const NoteModalContent: React.FC<NoteModalInput> = ({
   bookRef,
   noteId,
 }) => {
+  const note = useNote(noteId);
+
   return (
     <section className=":uno: h-full flex flex-col flex-nowrap gap-4">
       <header className=":uno: flex flex-[0_0] flex-basis-8 rounded-4 px-3 py-2 align-middle">
@@ -36,9 +38,7 @@ export const NoteModalContent: React.FC<NoteModalInput> = ({
         </div>
       </header>
       <div className=":uno: flex-1 overflow-x-hidden">
-        <Suspense>
-          <FullNote key={noteId} noteId={noteId} />
-        </Suspense>
+        <FullNote key={noteId} note={note} />
       </div>
     </section>
   );

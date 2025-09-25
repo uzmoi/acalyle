@@ -1,18 +1,16 @@
-import { cx, style } from "@acalyle/css";
-import { Alert, Catch, vars } from "@acalyle/ui";
-import { Suspense } from "react";
-import { BiError } from "react-icons/bi";
 import type { Book } from "~/entities/book";
-import type { NoteId } from "~/entities/note";
+import { type NoteId, useNote } from "~/entities/note";
 import { FullNote } from "~/widgets/note";
 
 export const NotePage: React.FC<{
   book: Book;
   noteId: NoteId;
 }> = ({ noteId }) => {
+  const note = useNote(noteId);
+
   return (
     <div>
-      <Suspense>
+      {/* <Suspense>
         <Catch
           fallback={
             // REVIEW: role="alert"ってこういう所で使っていいものなのか
@@ -29,10 +27,10 @@ export const NotePage: React.FC<{
               </p>
             </Alert>
           }
-        >
-          <FullNote noteId={noteId} />
-        </Catch>
-      </Suspense>
+        > */}
+      <FullNote note={note} />
+      {/* </Catch>
+      </Suspense> */}
     </div>
   );
 };
