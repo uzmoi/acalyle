@@ -1,20 +1,29 @@
-import { cx } from "@acalyle/css";
-import { TextInput, base } from "@acalyle/ui";
-import { lexQuery, type QueryToken } from "../model";
+import { base } from "@acalyle/ui";
+import { createEditor, plainSchema } from "edix";
+import { useEffect, useRef } from "react";
+import { type QueryToken, lexQuery } from "../model";
 
 export const SearchBox: React.FC<{
   query: string;
   setQuery: (query: string) => void;
 }> = ({ query, setQuery }) => {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (ref.current == null) return;
+    const editor = createEditor({
+      doc: "",
+      schema: plainSchema({ multiline: true }),
+      onChange(value) {
+        setQuery(value);
+      },
+    });
+    return editor.input(ref.current);
+  }, [setQuery]);
+
   return (
-    <div className=":uno: relative">
-      <TextInput type="search" value={query} onValueChange={setQuery} />
-      <div
-        className={cx(
-          ":uno: pointer-events-none absolute inset-0 ws-pre bg-transparent",
-          base,
-        )}
-      >
+    <div>
+      <div className={base} ref={ref}>
         {lexQuery(query).map((token, i) => (
           <span key={i}>{renderQueryToken(token)}</span>
         ))}

@@ -8,6 +8,7 @@ cond
 cssole
 csstype
 datetime
+edix
 emnorst
 espree
 esquery
