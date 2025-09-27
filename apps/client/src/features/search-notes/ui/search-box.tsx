@@ -1,6 +1,6 @@
 import { Popover } from "@acalyle/ui";
 import type { BookId } from "~/entities/book";
-import { parseQuery } from "../model";
+import { appendTag, parseQuery, removeTag } from "../model";
 import { QueryInput } from "./query-input";
 import { TagForm } from "./tag-form";
 
@@ -20,13 +20,11 @@ export const SearchBox: React.FC<{
             <TagForm
               bookId={bookId}
               query={parseQuery(query).toArray()}
-              xorTag={tag => {
-                // TODO: 空白文字の入り方などを改善、parseQueryに挙動を合わせる
-                setQuery(
-                  query.includes(tag) ?
-                    query.replaceAll(tag, "")
-                  : `${query} ${tag}`,
-                );
+              addTag={tag => {
+                setQuery(appendTag(query, tag));
+              }}
+              removeTag={tag => {
+                setQuery(removeTag(query, tag));
               }}
             />
           </Popover.Content>

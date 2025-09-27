@@ -1,3 +1,4 @@
+import type { TagSymbol } from "@acalyle/core";
 import { List, TextInput } from "@acalyle/ui";
 import { useId, useState } from "react";
 import type { BookId } from "~/entities/book";
@@ -10,12 +11,13 @@ const focus = (el: HTMLElement | null): void => {
 export const TagForm: React.FC<{
   bookId: BookId;
   query: readonly QueryItem[];
-  xorTag: (tag: string) => void;
-}> = ({ query, xorTag }) => {
+  addTag: (tag: TagSymbol) => void;
+  removeTag: (tag: TagSymbol) => void;
+}> = ({ query, addTag, removeTag }) => {
   const id = useId();
   const [tagQuery, setTagQuery] = useState("");
 
-  const filtered = ([] as { tag: string; description: string }[]).filter(
+  const filtered = ([] as { tag: TagSymbol; description: string }[]).filter(
     ({ tag, description }) =>
       tag.includes(tagQuery) || description.includes(tagQuery),
   );
@@ -47,8 +49,12 @@ export const TagForm: React.FC<{
                 id={id + tag}
                 className=":uno: before:(absolute inset-0 cursor-pointer content-empty)"
                 checked={query.some(q => q.type === "tag" && q.symbol === tag)}
-                onChange={() => {
-                  xorTag(tag);
+                onChange={event => {
+                  if (event.target.checked) {
+                    addTag(tag);
+                  } else {
+                    removeTag(tag);
+                  }
                 }}
               />
               <label htmlFor={id + tag} className=":uno: ml-2 text-sm">

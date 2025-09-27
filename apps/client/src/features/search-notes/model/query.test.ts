@@ -2,9 +2,11 @@ import { describe, expect, test } from "vitest";
 import {
   type QueryItem,
   type QueryToken,
+  appendTag,
   lexQuery,
   parseQuery,
   printServerQuery,
+  removeTag,
 } from "./query";
 
 // query token helper
@@ -87,5 +89,31 @@ describe("printServerQuery", () => {
     expect(printServerQuery([h.word("hoge"), h.word("fuga")])).toBe(
       '"hoge" "fuga"',
     );
+  });
+});
+
+describe("update query", () => {
+  describe("removeTag", () => {
+    test.each([
+      ['"#tag"', '"#tag"'],
+      ["#tag", ""],
+      [" #tag ", " "],
+      ["  hoge   #tag  fuga  ", "  hoge  fuga  "],
+    ])("%o", (query, expected) => {
+      expect(removeTag(query, "#tag")).toBe(expected);
+    });
+  });
+
+  describe("appendTag", () => {
+    test.each([
+      ["", "#tag"],
+      ["hoge ", "hoge #tag"],
+      ["hoge", "hoge #tag"],
+    ])("%o", (query, expected) => {
+      expect(appendTag(query, "#tag")).toBe(expected);
+    });
+    test("replace tag", () => {
+      expect(appendTag("@tag:fuga", "@tag")).toBe("@tag");
+    });
   });
 });

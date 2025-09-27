@@ -108,3 +108,35 @@ export const printServerQuery = (query: readonly QueryItem[]): string =>
   query
     .map(item => (item.exclude ? "-" : "") + printServerQueryItem(item))
     .join(" ");
+
+export const removeTag = (query: string, targetTag: TagSymbol): string => {
+  let current = "";
+  let result = "";
+
+  for (const { type, content } of lexQuery(query)) {
+    if (type === "op" || type === "ignore") {
+      current += content;
+      continue;
+    }
+
+    if (type === "tag") {
+      const tag = NoteTag.fromString(content)!;
+
+      if (tag.symbol === targetTag) {
+        current = "";
+        continue;
+      }
+    }
+
+    result += current + content;
+    current = "";
+  }
+
+  return result + current;
+};
+
+export const appendTag = (query: string, targetTag: TagSymbol): string => {
+  const q = removeTag(query, targetTag);
+
+  return q === "" || /\s$/.test(q) ? q + targetTag : `${q} ${targetTag}`;
+};
