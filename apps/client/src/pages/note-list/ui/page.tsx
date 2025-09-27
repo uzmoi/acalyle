@@ -13,8 +13,8 @@ export const NoteListPage: React.FC<{
 
   return (
     <div>
-      <div className=":uno: mb-4 flex gap-4">
-        <SearchBox query={query} setQuery={setQuery} />
+      <div className=":uno: mb-4">
+        <SearchBox bookId={book.id} query={query} setQuery={setQuery} />
         <NoteCreateButton book={book} />
       </div>
       <NoteWarpList book={book} query={`-@relate:* ${deferredQuery}`} />
