@@ -31,16 +31,20 @@ export const QueryInput: React.FC<{
           }
           case "op": {
             return (
-              <span key={i} className=":uno: text-red">
+              <span key={i} className=":uno: text-orange">
                 {content}
               </span>
             );
           }
           case "word:quoted": {
             return (
-              <span key={i} className=":uno: text-blue-8">
+              <span key={i} className=":uno: text-green-2">
                 {content.split(/(\\.)/gv).map((str, i) => (
-                  <span key={i} data-escape={!!(i & 1)}>
+                  <span
+                    key={i}
+                    data-escape={!!(i & 1)}
+                    className=":uno: data-[escape=true]:text-cyan"
+                  >
                     {str}
                   </span>
                 ))}
@@ -55,13 +59,12 @@ export const QueryInput: React.FC<{
 
             return (
               <span key={i}>
-                <span className=":uno: text-green-6">
+                <span className=":uno: text-blue-3">
                   {tag.hasHead && tag.head}
                   {tag.path.join("/")}
                 </span>
-                {(tag.prop !== "" || content.endsWith(":")) && ":"}
-                {tag.prop && (
-                  <span className=":uno: text-yellow-6">{tag.prop}</span>
+                {(content.endsWith(":") || tag.prop) && (
+                  <span className=":uno: text-fuchsia-3">:{tag.prop}</span>
                 )}
               </span>
             );

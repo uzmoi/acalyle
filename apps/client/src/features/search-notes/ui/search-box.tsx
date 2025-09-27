@@ -12,7 +12,7 @@ export const SearchBox: React.FC<{
   return (
     <div>
       <QueryInput query={query} setQuery={setQuery} />
-      <div className=":uno: flex gap-2">
+      <div className=":uno: mt-2 flex gap-2">
         <Popover>
           <Popover.Button>タグ</Popover.Button>
           {/* TODO: !important を削除してテーマに従う */}
