@@ -1,3 +1,4 @@
+import { NoteTag } from "@acalyle/core";
 import { base } from "@acalyle/ui";
 import { createEditor, plainSchema } from "edix";
 import { useEffect, useRef } from "react";
@@ -23,36 +24,44 @@ export const QueryInput: React.FC<{
 
   return (
     <div className={base} ref={ref}>
-      {lexQuery(query).map((token, i) => {
-        switch (token.type) {
+      {[...lexQuery(query)].map(({ type, content }, i) => {
+        switch (type) {
           case "ignore": {
-            return <span key={i}>{token.content}</span>;
+            return <span key={i}>{content}</span>;
           }
-          case "word": {
+          case "op": {
             return (
-              <span key={i}>
-                {token.exclude && <span className=":uno: text-red">-</span>}
-                {token.quoted ?
-                  <span className=":uno: text-blue-8">
-                    {token.content.split(/(\\.)/gv).map((str, i) => (
-                      <span key={i} data-escape={!!(i & 1)}>
-                        {str}
-                      </span>
-                    ))}
-                  </span>
-                : token.content}
+              <span key={i} className=":uno: text-red">
+                {content}
               </span>
             );
           }
+          case "word:quoted": {
+            return (
+              <span key={i} className=":uno: text-blue-8">
+                {content.split(/(\\.)/gv).map((str, i) => (
+                  <span key={i} data-escape={!!(i & 1)}>
+                    {str}
+                  </span>
+                ))}
+              </span>
+            );
+          }
+          case "word": {
+            return <span key={i}>{content}</span>;
+          }
           case "tag": {
+            const tag = NoteTag.parse(content);
+
             return (
               <span key={i}>
-                {token.exclude && <span className=":uno: text-red">-</span>}
-                <span className=":uno: text-green-6">{token.symbol}</span>
-                {token.prop != null && (
-                  <>
-                    :<span className=":uno: text-yellow-6">{token.prop}</span>
-                  </>
+                <span className=":uno: text-green-6">
+                  {tag.hasHead && tag.head}
+                  {tag.path.join("/")}
+                </span>
+                {(tag.prop !== "" || content.endsWith(":")) && ":"}
+                {tag.prop && (
+                  <span className=":uno: text-yellow-6">{tag.prop}</span>
                 )}
               </span>
             );

@@ -1,18 +1,51 @@
 import { describe, expect, test } from "vitest";
 import {
-  parseQuery,
-  lexQuery,
   type QueryItem,
   type QueryToken,
+  lexQuery,
+  parseQuery,
   printServerQuery,
 } from "./query";
 
+// query token helper
+const t = {
+  ignore: (): QueryToken => ({
+    type: "ignore",
+    content: expect.stringMatching(/ */) as string,
+  }),
+  op: (op: string): QueryToken => ({ type: "op", content: op }),
+  word: (content: string): QueryToken => ({ type: "word", content }),
+  quoted: (content: string): QueryToken => ({ type: "word:quoted", content }),
+  tag: (content: string): QueryToken => ({ type: "tag", content }),
+};
+
+describe("lexQuery", () => {
+  test("empty", () => {
+    expect(lexQuery("").toArray()).toEqual([]);
+  });
+  test("lexQuery", () => {
+    expect(lexQuery('hoge -"\\\\" #tag -@tag:prop ').toArray()).toMatchObject([
+      t.word("hoge"),
+      t.ignore(),
+      t.op("-"),
+      t.quoted('"\\\\"'),
+      t.ignore(),
+      t.tag("#tag"),
+      t.ignore(),
+      t.op("-"),
+      t.tag("@tag:prop"),
+      t.ignore(),
+    ]);
+  });
+});
+
 // query item helper
 const h = {
-  word: (
-    value: string,
-    { quoted = false, exclude = false } = {},
-  ): QueryItem => ({ type: "word", exclude, quoted, value }),
+  word: (value: string, { exclude = false } = {}): QueryItem => ({
+    type: "word",
+    exclude,
+    value,
+  }),
   tag: (
     symbol: string,
     prop: string | null,
@@ -31,14 +64,14 @@ describe("parser", () => {
     ["-hoge", h.word("hoge", { exclude: true })],
     ["--hoge", h.word("-hoge", { exclude: true })],
     // quote
-    ['""'],
-    ['" "', h.word(" ", { quoted: true })],
+    ['""', h.word("")],
+    ['" "', h.word(" ")],
     ['"a"b', h.word('"a"b')],
     ['a"b"', h.word('a"b"')],
     ['" ', h.word('"')],
-    ['"\\""', h.word('"', { quoted: true })],
-    ['"#tag"', h.word("#tag", { quoted: true })],
-    ['-"a"', h.word("a", { quoted: true, exclude: true })],
+    ['"\\""', h.word('"')],
+    ['"#tag"', h.word("#tag")],
+    ['-"a"', h.word("a", { exclude: true })],
     // tag
     ["#tag", h.tag("#tag", null)],
     ["@hoge:fuga", h.tag("@hoge", "fuga")],
@@ -55,34 +88,4 @@ describe("printServerQuery", () => {
       '"hoge" "fuga"',
     );
   });
-});
-
-// query token helper
-const t = {
-  ignore: (): QueryToken => ({
-    type: "ignore",
-    content: expect.stringMatching(/ */) as string,
-  }),
-  word: (
-    content: string,
-    { quoted = false, exclude = false } = {},
-  ): QueryToken => ({ type: "word", exclude, quoted, content }),
-  tag: (
-    symbol: string,
-    prop: string | null,
-    { exclude = false } = {},
-  ): QueryToken => ({ type: "tag", exclude, symbol, prop }),
-};
-
-test("lexQuery", () => {
-  expect(lexQuery('hoge -"\\\\" #tag -@tag:prop ')).toMatchObject([
-    t.ignore(),
-    t.word("hoge"),
-    t.ignore(),
-    t.word('"\\\\"', { exclude: true, quoted: true }),
-    t.ignore(),
-    t.tag("#tag", null),
-    t.ignore(),
-    t.tag("@tag", "prop", { exclude: true }),
-  ]);
 });
