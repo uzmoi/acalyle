@@ -1,2 +1,8 @@
 export { type BookRef, bookRefFromId, bookRefOf, fetchBookByRef } from "./ref";
-export type { Book, BookHandle, BookId } from "./types";
+export type {
+  Book,
+  BookDetail,
+  BookHandle,
+  BookId,
+  NoteTagMetadata,
+} from "./types";

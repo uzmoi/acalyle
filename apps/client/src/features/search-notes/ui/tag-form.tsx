@@ -2,15 +2,14 @@ import type { TagSymbol } from "@acalyle/core";
 import { List, TextInput } from "@acalyle/ui";
 import { memoize } from "es-toolkit";
 import { use, useId, useState } from "react";
-import type { BookId } from "~/entities/book";
-import { fetchBookTags } from "~/features/editable-tags/api";
+import { type BookId, fetchBookDetail } from "~/entities/book";
 import type { QueryItem } from "../model";
 
 const focus = (el: HTMLElement | null): void => {
   el?.focus();
 };
 
-const memoizedFetchBookTags = /* #__PURE__ */ memoize(fetchBookTags);
+const memoizedFetchBookDetail = /* #__PURE__ */ memoize(fetchBookDetail);
 
 export const TagForm: React.FC<{
   bookId: BookId;
@@ -20,15 +19,18 @@ export const TagForm: React.FC<{
 }> = ({ bookId, query, addTag, removeTag }) => {
   const id = useId();
   const [tagQuery, setTagQuery] = useState("");
-  const tags = use(memoizedFetchBookTags(bookId)).mapOr([], tags =>
-    [...new Set(tags)]
-      .filter(tag => tag.startsWith("#"))
-      .map(tag => ({ tag, description: "" })),
+  const tags = use(memoizedFetchBookDetail(bookId)).mapOr(
+    [],
+    bookDetail =>
+      bookDetail?.tags
+        .values()
+        .filter(tag => tag.symbol.startsWith("#"))
+        .toArray() ?? [],
   );
 
   const filtered = tags.filter(
-    ({ tag, description }) =>
-      tag.includes(tagQuery) || description.includes(tagQuery),
+    ({ symbol, description }) =>
+      symbol.includes(tagQuery) || description.includes(tagQuery),
   );
 
   return (
@@ -47,27 +49,29 @@ export const TagForm: React.FC<{
       </div>
       {filtered.length > 0 ?
         <List>
-          {filtered.map(({ tag, description }) => (
+          {filtered.map(({ symbol, description }) => (
             <List.Item
-              key={tag}
+              key={symbol}
               className=":uno: relative select-none p-1 has-focus-visible:bg-zinc-700 hover:bg-zinc-700"
             >
               {/* TODO: <Checkbox /> として切り出す */}
               <input
                 type="checkbox"
-                id={id + tag}
+                id={id + symbol}
                 className=":uno: before:(absolute inset-0 cursor-pointer content-empty)"
-                checked={query.some(q => q.type === "tag" && q.symbol === tag)}
+                checked={query.some(
+                  q => q.type === "tag" && q.symbol === symbol,
+                )}
                 onChange={event => {
                   if (event.target.checked) {
-                    addTag(tag);
+                    addTag(symbol);
                   } else {
-                    removeTag(tag);
+                    removeTag(symbol);
                   }
                 }}
               />
-              <label htmlFor={id + tag} className=":uno: ml-2 text-sm">
-                {tag}
+              <label htmlFor={id + symbol} className=":uno: ml-2 text-sm">
+                {symbol}
               </label>
               <p className=":uno: text-xs text-gray">{description}</p>
             </List.Item>
