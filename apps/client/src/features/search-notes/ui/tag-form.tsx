@@ -1,23 +1,32 @@
 import type { TagSymbol } from "@acalyle/core";
 import { List, TextInput } from "@acalyle/ui";
-import { useId, useState } from "react";
+import { memoize } from "es-toolkit";
+import { use, useId, useState } from "react";
 import type { BookId } from "~/entities/book";
+import { fetchBookTags } from "~/features/editable-tags/api";
 import type { QueryItem } from "../model";
 
 const focus = (el: HTMLElement | null): void => {
   el?.focus();
 };
 
+const memoizedFetchBookTags = /* #__PURE__ */ memoize(fetchBookTags);
+
 export const TagForm: React.FC<{
   bookId: BookId;
   query: readonly QueryItem[];
   addTag: (tag: TagSymbol) => void;
   removeTag: (tag: TagSymbol) => void;
-}> = ({ query, addTag, removeTag }) => {
+}> = ({ bookId, query, addTag, removeTag }) => {
   const id = useId();
   const [tagQuery, setTagQuery] = useState("");
+  const tags = use(memoizedFetchBookTags(bookId)).mapOr([], tags =>
+    [...new Set(tags)]
+      .filter(tag => tag.startsWith("#"))
+      .map(tag => ({ tag, description: "" })),
+  );
 
-  const filtered = ([] as { tag: TagSymbol; description: string }[]).filter(
+  const filtered = tags.filter(
     ({ tag, description }) =>
       tag.includes(tagQuery) || description.includes(tagQuery),
   );
