@@ -1,3 +1,5 @@
+import { NoteTag, type TagSymbol } from "@acalyle/core";
+
 export interface QueryToken {
   type: "op" | "word" | "word:quoted" | "tag" | "ignore";
   content: string;
