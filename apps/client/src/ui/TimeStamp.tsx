@@ -19,7 +19,7 @@ const units = [
 ] as const satisfies readonly (keyof DurationObject)[];
 
 const formatRelative = (dur: DurationObject): string => {
-  const unit = units.find(unit => dur[unit]) ?? "seconds";
+  const unit = units.find(unit => !!dur[unit]) ?? "seconds";
   return relativeTimeFormat.format(-dur[unit], unit);
 };
 
