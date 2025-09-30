@@ -1,8 +1,10 @@
 export { $noteConnection } from "./connection";
 export {
-  parseQuery,
+  appendTag,
   lexQuery,
+  parseQuery,
+  printServerQuery,
+  removeTag,
   type QueryItem,
   type QueryToken,
-  printServerQuery,
 } from "./query";

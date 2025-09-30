@@ -1,0 +1,18 @@
+query BookDetail($bookId: ID!) {
+  book(id: $bookId) {
+    createdAt
+    tags
+    # tagMetaDatum(symbol: "") {}
+    # tagMetaData {
+    #   symbol
+    #   props
+    #   description
+    # }
+    # tagProps(symbol: "")
+    # resources
+    # settings {
+    #   extensions
+    #   implicitQuery
+    # }
+  }
+}

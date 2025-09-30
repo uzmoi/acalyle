@@ -1,14 +1,54 @@
-interface Range {
-  start: number;
-  end: number;
+import { NoteTag, type TagSymbol } from "@acalyle/core";
+
+export interface QueryToken {
+  type: "op" | "word" | "word:quoted" | "tag" | "ignore";
+  content: string;
 }
+
+const queryRe =
+  /-?('(?:\\.|[^\\'])*'|"(?:\\.|[^\\"])*")(?!\P{White_Space})|\P{White_Space}+/gv;
+
+const tagHeadRe = /^[!#$%&*+=?@^~]/;
+
+export const lexQuery = function* (query: string): Generator<QueryToken, void> {
+  let ignoreStartIndex = 0;
+
+  for (const match of query.matchAll(queryRe)) {
+    let content = match[0];
+    let pos = match.index;
+
+    if (ignoreStartIndex !== pos) {
+      yield { type: "ignore", content: query.slice(ignoreStartIndex, pos) };
+    }
+
+    if (content !== "-" && content.startsWith("-")) {
+      yield { type: "op", content: "-" };
+      pos++;
+      content = content.slice(1);
+    }
+
+    const isQuoted = match[1] != null;
+
+    const type =
+      isQuoted ? "word:quoted"
+      : tagHeadRe.test(content) ? "tag"
+      : "word";
+
+    yield { type, content };
+
+    ignoreStartIndex = pos + content.length;
+  }
+
+  if (ignoreStartIndex !== query.length) {
+    yield { type: "ignore", content: query.slice(ignoreStartIndex) };
+  }
+};
 
 export type QueryItem =
   | {
       type: "word";
       exclude: boolean;
       value: string;
-      quoted: boolean;
     }
   | {
       type: "tag";
@@ -17,49 +57,42 @@ export type QueryItem =
       prop: string | null;
     };
 
-const queryRe =
-  /-?('(?:\\.|[^\\'])*'|"(?:\\.|[^\\"])*")(?!\P{White_Space})|\P{White_Space}+/gv;
-const tagHeadRe = /^[!#$%&*+=?@^~]/;
 const unescapeRe = /\\(.)/gv;
 
-export const parseQuery = (
+export const parseQuery = function* (
   query: string,
-): IteratorObject<QueryItem & Range, undefined> =>
-  query
-    .matchAll(queryRe)
-    .map<QueryItem & Range>(match => {
-      let part = match[0];
-      const start = match.index;
-      const end = start + part.length;
+): Generator<QueryItem, void> {
+  let exclude = false;
 
-      const exclude = part !== "-" && part.startsWith("-");
-      if (exclude) {
-        part = part.slice(1);
+  for (const { type, content } of lexQuery(query)) {
+    if (type === "op") {
+      exclude = true;
+      continue;
+    }
+
+    switch (type) {
+      case "tag": {
+        const index = content.indexOf(":");
+        const symbol = index === -1 ? content : content.slice(0, index);
+        const prop = index === -1 ? null : content.slice(index + 1);
+        yield { type: "tag", exclude, symbol, prop };
+        break;
       }
-
-      // quoted
-      if (match[1] != null) {
-        const value = part.slice(1, -1).replaceAll(unescapeRe, "$1");
-
-        return { type: "word", start, end, exclude, value, quoted: true };
+      case "word": {
+        yield { type: "word", exclude, value: content };
+        break;
       }
-
-      // tag
-      if (tagHeadRe.test(part)) {
-        const index = part.indexOf(":");
-        return {
-          type: "tag",
-          start,
-          end,
-          exclude,
-          symbol: index === -1 ? part : part.slice(0, index),
-          prop: index === -1 ? null : part.slice(index + 1),
-        };
+      case "word:quoted": {
+        const value = content.slice(1, -1).replaceAll(unescapeRe, "$1");
+        yield { type: "word", exclude, value };
+        break;
       }
+      default:
+    }
 
-      return { type: "word", start, end, exclude, value: part, quoted: false };
-    })
-    .filter(item => item.type !== "word" || item.value !== "");
+    exclude = false;
+  }
+};
 
 const printServerQueryItem = (item: QueryItem): string => {
   switch (item.type) {
@@ -78,34 +111,34 @@ export const printServerQuery = (query: readonly QueryItem[]): string =>
     .map(item => (item.exclude ? "-" : "") + printServerQueryItem(item))
     .join(" ");
 
-export type QueryToken =
-  | { type: "ignore"; content: string }
-  | { type: "word"; exclude: boolean; quoted: boolean; content: string }
-  | { type: "tag"; exclude: boolean; symbol: string; prop: string | null };
+export const removeTag = (query: string, targetTag: TagSymbol): string => {
+  let current = "";
+  let result = "";
 
-export const lexQuery = (query: string): QueryToken[] => {
-  const tokens: QueryToken[] = [];
-  let ignoreStartIndex = 0;
+  for (const { type, content } of lexQuery(query)) {
+    if (type === "op" || type === "ignore") {
+      current += content;
+      continue;
+    }
 
-  for (const item of parseQuery(query)) {
-    tokens.push({
-      type: "ignore",
-      content: query.slice(ignoreStartIndex, item.start),
-    });
+    if (type === "tag") {
+      const tag = NoteTag.fromString(content)!;
 
-    ignoreStartIndex = item.end;
+      if (tag.symbol === targetTag) {
+        current = "";
+        continue;
+      }
+    }
 
-    tokens.push(
-      item.type === "word" ?
-        {
-          type: "word",
-          exclude: item.exclude,
-          quoted: item.quoted,
-          content: query.slice(item.start + +item.exclude, item.end),
-        }
-      : item,
-    );
+    result += current + content;
+    current = "";
   }
 
-  return tokens;
+  return result + current;
+};
+
+export const appendTag = (query: string, targetTag: TagSymbol): string => {
+  const q = removeTag(query, targetTag);
+
+  return q === "" || /\s$/.test(q) ? q + targetTag : `${q} ${targetTag}`;
 };
