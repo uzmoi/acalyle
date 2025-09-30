@@ -132,10 +132,13 @@
 
     // MARK: Style
     // Source: ESLint
+    "arrow-body-style": "off",
     "curly": "off",
     "func-names": ["warn", "as-needed"],
+    "id-length": "off",
     "init-declarations": "off",
     "max-params": ["warn", { "max": 4 }],
+    "new-cap": "off",
     "no-continue": "off",
     "no-labels": "off",
     "no-magic-numbers": [
@@ -159,9 +162,13 @@
     "vars-on-top": "off",
     "yoda": ["warn", "never", { "exceptRange": true }],
     // Source: import
+    "import/consistent-type-specifier-style": "off",
     "import/exports-last": "off",
+    "import/group-exports": "off",
     "import/no-mutable-exports": "error",
+    "import/no-named-export": "off",
     "import/no-namespace": "off",
+    "import/prefer-default-export": "off",
     // Source: react
     "react/no-set-state": "off",
     // Source: TypeScript ESLint
