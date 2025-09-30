@@ -9,6 +9,7 @@
         "skipLibCheck": true,
         "strict": true,
         "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
         "forceConsistentCasingInFileNames": true,
         "moduleResolution": "bundler",
         "noEmit": true,
