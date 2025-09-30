@@ -1,4 +1,0 @@
-{
-    "extends": "@acalyle/tsconfig/tsconfig.base.json",
-    "include": ["**/*.test.ts", "**/*.test-d.ts"],
-}
