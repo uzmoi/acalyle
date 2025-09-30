@@ -1,10 +1,15 @@
-import type { NoteTag } from "@acalyle/core";
+import { NoteTag } from "@acalyle/core";
 import { cx, style } from "@acalyle/css";
 import { theme, vars } from "@acalyle/ui";
+import type { NoteTagString } from "../model";
 
 export const Tag: React.FC<{
-  tag: NoteTag;
-}> = ({ tag }) => {
+  tag: NoteTagString;
+}> = ({ tag: tagString }) => {
+  const tag = NoteTag.fromString(tagString);
+
+  if (tag == null) return;
+
   return (
     <span
       className={cx(
