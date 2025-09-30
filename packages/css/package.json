@@ -10,8 +10,7 @@
   },
   "scripts": {
     "build": "tsup",
-    "check": "tsc",
-    "lint": "eslint ."
+    "check": "tsc"
   },
   "dependencies": {
     "@wyw-in-js/processor-utils": "^0.5.3",

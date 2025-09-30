@@ -5,6 +5,10 @@ parallel = true
 glob = "*.{ts,tsx}"
 run = "npx oxlint --deny-warnings {staged_files}"
 
+[pre-commit.commands.markuplint]
+glob = "*.tsx"
+run = "npx markuplint --problem-only {staged_files}"
+
 [pre-commit.commands.prettier]
 run = "npx prettier --check --ignore-unknown {staged_files}"
 

@@ -1,0 +1,29 @@
+{
+  "extends": [
+    "markuplint:recommended-react"
+  ],
+  "pretenders": [
+    {
+      "selector": "List",
+      "as": "ul"
+    },
+    {
+      "selector": "List\\.Item",
+      "as": "li"
+    },
+    {
+      "selector": "TextInput",
+      "as": "input"
+    },
+    {
+      "selector": "Button",
+      "as": "button"
+    }
+  ],
+  "parser": {
+    "\\.tsx$": "@markuplint/jsx-parser"
+  },
+  "specs": {
+    "\\.tsx$": "@markuplint/react-spec"
+  }
+}

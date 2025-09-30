@@ -6,7 +6,11 @@ import {
 } from "nanostores";
 
 export type PromiseLoader<T = unknown> =
-  | { status: "pending"; promise: PromiseLike<void>; abort?: () => void }
+  | {
+      status: "pending";
+      promise: PromiseLike<void>;
+      abort: (() => void) | undefined;
+    }
   | { status: "fulfilled"; value: T }
   | { status: "rejected"; error: unknown };
 
