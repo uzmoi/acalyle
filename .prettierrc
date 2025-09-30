@@ -3,7 +3,7 @@
   "experimentalTernaries": true,
   "overrides": [
     {
-      "files": [".vscode/*.json"],
+      "files": [".vscode/*.json", ".oxlintrc.json"],
       "options": { "parser": "jsonc" }
     }
   ]
