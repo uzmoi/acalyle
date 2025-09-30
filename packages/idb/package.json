@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsup",
-    "check": "tsc",
+    "check": " tsc",
     "test": "vitest",
     "coverage": "vitest run --coverage --passWithNoTests"
   },
