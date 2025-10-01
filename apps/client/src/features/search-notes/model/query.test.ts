@@ -1,4 +1,5 @@
 import { describe, expect, test } from "vitest";
+import type { TagSymbol } from "~/entities/tag";
 import {
   type QueryItem,
   type QueryToken,
@@ -100,7 +101,7 @@ describe("update query", () => {
       [" #tag ", " "],
       ["  hoge   #tag  fuga  ", "  hoge  fuga  "],
     ])("%o", (query, expected) => {
-      expect(removeTag(query, "#tag")).toBe(expected);
+      expect(removeTag(query, "#tag" as TagSymbol)).toBe(expected);
     });
   });
 
@@ -110,10 +111,10 @@ describe("update query", () => {
       ["hoge ", "hoge #tag"],
       ["hoge", "hoge #tag"],
     ])("%o", (query, expected) => {
-      expect(appendTag(query, "#tag")).toBe(expected);
+      expect(appendTag(query, "#tag" as TagSymbol)).toBe(expected);
     });
     test("replace tag", () => {
-      expect(appendTag("@tag:fuga", "@tag")).toBe("@tag");
+      expect(appendTag("@tag:fuga", "@tag" as TagSymbol)).toBe("@tag");
     });
   });
 });

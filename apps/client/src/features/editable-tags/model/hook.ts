@@ -1,13 +1,18 @@
-import { NoteTag } from "@acalyle/core";
 import { nonNullable } from "emnorst";
 import { useReducer } from "react";
 import type { NoteId } from "~/entities/note";
-import type { Tag, TagSymbol } from "~/entities/tag";
+import {
+  type Tag,
+  type TagObject,
+  type TagSymbol,
+  parseTag,
+  tagToString,
+} from "~/entities/tag";
 import { updateNoteTagsMutation } from "../api";
 import { tagsDiff } from "./diff";
 
 export interface State {
-  tags: readonly NoteTag[];
+  tags: readonly TagObject[];
 }
 
 export type Action =
@@ -20,7 +25,7 @@ const reducer = (state: State | null, action: Action): State | null => {
   switch (action.type) {
     case "start": {
       return {
-        tags: action.tags.map(NoteTag.fromString).filter(nonNullable),
+        tags: action.tags.map(parseTag).filter(nonNullable),
       };
     }
     case "end": {
@@ -28,7 +33,7 @@ const reducer = (state: State | null, action: Action): State | null => {
     }
     case "upsert": {
       if (state == null) return null;
-      const newTag = NoteTag.fromString(action.tag);
+      const newTag = parseTag(action.tag);
       if (newTag == null) return state;
       const index = state.tags.findIndex(tag => tag.symbol === newTag.symbol);
       return {
@@ -67,7 +72,7 @@ export const useEditableTags = (): readonly [State | null, EditableTagsOps] => {
       end(noteId, tags) {
         dispatch({ type: "end" });
         if (state != null) {
-          const modifiedTags = state.tags.map(tag => tag.toString() as Tag);
+          const modifiedTags = state.tags.map(tagToString);
           void updateNoteTagsMutation(noteId, tagsDiff(tags, modifiedTags));
         }
       },

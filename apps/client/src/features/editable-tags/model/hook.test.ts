@@ -1,6 +1,6 @@
 import { renderHook } from "@testing-library/react";
 import { describe, expect, test, vi } from "vitest";
-import type { Tag } from "~/entities/tag";
+import { type Tag, type TagSymbol, parseTag } from "~/entities/tag";
 import { useEditableTags } from "./hook";
 
 describe("useEditableTags", () => {
@@ -18,7 +18,7 @@ describe("useEditableTags", () => {
 
     {
       const [state, { end: _ }] = result.current;
-      expect(state).toEqual({ tags: [NoteTag.fromString("#hoge")] });
+      expect(state).toEqual({ tags: [parseTag("#hoge")] });
       // TODO[+msw]: end("<note-id>" as NoteId, tags);
     }
 
@@ -31,7 +31,7 @@ describe("useEditableTags", () => {
     {
       const [, { start, upsertTag, removeTag }] = result.current;
       start(["#hoge" as Tag, "@piyo:1" as Tag]);
-      removeTag("#hoge");
+      removeTag("#hoge" as TagSymbol);
       upsertTag("#fuga" as Tag);
       upsertTag("@piyo:2" as Tag);
     }
@@ -39,7 +39,7 @@ describe("useEditableTags", () => {
     rerender();
 
     expect(result.current[0]).toEqual({
-      tags: ["@piyo:2", "#fuga"].map(NoteTag.fromString),
+      tags: ["@piyo:2", "#fuga"].map(parseTag),
     });
 
     // TODO[+msw]: end("<note-id>" as NoteId, tags);

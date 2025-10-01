@@ -1,10 +1,9 @@
-import { NoteTag } from "@acalyle/core";
 import { Form, List, TextInput } from "@acalyle/ui";
 import { nonNullable } from "emnorst";
 import { useState } from "react";
 import type { Book } from "~/entities/book";
 import { type NoteId, useNote } from "~/entities/note";
-import type { Tag, TagSymbol } from "~/entities/tag";
+import { type Tag, parseTag } from "~/entities/tag";
 import { complementNoteTag } from "../model";
 
 export const TagUpsertForm: React.FC<{
@@ -20,10 +19,10 @@ export const TagUpsertForm: React.FC<{
     // 補完から除外するタグを指定。propがあるタグは書き換えをする可能性があるので含めない（==補完に含める）
     tagsOnTargetNote: new Set(
       note.tags
-        .map(NoteTag.fromString)
+        .map(parseTag)
         .filter(nonNullable)
         .filter(tag => tag.prop == null)
-        .map(tag => tag.symbol as TagSymbol),
+        .map(tag => tag.symbol),
     ),
     tagSymbolsInBook: [], // TODO: どこかで取得する。
   });

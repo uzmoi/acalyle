@@ -3,7 +3,7 @@ import { Button, List, theme } from "@acalyle/ui";
 import { BiSolidEdit, BiX } from "react-icons/bi";
 import type { Book } from "~/entities/book";
 import { type NoteId, TagList } from "~/entities/note";
-import type { Tag, TagSymbol } from "~/entities/tag";
+import { type Tag, tagToString } from "~/entities/tag";
 import { useEditableTags } from "../model";
 import { TagUpsertForm } from "./tag-upsert-form";
 
@@ -32,11 +32,8 @@ export const EditableTags: React.FC<{
       : <List className=":uno: inline-block">
           {state.tags.map(tag => (
             <List.Item key={tag.symbol} className=":uno: inline-block px-0.5">
-              <span>{tag.toString()}</span>
-              <Button
-                onClick={() => removeTag(tag.symbol as TagSymbol)}
-                unstyled
-              >
+              <span>{tagToString(tag)}</span>
+              <Button onClick={() => removeTag(tag.symbol)} unstyled>
                 <BiX title="Remove" />
               </Button>
             </List.Item>

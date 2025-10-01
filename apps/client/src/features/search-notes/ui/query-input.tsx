@@ -1,7 +1,7 @@
-import { NoteTag } from "@acalyle/core";
 import { base } from "@acalyle/ui";
 import { createEditor, plainSchema } from "edix";
 import { useEffect, useRef } from "react";
+import { parseTag } from "~/entities/tag";
 import { lexQuery } from "../model";
 
 export const QueryInput: React.FC<{
@@ -55,15 +55,12 @@ export const QueryInput: React.FC<{
             return <span key={i}>{content}</span>;
           }
           case "tag": {
-            const tag = NoteTag.parse(content);
+            const tag = parseTag(content)!;
 
             return (
               <span key={i}>
-                <span className=":uno: text-blue-3">
-                  {tag.hasHead && tag.head}
-                  {tag.path.join("/")}
-                </span>
-                {(content.endsWith(":") || tag.prop) && (
+                <span className=":uno: text-blue-3">{tag.symbol}</span>
+                {tag.prop != null && (
                   <span className=":uno: text-fuchsia-3">:{tag.prop}</span>
                 )}
               </span>

@@ -1,12 +1,11 @@
-import { NoteTag } from "@acalyle/core";
 import { cx, style } from "@acalyle/css";
 import { theme, vars } from "@acalyle/ui";
-import type { Tag as TagType } from "../model";
+import { type Tag as TagType, parseTag } from "../model";
 
 export const Tag: React.FC<{
   tag: TagType;
 }> = ({ tag: tagString }) => {
-  const tag = NoteTag.fromString(tagString);
+  const tag = parseTag(tagString);
 
   if (tag == null) return;
 
@@ -21,7 +20,6 @@ export const Tag: React.FC<{
           borderColor: theme("tag-outline"),
         }),
       )}
-      data-tag-type={tag.type}
     >
       <span>{tag.symbol}</span>
       {tag.prop && ":"}

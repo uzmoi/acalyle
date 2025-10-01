@@ -1,5 +1,4 @@
-import { NoteTag } from "@acalyle/core";
-import type { TagSymbol } from "~/entities/tag";
+import { type TagSymbol, parseTag } from "~/entities/tag";
 
 export interface QueryToken {
   type: "op" | "word" | "word:quoted" | "tag" | "ignore";
@@ -74,10 +73,13 @@ export const parseQuery = function* (
 
     switch (type) {
       case "tag": {
-        const index = content.indexOf(":");
-        const symbol = index === -1 ? content : content.slice(0, index);
-        const prop = index === -1 ? null : content.slice(index + 1);
-        yield { type: "tag", exclude, symbol, prop };
+        const tag = parseTag(content)!;
+        yield {
+          type: "tag",
+          exclude,
+          symbol: tag.symbol,
+          prop: tag.prop ?? null,
+        };
         break;
       }
       case "word": {
@@ -124,7 +126,7 @@ export const removeTag = (query: string, targetTag: TagSymbol): string => {
     }
 
     if (type === "tag") {
-      const tag = NoteTag.fromString(content)!;
+      const tag = parseTag(content)!;
 
       if (tag.symbol === targetTag) {
         current = "";
