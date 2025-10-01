@@ -9,6 +9,8 @@ type C = string & Brand<"C">;
 declare const a: A;
 declare const b: B;
 
+declare const dummy: <T>() => T;
+
 declare const rebrand: Rebrand<{
   a(a: A): B; // A -> B
   b(b: B): A; // B -> A
@@ -32,6 +34,19 @@ describe("正常系", () => {
   test("リブランド先の型が複数あるとき、型引数を指定しなくとも推論可能なこと", () => {
     assertType<A>(rebrand(b));
     assertType<C>(rebrand(b));
+  });
+
+  test("nullable", () => {
+    expectTypeOf(rebrand(dummy<A | null>())).toEqualTypeOf<B | null>();
+  });
+
+  test("array", () => {
+    expectTypeOf(rebrand(dummy<A[]>())).toEqualTypeOf<readonly B[]>();
+  });
+
+  test("array + nullable", () => {
+    const value = dummy<(A | null)[] | null>();
+    expectTypeOf(rebrand(value)).toEqualTypeOf<readonly (B | null)[] | null>();
   });
 });
 

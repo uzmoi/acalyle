@@ -1,9 +1,4 @@
-import type { Brand } from "@uzmoi/ut/types";
-
-interface NoBrand {
-  "__?+brand"?: undefined;
-  "__?-brand"?: undefined;
-}
+import type { Brand, NoBrand } from "@uzmoi/ut/types";
 
 declare module "~/shared/utils" {
   interface RegisterRebrand {

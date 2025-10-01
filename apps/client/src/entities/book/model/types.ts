@@ -1,11 +1,6 @@
-import type { Brand } from "@uzmoi/ut/types";
+import type { Brand, NoBrand } from "@uzmoi/ut/types";
 import type { TagMetadata, TagSymbol } from "~/entities/tag";
 import type { ID } from "~/shared/graphql";
-
-interface NoBrand {
-  "__?+brand"?: undefined;
-  "__?-brand"?: undefined;
-}
 
 declare module "~/shared/utils" {
   interface RegisterRebrand {
