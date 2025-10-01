@@ -1,4 +1,5 @@
-import { NoteTag, type TagSymbol } from "@acalyle/core";
+import { NoteTag } from "@acalyle/core";
+import type { TagSymbol } from "~/entities/tag";
 
 export interface QueryToken {
   type: "op" | "word" | "word:quoted" | "tag" | "ignore";
@@ -14,6 +15,7 @@ export const lexQuery = function* (query: string): Generator<QueryToken, void> {
   let ignoreStartIndex = 0;
 
   for (const match of query.matchAll(queryRe)) {
+    // oxlint-disable-next-line prefer-destructuring
     let content = match[0];
     let pos = match.index;
 

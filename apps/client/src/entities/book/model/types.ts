@@ -1,5 +1,5 @@
-import type { TagSymbol } from "@acalyle/core";
 import type { Brand } from "@uzmoi/ut/types";
+import type { TagMetadata, TagSymbol } from "~/entities/tag";
 import type { ID } from "~/shared/graphql";
 
 interface NoBrand {
@@ -29,11 +29,5 @@ export interface Book {
 
 export interface BookDetail {
   createdAt: string;
-  tags: Map<TagSymbol, NoteTagMetadata>;
-}
-
-export interface NoteTagMetadata {
-  symbol: TagSymbol;
-  props: Set<string>;
-  description: string;
+  tags: Map<TagSymbol, TagMetadata>;
 }

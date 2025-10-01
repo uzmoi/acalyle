@@ -1,4 +1,4 @@
-import type { TagSymbol } from "@acalyle/core";
+import type { TagSymbol } from "~/entities/tag";
 
 export interface NoteTagComplementContext {
   tagsOnTargetNote: ReadonlySet<TagSymbol>;

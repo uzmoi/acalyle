@@ -1,9 +1,8 @@
 import { List } from "@acalyle/ui";
-import type { NoteTagString } from "../model";
-import { Tag } from "./tag";
+import { Tag } from "~/entities/tag";
 
 export const TagList: React.FC<{
-  tags: readonly NoteTagString[];
+  tags: readonly Tag[];
   className?: string;
 }> = ({ tags, className }) => {
   return (

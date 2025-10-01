@@ -1,14 +1,13 @@
-import { NoteTag } from "@acalyle/core";
 import { renderHook } from "@testing-library/react";
 import { describe, expect, test, vi } from "vitest";
-import type { NoteTagString } from "~/entities/note";
+import type { Tag } from "~/entities/tag";
 import { useEditableTags } from "./hook";
 
 describe("useEditableTags", () => {
   test("start / end", () => {
     const { rerender, result } = renderHook(useEditableTags);
 
-    const tags = ["#hoge"] as NoteTagString[];
+    const tags = ["#hoge"] as Tag[];
     {
       const [state, { start }] = result.current;
       expect(state).toBeNull();
@@ -31,10 +30,10 @@ describe("useEditableTags", () => {
 
     {
       const [, { start, upsertTag, removeTag }] = result.current;
-      start(["#hoge" as NoteTagString, "@piyo:1" as NoteTagString]);
+      start(["#hoge" as Tag, "@piyo:1" as Tag]);
       removeTag("#hoge");
-      upsertTag("#fuga" as NoteTagString);
-      upsertTag("@piyo:2" as NoteTagString);
+      upsertTag("#fuga" as Tag);
+      upsertTag("@piyo:2" as Tag);
     }
 
     rerender();
@@ -57,7 +56,7 @@ describe("useEditableTags", () => {
     {
       const [, { start, upsertTag }] = result.current;
       start([]);
-      upsertTag("#hoge" as NoteTagString);
+      upsertTag("#hoge" as Tag);
     }
 
     rerender();

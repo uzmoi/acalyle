@@ -1,15 +1,9 @@
-import type { TagSymbol } from "@acalyle/core";
 import type { ResultOf } from "@graphql-typed-document-node/core";
 import type { Result } from "@uzmoi/ut/fp";
+import type { TagMetadata, TagSymbol } from "~/entities/tag";
 import { type GqlFnError, gql } from "~/shared/graphql";
 import { rebrand } from "~/shared/utils";
-import type {
-  Book,
-  BookDetail,
-  BookHandle,
-  BookId,
-  NoteTagMetadata,
-} from "../model";
+import type { Book, BookDetail, BookHandle, BookId } from "../model";
 import BookDetailQuery from "./book-detail.graphql";
 import BookQuery from "./book.graphql";
 
@@ -49,7 +43,7 @@ export const fetchBookDetail = async (
   return result.map(({ book }) => {
     if (book == null) return null;
     return {
-      tags: new Map<TagSymbol, NoteTagMetadata>(
+      tags: new Map<TagSymbol, TagMetadata>(
         new Set(book.tags)
           .values()
           .map(tag => [

@@ -1,9 +1,8 @@
-import type { TagSymbol } from "@acalyle/core";
 import { List, TextInput } from "@acalyle/ui";
 import { memoize } from "es-toolkit";
 import { use, useId, useState } from "react";
 import { type BookId, fetchBookDetail } from "~/entities/book";
-import { type NoteTagString, Tag } from "~/entities/note";
+import { Tag, type TagSymbol } from "~/entities/tag";
 import type { QueryItem } from "../model";
 
 const focus = (el: HTMLElement | null): void => {
@@ -72,7 +71,7 @@ export const TagForm: React.FC<{
                 }}
               />
               <label htmlFor={id + symbol} className=":uno: ml-2">
-                <Tag tag={symbol as NoteTagString} />
+                <Tag tag={symbol} />
               </label>
               <p className=":uno: text-xs text-gray">{description}</p>
             </List.Item>

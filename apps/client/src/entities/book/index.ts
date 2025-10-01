@@ -7,7 +7,6 @@ export {
   type BookHandle,
   type BookId,
   type BookRef,
-  type NoteTagMetadata,
   bookRefFromId,
   bookRefOf,
   fetchBookByRef,
