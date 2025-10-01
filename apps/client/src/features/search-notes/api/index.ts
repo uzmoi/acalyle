@@ -1,7 +1,8 @@
 import type { ResultOf } from "@graphql-typed-document-node/core";
 import type { Result } from "@uzmoi/ut/fp";
 import type { BookId } from "~/entities/book";
-import { gql, type GqlFnError, type Cursor, type ID } from "~/shared/graphql";
+import { type Cursor, type GqlFnError, gql } from "~/shared/graphql";
+import { rebrand } from "~/shared/utils";
 import AfterNotesPageQuery from "./after-notes-page.graphql";
 import BeforeNotesPageQuery from "./before-notes-page.graphql";
 
@@ -19,7 +20,7 @@ export const fetchNotePagination = async (
     dir === "previous" ? BeforeNotesPageQuery : AfterNotesPageQuery;
 
   const result = await gql(graphqlQuery, {
-    bookId: bookId as string as ID,
+    bookId: rebrand(bookId),
     cursor,
     count: 32,
     query,

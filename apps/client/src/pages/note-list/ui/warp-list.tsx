@@ -2,9 +2,9 @@ import { cx, style } from "@acalyle/css";
 import { Intersection } from "@acalyle/ui";
 import { useCallback } from "react";
 import type { Book } from "~/entities/book";
-import type { NoteId } from "~/entities/note";
 import { $noteConnection } from "~/features/search-notes";
 import { useConnection } from "~/shared/graphql";
+import { rebrand } from "~/shared/utils";
 import { NoteWarpListItem } from "./wrap-list-item";
 
 export const NoteWarpList: React.FC<{
@@ -33,11 +33,7 @@ export const NoteWarpList: React.FC<{
         )}
       >
         {nodeIds.map(noteId => (
-          <NoteWarpListItem
-            key={noteId}
-            book={book}
-            noteId={noteId as string as NoteId}
-          />
+          <NoteWarpListItem key={noteId} book={book} noteId={rebrand(noteId)} />
         ))}
       </div>
       <Intersection onIntersection={onIntersection} rootMargin="25% 0px" />

@@ -1,5 +1,19 @@
 import type { TagSymbol } from "@acalyle/core";
 import type { Brand } from "@uzmoi/ut/types";
+import type { ID } from "~/shared/graphql";
+
+interface NoBrand {
+  "__?+brand"?: undefined;
+  "__?-brand"?: undefined;
+}
+
+declare module "~/shared/utils" {
+  interface RegisterRebrand {
+    ["BookId->ID"](input: BookId): ID;
+    ["ID->BookId"](input: ID): BookId;
+    ["string->BookHandle"](input: string & NoBrand): BookHandle;
+  }
+}
 
 export type BookId = string & Brand<"BookId">;
 

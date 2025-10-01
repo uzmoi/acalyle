@@ -1,17 +1,18 @@
-import { gql, type ID } from "~/shared/graphql";
-import type { Note, NoteId, NoteTagString } from "../model";
+import { gql } from "~/shared/graphql";
+import { rebrand } from "~/shared/utils";
+import type { Note, NoteId } from "../model";
 import NoteQuery from "./note.graphql";
 
 export const fetchNote = async (id: NoteId): Promise<Note | null> => {
-  const result = await gql(NoteQuery, { noteId: id as string as ID });
+  const result = await gql(NoteQuery, { noteId: rebrand(id) });
   const note = result.unwrap().memo;
 
   if (note == null) return null;
 
   return {
-    id: note.id as string as NoteId,
+    id: rebrand(note.id),
     contents: note.contents,
-    tags: note.tags as NoteTagString[],
+    tags: rebrand(note.tags),
     createdAt: note.createdAt,
     updatedAt: note.updatedAt,
   };
