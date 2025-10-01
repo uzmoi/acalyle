@@ -1,4 +1,4 @@
-import { type TagSymbol, parseTag } from "~/entities/tag";
+import { type TagObject, type TagSymbol, parseTag } from "~/entities/tag";
 
 export interface QueryToken {
   type: "op" | "word" | "word:quoted" | "tag" | "ignore";
@@ -43,18 +43,18 @@ export const lexQuery = function* (query: string): Generator<QueryToken, void> {
   }
 };
 
-export type QueryItem =
-  | {
-      type: "word";
-      exclude: boolean;
-      value: string;
-    }
-  | {
-      type: "tag";
-      exclude: boolean;
-      symbol: string;
-      prop: string | null;
-    };
+interface WordQueryItem {
+  type: "word";
+  exclude: boolean;
+  value: string;
+}
+
+interface TagQueryItem extends TagObject {
+  type: "tag";
+  exclude: boolean;
+}
+
+export type QueryItem = WordQueryItem | TagQueryItem;
 
 const unescapeRe = /\\(.)/gv;
 
@@ -72,12 +72,7 @@ export const parseQuery = function* (
     switch (type) {
       case "tag": {
         const tag = parseTag(content)!;
-        yield {
-          type: "tag",
-          exclude,
-          symbol: tag.symbol,
-          prop: tag.prop ?? null,
-        };
+        yield { type: "tag", exclude, ...tag };
         break;
       }
       case "word": {

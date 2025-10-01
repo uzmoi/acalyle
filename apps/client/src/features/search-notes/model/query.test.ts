@@ -51,9 +51,9 @@ const h = {
   }),
   tag: (
     symbol: string,
-    prop: string | null,
+    prop?: string,
     { exclude = false } = {},
-  ): QueryItem => ({ type: "tag", exclude, symbol, prop }),
+  ): QueryItem => ({ type: "tag", exclude, symbol: symbol as TagSymbol, prop }),
 };
 
 describe("parser", () => {
@@ -76,9 +76,9 @@ describe("parser", () => {
     ['"#tag"', h.word("#tag")],
     ['-"a"', h.word("a", { exclude: true })],
     // tag
-    ["#tag", h.tag("#tag", null)],
+    ["#tag", h.tag("#tag")],
     ["@hoge:fuga", h.tag("@hoge", "fuga")],
-    ["-#tag", h.tag("#tag", null, { exclude: true })],
+    ["-#tag", h.tag("#tag", undefined, { exclude: true })],
     ["-@hoge:fuga", h.tag("@hoge", "fuga", { exclude: true })],
   ] satisfies Case[])("parse %o", (queryString, ...items) => {
     expect(parseQuery(queryString).toArray()).toMatchObject(items);
