@@ -4,6 +4,12 @@ import type { Tag as TagType } from "./model";
 export type Tag = TagType;
 
 /** @public */
-export type { TagSymbol, TagMetadata } from "./model";
+export {
+  type TagMetadata,
+  type TagObject,
+  type TagSymbol,
+  parseTag,
+  tagToString,
+} from "./model";
 /** @public */
 export { Tag } from "./ui";

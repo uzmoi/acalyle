@@ -15,6 +15,11 @@ export type Tag = string & Brand<"Tag">;
 
 export type TagSymbol = Tag & Brand<"TagSymbol">;
 
+export interface TagObject {
+  symbol: TagSymbol;
+  prop: string | undefined;
+}
+
 export interface TagMetadata {
   symbol: TagSymbol;
   props: Set<string>;
