@@ -8,8 +8,6 @@ export interface QueryToken {
 const queryRe =
   /-?('(?:\\.|[^\\'])*'|"(?:\\.|[^\\"])*")(?!\P{White_Space})|\P{White_Space}+/gv;
 
-const tagHeadRe = /^[!#$%&*+=?@^~]/;
-
 export const lexQuery = function* (query: string): Generator<QueryToken, void> {
   let ignoreStartIndex = 0;
 
@@ -32,8 +30,8 @@ export const lexQuery = function* (query: string): Generator<QueryToken, void> {
 
     const type =
       isQuoted ? "word:quoted"
-      : tagHeadRe.test(content) ? "tag"
-      : "word";
+      : parseTag(content) == null ? "word"
+      : "tag";
 
     yield { type, content };
 
