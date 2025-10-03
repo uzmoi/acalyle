@@ -40,16 +40,18 @@ export const fetchBookDetail = async (
 ): Promise<Result<BookDetail | null, GqlFnError>> => {
   const result = await gql(BookDetailQuery, { bookId: rebrand(id) });
 
-  return result.map(({ book }) => {
+  return result.map(({ book }): BookDetail | null => {
     if (book == null) return null;
     return {
-      tags: new Map<TagSymbol, TagMetadata>(
-        new Set(book.tags)
-          .values()
-          .map(tag => [
-            tag as TagSymbol,
-            { symbol: tag as TagSymbol, props: new Set(), description: "" },
-          ]),
+      tags: new Map(
+        new Set(book.tags).values().map(tag => {
+          const metadata: TagMetadata = {
+            symbol: tag as TagSymbol,
+            props: new Set(tag === "@template" ? book.templates : undefined),
+            description: "",
+          };
+          return [metadata.symbol, metadata];
+        }),
       ),
       createdAt: book.createdAt,
     };

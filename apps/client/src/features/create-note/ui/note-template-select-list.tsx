@@ -1,17 +1,14 @@
 import { cx, style } from "@acalyle/css";
 import { Button, vars } from "@acalyle/ui";
-import { memoize } from "es-toolkit";
-import { use, useCallback } from "react";
+import { useCallback } from "react";
 import type { BookId } from "~/entities/book";
-import { fetchTemplate } from "../api";
-
-const memoizedFetchTemplate = /* #__PURE__ */ memoize(fetchTemplate);
+import { useTemplates } from "../model";
 
 export const NoteTemplateSelectList: React.FC<{
   bookId: BookId;
   onSelectTemplate?: (templateName: string) => Promise<void>;
 }> = ({ bookId, onSelectTemplate }) => {
-  const templates = use(memoizedFetchTemplate(bookId)).unwrap();
+  const templates = useTemplates(bookId);
 
   const selectTemplate = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
