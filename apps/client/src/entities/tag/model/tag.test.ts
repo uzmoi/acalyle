@@ -36,6 +36,10 @@ describe("parseTag", () => {
     expect(parseTag("#")).toBeNull();
     expect(parseTag("#:property")).toBeNull();
   });
+
+  test("制御文字が含まれていると無効", () => {
+    expect(parseTag("#\t")).toBeNull();
+  });
 });
 
 describe("toString", () => {

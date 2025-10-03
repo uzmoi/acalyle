@@ -2,8 +2,11 @@ import type { Tag, TagObject, TagSymbol } from "./types";
 
 const MIN_TAG_LENGTH = 2;
 
+const TAG_INVALID_CHARACTER_RE = /\p{Cc}/v;
+
 export const parseTag = (tag: string): TagObject | null => {
-  if (tag.length <= MIN_TAG_LENGTH) return null;
+  if (tag.length <= MIN_TAG_LENGTH || TAG_INVALID_CHARACTER_RE.test(tag))
+    return null;
 
   const head = tag.charAt(0);
   if (head !== "#" && head !== "@" && head !== "*") return null;
