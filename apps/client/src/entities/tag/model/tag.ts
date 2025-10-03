@@ -1,12 +1,11 @@
 import type { Tag, TagObject, TagSymbol } from "./types";
 
-const MIN_TAG_LENGTH = 2;
-
 const TAG_INVALID_CHARACTER_RE = /\p{Cc}/v;
 
 export const parseTag = (tag: string): TagObject | null => {
-  if (tag.length <= MIN_TAG_LENGTH || TAG_INVALID_CHARACTER_RE.test(tag))
-    return null;
+  // 空文字列とhead文字のみの文字列を弾く
+  // 無効な文字が入った文字列を弾く
+  if (tag.length <= 1 || TAG_INVALID_CHARACTER_RE.test(tag)) return null;
 
   const head = tag.charAt(0);
   if (head !== "#" && head !== "@" && head !== "*") return null;

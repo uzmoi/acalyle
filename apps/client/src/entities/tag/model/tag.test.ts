@@ -9,6 +9,10 @@ const tag = (symbol: string, prop?: string): TagObject => ({
 
 describe("parseTag", () => {
   describe("symbol only", () => {
+    test("nameが1文字", () => {
+      expect(parseTag("#a")).toStrictEqual(tag("#a"));
+    });
+
     test.each(["#normal", "@control", "*unique"])("%s", symbol => {
       expect(parseTag(symbol)).toStrictEqual(tag(symbol));
     });
