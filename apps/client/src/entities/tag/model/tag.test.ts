@@ -52,7 +52,7 @@ describe("toString", () => {
   });
 
   test("with empty prop", () => {
-    expect(tagToString(tag("@tag", ""))).toBe("@tag");
+    expect(tagToString(tag("@tag", ""))).toBe("@tag:");
   });
 
   test("with prop", () => {
