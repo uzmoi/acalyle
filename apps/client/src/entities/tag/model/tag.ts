@@ -6,7 +6,7 @@ export const parseTag = (tag: string): TagObject | null => {
   if (tag.length <= MIN_TAG_LENGTH) return null;
 
   const head = tag.charAt(0);
-  if (head !== "#" && head !== "@") return null;
+  if (head !== "#" && head !== "@" && head !== "*") return null;
 
   const propDelimiterIndex = tag.indexOf(":", 1);
   if (propDelimiterIndex === 1) return null;

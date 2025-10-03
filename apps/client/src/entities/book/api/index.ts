@@ -47,7 +47,7 @@ export const fetchBookDetail = async (
         new Set(book.tags).values().map(tag => {
           const metadata: TagMetadata = {
             symbol: tag as TagSymbol,
-            props: new Set(tag === "@template" ? book.templates : undefined),
+            props: new Set(tag === "*template" ? book.templates : undefined),
             description: "",
           };
           return [metadata.symbol, metadata];

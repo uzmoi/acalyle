@@ -8,7 +8,7 @@ query BookDetail($bookId: ID!) {
     #   props
     #   description
     # }
-    templates: tagProps(symbol: "@template")
+    templates: tagProps(symbol: "*template")
     # resources
     # settings {
     #   extensions

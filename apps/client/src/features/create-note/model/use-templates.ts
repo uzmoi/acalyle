@@ -5,7 +5,7 @@ import type { TagSymbol } from "~/entities/tag";
 
 const memoizedFetchBookDetail = /* #__PURE__ */ memoize(fetchBookDetail);
 
-const TEMPLATE_TAG_SYMBOL = "@template" as TagSymbol;
+const TEMPLATE_TAG_SYMBOL = "*template" as TagSymbol;
 
 export const useTemplates = (bookId: BookId): readonly string[] => {
   const bookDetail = use(memoizedFetchBookDetail(bookId)).unwrap()!;

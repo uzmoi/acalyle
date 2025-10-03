@@ -9,7 +9,7 @@ const tag = (symbol: string, prop?: string): TagObject => ({
 
 describe("parseTag", () => {
   describe("symbol only", () => {
-    test.each(["#normal", "@control"])("%s", symbol => {
+    test.each(["#normal", "@control", "*unique"])("%s", symbol => {
       expect(parseTag(symbol)).toStrictEqual(tag(symbol));
     });
   });
