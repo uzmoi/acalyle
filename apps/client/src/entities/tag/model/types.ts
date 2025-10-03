@@ -15,6 +15,12 @@ export interface TagObject {
   prop: string | undefined;
 }
 
+export interface TagStyle {
+  fg: string;
+  bg: string;
+  outline: string;
+}
+
 export interface TagMetadata {
   symbol: TagSymbol;
   props: Set<string>;
