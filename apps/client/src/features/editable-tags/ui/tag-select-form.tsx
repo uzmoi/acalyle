@@ -2,7 +2,6 @@ import { List, TextInput } from "@acalyle/ui";
 import { useId, useState } from "react";
 import { type BookId, useBookDetail } from "~/entities/book";
 import { Tag, type TagSymbol } from "~/entities/tag";
-import type { QueryItem } from "~/features/search-notes";
 
 const focus = (el: HTMLElement | null): void => {
   el?.focus();
@@ -10,10 +9,10 @@ const focus = (el: HTMLElement | null): void => {
 
 export const TagSelectForm: React.FC<{
   bookId: BookId;
-  query: readonly QueryItem[];
+  selection: Set<TagSymbol>;
   addTag: (tag: TagSymbol) => void;
   removeTag: (tag: TagSymbol) => void;
-}> = ({ bookId, query, addTag, removeTag }) => {
+}> = ({ bookId, selection, addTag, removeTag }) => {
   const id = useId();
   const [tagQuery, setTagQuery] = useState("");
   const bookDetail = useBookDetail(bookId);
@@ -55,9 +54,7 @@ export const TagSelectForm: React.FC<{
                 type="checkbox"
                 id={id + symbol}
                 className=":uno: before:(absolute inset-0 cursor-pointer content-empty)"
-                checked={query.some(
-                  q => q.type === "tag" && q.symbol === symbol,
-                )}
+                checked={selection.has(symbol)}
                 onChange={event => {
                   if (event.target.checked) {
                     addTag(symbol);

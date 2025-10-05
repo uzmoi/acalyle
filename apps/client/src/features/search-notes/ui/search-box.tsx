@@ -9,6 +9,12 @@ export const SearchBox: React.FC<{
   query: string;
   setQuery: (query: string) => void;
 }> = ({ bookId, query, setQuery }) => {
+  const tagSymbols = new Set(
+    parseQuery(query)
+      .filter(q => q.type === "tag")
+      .map(q => q.symbol),
+  );
+
   return (
     <div>
       <QueryInput query={query} setQuery={setQuery} />
@@ -19,7 +25,7 @@ export const SearchBox: React.FC<{
           <Popover.Content className=":uno: z-1 p-1 line-height-none !b-zinc !bg-zinc-800">
             <TagSelectForm
               bookId={bookId}
-              query={parseQuery(query).toArray()}
+              selection={tagSymbols}
               addTag={tag => {
                 setQuery(appendTag(query, tag));
               }}
