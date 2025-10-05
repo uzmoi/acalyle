@@ -1,7 +1,8 @@
 import { List } from "@acalyle/ui";
 import { useId } from "react";
-import { type BookId, useBookDetail } from "~/entities/book";
+import type { BookId } from "~/entities/book";
 import { Tag, type TagSymbol } from "~/entities/tag";
+import { useFilteredTags } from "../model";
 
 export const TagSelectList: React.FC<{
   bookId: BookId;
@@ -11,19 +12,9 @@ export const TagSelectList: React.FC<{
   removeTag: (tag: TagSymbol) => void;
 }> = ({ bookId, query, selection, addTag, removeTag }) => {
   const id = useId();
-  const bookDetail = useBookDetail(bookId);
-  const tags =
-    bookDetail?.tags
-      .values()
-      .filter(tag => tag.symbol.startsWith("#"))
-      .toArray() ?? [];
+  const tags = useFilteredTags(bookId, query);
 
-  const filtered = tags.filter(
-    ({ symbol, description }) =>
-      symbol.includes(query) || description.includes(query),
-  );
-
-  if (filtered.length === 0) {
+  if (tags.length === 0) {
     return (
       <div className=":uno: m-auto px-1 py-2 text-center text-sm">
         タグが見つかりません。
@@ -33,7 +24,7 @@ export const TagSelectList: React.FC<{
 
   return (
     <List>
-      {filtered.map(({ symbol, description }) => (
+      {tags.map(({ symbol, description }) => (
         <List.Item
           key={symbol}
           className=":uno: relative select-none p-1 has-focus-visible:bg-zinc-700 hover:bg-zinc-700"
