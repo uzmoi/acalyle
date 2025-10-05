@@ -1,5 +1,5 @@
 import { Form, List, TextInput } from "@acalyle/ui";
-import { nonNullable } from "emnorst";
+import { isNotNil } from "es-toolkit";
 import { useState } from "react";
 import type { Book } from "~/entities/book";
 import { type NoteId, useNote } from "~/entities/note";
@@ -20,7 +20,7 @@ export const TagUpsertForm: React.FC<{
     tagsOnTargetNote: new Set(
       note.tags
         .map(parseTag)
-        .filter(nonNullable)
+        .filter(isNotNil)
         .filter(tag => tag.prop == null)
         .map(tag => tag.symbol),
     ),

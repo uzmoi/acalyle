@@ -1,4 +1,4 @@
-import { nonNullable } from "emnorst";
+import { isNotNil } from "es-toolkit";
 import { useReducer } from "react";
 import type { NoteId } from "~/entities/note";
 import {
@@ -25,7 +25,7 @@ const reducer = (state: State | null, action: Action): State | null => {
   switch (action.type) {
     case "start": {
       return {
-        tags: action.tags.map(parseTag).filter(nonNullable),
+        tags: action.tags.map(parseTag).filter(isNotNil),
       };
     }
     case "end": {
