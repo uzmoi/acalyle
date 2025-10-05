@@ -2,13 +2,13 @@ import { List, TextInput } from "@acalyle/ui";
 import { useId, useState } from "react";
 import { type BookId, useBookDetail } from "~/entities/book";
 import { Tag, type TagSymbol } from "~/entities/tag";
-import type { QueryItem } from "../model";
+import type { QueryItem } from "~/features/search-notes";
 
 const focus = (el: HTMLElement | null): void => {
   el?.focus();
 };
 
-export const TagForm: React.FC<{
+export const TagSelectForm: React.FC<{
   bookId: BookId;
   query: readonly QueryItem[];
   addTag: (tag: TagSymbol) => void;
@@ -42,6 +42,7 @@ export const TagForm: React.FC<{
           className=":uno: mt-1"
         />
       </div>
+      {/* TODO: <TagList /> */}
       {filtered.length > 0 ?
         <List>
           {filtered.map(({ symbol, description }) => (

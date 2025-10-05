@@ -1,8 +1,8 @@
 import { Popover } from "@acalyle/ui";
+import { TagSelectForm } from "#features/editable-tags";
 import type { BookId } from "~/entities/book";
 import { appendTag, parseQuery, removeTag } from "../model";
 import { QueryInput } from "./query-input";
-import { TagForm } from "./tag-form";
 
 export const SearchBox: React.FC<{
   bookId: BookId;
@@ -17,7 +17,7 @@ export const SearchBox: React.FC<{
           <Popover.Button>タグ</Popover.Button>
           {/* TODO: !important を削除してテーマに従う */}
           <Popover.Content className=":uno: z-1 p-1 line-height-none !b-zinc !bg-zinc-800">
-            <TagForm
+            <TagSelectForm
               bookId={bookId}
               query={parseQuery(query).toArray()}
               addTag={tag => {
