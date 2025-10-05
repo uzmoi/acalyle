@@ -1,7 +1,8 @@
-import { List, TextInput } from "@acalyle/ui";
+import { TextInput } from "@acalyle/ui";
 import { useId, useState } from "react";
-import { type BookId, useBookDetail } from "~/entities/book";
-import { Tag, type TagSymbol } from "~/entities/tag";
+import type { BookId } from "~/entities/book";
+import type { TagSymbol } from "~/entities/tag";
+import { TagSelectList } from "./tag-select-list";
 
 const focus = (el: HTMLElement | null): void => {
   el?.focus();
@@ -9,23 +10,12 @@ const focus = (el: HTMLElement | null): void => {
 
 export const TagSelectForm: React.FC<{
   bookId: BookId;
-  selection: Set<TagSymbol>;
+  selection: ReadonlySet<TagSymbol>;
   addTag: (tag: TagSymbol) => void;
   removeTag: (tag: TagSymbol) => void;
 }> = ({ bookId, selection, addTag, removeTag }) => {
   const id = useId();
-  const [tagQuery, setTagQuery] = useState("");
-  const bookDetail = useBookDetail(bookId);
-  const tags =
-    bookDetail?.tags
-      .values()
-      .filter(tag => tag.symbol.startsWith("#"))
-      .toArray() ?? [];
-
-  const filtered = tags.filter(
-    ({ symbol, description }) =>
-      symbol.includes(tagQuery) || description.includes(tagQuery),
-  );
+  const [query, setQuery] = useState("");
 
   return (
     <div>
@@ -36,44 +26,18 @@ export const TagSelectForm: React.FC<{
         <TextInput
           ref={focus}
           id={id}
-          value={tagQuery}
-          onValueChange={setTagQuery}
+          value={query}
+          onValueChange={setQuery}
           className=":uno: mt-1"
         />
       </div>
-      {/* TODO: <TagList /> */}
-      {filtered.length > 0 ?
-        <List>
-          {filtered.map(({ symbol, description }) => (
-            <List.Item
-              key={symbol}
-              className=":uno: relative select-none p-1 has-focus-visible:bg-zinc-700 hover:bg-zinc-700"
-            >
-              {/* TODO: <Checkbox /> として切り出す */}
-              <input
-                type="checkbox"
-                id={id + symbol}
-                className=":uno: before:(absolute inset-0 cursor-pointer content-empty)"
-                checked={selection.has(symbol)}
-                onChange={event => {
-                  if (event.target.checked) {
-                    addTag(symbol);
-                  } else {
-                    removeTag(symbol);
-                  }
-                }}
-              />
-              <label htmlFor={id + symbol} className=":uno: ml-2">
-                <Tag tag={symbol} />
-              </label>
-              <p className=":uno: text-xs text-gray">{description}</p>
-            </List.Item>
-          ))}
-        </List>
-      : <div className=":uno: m-auto px-1 py-2 text-center text-sm">
-          タグが見つかりません。
-        </div>
-      }
+      <TagSelectList
+        bookId={bookId}
+        query={query}
+        selection={selection}
+        addTag={addTag}
+        removeTag={removeTag}
+      />
     </div>
   );
 };
