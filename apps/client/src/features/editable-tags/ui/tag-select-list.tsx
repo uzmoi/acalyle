@@ -16,18 +16,18 @@ export const TagSelectList: React.FC<{
 
   if (tags.length === 0) {
     return (
-      <div className=":uno: m-auto px-1 py-2 text-center text-sm">
+      <div className=":uno: p-2 text-center text-sm">
         タグが見つかりません。
       </div>
     );
   }
 
   return (
-    <List>
+    <List className=":uno: max-h-sm overflow-y-auto">
       {tags.map(({ symbol, description }) => (
         <List.Item
           key={symbol}
-          className=":uno: relative select-none p-1 has-focus-visible:bg-zinc-700 hover:bg-zinc-700"
+          className=":uno: relative select-none px-2 py-1 has-focus-visible:bg-zinc-700 hover:bg-zinc-700"
         >
           {/* TODO: <Checkbox /> として切り出す */}
           <input

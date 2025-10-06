@@ -21,8 +21,7 @@ export const SearchBox: React.FC<{
       <div className=":uno: mt-2 flex gap-2">
         <Popover>
           <Popover.Button>タグ</Popover.Button>
-          {/* TODO: !important を削除してテーマに従う */}
-          <Popover.Content className=":uno: z-1 p-1 line-height-none !b-zinc !bg-zinc-800">
+          <Popover.Content className=":uno: z-1">
             <TagSelectForm
               bookId={bookId}
               selection={tagSymbols}
