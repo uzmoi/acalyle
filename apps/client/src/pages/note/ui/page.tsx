@@ -5,7 +5,7 @@ import { FullNote } from "~/widgets/note";
 export const NotePage: React.FC<{
   book: Book;
   noteId: NoteId;
-}> = ({ noteId }) => {
+}> = ({ book, noteId }) => {
   const note = useNote(noteId);
 
   return (
@@ -28,7 +28,7 @@ export const NotePage: React.FC<{
             </Alert>
           }
         > */}
-      <FullNote note={note} />
+      <FullNote bookId={book.id} note={note} />
       {/* </Catch>
       </Suspense> */}
     </div>
