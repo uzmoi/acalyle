@@ -12,7 +12,7 @@ export const Tag: React.FC<{
   return (
     <span
       className={cx(
-        ":uno: inline-block max-w-sm overflow-hidden text-ellipsis b rounded b-solid px-1 py-0.5 align-top text-xs",
+        ":uno: tag inline-block max-w-sm overflow-hidden text-ellipsis b rounded b-solid px-1 py-0.5 align-top text-xs",
         style({
           fontFamily: vars.font.mono,
           color: theme("tag-text"),
@@ -20,6 +20,8 @@ export const Tag: React.FC<{
           borderColor: theme("tag-outline"),
         }),
       )}
+      data-symbol={tag.symbol}
+      data-prop={tag.prop}
     >
       <span>{tag.symbol}</span>
       {tag.prop && ":"}
