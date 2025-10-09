@@ -6,7 +6,7 @@ import { type Note, TagList } from "#entities/note";
 import { parseTag } from "#entities/tag";
 import { TagSelectForm } from "#features/editable-tags";
 import { NoteActionButton } from "#features/note-action";
-import { TimeStamp } from "~/ui/TimeStamp";
+import { DateTimeView } from "#shared/ui";
 
 export const NoteHeader: React.FC<{
   bookId: BookId;
@@ -26,10 +26,10 @@ export const NoteHeader: React.FC<{
       <div className=":uno: flex items-center">
         <div className=":uno: flex-1 text-size-xs text-gray-3">
           <p>
-            updated <TimeStamp dt={note.updatedAt} />
+            updated <DateTimeView dt={note.updatedAt} />
           </p>
           <p>
-            created <TimeStamp dt={note.createdAt} />
+            created <DateTimeView dt={note.createdAt} />
           </p>
         </div>
         <NoteActionButton noteIds={new Set([note.id])} />
