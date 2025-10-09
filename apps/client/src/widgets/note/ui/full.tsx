@@ -10,11 +10,11 @@ export const FullNote: React.FC<{
   return (
     <article
       data-note-id={note.id}
-      data-note-tags={note.tags.join(" ")}
-      className=":uno: min-h-32 min-w-sm"
+      data-tags={note.tags.join(" ")}
+      className=":uno: mx-auto min-w-sm max-w-screen-xl"
     >
       <NoteHeader bookId={bookId} note={note} />
-      <NoteBody noteId={note.id} contents={note.contents} />
+      <NoteBody bookId={bookId} note={note} />
     </article>
   );
 };

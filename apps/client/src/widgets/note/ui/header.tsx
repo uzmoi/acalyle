@@ -21,20 +21,23 @@ export const NoteHeader: React.FC<{
       .map(x => x.symbol),
   );
 
+  const lastUpdatedAt =
+    note.createdAt === note.updatedAt ?
+      { name: "に作成", dt: note.createdAt }
+    : { name: "に更新", dt: note.updatedAt };
+
   return (
     <header className=":uno: px-2 py-1">
       <div className=":uno: flex items-center">
         <div className=":uno: flex-1 text-size-xs text-gray-3">
           <p>
-            updated <DateTimeView dt={note.updatedAt} />
-          </p>
-          <p>
-            created <DateTimeView dt={note.createdAt} />
+            <DateTimeView dt={lastUpdatedAt.dt} />
+            {lastUpdatedAt.name}
           </p>
         </div>
         <NoteActionButton noteIds={new Set([note.id])} />
       </div>
-      <div className=":uno: mt-1">
+      <div className=":uno: mt-1 flex items-center gap-1">
         <TagList tags={tags} />
         <Popover>
           <Popover.Button>Edit</Popover.Button>
