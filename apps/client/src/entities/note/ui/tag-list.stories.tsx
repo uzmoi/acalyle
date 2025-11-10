@@ -1,6 +1,6 @@
 import { style } from "@acalyle/css";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { NoteTagString } from "../model";
+import type { Tag } from "~/entities/tag";
 import { TagList } from "./tag-list";
 
 export default {
@@ -12,7 +12,7 @@ type Story = StoryObj<typeof TagList>;
 
 export const Tags: Story = {
   args: {
-    tags: ["#tag1", "@tag2", "@tag3:hoge"] as NoteTagString[],
+    tags: ["#tag1", "@tag2", "@tag3:hoge"] as Tag[],
   },
 };
 
@@ -27,7 +27,7 @@ export const ManyTags: Story = {
       "#tag6",
       "#tag7",
       "#tag8",
-    ] as NoteTagString[],
+    ] as Tag[],
     className: style({ width: "24em" }),
   },
 };

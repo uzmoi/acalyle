@@ -1,7 +1,8 @@
 import type { BookId } from "~/entities/book";
-import { $note, type NoteId, type NoteTagString } from "~/entities/note";
+import { $note } from "~/entities/note";
 import { type Cursor, GraphqlConnection } from "~/shared/graphql";
-import { fetchNotePagination, type NotePage } from "../api";
+import { rebrand } from "~/shared/utils";
+import { type NotePage, fetchNotePagination } from "../api";
 import { parseQuery, printServerQuery } from "./query";
 
 type NoteNode = NotePage["nodes"][number];
@@ -26,12 +27,13 @@ export class NoteConnection extends GraphqlConnection<NoteNode> {
     // FIXME: non-null ではない
     return result.unwrap()!;
   }
+  // oxlint-disable-next-line class-methods-use-this
   protected updateNodes(nodes: readonly NoteNode[]): void {
     for (const note of nodes) {
-      $note(note.id as string as NoteId).resolve({
+      $note(rebrand(note.id)).resolve({
         ...note,
-        id: note.id as string as NoteId,
-        tags: note.tags as NoteTagString[],
+        id: rebrand(note.id),
+        tags: rebrand(note.tags),
       });
     }
   }

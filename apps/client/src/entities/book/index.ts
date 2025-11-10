@@ -1,5 +1,5 @@
 /** @public */
-export { fetchBookByHandle, fetchBookDetail } from "./api";
+export { fetchBookByHandle } from "./api";
 /** @public */
 export {
   type Book,
@@ -7,8 +7,8 @@ export {
   type BookHandle,
   type BookId,
   type BookRef,
-  type NoteTagMetadata,
   bookRefFromId,
   bookRefOf,
   fetchBookByRef,
+  useBookDetail,
 } from "./model";

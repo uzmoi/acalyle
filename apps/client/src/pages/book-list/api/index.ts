@@ -1,5 +1,6 @@
-import type { BookId, BookHandle, Book } from "~/entities/book";
+import type { Book } from "~/entities/book";
 import { gql } from "~/shared/graphql";
+import { rebrand } from "~/shared/utils";
 import BookPaginationQuery from "./book-pagination.graphql";
 
 export interface BooksPage {
@@ -24,8 +25,8 @@ export const fetchBooksPage = async (query: string): Promise<BooksPage> => {
   const books = edges.map((edge): Book => {
     const book = edge.node;
     return {
-      id: book.id as string as BookId,
-      handle: book.handle as BookHandle | null,
+      id: rebrand(book.id),
+      handle: rebrand(book.handle),
       title: book.title,
       description: book.description,
       thumbnail: book.thumbnail,

@@ -1,6 +1,7 @@
 import type { Result } from "@uzmoi/ut/fp";
-import type { BookId, Book, BookHandle } from "~/entities/book";
-import { gql, type GqlFnError } from "~/shared/graphql";
+import type { Book, BookHandle } from "~/entities/book";
+import { type GqlFnError, gql } from "~/shared/graphql";
+import { rebrand } from "~/shared/utils";
 import CreateBookMutation from "./create-book.graphql";
 
 export const createBookMutation = async (
@@ -16,7 +17,7 @@ export const createBookMutation = async (
   });
 
   return result.map(({ createBook: book }) => ({
-    id: book.id as string as BookId,
+    id: rebrand(book.id),
     handle: null,
     title,
     description,

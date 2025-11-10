@@ -1,13 +1,13 @@
-import type { NoteTagString } from "~/entities/note";
+import type { Tag } from "~/entities/tag";
 
 export interface TagsDiff {
-  added: readonly NoteTagString[];
-  removed: readonly NoteTagString[];
+  added: readonly Tag[];
+  removed: readonly Tag[];
 }
 
 export const tagsDiff = (
-  base: readonly NoteTagString[],
-  modified: readonly NoteTagString[],
+  base: readonly Tag[],
+  modified: readonly Tag[],
 ): TagsDiff => {
   return {
     removed: base.filter(tag => !modified.includes(tag)),

@@ -1,4 +1,5 @@
 import { describe, expect, test } from "vitest";
+import type { TagSymbol } from "~/entities/tag";
 import {
   type QueryItem,
   type QueryToken,
@@ -50,9 +51,9 @@ const h = {
   }),
   tag: (
     symbol: string,
-    prop: string | null,
+    prop?: string,
     { exclude = false } = {},
-  ): QueryItem => ({ type: "tag", exclude, symbol, prop }),
+  ): QueryItem => ({ type: "tag", exclude, symbol: symbol as TagSymbol, prop }),
 };
 
 describe("parser", () => {
@@ -75,9 +76,9 @@ describe("parser", () => {
     ['"#tag"', h.word("#tag")],
     ['-"a"', h.word("a", { exclude: true })],
     // tag
-    ["#tag", h.tag("#tag", null)],
+    ["#tag", h.tag("#tag")],
     ["@hoge:fuga", h.tag("@hoge", "fuga")],
-    ["-#tag", h.tag("#tag", null, { exclude: true })],
+    ["-#tag", h.tag("#tag", undefined, { exclude: true })],
     ["-@hoge:fuga", h.tag("@hoge", "fuga", { exclude: true })],
   ] satisfies Case[])("parse %o", (queryString, ...items) => {
     expect(parseQuery(queryString).toArray()).toMatchObject(items);
@@ -100,7 +101,7 @@ describe("update query", () => {
       [" #tag ", " "],
       ["  hoge   #tag  fuga  ", "  hoge  fuga  "],
     ])("%o", (query, expected) => {
-      expect(removeTag(query, "#tag")).toBe(expected);
+      expect(removeTag(query, "#tag" as TagSymbol)).toBe(expected);
     });
   });
 
@@ -110,10 +111,10 @@ describe("update query", () => {
       ["hoge ", "hoge #tag"],
       ["hoge", "hoge #tag"],
     ])("%o", (query, expected) => {
-      expect(appendTag(query, "#tag")).toBe(expected);
+      expect(appendTag(query, "#tag" as TagSymbol)).toBe(expected);
     });
     test("replace tag", () => {
-      expect(appendTag("@tag:fuga", "@tag")).toBe("@tag");
+      expect(appendTag("@tag:fuga", "@tag" as TagSymbol)).toBe("@tag");
     });
   });
 });

@@ -2,7 +2,8 @@ import { cx, style } from "@acalyle/css";
 import { Button, List, theme } from "@acalyle/ui";
 import { BiSolidEdit, BiX } from "react-icons/bi";
 import type { Book } from "~/entities/book";
-import { type NoteId, type NoteTagString, TagList } from "~/entities/note";
+import { type NoteId, TagList } from "~/entities/note";
+import { type Tag, tagToString } from "~/entities/tag";
 import { useEditableTags } from "../model";
 import { TagUpsertForm } from "./tag-upsert-form";
 
@@ -12,7 +13,7 @@ import { TagUpsertForm } from "./tag-upsert-form";
 export const EditableTags: React.FC<{
   book: Book;
   noteId: NoteId;
-  tags: readonly NoteTagString[];
+  tags: readonly Tag[];
 }> = ({ book, noteId, tags }) => {
   const [state, { start, end, upsertTag, removeTag }] = useEditableTags();
 
@@ -31,9 +32,9 @@ export const EditableTags: React.FC<{
       : <List className=":uno: inline-block">
           {state.tags.map(tag => (
             <List.Item key={tag.symbol} className=":uno: inline-block px-0.5">
-              <span>{tag.toString()}</span>
+              <span>{tagToString(tag)}</span>
               <Button onClick={() => removeTag(tag.symbol)} unstyled>
-                <BiX />
+                <BiX title="Remove" />
               </Button>
             </List.Item>
           ))}
@@ -41,7 +42,7 @@ export const EditableTags: React.FC<{
       }
       {state == null && (
         <Button unstyled onClick={onOpen}>
-          <BiSolidEdit />
+          <BiSolidEdit title="Edit" />
         </Button>
       )}
       {state != null && (

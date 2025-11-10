@@ -1,5 +1,14 @@
-import type { TagSymbol } from "@acalyle/core";
-import type { Brand } from "@uzmoi/ut/types";
+import type { Brand, NoBrand } from "@uzmoi/ut/types";
+import type { TagMetadata, TagSymbol } from "~/entities/tag";
+import type { ID } from "~/shared/graphql";
+
+declare module "~/shared/utils" {
+  interface RegisterRebrand {
+    ["BookId->ID"](input: BookId): ID;
+    ["ID->BookId"](input: ID): BookId;
+    ["string->BookHandle"](input: string & NoBrand): BookHandle;
+  }
+}
 
 export type BookId = string & Brand<"BookId">;
 
@@ -15,11 +24,5 @@ export interface Book {
 
 export interface BookDetail {
   createdAt: string;
-  tags: Map<TagSymbol, NoteTagMetadata>;
-}
-
-export interface NoteTagMetadata {
-  symbol: TagSymbol;
-  props: Set<string>;
-  description: string;
+  tags: Map<TagSymbol, TagMetadata>;
 }
