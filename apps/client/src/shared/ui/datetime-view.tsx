@@ -23,7 +23,7 @@ const formatRelative = (dur: DurationObject): string => {
   return relativeTimeFormat.format(-dur[unit], unit);
 };
 
-export const TimeStamp: React.FC<{
+export const DateTimeView: React.FC<{
   dt: string;
 }> = ({ dt }) => {
   const at = DateTime.from(dt);

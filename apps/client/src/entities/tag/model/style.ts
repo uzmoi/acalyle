@@ -21,7 +21,7 @@ export const printTagStyleCss = (
   // newline はタグの構文として無効なため、'\' と '"' のみエスケープすれば良い。
   // https://www.w3.org/TR/selectors-4/#attribute-representation
   // https://www.w3.org/TR/css-syntax-3/#ident-token-diagram
-  const selector = `[data-tag-symbol="${symbol.replaceAll(/["\\]/g, "\\$&")}"]`;
+  const selector = `.tag[data-symbol="${symbol.replaceAll(/["\\]/g, "\\$&")}"]`;
 
   return toCss(selector, {
     [varName("tag-text")]: validateCssValue("color", style.fg),

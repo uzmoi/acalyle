@@ -5,6 +5,7 @@ import { NoteModalContent } from "./content";
 
 const renderModalContent = ({
   bookRef,
+  bookId,
   noteId,
 }: NoteModalInput): React.ReactNode => (
   <div
@@ -13,7 +14,7 @@ const renderModalContent = ({
       style({ backgroundColor: theme("app-bg") }),
     )}
   >
-    <NoteModalContent bookRef={bookRef} noteId={noteId} />
+    <NoteModalContent bookRef={bookRef} bookId={bookId} noteId={noteId} />
   </div>
 );
 

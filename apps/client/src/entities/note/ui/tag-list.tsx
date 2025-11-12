@@ -1,3 +1,4 @@
+import { cx } from "@acalyle/css";
 import { List } from "@acalyle/ui";
 import { Tag } from "~/entities/tag";
 
@@ -6,9 +7,9 @@ export const TagList: React.FC<{
   className?: string;
 }> = ({ tags, className }) => {
   return (
-    <List className={className}>
+    <List className={cx(":uno: flex flex-wrap gap-1", className)}>
       {tags.map(tag => (
-        <List.Item key={tag} className=":uno: inline-block px-0.5">
+        <List.Item key={tag}>
           <Tag tag={tag} />
         </List.Item>
       ))}

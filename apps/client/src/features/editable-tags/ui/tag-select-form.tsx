@@ -18,8 +18,8 @@ export const TagSelectForm: React.FC<{
   const [query, setQuery] = useState("");
 
   return (
-    <div>
-      <div className=":uno: b b-b-zinc-600 b-b-solid pb-1">
+    <div className=":uno: line-height-none">
+      <div className=":uno: b b-b-zinc-600 b-b-solid p-1">
         <label htmlFor={id} className=":uno: px-1 text-xs">
           タグ検索
         </label>
