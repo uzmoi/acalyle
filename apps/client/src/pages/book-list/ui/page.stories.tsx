@@ -32,3 +32,9 @@ export const Loading: Story = {
     page: new Promise(noop),
   },
 };
+
+export const LoadingError: Story = {
+  args: {
+    page: Promise.reject(new Error("Error")),
+  },
+};
