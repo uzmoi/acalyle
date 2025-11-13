@@ -2,8 +2,8 @@ import { cx, style } from "@acalyle/css";
 import { theme, visuallyHidden } from "@acalyle/ui";
 import { Link } from "@tanstack/react-router";
 import { useCallback } from "react";
-import { type Book, bookRefOf } from "~/entities/book";
-import { type NoteId, useNote, TagList } from "~/entities/note";
+import { type Book, bookRefOf } from "#entities/book";
+import { type NoteId, TagList, useNote } from "#entities/note";
 // eslint-disable-next-line import-access/jsdoc
 import { NoteContents } from "~/entities/note/ui/contents";
 import { openNoteInModal } from "~/features/note-modal";
@@ -19,7 +19,7 @@ export const NoteWarpListItem: React.FC<{
       // NOTE: noscript環境でなるべく正しく動くようにLinkのままpreventDefaultしている。
       // これが本当正しいのかはわからない。
       e.preventDefault();
-      void openNoteInModal(bookRefOf(book), noteId);
+      void openNoteInModal(bookRefOf(book), book.id, noteId);
     },
     [book, noteId],
   );

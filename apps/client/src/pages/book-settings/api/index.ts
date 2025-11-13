@@ -1,6 +1,7 @@
 import { Err, Ok, type Result } from "@uzmoi/ut/fp";
-import type { BookId, BookHandle } from "~/entities/book";
-import { type ID, gql, type GqlFnError } from "~/shared/graphql";
+import type { BookHandle, BookId } from "~/entities/book";
+import { type GqlFnError, gql } from "~/shared/graphql";
+import { rebrand } from "~/shared/utils";
 import ChangeBookDescriptionMutation from "./change-book-description.graphql";
 import ChangeBookHandleMutation from "./change-book-handle.graphql";
 import ChangeBookTitleMutation from "./change-book-title.graphql";
@@ -10,7 +11,7 @@ export const changeBookTitleMutation = async (
   title: string,
 ): Promise<Result<string, GqlFnError>> => {
   const result = await gql(ChangeBookTitleMutation, {
-    bookId: id as string as ID,
+    bookId: rebrand(id),
     title,
   });
 
@@ -25,7 +26,7 @@ export const changeBookHandleMutation = async (
   handle: BookHandle | null,
 ): Promise<Result<BookHandle | null, GqlFnError>> => {
   const result = await gql(ChangeBookHandleMutation, {
-    bookId: id as string as ID,
+    bookId: rebrand(id),
     handle,
   });
 
@@ -34,7 +35,7 @@ export const changeBookHandleMutation = async (
 
   return book == null ?
       Err({ name: "NotFoundError" })
-    : Ok(book.handle as BookHandle);
+    : Ok(rebrand<BookHandle | null>(book.handle));
 };
 
 export const changeBookDescriptionMutation = async (
@@ -42,7 +43,7 @@ export const changeBookDescriptionMutation = async (
   description: string,
 ): Promise<Result<string, GqlFnError>> => {
   const result = await gql(ChangeBookDescriptionMutation, {
-    bookId: id as string as ID,
+    bookId: rebrand(id),
     description,
   });
 

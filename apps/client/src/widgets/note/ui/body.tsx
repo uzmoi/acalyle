@@ -1,16 +1,17 @@
 import { cx } from "@acalyle/css";
 import { Button, List } from "@acalyle/ui";
 import { useState } from "react";
-import type { NoteId } from "~/entities/note";
+import type { BookId } from "#entities/book";
+import type { Note } from "#entities/note";
+import { NoteContentsEditor } from "#features/note-contents-editor";
 import { NoteContents } from "~/entities/note/ui/contents";
-import { NoteContentsEditor } from "~/features/note-contents-editor";
 
 const tabs = ["view", "editor"] as const;
 
 export const NoteBody: React.FC<{
-  noteId: NoteId;
-  contents: string;
-}> = ({ noteId, contents }) => {
+  bookId: BookId;
+  note: Note;
+}> = ({ bookId: _, note }) => {
   const [tab, setTab] = useState<(typeof tabs)[number]>("view");
 
   return (
@@ -34,11 +35,11 @@ export const NoteBody: React.FC<{
           </List.Item>
         ))}
       </List>
-      {tab === "view" && <NoteContents contents={contents} />}
+      {tab === "view" && <NoteContents contents={note.contents} />}
       {tab === "editor" && (
         <NoteContentsEditor
-          noteId={noteId}
-          initialValue={contents}
+          noteId={note.id}
+          initialValue={note.contents}
           onEnd={() => {
             setTab("view");
           }}

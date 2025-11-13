@@ -137,6 +137,7 @@
     "typescript/no-unsafe-function-type": "error",
     "typescript/prefer-ts-expect-error": "error",
     // Source: unicorn
+    "unicorn/no-array-callback-reference": "off",
     "unicorn/no-useless-promise-resolve-reject": "off",
     "unicorn/prefer-code-point": "off",
     "unicorn/prefer-math-trunc": "off",

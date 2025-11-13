@@ -1,11 +1,13 @@
-import { Err, Ok, Result } from "@uzmoi/ut/fp";
-import type { NoteId, NoteTagString } from "~/entities/note";
-import { gql, type ID, type GqlFnError } from "~/shared/graphql";
+import { Err, Ok, type Result } from "@uzmoi/ut/fp";
+import type { NoteId } from "~/entities/note";
+import type { Tag } from "~/entities/tag";
+import { type GqlFnError, gql } from "~/shared/graphql";
+import { rebrand } from "~/shared/utils";
 import UpdateNoteContentsMutation from "./update-note-contents.graphql";
 
 export interface UpdateNoteContentsMutationResult {
   contents: string;
-  tags: readonly NoteTagString[];
+  tags: readonly Tag[];
   updatedAt: string;
 }
 
@@ -14,7 +16,7 @@ export const updateNoteContentsMutation = async (
   contents: string,
 ): Promise<Result<UpdateNoteContentsMutationResult, GqlFnError>> => {
   const result = await gql(UpdateNoteContentsMutation, {
-    noteId: id as string as ID,
+    noteId: rebrand(id),
     contents,
   });
 
@@ -27,7 +29,7 @@ export const updateNoteContentsMutation = async (
 
   return Ok({
     contents: note.contents,
-    tags: note.tags as NoteTagString[],
+    tags: rebrand<Tag[]>(note.tags),
     updatedAt: note.updatedAt,
   });
 };

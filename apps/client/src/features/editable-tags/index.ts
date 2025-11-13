@@ -1,2 +1,2 @@
 /** @public */
-export { EditableTags } from "./ui";
+export { EditableTags, TagSelectForm } from "./ui";

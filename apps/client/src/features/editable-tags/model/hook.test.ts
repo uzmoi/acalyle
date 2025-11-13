@@ -1,14 +1,13 @@
-import { NoteTag } from "@acalyle/core";
 import { renderHook } from "@testing-library/react";
 import { describe, expect, test, vi } from "vitest";
-import type { NoteTagString } from "~/entities/note";
+import { type Tag, type TagSymbol, parseTag } from "~/entities/tag";
 import { useEditableTags } from "./hook";
 
 describe("useEditableTags", () => {
   test("start / end", () => {
     const { rerender, result } = renderHook(useEditableTags);
 
-    const tags = ["#hoge"] as NoteTagString[];
+    const tags = ["#hoge"] as Tag[];
     {
       const [state, { start }] = result.current;
       expect(state).toBeNull();
@@ -19,7 +18,7 @@ describe("useEditableTags", () => {
 
     {
       const [state, { end: _ }] = result.current;
-      expect(state).toEqual({ tags: [NoteTag.fromString("#hoge")] });
+      expect(state).toEqual({ tags: [parseTag("#hoge")] });
       // TODO[+msw]: end("<note-id>" as NoteId, tags);
     }
 
@@ -31,16 +30,16 @@ describe("useEditableTags", () => {
 
     {
       const [, { start, upsertTag, removeTag }] = result.current;
-      start(["#hoge" as NoteTagString, "@piyo:1" as NoteTagString]);
-      removeTag("#hoge");
-      upsertTag("#fuga" as NoteTagString);
-      upsertTag("@piyo:2" as NoteTagString);
+      start(["#hoge" as Tag, "@piyo:1" as Tag]);
+      removeTag("#hoge" as TagSymbol);
+      upsertTag("#fuga" as Tag);
+      upsertTag("@piyo:2" as Tag);
     }
 
     rerender();
 
     expect(result.current[0]).toEqual({
-      tags: ["@piyo:2", "#fuga"].map(NoteTag.fromString),
+      tags: ["@piyo:2", "#fuga"].map(parseTag),
     });
 
     // TODO[+msw]: end("<note-id>" as NoteId, tags);
@@ -57,7 +56,7 @@ describe("useEditableTags", () => {
     {
       const [, { start, upsertTag }] = result.current;
       start([]);
-      upsertTag("#hoge" as NoteTagString);
+      upsertTag("#hoge" as Tag);
     }
 
     rerender();

@@ -6,8 +6,8 @@ import { createTheme, theme } from "@acalyle/ui";
 
 export const defaultTheme = createTheme({
   paper: {
-    bg: "#EEEEEE",
-    outline: "#DDDDDD",
+    bg: "#222",
+    outline: "#888",
     radius: "0.25rem",
     shadow: "#11111122",
   },

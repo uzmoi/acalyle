@@ -1,4 +1,4 @@
-import { NoteTag, type TagSymbol } from "@acalyle/core";
+import { type TagObject, type TagSymbol, parseTag } from "~/entities/tag";
 
 export interface QueryToken {
   type: "op" | "word" | "word:quoted" | "tag" | "ignore";
@@ -8,12 +8,11 @@ export interface QueryToken {
 const queryRe =
   /-?('(?:\\.|[^\\'])*'|"(?:\\.|[^\\"])*")(?!\P{White_Space})|\P{White_Space}+/gv;
 
-const tagHeadRe = /^[!#$%&*+=?@^~]/;
-
 export const lexQuery = function* (query: string): Generator<QueryToken, void> {
   let ignoreStartIndex = 0;
 
   for (const match of query.matchAll(queryRe)) {
+    // oxlint-disable-next-line prefer-destructuring
     let content = match[0];
     let pos = match.index;
 
@@ -31,8 +30,8 @@ export const lexQuery = function* (query: string): Generator<QueryToken, void> {
 
     const type =
       isQuoted ? "word:quoted"
-      : tagHeadRe.test(content) ? "tag"
-      : "word";
+      : parseTag(content) == null ? "word"
+      : "tag";
 
     yield { type, content };
 
@@ -44,18 +43,18 @@ export const lexQuery = function* (query: string): Generator<QueryToken, void> {
   }
 };
 
-export type QueryItem =
-  | {
-      type: "word";
-      exclude: boolean;
-      value: string;
-    }
-  | {
-      type: "tag";
-      exclude: boolean;
-      symbol: string;
-      prop: string | null;
-    };
+interface WordQueryItem {
+  type: "word";
+  exclude: boolean;
+  value: string;
+}
+
+interface TagQueryItem extends TagObject {
+  type: "tag";
+  exclude: boolean;
+}
+
+export type QueryItem = WordQueryItem | TagQueryItem;
 
 const unescapeRe = /\\(.)/gv;
 
@@ -72,10 +71,8 @@ export const parseQuery = function* (
 
     switch (type) {
       case "tag": {
-        const index = content.indexOf(":");
-        const symbol = index === -1 ? content : content.slice(0, index);
-        const prop = index === -1 ? null : content.slice(index + 1);
-        yield { type: "tag", exclude, symbol, prop };
+        const tag = parseTag(content)!;
+        yield { type: "tag", exclude, ...tag };
         break;
       }
       case "word": {
@@ -122,7 +119,7 @@ export const removeTag = (query: string, targetTag: TagSymbol): string => {
     }
 
     if (type === "tag") {
-      const tag = NoteTag.fromString(content)!;
+      const tag = parseTag(content)!;
 
       if (tag.symbol === targetTag) {
         current = "";

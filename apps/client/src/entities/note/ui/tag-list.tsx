@@ -1,19 +1,15 @@
-import { NoteTag } from "@acalyle/core";
+import { cx } from "@acalyle/css";
 import { List } from "@acalyle/ui";
-import { nonNullable } from "emnorst";
-import type { NoteTagString } from "../model";
-import { Tag } from "./tag";
+import { Tag } from "~/entities/tag";
 
 export const TagList: React.FC<{
-  tags: readonly NoteTagString[];
+  tags: readonly Tag[];
   className?: string;
 }> = ({ tags, className }) => {
-  const noteTags = tags.map(NoteTag.fromString).filter(nonNullable);
-
   return (
-    <List className={className}>
-      {noteTags.map(tag => (
-        <List.Item key={tag.symbol} className=":uno: inline-block px-0.5">
+    <List className={cx(":uno: flex flex-wrap gap-1", className)}>
+      {tags.map(tag => (
+        <List.Item key={tag}>
           <Tag tag={tag} />
         </List.Item>
       ))}

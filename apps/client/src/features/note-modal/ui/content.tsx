@@ -8,6 +8,7 @@ import { type NoteModalInput, close } from "../model";
 
 export const NoteModalContent: React.FC<NoteModalInput> = ({
   bookRef,
+  bookId,
   noteId,
 }) => {
   const note = useNote(noteId);
@@ -33,12 +34,12 @@ export const NoteModalContent: React.FC<NoteModalInput> = ({
             <BiExpandAlt />
           </Link>
           <Button unstyled onClick={close}>
-            <BiX />
+            <BiX title="Close" />
           </Button>
         </div>
       </header>
       <div className=":uno: flex-1 overflow-x-hidden">
-        <FullNote key={noteId} note={note} />
+        <FullNote key={noteId} bookId={bookId} note={note} />
       </div>
     </section>
   );
