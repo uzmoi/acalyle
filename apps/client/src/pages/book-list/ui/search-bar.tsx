@@ -34,8 +34,12 @@ export const SearchBar: React.FC<{
           defaultValue={initialQuery ?? ""}
           onValueChange={setQuery}
         />
-        <Button type="submit" className=":uno: px-1 py-0 line-height-none">
-          <BiRefresh title="Refresh" size="20" className=":uno: align-top" />
+        <Button type="submit" className=":uno: p-1">
+          <BiRefresh
+            title="Refresh"
+            size="1.25em"
+            className=":uno: align-top"
+          />
         </Button>
       </ControlGroup>
     </form>

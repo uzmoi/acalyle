@@ -10,7 +10,7 @@ export const BookShelf: React.FC<{
     <div
       className={cx(
         ":uno: grid gap-x-5 gap-y-3",
-        style({ gridTemplateColumns: "repeat(auto-fit, minmax(32em, 1fr))" }),
+        style({ gridTemplateColumns: "repeat(auto-fit, minmax(24rem, 1fr))" }),
       )}
     >
       {use(books).map(book => (

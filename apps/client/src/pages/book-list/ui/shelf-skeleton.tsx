@@ -5,7 +5,7 @@ export const BookShelfSkeleton: React.FC = () => (
   <div
     className={cx(
       ":uno: grid gap-x-5 gap-y-3",
-      style({ gridTemplateColumns: "repeat(auto-fit, minmax(32em, 1fr))" }),
+      style({ gridTemplateColumns: "repeat(auto-fit, minmax(24rem, 1fr))" }),
     )}
   >
     {/* TODO: 要素数を定数化 or 変数化したい */}
