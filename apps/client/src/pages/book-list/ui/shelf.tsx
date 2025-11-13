@@ -4,8 +4,10 @@ import type { Book } from "~/entities/book";
 import { BookCover } from "./cover";
 
 export const BookShelf: React.FC<{
-  books: Promise<readonly Book[]>;
-}> = ({ books }) => {
+  fetchingBooks: Promise<readonly Book[]>;
+}> = ({ fetchingBooks }) => {
+  const books = use(fetchingBooks);
+
   return (
     <div
       className={cx(
@@ -13,7 +15,7 @@ export const BookShelf: React.FC<{
         style({ gridTemplateColumns: "repeat(auto-fit, minmax(24rem, 1fr))" }),
       )}
     >
-      {use(books).map(book => (
+      {books.map(book => (
         <BookCover key={book.id} book={book} />
       ))}
     </div>

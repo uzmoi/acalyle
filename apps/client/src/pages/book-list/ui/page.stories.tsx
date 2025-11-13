@@ -23,18 +23,18 @@ export const Default: Story = {
     },
   }),
   args: {
-    page: new Promise(noop),
+    fetchingPage: new Promise(noop),
   },
 };
 
 export const Loading: Story = {
   args: {
-    page: new Promise(noop),
+    fetchingPage: new Promise(noop),
   },
 };
 
 export const LoadingError: Story = {
   args: {
-    page: Promise.reject(new Error("Error")),
+    fetchingPage: Promise.reject(new Error("Error")),
   },
 };

@@ -23,8 +23,8 @@ const getErrorMessage = (error: unknown): string => {
 
 export const BookListPage: React.FC<{
   initialQuery?: string | undefined;
-  page: Promise<BooksPage>;
-}> = ({ initialQuery, page }) => {
+  fetchingPage: Promise<BooksPage>;
+}> = ({ initialQuery, fetchingPage }) => {
   return (
     <main className=":uno: mx-auto max-w-screen-xl px-8 py-4">
       <div className=":uno: mb-6 flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -43,7 +43,7 @@ export const BookListPage: React.FC<{
         )}
       >
         <Suspense fallback={<BookShelfSkeleton />}>
-          <BookShelf books={page.then(page => page.books)} />
+          <BookShelf fetchingBooks={fetchingPage.then(page => page.books)} />
         </Suspense>
       </Catch>
     </main>
