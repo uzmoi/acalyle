@@ -10,9 +10,9 @@ import { BookListPage, fetchBooksPage } from "~/pages/book-list";
 
 const RouteComponent: React.FC = () => {
   const { query } = useSearch({ from: Route.id });
-  const { page } = useLoaderData({ from: Route.id });
+  const { fetchingPage } = useLoaderData({ from: Route.id });
 
-  return <BookListPage initialQuery={query} fetchingPage={page} />;
+  return <BookListPage initialQuery={query} fetchingPage={fetchingPage} />;
 };
 
 export const Route = createFileRoute("/books/")({
@@ -24,6 +24,7 @@ export const Route = createFileRoute("/books/")({
     return search;
   },
   loader({ deps }) {
-    return { page: fetchBooksPage(deps.query ?? "") };
+    const fetchingPage = fetchBooksPage(deps.query ?? "", null, "forward");
+    return { fetchingPage };
   },
 });
