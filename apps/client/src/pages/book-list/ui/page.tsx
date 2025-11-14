@@ -3,10 +3,10 @@ import { Link } from "@tanstack/react-router";
 import { Suspense } from "react";
 import { BiBookAdd } from "react-icons/bi";
 import type { GqlFnError } from "#shared/graphql";
-import type { BooksPage } from "../api";
+import type { BooksPage as IBooksPage } from "../api";
 import { Alert } from "./alert";
+import { BooksPage } from "./books-page";
 import { SearchBar } from "./search-bar";
-import { BookShelf } from "./shelf";
 import { BookShelfSkeleton } from "./shelf-skeleton";
 
 const getErrorMessage = (error: unknown): string => {
@@ -23,7 +23,7 @@ const getErrorMessage = (error: unknown): string => {
 
 export const BookListPage: React.FC<{
   initialQuery?: string | undefined;
-  fetchingPage: Promise<BooksPage>;
+  fetchingPage: Promise<IBooksPage>;
 }> = ({ initialQuery, fetchingPage }) => {
   return (
     <main className=":uno: mx-auto max-w-screen-xl px-8 py-4">
@@ -43,7 +43,7 @@ export const BookListPage: React.FC<{
         )}
       >
         <Suspense fallback={<BookShelfSkeleton />}>
-          <BookShelf fetchingBooks={fetchingPage.then(page => page.books)} />
+          <BooksPage query={initialQuery} fetchingPage={fetchingPage} />
         </Suspense>
       </Catch>
     </main>

@@ -1,13 +1,10 @@
 import { cx, style } from "@acalyle/css";
-import { use } from "react";
 import type { Book } from "~/entities/book";
 import { BookCover } from "./cover";
 
 export const BookShelf: React.FC<{
-  fetchingBooks: Promise<readonly Book[]>;
-}> = ({ fetchingBooks }) => {
-  const books = use(fetchingBooks);
-
+  books: readonly Book[];
+}> = ({ books }) => {
   return (
     <div
       className={cx(
