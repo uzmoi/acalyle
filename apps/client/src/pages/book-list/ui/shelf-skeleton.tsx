@@ -1,5 +1,6 @@
 import { cx, style } from "@acalyle/css";
 import { theme } from "@acalyle/ui";
+import { BOOKS_PER_PAGE } from "../model";
 
 export const BookShelfSkeleton: React.FC = () => (
   <div
@@ -8,9 +9,7 @@ export const BookShelfSkeleton: React.FC = () => (
       style({ gridTemplateColumns: "repeat(auto-fit, minmax(24rem, 1fr))" }),
     )}
   >
-    {/* TODO: 要素数を定数化 or 変数化したい */}
-    {/* ref. api/index.ts */}
-    {Array.from({ length: 32 }).map((_, i) => (
+    {Array.from({ length: BOOKS_PER_PAGE }).map((_, i) => (
       <div
         key={i}
         className={cx(
