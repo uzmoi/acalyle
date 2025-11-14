@@ -12,7 +12,7 @@ export const BookCover: React.FC<{
       data-book-id={book.id}
       data-book-handle={book.handle}
       className={cx(
-        ":uno: flex h-24 relative",
+        ":uno: relative h-24 flex overflow-hidden font-sans transition-[transform,color] focus-within:scale-102.5 hover:scale-102.5",
         style({
           background: theme("bookOverview-bg"),
           color: theme("bookOverview-text"),
@@ -20,39 +20,33 @@ export const BookCover: React.FC<{
         }),
       )}
     >
-      <BookThumbnail thumbnail={book.thumbnail} className=":uno: flex-none" />
       <div className=":uno: flex-1 overflow-hidden px-4 py-2">
-        <p
-          className={cx(
-            ":uno: overflow-hidden text-ellipsis ws-nowrap",
-            style({
-              // (height / 2 - paddingBlock) / lineHeight
-              // oxlint-disable-next-line no-magic-numbers
-              fontSize: `${(6 / 2 - 0.5) / 1.375}em`,
-              lineHeight: 1.375,
-            }),
+        <div>
+          {book.handle && (
+            <p className=":uno: truncate text-xs text-gray font-mono">
+              {book.handle}
+            </p>
           )}
-        >
+        </div>
+        <p className=":uno: truncate text-xl">
           <Link
             to="/books/$book-ref"
             params={{ "book-ref": bookRefOf(book) }}
-            className=":uno: text-inherit decoration-none before:absolute before:inset-0 before:content-empty"
+            className=":uno: text-inherit decoration-none outline-none before:absolute before:inset-0 focus-visible:text-teal before:content-empty"
           >
             {book.title}
           </Link>
         </p>
-        <div
+        <p
           className={cx(
-            ":uno: b-t b-t-solid pt-1",
+            ":uno: mt-2 truncate b-t b-t-solid pt-2 text-xs text-gray",
             style({ borderTopColor: theme("bookOverview-border") }),
           )}
         >
-          {book.handle && <p className=":uno: text-xs">{book.handle}</p>}
-          <p className=":uno: overflow-hidden text-ellipsis ws-nowrap text-sm">
-            {book.description}
-          </p>
-        </div>
+          {book.description}
+        </p>
       </div>
+      <BookThumbnail thumbnail={book.thumbnail} className=":uno: flex-none" />
     </div>
   );
 };
