@@ -13,7 +13,7 @@ const RouteComponent: React.FC = () => {
   const { query } = useSearch({ from: Route.id });
   const { fetchingPage } = useLoaderData({ from: Route.id });
 
-  return <BookListPage initialQuery={query} fetchingPage={fetchingPage} />;
+  return <BookListPage query={query} fetchingPage={fetchingPage} />;
 };
 
 export const Route = createFileRoute("/books/")({

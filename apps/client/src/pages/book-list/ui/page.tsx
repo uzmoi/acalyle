@@ -22,13 +22,13 @@ const getErrorMessage = (error: unknown): string => {
 };
 
 export const BookListPage: React.FC<{
-  initialQuery?: string | undefined;
+  query?: string | undefined;
   fetchingPage: Promise<IBooksPage>;
-}> = ({ initialQuery, fetchingPage }) => {
+}> = ({ query, fetchingPage }) => {
   return (
     <main className=":uno: mx-auto max-w-screen-xl px-8 py-4">
       <div className=":uno: mb-6 flex flex-wrap items-center gap-x-4 gap-y-2">
-        <SearchBar initialQuery={initialQuery} />
+        <SearchBar initialQuery={query} />
         <Link to="/books/new">
           <BiBookAdd />
           <span className=":uno: ml-1">New</span>
@@ -43,7 +43,7 @@ export const BookListPage: React.FC<{
         )}
       >
         <Suspense fallback={<BookShelfSkeleton />}>
-          <BooksPage query={initialQuery} fetchingPage={fetchingPage} />
+          <BooksPage query={query} fetchingPage={fetchingPage} />
         </Suspense>
       </Catch>
     </main>
