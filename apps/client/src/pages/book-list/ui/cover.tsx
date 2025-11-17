@@ -37,14 +37,13 @@ export const BookCover: React.FC<{
             {book.title}
           </Link>
         </p>
-        <p
+        <hr
           className={cx(
-            ":uno: mt-2 truncate b-t b-t-solid pt-2 text-xs text-gray",
+            ":uno: b-none b-t b-t-solid my-2",
             style({ borderTopColor: theme("bookOverview-border") }),
           )}
-        >
-          {book.description}
-        </p>
+        />
+        <p className=":uno: truncate text-xs text-gray">{book.description}</p>
       </div>
       <BookThumbnail thumbnail={book.thumbnail} className=":uno: flex-none" />
     </div>
