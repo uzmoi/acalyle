@@ -1,0 +1,17 @@
+fragment BooksPage on BookConnection {
+  edges {
+    node {
+      id
+      handle
+      title
+      description
+      thumbnail
+    }
+  }
+  pageInfo {
+    hasNextPage
+    hasPreviousPage
+    startCursor
+    endCursor
+  }
+}

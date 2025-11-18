@@ -16,19 +16,30 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   loaders: () => ({
     args: {
-      page: Promise.resolve({
+      fetchingPage: Promise.resolve({
         books: faker.helpers.multiple(() => createRandomBook()),
-        pageInfo: {},
+        pageInfo: {
+          hasPreviousPage: true,
+          startCursor: btoa("start"),
+          hasNextPage: false,
+          endCursor: null,
+        },
       }),
-    },
+    } satisfies Story["args"],
   }),
   args: {
-    page: new Promise(noop),
+    fetchingPage: new Promise(noop),
   },
 };
 
 export const Loading: Story = {
   args: {
-    page: new Promise(noop),
+    fetchingPage: new Promise(noop),
+  },
+};
+
+export const LoadingError: Story = {
+  args: {
+    fetchingPage: Promise.reject(new Error("Error")),
   },
 };

@@ -6,24 +6,36 @@ import {
   useSearch,
 } from "@tanstack/react-router";
 import * as v from "valibot";
+import type { Cursor } from "#shared/graphql";
 import { BookListPage, fetchBooksPage } from "~/pages/book-list";
 
 const RouteComponent: React.FC = () => {
   const { query } = useSearch({ from: Route.id });
-  const { page } = useLoaderData({ from: Route.id });
+  const { fetchingPage } = useLoaderData({ from: Route.id });
 
-  return <BookListPage initialQuery={query} page={page} />;
+  return <BookListPage query={query} fetchingPage={fetchingPage} />;
 };
 
 export const Route = createFileRoute("/books/")({
   component: RouteComponent,
   validateSearch: v.object({
     query: v.optional(v.string()),
+    after: v.optional(v.string()),
+    before: v.optional(v.string()),
   }),
   loaderDeps({ search }) {
     return search;
   },
   loader({ deps }) {
-    return { page: fetchBooksPage(deps.query ?? "") };
+    let dir: "forward" | "backward" = "forward";
+    let cursor = (deps.after ?? null) as Cursor | null;
+
+    if (deps.before) {
+      cursor = deps.before as Cursor;
+      dir = "backward";
+    }
+
+    const fetchingPage = fetchBooksPage(deps.query ?? "", cursor, dir);
+    return { fetchingPage };
   },
 });

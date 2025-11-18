@@ -1,7 +1,9 @@
 import type { Book } from "~/entities/book";
-import { gql } from "~/shared/graphql";
+import { type Cursor, gql } from "~/shared/graphql";
 import { rebrand } from "~/shared/utils";
-import BookPaginationQuery from "./book-pagination.graphql";
+import { BOOKS_PER_PAGE } from "../model";
+import BackwardBookPaginationQuery from "./backward-book-pagination.graphql";
+import ForwardBookPaginationQuery from "./forward-book-pagination.graphql";
 
 export interface BooksPage {
   books: Book[];
@@ -13,10 +15,19 @@ export interface BooksPage {
   };
 }
 
-export const fetchBooksPage = async (query: string): Promise<BooksPage> => {
-  const result = await gql(BookPaginationQuery, {
-    count: 32,
-    // cursor,
+export const fetchBooksPage = async (
+  query: string,
+  cursor: Cursor | null,
+  dir: "forward" | "backward",
+): Promise<BooksPage> => {
+  const Query = {
+    forward: ForwardBookPaginationQuery,
+    backward: BackwardBookPaginationQuery,
+  }[dir];
+
+  const result = await gql(Query, {
+    count: BOOKS_PER_PAGE,
+    cursor,
     query, // `orderby:updated order:desc ${query}`
   });
 

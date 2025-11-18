@@ -1,5 +1,4 @@
-import { cx, style } from "@acalyle/css";
-import { theme } from "@acalyle/ui";
+import { cx } from "@acalyle/css";
 import { resolveResource } from "../model";
 
 const COLOR_THUMBNAIL_PREFIX = "color:";
@@ -9,13 +8,7 @@ export const BookThumbnail: React.FC<{
   className?: string;
 }> = ({ thumbnail, className }) => {
   return (
-    <div
-      className={cx(
-        ":uno: size-24 overflow-hidden",
-        style({ borderRadius: theme("bookOverview-round") }),
-        className,
-      )}
-    >
+    <div className={cx(":uno: size-24 overflow-hidden", className)}>
       {thumbnail.startsWith(COLOR_THUMBNAIL_PREFIX) ?
         <svg width={96} height={96}>
           <rect

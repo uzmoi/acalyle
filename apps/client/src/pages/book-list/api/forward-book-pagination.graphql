@@ -1,0 +1,7 @@
+#import BooksPage from "./books-page.graphql"
+
+query ForwardBookPagination($count: Int!, $cursor: String, $query: String!) {
+  books(first: $count, after: $cursor, query: $query) {
+    ...BooksPage
+  }
+}
