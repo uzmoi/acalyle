@@ -29,7 +29,7 @@ export const BookListPage: React.FC<{
     <main className=":uno: mx-auto max-w-screen-xl px-8 py-4">
       <div className=":uno: mb-6 flex flex-wrap items-center gap-x-4 gap-y-2">
         <SearchBar initialQuery={query} />
-        <Link to="/books/new">
+        <Link to="/books/new" button>
           <BiBookAdd />
           <span className=":uno: ml-1">New</span>
         </Link>
