@@ -1,8 +1,8 @@
 import { Catch } from "@acalyle/ui";
-import { Link } from "@tanstack/react-router";
 import { Suspense } from "react";
 import { BiBookAdd } from "react-icons/bi";
 import type { GqlFnError } from "#shared/graphql";
+import { Link } from "#shared/ui";
 import type { BooksPage as IBooksPage } from "../api";
 import { Alert } from "./alert";
 import { BooksPage } from "./books-page";

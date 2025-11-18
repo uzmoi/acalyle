@@ -1,6 +1,6 @@
 import { cx, style } from "@acalyle/css";
 import { theme } from "@acalyle/ui";
-import { Link } from "@tanstack/react-router";
+import { Link } from "#shared/ui";
 import { type Book, bookRefOf } from "~/entities/book";
 import { BookThumbnail } from "./thumbnail";
 

@@ -1,11 +1,11 @@
 import {
-  Link,
   Outlet,
   createFileRoute,
   notFound,
   useLoaderData,
   useParams,
 } from "@tanstack/react-router";
+import { Link } from "#shared/ui";
 import { type BookRef, fetchBookByRef } from "~/entities/book";
 import { BookHeader } from "~/pages/book";
 

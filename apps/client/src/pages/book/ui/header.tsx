@@ -1,5 +1,5 @@
-import { Link } from "@tanstack/react-router";
 import { LuSettings } from "react-icons/lu";
+import { Link } from "#shared/ui";
 import { type Book, bookRefOf } from "~/entities/book";
 
 export const BookHeader: React.FC<{

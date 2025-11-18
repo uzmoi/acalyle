@@ -1,6 +1,6 @@
-import { Link } from "@tanstack/react-router";
 import { use } from "react";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
+import { Link } from "#shared/ui";
 import type { BooksPage as IBooksPage } from "../api";
 import { BookShelf } from "./shelf";
 
