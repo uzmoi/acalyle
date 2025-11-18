@@ -13,7 +13,14 @@ export const Link: React.FC<LinkProps> = ({ button, className, ...rest }) => {
   if ("disabled" in props) delete props.disabled;
 
   return (
-    <a {...props} className={cx(button && base, className)}>
+    <a
+      {...props}
+      className={cx(
+        ":uno: text-inherit not-any-link:text-gray-4",
+        button && base,
+        className,
+      )}
+    >
       {rest.children}
     </a>
   );
