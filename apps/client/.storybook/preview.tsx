@@ -12,7 +12,7 @@ import {
   lightBg,
   withTanstackRouter,
   withThemeProvider,
-} from "../src/app/dev";
+} from "#app/dev";
 
 const preview = definePreview({
   addons: [],
