@@ -1,6 +1,5 @@
 {
     "extends": "./tsconfig.main.json",
-    "files": [".storybook/theme.ts", ".storybook/preview.tsx"],
     "include": ["src"],
     "exclude": [],
     "compilerOptions": {

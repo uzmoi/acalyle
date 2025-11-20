@@ -1,19 +1,15 @@
 import { faker } from "@faker-js/faker";
-import type { Meta, StoryObj } from "@storybook/react-vite";
 import { noop } from "es-toolkit";
+import preview from "~/../.storybook/preview";
 import { createRandomBook } from "~/entities/book/dev";
 import { BookListPage } from "./page";
 
-const meta = {
+const meta = preview.meta({
   component: BookListPage,
   parameters: { layout: "fullscreen" },
-} satisfies Meta<typeof BookListPage>;
+});
 
-export default meta;
-
-type Story = StoryObj<typeof meta>;
-
-export const Default: Story = {
+export const Default = meta.story({
   loaders: () => ({
     args: {
       fetchingPage: Promise.resolve({
@@ -25,21 +21,21 @@ export const Default: Story = {
           endCursor: null,
         },
       }),
-    } satisfies Story["args"],
+    } satisfies React.ComponentProps<typeof BookListPage>,
   }),
   args: {
     fetchingPage: new Promise(noop),
   },
-};
+});
 
-export const Loading: Story = {
+export const Loading = meta.story({
   args: {
     fetchingPage: new Promise(noop),
   },
-};
+});
 
-export const LoadingError: Story = {
+export const LoadingError = meta.story({
   args: {
     fetchingPage: Promise.reject(new Error("Error")),
   },
-};
+});

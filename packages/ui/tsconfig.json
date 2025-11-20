@@ -1,6 +1,6 @@
 {
     "extends": "@acalyle/tsconfig/tsconfig.node.json",
-    "files": [".storybook/main.ts", "vite.config.ts"],
+    "files": ["vite.config.ts"],
     "references": [
         { "path": "./tsconfig.test.json" },
         { "path": "./tsconfig.main.json" },

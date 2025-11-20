@@ -1,15 +1,18 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { createRandomNote } from "~/entities/note/dev";
+import type { BookId } from "#entities/book";
+import preview from "~/../.storybook/preview";
+import { createRandomNote, defaultNote } from "~/entities/note/dev";
 import { FullNote } from "./full";
 
-export default {
+const meta = preview.meta({
   component: FullNote,
-} satisfies Meta<typeof FullNote>;
+});
 
-type Story = StoryObj<typeof FullNote>;
-
-export const Default: Story = {
+export const Default = meta.story({
   loaders: () => ({
     args: { note: createRandomNote() },
   }),
-};
+  args: {
+    bookId: "id" as BookId,
+    note: defaultNote,
+  },
+});

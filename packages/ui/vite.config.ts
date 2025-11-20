@@ -5,8 +5,6 @@ import dts from "vite-plugin-dts";
 import { coverageConfigDefaults, defineConfig } from "vitest/config";
 import packageJson from "./package.json" with { type: "json" };
 
-const isStorybook = process.argv[1]?.includes("storybook");
-
 type WyWinJS = typeof wywInJS.default;
 
 export default defineConfig({
@@ -26,8 +24,7 @@ export default defineConfig({
       classNameSlug: (hash, title, { name }) =>
         `${title === "className" ? name : title}__${hash}`,
     }),
-    !isStorybook &&
-      dts({ tsconfigPath: "tsconfig.main.json", rollupTypes: true }),
+    dts({ tsconfigPath: "tsconfig.main.json", rollupTypes: true }),
   ],
   build: {
     target: "esnext",
