@@ -1,5 +1,6 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { BiLeftArrowAlt } from "react-icons/bi";
+import { Link } from "#shared/ui";
 import type { BookRef } from "~/entities/book";
 import { CreateBookForm } from "./form";
 
@@ -17,7 +18,7 @@ export const NewBookPage: React.FC = () => {
     <div className=":uno: mx-auto w-screen-md px-8 py-4">
       <Link
         to="/books"
-        className=":uno: text-sm color-inherit decoration-none transition-colors hover:text-indigo"
+        className=":uno: text-sm decoration-none transition-colors hover:text-indigo"
       >
         <BiLeftArrowAlt />
         <span className=":uno: ml-1 align-bottom">Return to books</span>

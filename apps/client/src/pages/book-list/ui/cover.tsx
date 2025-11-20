@@ -1,6 +1,6 @@
 import { cx, style } from "@acalyle/css";
 import { theme } from "@acalyle/ui";
-import { Link } from "@tanstack/react-router";
+import { Link } from "#shared/ui";
 import { type Book, bookRefOf } from "~/entities/book";
 import { BookThumbnail } from "./thumbnail";
 
@@ -32,7 +32,7 @@ export const BookCover: React.FC<{
           <Link
             to="/books/$book-ref"
             params={{ "book-ref": bookRefOf(book) }}
-            className=":uno: text-inherit decoration-none outline-none before:absolute before:inset-0 focus-visible:text-teal before:content-empty"
+            className=":uno: decoration-none outline-none before:absolute before:inset-0 focus-visible:text-teal before:content-empty"
           >
             {book.title}
           </Link>

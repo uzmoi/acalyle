@@ -1,7 +1,7 @@
 import { style } from "@acalyle/css";
 import { Button } from "@acalyle/ui";
-import { Link } from "@tanstack/react-router";
 import { BiExpandAlt, BiX } from "react-icons/bi";
+import { Link } from "#shared/ui";
 import { useNote } from "~/entities/note";
 import { FullNote } from "~/widgets/note";
 import { type NoteModalInput, close } from "../model";

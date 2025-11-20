@@ -1,6 +1,6 @@
-import { Link } from "@tanstack/react-router";
 import { use } from "react";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
+import { Link } from "#shared/ui";
 import type { BooksPage as IBooksPage } from "../api";
 import { BookShelf } from "./shelf";
 
@@ -17,7 +17,6 @@ export const BooksPage: React.FC<{
         <Link
           to="/books"
           search={{ query, before: pageInfo.startCursor ?? undefined }}
-          className=":uno: text-gray-3 not-any-link:text-gray-4"
           disabled={!pageInfo.hasPreviousPage}
         >
           <BiChevronLeft />
@@ -26,7 +25,6 @@ export const BooksPage: React.FC<{
         <Link
           to="/books"
           search={{ query, after: pageInfo.endCursor ?? undefined }}
-          className=":uno: text-gray-3 not-any-link:text-gray-4"
           disabled={!pageInfo.hasNextPage}
         >
           <span className=":uno: mr-1">Next</span>

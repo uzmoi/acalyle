@@ -1,9 +1,9 @@
 import { cx, style } from "@acalyle/css";
 import { theme, visuallyHidden } from "@acalyle/ui";
-import { Link } from "@tanstack/react-router";
 import { useCallback } from "react";
 import { type Book, bookRefOf } from "#entities/book";
 import { type NoteId, TagList, useNote } from "#entities/note";
+import { Link } from "#shared/ui";
 // eslint-disable-next-line import-access/jsdoc
 import { NoteContents } from "~/entities/note/ui/contents";
 import { openNoteInModal } from "~/features/note-modal";
