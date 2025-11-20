@@ -1,18 +1,14 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import preview from "~/../.storybook/preview";
 import { createRandomBook, defaultBook } from "~/entities/book/dev";
 import { BookSettingsPage } from "./page";
 
-const meta = {
+const meta = preview.meta({
   component: BookSettingsPage,
-} satisfies Meta<typeof BookSettingsPage>;
+});
 
-export default meta;
-
-type Story = StoryObj<typeof meta>;
-
-export const Default: Story = {
+export const Default = meta.story({
   loaders: () => ({
     args: { book: createRandomBook() },
   }),
   args: { book: defaultBook },
-};
+});

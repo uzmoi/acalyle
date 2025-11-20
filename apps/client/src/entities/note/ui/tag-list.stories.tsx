@@ -1,22 +1,20 @@
 import { style } from "@acalyle/css";
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import preview from "~/../.storybook/preview";
 import type { Tag } from "~/entities/tag";
 import { TagList } from "./tag-list";
 
-export default {
+const meta = preview.meta({
   title: "Note / TagList",
   component: TagList,
-} satisfies Meta<typeof TagList>;
+});
 
-type Story = StoryObj<typeof TagList>;
-
-export const Tags: Story = {
+export const Tags = meta.story({
   args: {
     tags: ["#tag1", "@tag2", "@tag3:hoge"] as Tag[],
   },
-};
+});
 
-export const ManyTags: Story = {
+export const ManyTags = meta.story({
   args: {
     tags: [
       "#tag1",
@@ -30,4 +28,4 @@ export const ManyTags: Story = {
     ] as Tag[],
     className: style({ width: "24em" }),
   },
-};
+});

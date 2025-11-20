@@ -1,18 +1,21 @@
+// oxlint-disable-next-line no-unassigned-import
 import "@acalyle/ui/dist/style.css";
 // eslint-disable-next-line import/no-unresolved
+// oxlint-disable-next-line no-unassigned-import
 import "virtual:uno.css";
 
-import type { Preview } from "@storybook/react-vite";
+import { definePreview } from "@storybook/react-vite";
 import { faker } from "@faker-js/faker";
 import { xxHash32 } from "js-xxhash";
 import {
-  withThemeProvider,
-  withTanstackRouter,
-  lightBg,
   darkBg,
+  lightBg,
+  withTanstackRouter,
+  withThemeProvider,
 } from "../src/app/dev";
 
-const preview: Preview = {
+const preview = definePreview({
+  addons: [],
   parameters: {
     controls: {
       matchers: {
@@ -41,6 +44,7 @@ const preview: Preview = {
   beforeEach({ id }) {
     faker.seed(xxHash32(id));
   },
-};
+});
 
+/** @public */
 export default preview;
