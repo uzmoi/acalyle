@@ -1,6 +1,6 @@
 import { tagResolver } from "@acalyle/css/tag-resolver";
 import nitrogql from "@nitrogql/rollup-plugin";
-import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
+import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react-swc";
 import wywInJS from "@wyw-in-js/vite";
 import unocss from "unocss/vite";
@@ -13,7 +13,7 @@ type WyWinJS = typeof wywInJS.default;
 
 export default defineConfig({
   plugins: [
-    TanStackRouterVite(),
+    tanstackRouter(),
     react(),
     unocss(),
     {
