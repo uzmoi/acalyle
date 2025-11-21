@@ -1,10 +1,10 @@
 {
-    "extends": "./tsconfig.base.json",
-    "compilerOptions": {
-        "module": "NodeNext",
-        "moduleResolution": "NodeNext",
-        "verbatimModuleSyntax": false,
-        "resolveJsonModule": true,
-        "types": ["node"],
-    },
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "verbatimModuleSyntax": false,
+    "resolveJsonModule": true,
+    "types": ["node"],
+  },
 }
