@@ -1,6 +1,5 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { faker } from "@faker-js/faker";
-import type { Tag } from "~/entities/tag";
+import type { Tag } from "#entities/tag";
 import type { Note, NoteId } from "../model";
 
 /** @public */

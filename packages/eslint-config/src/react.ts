@@ -2,7 +2,7 @@ import type { Linter } from "eslint";
 import { defineConfig } from "eslint/config";
 import reactPlugin from "eslint-plugin-react";
 import testingLibraryPlugin from "eslint-plugin-testing-library";
-import { OFF, warn, WARN } from "./util";
+import { OFF, WARN, warn } from "./util";
 
 export const react: Linter.Config[] = [
   reactPlugin.configs.flat.recommended,
@@ -12,6 +12,7 @@ export const react: Linter.Config[] = [
       react: { version: "detect" },
     },
     rules: {
+      "react/display-name": OFF,
       "react/prop-types": OFF,
     },
   },
