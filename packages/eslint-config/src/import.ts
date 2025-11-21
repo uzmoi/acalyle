@@ -22,7 +22,7 @@ export const importConfig: Linter.Config[] = [
       "import/no-relative-packages": ERROR,
       "import/no-extraneous-dependencies": error({
         devDependencies: [
-          "**/*.{test,test-d,stories}.*",
+          "**/*.{test,test-d,stories,dev}.*",
           "**/dev/**",
           "!**/src/**",
         ],
