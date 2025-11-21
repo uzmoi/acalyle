@@ -3,14 +3,14 @@ parallel = true
 
 [pre-commit.commands.oxlint]
 glob = "*.{ts,tsx}"
-run = "npx oxlint --deny-warnings {staged_files}"
+run = "pnpm exec oxlint --deny-warnings {staged_files}"
 
 [pre-commit.commands.markuplint]
 glob = "*.tsx"
-run = "npx markuplint --problem-only {staged_files}"
+run = "pnpm exec markuplint --problem-only {staged_files}"
 
 [pre-commit.commands.prettier]
-run = "npx prettier --check --ignore-unknown {staged_files}"
+run = "pnpm exec prettier --check --ignore-unknown {staged_files}"
 
 [pre-commit.commands.cSpell]
-run = "npx cspell lint --no-progress --no-must-find-files {staged_files}"
+run = "pnpm exec cspell lint --no-progress --no-must-find-files {staged_files}"
