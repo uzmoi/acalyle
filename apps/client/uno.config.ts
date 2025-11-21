@@ -1,9 +1,4 @@
-import {
-  type Extractor,
-  defineConfig,
-  presetMini,
-  transformerCompileClass,
-} from "unocss";
+import { type Extractor, defineConfig, transformerCompileClass } from "unocss";
 
 const extractor: Extractor = {
   name: "@acalyle/extractor-compile-class",
@@ -23,7 +18,6 @@ const extractor: Extractor = {
 };
 
 export default defineConfig({
-  presets: [presetMini()],
   extractorDefault: extractor,
   transformers: [transformerCompileClass()],
 });
