@@ -1,3 +1,9 @@
+minimumReleaseAge: 10080 # 1 week
+
+publicHoistPattern:
+  - "@typescript/*"
+  - "@nitrogql/*"
+
 packages:
   - "apps/*"
   - "packages/*"
