@@ -66,6 +66,7 @@ export default defineConfig({
     },
   },
   test: {
+    reporters: [["junit", { outputFile: "coverage/test-report.junit.xml" }]],
     environment: "happy-dom",
     setupFiles: ["@testing-library/jest-dom/vitest", "vitest.setup.ts"],
     coverage: {
