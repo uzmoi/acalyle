@@ -154,5 +154,7 @@ jobs:
           key: ${{ runner.os }}-turbo-${{ needs.prepare.outputs.turbo-hash }}
           fail-on-cache-miss: true
 
+      - run: npm run codegen -- --output-logs=new-only
+
       - run: pnpm build
         working-directory: apps/client
