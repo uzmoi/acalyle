@@ -5,6 +5,9 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   prepare:
     runs-on: ubuntu-latest
@@ -68,7 +71,15 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4 # cspell:word codecov
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: ${{ steps.coverage_files.outputs.files }}
+
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: apps/client/coverage/test-report.junit.xml
   lint:
     needs: prepare
     runs-on: ubuntu-latest
@@ -124,3 +135,31 @@ jobs:
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           workingDir: apps/client
+  build:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - uses: actions/cache/restore@v4
+        with:
+          path: |
+            node_modules/.cache/turbo
+            **/.turbo
+          key: ${{ runner.os }}-turbo-${{ needs.prepare.outputs.turbo-hash }}
+          fail-on-cache-miss: true
+
+      - run: npm run codegen -- --output-logs=new-only
+
+      - run: pnpm build
+        working-directory: apps/client
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

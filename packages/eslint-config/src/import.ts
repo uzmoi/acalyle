@@ -21,7 +21,11 @@ export const importConfig: Linter.Config[] = [
       "import/no-unresolved": ERROR,
       "import/no-relative-packages": ERROR,
       "import/no-extraneous-dependencies": error({
-        devDependencies: ["**/*.{test,test-d,stories}.*", "!**/src/**"],
+        devDependencies: [
+          "**/*.{test,test-d,stories,dev}.*",
+          "**/dev/**",
+          "!**/src/**",
+        ],
       }),
       "import/extensions": error("ignorePackages", {
         js: never,
@@ -48,7 +52,7 @@ export const importConfig: Linter.Config[] = [
         ],
         pathGroups: [{ pattern: "~/**", group: "internal" }],
         alphabetize: { order: "asc" },
-        ["newlines-between"]: never,
+        "newlines-between": never,
       }),
     },
   },

@@ -1,6 +1,7 @@
 import { tagResolver } from "@acalyle/css/tag-resolver";
+import { codecovVitePlugin } from "@codecov/vite-plugin";
 import nitrogql from "@nitrogql/rollup-plugin";
-import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
+import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react-swc";
 import wywInJS from "@wyw-in-js/vite";
 import unocss from "unocss/vite";
@@ -13,7 +14,7 @@ type WyWinJS = typeof wywInJS.default;
 
 export default defineConfig({
   plugins: [
-    TanStackRouterVite(),
+    tanstackRouter(),
     react(),
     unocss(),
     {
@@ -36,6 +37,11 @@ export default defineConfig({
     nitrogql({ include: ["**/*.graphql"] }),
     !isStorybook &&
       dts({ tsconfigPath: "tsconfig.main.json", rollupTypes: true }),
+    codecovVitePlugin({
+      enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
+      bundleName: "@acalyle/client",
+      uploadToken: process.env.CODECOV_TOKEN,
+    }),
   ],
   resolve: {
     alias: { "~/": `${__dirname}/src/` },
@@ -60,6 +66,7 @@ export default defineConfig({
     },
   },
   test: {
+    reporters: [["junit", { outputFile: "coverage/test-report.junit.xml" }]],
     environment: "happy-dom",
     setupFiles: ["@testing-library/jest-dom/vitest", "vitest.setup.ts"],
     coverage: {

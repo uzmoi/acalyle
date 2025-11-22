@@ -5,6 +5,8 @@ import "@acalyle/ui/dist/style.css";
 import "virtual:uno.css";
 
 import { definePreview } from "@storybook/react-vite";
+import addonA11y from "@storybook/addon-a11y";
+import addonDocs from "@storybook/addon-docs";
 import { faker } from "@faker-js/faker";
 import { xxHash32 } from "js-xxhash";
 import {
@@ -12,10 +14,10 @@ import {
   lightBg,
   withTanstackRouter,
   withThemeProvider,
-} from "../src/app/dev";
+} from "#app/dev";
 
 const preview = definePreview({
-  addons: [],
+  addons: [addonA11y(), addonDocs()],
   parameters: {
     controls: {
       matchers: {

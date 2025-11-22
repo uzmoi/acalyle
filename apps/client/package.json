@@ -13,7 +13,7 @@
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "codegen": "tsr generate && nitrogql generate",
-    "storybook": "storybook dev -p 6006",
+    "storybook": "BROWSER=none storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
   "imports": {
@@ -47,6 +47,7 @@
     "@acalyle/server": "workspace:*",
     "@babel/preset-typescript": "^7.26.0",
     "@chromatic-com/storybook": "^4.1.2",
+    "@codecov/vite-plugin": "^1.9.1",
     "@faker-js/faker": "^9.9.0",
     "@graphql-typed-document-node/core": "^3.2.0",
     "@nitrogql/cli": "^1.7.0",

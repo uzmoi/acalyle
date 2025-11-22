@@ -1,8 +1,8 @@
 {
-    "extends": "./tsconfig.base.json",
-    "compilerOptions": {
-        "lib": ["ESNext", "DOM", "DOM.Iterable"],
-        "module": "ESNext",
-        "types": [],
-    },
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "types": [],
+  },
 }

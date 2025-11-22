@@ -11,12 +11,14 @@
     "editor.defaultFormatter": "tombi-toml.tombi",
   },
   "files.watcherExclude": {
-    "**/routeTree.gen.ts": true,
+    "**/*.gen.ts": true,
     "**/target": true,
   },
   "files.readonlyInclude": {
-    "**/routeTree.gen.ts": true,
+    "**/*.gen.ts": true,
     "**/target": true,
+    "**/*.d.graphql.ts": true,
+    "**/*.d.graphql.ts.map": true,
   },
   "explorer.fileNesting.patterns": {
     "*.graphql": "${capture}.d.graphql.ts, ${capture}.d.graphql.ts.map",

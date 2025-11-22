@@ -219,7 +219,7 @@
     },
     {
       "files": [
-        "**/*.{config,stories}.*",
+        "**/*.{config,stories,dev}.*",
         "**/.storybook/**",
         "**/dev/**",
         "**/*.test.*",

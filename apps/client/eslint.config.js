@@ -2,7 +2,7 @@
 
 import { createConfig, warn } from "@acalyle/eslint-config";
 import unocss from "@unocss/eslint-config/flat";
-import storybook from "eslint-plugin-storybook";
+import * as storybook from "eslint-plugin-storybook";
 
 /** @type {import("eslint").Linter.Config[]} */
 export default [

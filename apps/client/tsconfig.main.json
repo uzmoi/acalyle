@@ -1,20 +1,26 @@
 {
-    "extends": "@acalyle/tsconfig/tsconfig.web.json",
-    "include": ["src"],
-    "exclude": ["**/*.test.*", "**/*.test-d.*", "**/*.stories.*"],
-    "compilerOptions": {
-        "jsx": "react-jsx",
-        "lib": ["DOM", "DOM.Iterable", "ESNext"],
-        "baseUrl": "./",
-        "paths": { "~/*": ["./src/*"] },
-        "allowArbitraryExtensions": true,
-        "noEmit": false,
-        "composite": true,
-        "plugins": [
-            {
-                "name": "eslint-plugin-import-access",
-                "jsdoc": { "defaultImportability": "package" },
-            }
-        ]
-    },
+  "extends": "@acalyle/tsconfig/tsconfig.web.json",
+  "include": ["src"],
+  "exclude": [
+    "**/dev/**",
+    "**/*.dev.*",
+    "**/*.test.*",
+    "**/*.test-d.*",
+    "**/*.stories.*",
+  ],
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "baseUrl": "./",
+    "paths": { "~/*": ["./src/*"] },
+    "allowArbitraryExtensions": true,
+    "noEmit": false,
+    "composite": true,
+    "plugins": [
+      {
+        "name": "eslint-plugin-import-access",
+        "jsdoc": { "defaultImportability": "package" },
+      },
+    ],
+  },
 }

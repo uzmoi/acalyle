@@ -1,9 +1,9 @@
 {
-    "extends": "./tsconfig.main.json",
-    "files": [".storybook/preview.tsx"],
-    "include": ["src"],
-    "exclude": [],
-    "compilerOptions": {
-        "types": ["@testing-library/jest-dom"]
-    }
+  "extends": "./tsconfig.main.json",
+  "files": [".storybook/preview.tsx"],
+  "include": ["src"],
+  "exclude": [],
+  "compilerOptions": {
+    "types": ["@testing-library/jest-dom"],
+  },
 }
