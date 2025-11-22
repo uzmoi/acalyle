@@ -1,4 +1,5 @@
 import { tagResolver } from "@acalyle/css/tag-resolver";
+import { codecovVitePlugin } from "@codecov/vite-plugin";
 import nitrogql from "@nitrogql/rollup-plugin";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react-swc";
@@ -36,6 +37,11 @@ export default defineConfig({
     nitrogql({ include: ["**/*.graphql"] }),
     !isStorybook &&
       dts({ tsconfigPath: "tsconfig.main.json", rollupTypes: true }),
+    codecovVitePlugin({
+      enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
+      bundleName: "@acalyle/client",
+      uploadToken: process.env.CODECOV_TOKEN,
+    }),
   ],
   resolve: {
     alias: { "~/": `${__dirname}/src/` },

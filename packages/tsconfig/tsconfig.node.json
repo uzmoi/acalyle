@@ -6,5 +6,6 @@
     "verbatimModuleSyntax": false,
     "resolveJsonModule": true,
     "types": ["node"],
+    "exactOptionalPropertyTypes": false,
   },
 }
