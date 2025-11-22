@@ -132,3 +132,27 @@ jobs:
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           workingDir: apps/client
+  build:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - uses: actions/cache/restore@v4
+        with:
+          path: |
+            node_modules/.cache/turbo
+            **/.turbo
+          key: ${{ runner.os }}-turbo-${{ needs.prepare.outputs.turbo-hash }}
+          fail-on-cache-miss: true
+
+      - run: pnpm build
+        working-directory: apps/client
