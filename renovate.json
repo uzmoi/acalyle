@@ -24,6 +24,7 @@
     "dependencyDashboardApproval": false
   },
   "packageRules": [
-    { "groupName": "markuplint", "matchPackageNames": ["/markuplint/"] }
+    { "groupName": "markuplint", "matchPackageNames": ["/markuplint/"] },
+    { "groupName": "actions", "matchManagers": ["github-actions"] }
   ]
 }
