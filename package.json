@@ -29,7 +29,7 @@
     "markuplint": "^4.13.1",
     "oxlint": "^1.19.0",
     "prettier": "^3.6.2",
-    "turbo": "^1.10.16",
+    "turbo": "^1.13.4",
     "typescript": "5.8.2"
   }
 }
