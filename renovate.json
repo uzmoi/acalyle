@@ -3,6 +3,10 @@
   "extends": ["config:recommended"],
   "minimumReleaseAge": "7 days",
   "labels": ["dependencies"],
+  "automergeStrategy": "squash",
   "rangeStrategy": "bump",
-  "packageRules": [{ "groupName": "patch", "matchUpdateTypes": ["patch"] }]
+  "patch": { "groupName": "patch" },
+  "packageRules": [
+    { "groupName": "markuplint", "matchPackageNames": ["/markuplint/"] }
+  ]
 }
