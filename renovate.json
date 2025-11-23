@@ -1,6 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", ":automergePatch"],
+  "extends": [
+    "config:recommended",
+    ":automergePatch",
+    ":dependencyDashboardApproval"
+  ],
   "minimumReleaseAge": "7 days",
   "labels": ["dependencies"],
   "automergeStrategy": "squash",
