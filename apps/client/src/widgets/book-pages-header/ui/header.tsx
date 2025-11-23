@@ -2,7 +2,7 @@ import { LuSettings } from "react-icons/lu";
 import { Link } from "#shared/ui";
 import { type Book, bookRefOf } from "~/entities/book";
 
-export const BookHeader: React.FC<{
+export const BookPagesHeader: React.FC<{
   book: Book;
 }> = ({ book }) => {
   return (

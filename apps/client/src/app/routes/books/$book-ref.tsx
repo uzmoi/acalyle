@@ -5,16 +5,16 @@ import {
   useLoaderData,
   useParams,
 } from "@tanstack/react-router";
+import { type BookRef, fetchBookByRef } from "#entities/book";
 import { Link } from "#shared/ui";
-import { type BookRef, fetchBookByRef } from "~/entities/book";
-import { BookHeader } from "~/pages/book";
+import { BookPagesHeader } from "#widgets/book-pages-header";
 
 const LayoutComponent: React.FC = () => {
   const { book } = useLoaderData({ from: Route.fullPath });
 
   return (
     <main className=":uno: px-8 py-4">
-      <BookHeader book={book} />
+      <BookPagesHeader book={book} />
       <hr className=":uno: my-2 border-gray-7 border-none border-t-solid" />
       <Outlet />
     </main>
