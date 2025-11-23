@@ -13,6 +13,10 @@
     "groupName": "patch",
     "extends": ["schedule:weekly"]
   },
+  "vulnerabilityAlerts": {
+    "groupName": "vulnerability",
+    "dependencyDashboardApproval": false
+  },
   "packageRules": [
     { "groupName": "markuplint", "matchPackageNames": ["/markuplint/"] }
   ]
