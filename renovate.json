@@ -1,5 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
-  "minimumReleaseAge": "7 days"
+  "minimumReleaseAge": "7 days",
+  "labels": ["dependencies"],
+  "automergeStrategy": "squash",
+  "rangeStrategy": "bump",
+  "patch": { "groupName": "patch" },
+  "packageRules": [
+    { "groupName": "markuplint", "matchPackageNames": ["/markuplint/"] }
+  ]
 }
