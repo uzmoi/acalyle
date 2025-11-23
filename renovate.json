@@ -17,7 +17,10 @@
     ]
   },
   "vulnerabilityAlerts": {
-    "groupName": "vulnerability",
+    "packageRules": [
+      { "groupName": "vulnerability-npm", "matchManagers": ["npm"] },
+      { "groupName": "vulnerability-cargo", "matchManagers": ["cargo"] }
+    ],
     "dependencyDashboardApproval": false
   },
   "packageRules": [
