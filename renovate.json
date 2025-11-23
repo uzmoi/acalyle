@@ -2,6 +2,7 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended",
+    "schedule:weekly",
     ":automergePatch",
     ":dependencyDashboardApproval"
   ],
@@ -10,14 +11,20 @@
   "automergeStrategy": "squash",
   "rangeStrategy": "bump",
   "patch": {
-    "groupName": "patch",
-    "extends": ["schedule:weekly"]
+    "packageRules": [
+      { "groupName": "patch-npm", "matchManagers": ["npm"] },
+      { "groupName": "patch-cargo", "matchManagers": ["cargo"] }
+    ]
   },
   "vulnerabilityAlerts": {
-    "groupName": "vulnerability",
+    "packageRules": [
+      { "groupName": "vulnerability-npm", "matchManagers": ["npm"] },
+      { "groupName": "vulnerability-cargo", "matchManagers": ["cargo"] }
+    ],
     "dependencyDashboardApproval": false
   },
   "packageRules": [
-    { "groupName": "markuplint", "matchPackageNames": ["/markuplint/"] }
+    { "groupName": "markuplint", "matchPackageNames": ["/markuplint/"] },
+    { "groupName": "actions", "matchManagers": ["github-actions"] }
   ]
 }
