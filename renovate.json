@@ -1,11 +1,22 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
+  "extends": [
+    "config:recommended",
+    ":automergePatch",
+    ":dependencyDashboardApproval"
+  ],
   "minimumReleaseAge": "7 days",
   "labels": ["dependencies"],
   "automergeStrategy": "squash",
   "rangeStrategy": "bump",
-  "patch": { "groupName": "patch" },
+  "patch": {
+    "groupName": "patch",
+    "extends": ["schedule:weekly"]
+  },
+  "vulnerabilityAlerts": {
+    "groupName": "vulnerability",
+    "dependencyDashboardApproval": false
+  },
   "packageRules": [
     { "groupName": "markuplint", "matchPackageNames": ["/markuplint/"] }
   ]
