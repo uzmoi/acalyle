@@ -70,7 +70,7 @@
     "@wyw-in-js/vite": "^0.7.0",
     "babel-plugin-transform-vite-meta-env": "^1.0.3",
     "eslint-plugin-storybook": "10.0.7",
-    "happy-dom": "^18.0.1",
+    "happy-dom": "^20.0.0",
     "storybook": "^10.0.7",
     "unocss": "^66.5.1",
     "vite": "^7.1.5",
