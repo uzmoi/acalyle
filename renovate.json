@@ -5,7 +5,10 @@
   "labels": ["dependencies"],
   "automergeStrategy": "squash",
   "rangeStrategy": "bump",
-  "patch": { "groupName": "patch" },
+  "patch": {
+    "groupName": "patch",
+    "extends": ["schedule:weekly"]
+  },
   "packageRules": [
     { "groupName": "markuplint", "matchPackageNames": ["/markuplint/"] }
   ]
