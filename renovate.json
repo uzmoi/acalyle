@@ -10,8 +10,11 @@
   "automergeStrategy": "squash",
   "rangeStrategy": "bump",
   "patch": {
-    "groupName": "patch",
-    "extends": ["schedule:weekly"]
+    "extends": ["schedule:weekly"],
+    "packageRules": [
+      { "groupName": "patch-npm", "matchManagers": ["npm"] },
+      { "groupName": "patch-cargo", "matchManagers": ["cargo"] }
+    ]
   },
   "vulnerabilityAlerts": {
     "groupName": "vulnerability",
