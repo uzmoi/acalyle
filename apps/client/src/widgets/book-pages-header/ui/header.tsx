@@ -1,24 +1,21 @@
-import { LuSettings } from "react-icons/lu";
+import { type Book, bookRefOf } from "#entities/book";
 import { Link } from "#shared/ui";
-import { type Book, bookRefOf } from "~/entities/book";
 
 export const BookPagesHeader: React.FC<{
   book: Book;
 }> = ({ book }) => {
   return (
-    <header className=":uno: flex gap-4">
-      <div className=":uno: flex-1">
-        <h2 className=":uno: mb-2 text-3xl">{book.title}</h2>
-        <p className=":uno: text-xs text-gray-400">{book.description}</p>
-      </div>
-      <div>
+    <header>
+      <h2 className=":uno: text-2xl">
         <Link
-          to="/books/$book-ref/settings"
+          to="/books/$book-ref"
           params={{ "book-ref": bookRefOf(book) }}
+          className=":uno: decoration-none"
         >
-          <LuSettings size={24} title="Settings" />
+          {book.title}
         </Link>
-      </div>
+      </h2>
+      <p className=":uno: text-xs text-gray">{book.description}</p>
     </header>
   );
 };
