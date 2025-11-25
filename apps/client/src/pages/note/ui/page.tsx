@@ -1,6 +1,7 @@
-import type { Book } from "~/entities/book";
-import { type NoteId, useNote } from "~/entities/note";
-import { FullNote } from "~/widgets/note";
+import type { Book } from "#entities/book";
+import { type NoteId, useNote } from "#entities/note";
+import { BookPagesHeader } from "#widgets/book-pages-header";
+import { FullNote } from "#widgets/note";
 
 export const NotePage: React.FC<{
   book: Book;
@@ -9,7 +10,8 @@ export const NotePage: React.FC<{
   const note = useNote(noteId);
 
   return (
-    <div>
+    <main className=":uno: mx-auto max-w-screen-xl px-8 py-4">
+      <BookPagesHeader book={book} />
       {/* <Suspense>
         <Catch
           fallback={
@@ -31,6 +33,6 @@ export const NotePage: React.FC<{
       <FullNote bookId={book.id} note={note} />
       {/* </Catch>
       </Suspense> */}
-    </div>
+    </main>
   );
 };
