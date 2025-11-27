@@ -8,6 +8,7 @@ import { definePreview } from "@storybook/react-vite";
 import addonA11y from "@storybook/addon-a11y";
 import addonDocs from "@storybook/addon-docs";
 import { faker } from "@faker-js/faker";
+import { sb } from "storybook/test";
 import { xxHash32 } from "js-xxhash";
 import {
   darkBg,
@@ -15,6 +16,8 @@ import {
   withTanstackRouter,
   withThemeProvider,
 } from "#app/dev";
+
+sb.mock("../src/entities/note/model/hook.ts", { spy: true });
 
 const preview = definePreview({
   addons: [addonA11y(), addonDocs()],
