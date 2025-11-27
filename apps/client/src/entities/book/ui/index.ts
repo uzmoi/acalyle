@@ -1,0 +1,1 @@
+export { BookThumbnail } from "./thumbnail";

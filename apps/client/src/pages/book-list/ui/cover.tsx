@@ -1,8 +1,7 @@
 import { cx, style } from "@acalyle/css";
 import { theme } from "@acalyle/ui";
+import { type Book, BookThumbnail, bookRefOf } from "#entities/book";
 import { Link } from "#shared/ui";
-import { type Book, bookRefOf } from "~/entities/book";
-import { BookThumbnail } from "./thumbnail";
 
 export const BookCover: React.FC<{
   book: Book;

@@ -12,3 +12,5 @@ export {
   fetchBookByRef,
   useBookDetail,
 } from "./model";
+/** @public */
+export { BookThumbnail } from "./ui";
