@@ -1,38 +1,44 @@
+import { Catch, Spacer } from "@acalyle/ui";
+import { Suspense } from "react";
 import type { Book } from "#entities/book";
-import { type NoteId, useNote } from "#entities/note";
+import type { NoteId } from "#entities/note";
+import type { GqlFnError } from "#shared/graphql";
 import { BookPagesHeader } from "#widgets/book-pages-header";
-import { FullNote } from "#widgets/note";
+import { Alert } from "~/pages/book-list/ui/alert";
+import { Note } from "./note";
+
+const getErrorMessage = (error: unknown): string => {
+  if (error instanceof Error && error.cause) {
+    const err = error.cause as GqlFnError;
+
+    if (err.name === "NetworkError") {
+      return "ネットワークエラーが発生しました。インターネット環境をご確認ください。";
+    }
+  }
+
+  return "不明なエラーが発生しました。";
+};
 
 export const NotePage: React.FC<{
   book: Book;
   noteId: NoteId;
 }> = ({ book, noteId }) => {
-  const note = useNote(noteId);
-
   return (
     <main className=":uno: mx-auto max-w-screen-xl px-8 py-4">
       <BookPagesHeader book={book} />
-      {/* <Suspense>
+      <Spacer size={1} axis="horizontal" />
+      <Suspense>
         <Catch
-          fallback={
-            // REVIEW: role="alert"ってこういう所で使っていいものなのか
-            <Alert type="error">
-              <BiError
-                className={cx(
-                  ":uno: text-7 mr-1",
-                  style({ color: vars.color.danger }),
-                )}
-              />
-              <span className=":uno: align-middle">Note not found!</span>
-              <p>
-                note id: <span className=":uno: select-all">{noteId}</span>
-              </p>
-            </Alert>
-          }
-        > */}
-      <FullNote bookId={book.id} note={note} />
-      {/* </Catch>
-      </Suspense> */}
+          fallback={error => (
+            <Alert
+              title="ノートを取得できませんでした。"
+              detail={getErrorMessage(error)}
+            />
+          )}
+        >
+          <Note bookId={book.id} noteId={noteId} />
+        </Catch>
+      </Suspense>
     </main>
   );
 };
