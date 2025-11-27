@@ -1,29 +1,34 @@
-import { cx } from "@acalyle/css";
 import { resolveResource } from "../model";
 
 const COLOR_THUMBNAIL_PREFIX = "color:";
+const SIZE_SCALE = 4;
 
 export const BookThumbnail: React.FC<{
   thumbnail: string;
+  size?: number;
   className?: string;
-}> = ({ thumbnail, className }) => {
-  return (
-    <div className={cx(":uno: size-24 overflow-hidden", className)}>
-      {thumbnail.startsWith(COLOR_THUMBNAIL_PREFIX) ?
-        <svg width={96} height={96}>
-          <rect
-            width={96}
-            height={96}
-            fill={thumbnail.slice(COLOR_THUMBNAIL_PREFIX.length)}
-          />
-        </svg>
-      : <img
-          src={resolveResource(thumbnail).href}
-          alt="book thumbnail"
-          width={96}
-          height={96}
+}> = ({ thumbnail, size = 24, className }) => {
+  size *= SIZE_SCALE;
+
+  if (thumbnail.startsWith(COLOR_THUMBNAIL_PREFIX)) {
+    return (
+      <svg width={size} height={size} viewBox="0 0 1 1" className={className}>
+        <rect
+          width="1"
+          height="1"
+          fill={thumbnail.slice(COLOR_THUMBNAIL_PREFIX.length)}
         />
-      }
-    </div>
+      </svg>
+    );
+  }
+
+  return (
+    <img
+      src={resolveResource(thumbnail).href}
+      alt="book thumbnail"
+      width={size}
+      height={size}
+      className={className}
+    />
   );
 };
