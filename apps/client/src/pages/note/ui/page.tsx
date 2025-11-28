@@ -3,8 +3,8 @@ import { Suspense } from "react";
 import type { Book } from "#entities/book";
 import type { NoteId } from "#entities/note";
 import type { GqlFnError } from "#shared/graphql";
+import { Alert } from "#widgets/alert";
 import { BookPagesHeader } from "#widgets/book-pages-header";
-import { Alert } from "~/pages/book-list/ui/alert";
 import { Note } from "./note";
 
 const getErrorMessage = (error: unknown): string => {
