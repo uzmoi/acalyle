@@ -12,7 +12,11 @@
   "rangeStrategy": "bump",
   "patch": {
     "packageRules": [
-      { "groupName": "patch-npm", "matchManagers": ["npm"] },
+      {
+        "groupName": "patch-npm",
+        "matchManagers": ["npm"],
+        "dependencyDashboardApproval": false
+      },
       { "groupName": "patch-cargo", "matchManagers": ["cargo"] }
     ]
   },
@@ -24,6 +28,7 @@
     "dependencyDashboardApproval": false
   },
   "packageRules": [
+    { "groupName": "wyw-in-js", "matchPackageNames": ["/wyw-in-js/"] },
     { "groupName": "markuplint", "matchPackageNames": ["/markuplint/"] },
     { "groupName": "actions", "matchManagers": ["github-actions"] }
   ]
