@@ -1,25 +1,6 @@
-import {
-  Outlet,
-  createFileRoute,
-  notFound,
-  useLoaderData,
-  useParams,
-} from "@tanstack/react-router";
+import { createFileRoute, notFound, useParams } from "@tanstack/react-router";
+import { type BookRef, fetchBookByRef } from "#entities/book";
 import { Link } from "#shared/ui";
-import { type BookRef, fetchBookByRef } from "~/entities/book";
-import { BookHeader } from "~/pages/book";
-
-const LayoutComponent: React.FC = () => {
-  const { book } = useLoaderData({ from: Route.fullPath });
-
-  return (
-    <main className=":uno: px-8 py-4">
-      <BookHeader book={book} />
-      <hr className=":uno: my-2 border-gray-7 border-none border-t-solid" />
-      <Outlet />
-    </main>
-  );
-};
 
 const ErrorComponent: React.FC = () => {
   const { "book-ref": bookRef } = useParams({ from: Route.fullPath });
@@ -33,7 +14,6 @@ const ErrorComponent: React.FC = () => {
 };
 
 export const Route = /* #__PURE__ */ createFileRoute("/books/$book-ref")({
-  component: LayoutComponent,
   notFoundComponent: ErrorComponent,
   async loader({ params }) {
     const bookRef = params["book-ref"] as BookRef;

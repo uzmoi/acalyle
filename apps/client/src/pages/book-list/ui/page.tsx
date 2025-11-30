@@ -1,25 +1,12 @@
 import { Catch } from "@acalyle/ui";
 import { Suspense } from "react";
 import { BiBookAdd } from "react-icons/bi";
-import type { GqlFnError } from "#shared/graphql";
 import { Link } from "#shared/ui";
+import { Alert } from "#widgets/alert";
 import type { BooksPage as IBooksPage } from "../api";
-import { Alert } from "./alert";
 import { BooksPage } from "./books-page";
 import { SearchBar } from "./search-bar";
 import { BookShelfSkeleton } from "./shelf-skeleton";
-
-const getErrorMessage = (error: unknown): string => {
-  if (error instanceof Error && error.cause) {
-    const err = error.cause as GqlFnError;
-
-    if (err.name === "NetworkError") {
-      return "ネットワークエラーが発生しました。インターネット環境をご確認ください。";
-    }
-  }
-
-  return "不明なエラーが発生しました。";
-};
 
 export const BookListPage: React.FC<{
   query?: string | undefined;
@@ -36,10 +23,7 @@ export const BookListPage: React.FC<{
       </div>
       <Catch
         fallback={error => (
-          <Alert
-            title="本の一覧を取得できませんでした。"
-            detail={getErrorMessage(error)}
-          />
+          <Alert title="本の一覧を取得できませんでした。" error={error} />
         )}
       >
         <Suspense fallback={<BookShelfSkeleton />}>

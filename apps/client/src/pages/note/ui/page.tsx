@@ -1,36 +1,28 @@
-import type { Book } from "~/entities/book";
-import { type NoteId, useNote } from "~/entities/note";
-import { FullNote } from "~/widgets/note";
+import { Catch, Spacer } from "@acalyle/ui";
+import { Suspense } from "react";
+import type { Book } from "#entities/book";
+import type { NoteId } from "#entities/note";
+import { Alert } from "#widgets/alert";
+import { BookPagesHeader } from "#widgets/book-pages-header";
+import { Note } from "./note";
 
 export const NotePage: React.FC<{
   book: Book;
   noteId: NoteId;
 }> = ({ book, noteId }) => {
-  const note = useNote(noteId);
-
   return (
-    <div>
-      {/* <Suspense>
+    <main className=":uno: mx-auto max-w-screen-xl px-8 py-4">
+      <BookPagesHeader book={book} />
+      <Spacer size={1} axis="horizontal" />
+      <Suspense>
         <Catch
-          fallback={
-            // REVIEW: role="alert"ってこういう所で使っていいものなのか
-            <Alert type="error">
-              <BiError
-                className={cx(
-                  ":uno: text-7 mr-1",
-                  style({ color: vars.color.danger }),
-                )}
-              />
-              <span className=":uno: align-middle">Note not found!</span>
-              <p>
-                note id: <span className=":uno: select-all">{noteId}</span>
-              </p>
-            </Alert>
-          }
-        > */}
-      <FullNote bookId={book.id} note={note} />
-      {/* </Catch>
-      </Suspense> */}
-    </div>
+          fallback={error => (
+            <Alert title="ノートを取得できませんでした。" error={error} />
+          )}
+        >
+          <Note bookId={book.id} noteId={noteId} />
+        </Catch>
+      </Suspense>
+    </main>
   );
 };

@@ -15,7 +15,7 @@ export const defaultNote: Note = {
 export const createRandomNote = (): Note => {
   const id = faker.string.nanoid(16) as NoteId;
   const contents = faker.lorem.text();
-  const tags = faker.helpers.multiple(() => faker.word.noun() as Tag, {
+  const tags = faker.helpers.multiple(() => `#${faker.word.noun()}` as Tag, {
     count: { min: 0, max: 10 },
   });
   const createdAt = faker.date.past().toISOString();
