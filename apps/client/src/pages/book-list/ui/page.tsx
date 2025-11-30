@@ -2,7 +2,7 @@ import { Catch } from "@acalyle/ui";
 import { Suspense } from "react";
 import { BiBookAdd } from "react-icons/bi";
 import { Link } from "#shared/ui";
-import { Alert, getErrorMessage } from "#widgets/alert";
+import { Alert } from "#widgets/alert";
 import type { BooksPage as IBooksPage } from "../api";
 import { BooksPage } from "./books-page";
 import { SearchBar } from "./search-bar";
@@ -23,10 +23,7 @@ export const BookListPage: React.FC<{
       </div>
       <Catch
         fallback={error => (
-          <Alert
-            title="本の一覧を取得できませんでした。"
-            detail={getErrorMessage(error)}
-          />
+          <Alert title="本の一覧を取得できませんでした。" error={error} />
         )}
       >
         <Suspense fallback={<BookShelfSkeleton />}>

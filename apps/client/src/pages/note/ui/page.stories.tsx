@@ -1,5 +1,5 @@
 import { noop } from "es-toolkit";
-import { mocked } from "storybook/test";
+import { expect, mocked } from "storybook/test";
 import { createRandomBook, defaultBook } from "#entities/book/dev";
 import type { NoteId } from "#entities/note";
 import { createRandomNote } from "#entities/note/dev";
@@ -37,4 +37,11 @@ export const Loading = Default.extend({
 
 export const LoadingError = Default.extend({
   args: { noteId: "id-error" as NoteId },
+});
+
+export const LoadingErrorStacktraceOpened = LoadingError.extend({
+  async play({ canvas, userEvent }) {
+    await userEvent.click(canvas.getByText(/stacktrace/));
+    await expect(canvas.getByText(/Error:/)).toBeVisible();
+  },
 });

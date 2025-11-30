@@ -2,7 +2,7 @@ import { Catch, Spacer } from "@acalyle/ui";
 import { Suspense } from "react";
 import type { Book } from "#entities/book";
 import type { NoteId } from "#entities/note";
-import { Alert, getErrorMessage } from "#widgets/alert";
+import { Alert } from "#widgets/alert";
 import { BookPagesHeader } from "#widgets/book-pages-header";
 import { Note } from "./note";
 
@@ -17,10 +17,7 @@ export const NotePage: React.FC<{
       <Suspense>
         <Catch
           fallback={error => (
-            <Alert
-              title="ノートを取得できませんでした。"
-              detail={getErrorMessage(error)}
-            />
+            <Alert title="ノートを取得できませんでした。" error={error} />
           )}
         >
           <Note bookId={book.id} noteId={noteId} />

@@ -1,9 +1,11 @@
 import { LuCircleAlert } from "react-icons/lu";
+import { getErrorMessage } from "../model";
 
 export const Alert: React.FC<{
   title: string;
-  detail: string;
-}> = ({ title, detail }) => {
+  detail?: string;
+  error?: unknown;
+}> = ({ title, detail, error }) => {
   return (
     <section
       role="alert"
@@ -13,7 +15,17 @@ export const Alert: React.FC<{
         <LuCircleAlert size={24} />
         <span className=":uno: ml-2 text-base">{title}</span>
       </h2>
-      <p className=":uno: text-xs">{detail}</p>
+      <p className=":uno: text-xs">{detail ?? getErrorMessage(error)}</p>
+      {error instanceof Error && (
+        <details className=":uno: mt-2 open:">
+          <summary className=":uno: text-sm cursor-pointer">
+            Error stacktrace
+          </summary>
+          <pre className=":uno: text-xs p-2 text-start mx-auto w-fit max-w-full overflow-auto font-mono">
+            {error.stack ?? error.toString()}
+          </pre>
+        </details>
+      )}
     </section>
   );
 };
