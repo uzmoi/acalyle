@@ -26,7 +26,7 @@
     "eslint": "^9.23.0",
     "globals": "^13.24.0",
     "lefthook": "^1.13.6",
-    "markuplint": "^4.13.1",
+    "markuplint": "^4.14.0",
     "oxlint": "^1.19.0",
     "prettier": "^3.6.2",
     "turbo": "^1.13.4",
