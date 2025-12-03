@@ -15,8 +15,8 @@ export const BookShelfSkeleton: React.FC = () => (
         className={cx(
           ":uno: flex h-24 animate-pulse",
           style({
-            background: theme("bookOverview-bg"),
-            borderRadius: theme("bookOverview-round"),
+            background: theme("book_cover-bg"),
+            borderRadius: theme("book_cover-round"),
           }),
         )}
       />
