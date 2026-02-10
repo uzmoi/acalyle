@@ -16,12 +16,12 @@ export const handle = <T extends string>(
 ): BookHandle => handle as unknown as BookHandle;
 
 /** @public */
-export const defaultBook: Book = {
-  id: "id" as BookId,
+export const dummyBook: Book = {
+  id: "B0000000000000000" as BookId,
   title: "Title",
   handle: handle("handle"),
-  description: "description.",
-  thumbnail: "color:gray",
+  description: "",
+  thumbnail: "color:black",
 };
 
 /** @public */

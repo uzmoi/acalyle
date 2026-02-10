@@ -3,12 +3,12 @@ import type { Tag } from "#entities/tag";
 import type { Note, NoteId } from "../model";
 
 /** @public */
-export const defaultNote: Note = {
-  id: "id" as NoteId,
-  contents: "contents.\ncontents.",
-  tags: ["#tag" as Tag],
-  createdAt: "2022-11-06T13:00:00+09:00",
-  updatedAt: "2024-11-07T14:55:00+09:00",
+export const dummyNote: Note = {
+  id: "N0000000000000000" as NoteId,
+  contents: "",
+  tags: [],
+  createdAt: "1970-01-01T00:00:00Z",
+  updatedAt: "1970-01-01T00:00:00Z",
 };
 
 /** @public */

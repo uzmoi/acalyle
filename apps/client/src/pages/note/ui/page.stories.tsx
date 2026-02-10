@@ -1,6 +1,6 @@
 import { noop } from "es-toolkit";
 import { expect, mocked } from "storybook/test";
-import { createRandomBook, defaultBook } from "#entities/book/dev";
+import { createRandomBook, dummyBook } from "#entities/book/dev";
 import type { NoteId } from "#entities/note";
 import { createRandomNote } from "#entities/note/dev";
 import preview from "~/../.storybook/preview";
@@ -26,7 +26,7 @@ export const Default = meta.story({
     args: { book: createRandomBook() },
   }),
   args: {
-    book: defaultBook,
+    book: dummyBook,
     noteId: "id-default" as NoteId,
   },
 });

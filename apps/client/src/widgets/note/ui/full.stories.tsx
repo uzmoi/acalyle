@@ -1,6 +1,6 @@
 import type { BookId } from "#entities/book";
 import preview from "~/../.storybook/preview";
-import { createRandomNote, defaultNote } from "~/entities/note/dev";
+import { createRandomNote, dummyNote } from "~/entities/note/dev";
 import { FullNote } from "./full";
 
 const meta = preview.meta({
@@ -13,6 +13,6 @@ export const Default = meta.story({
   }),
   args: {
     bookId: "id" as BookId,
-    note: defaultNote,
+    note: dummyNote,
   },
 });
