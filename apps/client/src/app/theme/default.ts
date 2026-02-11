@@ -25,7 +25,7 @@ export const defaultTheme = createTheme({
   "control:hover": {
     text: theme("control-text"),
     bg: theme("control-bg"),
-    outline: "#AA66EE",
+    outline: "#8888DD",
   },
   "control:active": {
     text: theme("control-text"),
@@ -48,23 +48,24 @@ export const defaultTheme = createTheme({
 
   app: {
     text: "#DDDDDD",
-    bg: "#04080A",
+    bg: "#0e0e12",
   },
-  bookOverview: {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  book_cover: {
     text: "currentColor",
-    bg: "#10141A",
-    border: "#404040",
-    round: ".75rem",
+    bg: "#14141a",
+    border: "#1e1e28",
+    round: "0.5rem",
   },
   note: {
-    text: "#DDDDDD",
-    // bg: "#0A0C0E",
-    bg: "#0A0E12",
+    text: "currentColor",
+    bg: "#14141a",
+    outline: "#1e1e28",
   },
   tag: {
     text: "currentColor",
-    bg: "transparent",
-    outline: "#AA8888",
+    bg: "#041e40",
+    outline: "#486aa2",
   },
 });
 

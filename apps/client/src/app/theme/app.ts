@@ -3,7 +3,7 @@ export interface AppTheme {
   bg: string;
 }
 
-export interface BookOverviewTheme {
+export interface BookCoverTheme {
   text: string;
   bg: string;
   border: string;
@@ -13,6 +13,7 @@ export interface BookOverviewTheme {
 export interface NoteTheme {
   text: string;
   bg: string;
+  outline: string;
 }
 
 export interface TagTheme {
@@ -24,7 +25,8 @@ export interface TagTheme {
 declare module "@acalyle/ui" {
   interface Theme {
     app: AppTheme;
-    bookOverview: BookOverviewTheme;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    book_cover: BookCoverTheme;
     note: NoteTheme;
     tag: TagTheme;
   }

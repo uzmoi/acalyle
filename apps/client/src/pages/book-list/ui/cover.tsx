@@ -13,9 +13,9 @@ export const BookCover: React.FC<{
       className={cx(
         ":uno: relative h-24 flex overflow-hidden font-sans transition-[transform,color] focus-within:scale-102.5 hover:scale-102.5",
         style({
-          background: theme("bookOverview-bg"),
-          color: theme("bookOverview-text"),
-          borderRadius: theme("bookOverview-round"),
+          background: theme("book_cover-bg"),
+          color: theme("book_cover-text"),
+          borderRadius: theme("book_cover-round"),
         }),
       )}
     >
@@ -39,7 +39,7 @@ export const BookCover: React.FC<{
         <hr
           className={cx(
             ":uno: b-none b-t b-t-solid my-2",
-            style({ borderTopColor: theme("bookOverview-border") }),
+            style({ borderTopColor: theme("book_cover-border") }),
           )}
         />
         <p className=":uno: truncate text-xs text-gray">{book.description}</p>
