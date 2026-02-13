@@ -1,2 +1,2 @@
 /** @public */
-export { FullNote, NoteBody } from "./ui";
+export { FullNote, NoteBody, DetailedNoteView } from "./ui";
