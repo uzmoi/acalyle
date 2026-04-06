@@ -7,3 +7,6 @@ publicHoistPattern:
 packages:
   - "apps/*"
   - "packages/*"
+minimumReleaseAgeExclude:
+  # Renovate security update: vite@7.3.2
+  - vite@7.3.2
