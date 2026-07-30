@@ -7,3 +7,6 @@ publicHoistPattern:
 packages:
   - "apps/*"
   - "packages/*"
+minimumReleaseAgeExclude:
+  # Renovate security update: happy-dom@20.8.9
+  - happy-dom@20.8.9
