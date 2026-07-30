@@ -7,3 +7,6 @@ publicHoistPattern:
 packages:
   - "apps/*"
   - "packages/*"
+minimumReleaseAgeExclude:
+  # Renovate security update: valibot@1.4.2
+  - valibot@1.4.2
