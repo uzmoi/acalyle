@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsup src/index.ts --format esm --minify-syntax --sourcemap --dts",
+    "build": "tsdown src/index.ts --minify-syntax --sourcemap --dts",
     "check": "tsc",
     "test": "vitest",
     "coverage": "vitest run --coverage"
@@ -18,7 +18,7 @@
     "@acalyle/eslint-config": "workspace:*",
     "@acalyle/tsconfig": "workspace:*",
     "@vitest/coverage-v8": "^4.1.10",
-    "tsup": "^8.5.1",
+    "tsdown": "^0.22.14",
     "vitest": "^4.1.10"
   }
 }

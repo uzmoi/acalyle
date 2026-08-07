@@ -9,7 +9,7 @@
     "./processors/*": "./dist/processors/*"
   },
   "scripts": {
-    "build": "tsup",
+    "build": "tsdown",
     "check": "tsc"
   },
   "dependencies": {
@@ -20,6 +20,6 @@
   "devDependencies": {
     "@acalyle/eslint-config": "workspace:*",
     "@acalyle/tsconfig": "workspace:*",
-    "tsup": "^8.5.1"
+    "tsdown": "^0.22.14"
   }
 }

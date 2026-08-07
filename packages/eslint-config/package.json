@@ -5,7 +5,7 @@
   "sideEffects": false,
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsup src/index.ts --format esm --dts",
+    "build": "tsdown src/index.ts --dts",
     "check": "tsc",
     "test": "vitest",
     "coverage": "vitest run --coverage"
@@ -27,7 +27,7 @@
   "devDependencies": {
     "@acalyle/tsconfig": "workspace:*",
     "@vitest/coverage-v8": "^4.1.10",
-    "tsup": "^8.5.1",
+    "tsdown": "^0.22.14",
     "vitest": "^4.1.10"
   }
 }
