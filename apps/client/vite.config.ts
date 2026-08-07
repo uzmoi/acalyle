@@ -9,29 +9,17 @@ import { coverageConfigDefaults, defineConfig } from "vitest/config";
 
 const isStorybook = process.argv[1]?.includes("storybook");
 
-type WyWinJS = typeof wywInJS.default;
-
 export default defineConfig({
   plugins: [
     tanstackRouter(),
     react(),
     unocss(),
-    {
-      ...(wywInJS as unknown as WyWinJS)({
-        include: ["**/*.{ts,tsx}"],
-        babelOptions: {
-          presets: ["@babel/preset-typescript"],
-          plugins: ["transform-vite-meta-env"],
-        },
-        sourceMap: true,
-        features: {
-          dangerousCodeRemover: ["**/*"],
-        } as NonNullable<NonNullable<Parameters<WyWinJS>[0]>["features"]>,
-        classNameSlug: (hash, title, { name }) =>
-          `${title === "className" ? name : title}__${hash}`,
-      }),
-      enforce: "pre", // '/@react-refresh' を読もうとして失敗するので対策。
-    },
+    wywInJS({
+      include: ["**/*.{ts,tsx}"],
+      sourceMap: true,
+      classNameSlug: (hash, title, { name }) =>
+        `${title === "className" ? name : title}__${hash}`,
+    }),
     nitrogql({ include: ["**/*.graphql"] }),
     !isStorybook && dts({ tsconfig: "tsconfig.main.json" }),
     codecovVitePlugin({
