@@ -36,8 +36,8 @@
     "babel-plugin-transform-vite-meta-env": "^1.0.3",
     "happy-dom": "^20.11.1",
     "react-dom": "^19.2.0",
+    "rolldown-plugin-dts": "^0.27.14",
     "vite": "^8.2.0",
-    "vite-plugin-dts": "^5.0.3",
     "vitest": "^4.1.10"
   }
 }

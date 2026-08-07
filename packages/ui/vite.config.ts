@@ -1,6 +1,6 @@
 import react from "@vitejs/plugin-react";
 import wywInJS from "@wyw-in-js/vite";
-import dts from "vite-plugin-dts";
+import { dts } from "rolldown-plugin-dts";
 import { coverageConfigDefaults, defineConfig } from "vitest/config";
 import packageJson from "./package.json" with { type: "json" };
 
@@ -22,7 +22,7 @@ export default defineConfig({
       classNameSlug: (hash, title, { name }) =>
         `${title === "className" ? name : title}__${hash}`,
     }),
-    dts({ tsconfigPath: "tsconfig.main.json", rollupTypes: true }),
+    dts({ tsconfig: "tsconfig.main.json" }),
   ],
   build: {
     target: "esnext",

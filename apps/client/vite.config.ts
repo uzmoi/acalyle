@@ -4,7 +4,7 @@ import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react";
 import wywInJS from "@wyw-in-js/vite";
 import unocss from "unocss/vite";
-import dts from "vite-plugin-dts";
+import { dts } from "rolldown-plugin-dts";
 import { coverageConfigDefaults, defineConfig } from "vitest/config";
 
 const isStorybook = process.argv[1]?.includes("storybook");
@@ -33,8 +33,7 @@ export default defineConfig({
       enforce: "pre", // '/@react-refresh' を読もうとして失敗するので対策。
     },
     nitrogql({ include: ["**/*.graphql"] }),
-    !isStorybook &&
-      dts({ tsconfigPath: "tsconfig.main.json", rollupTypes: true }),
+    !isStorybook && dts({ tsconfig: "tsconfig.main.json" }),
     codecovVitePlugin({
       enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
       bundleName: "@acalyle/client",
