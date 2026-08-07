@@ -2,7 +2,7 @@ import { tagResolver } from "@acalyle/css/tag-resolver";
 import { codecovVitePlugin } from "@codecov/vite-plugin";
 import nitrogql from "@nitrogql/rollup-plugin";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
-import react from "@vitejs/plugin-react-swc";
+import react from "@vitejs/plugin-react";
 import wywInJS from "@wyw-in-js/vite";
 import unocss from "unocss/vite";
 import dts from "vite-plugin-dts";

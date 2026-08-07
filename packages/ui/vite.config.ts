@@ -1,5 +1,5 @@
 import { tagResolver } from "@acalyle/css/tag-resolver";
-import react from "@vitejs/plugin-react-swc";
+import react from "@vitejs/plugin-react";
 import wywInJS from "@wyw-in-js/vite";
 import dts from "vite-plugin-dts";
 import { coverageConfigDefaults, defineConfig } from "vitest/config";

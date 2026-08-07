@@ -65,7 +65,7 @@
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@unocss/eslint-config": "^66.5.9",
-    "@vitejs/plugin-react-swc": "^4.0.1",
+    "@vitejs/plugin-react": "^6.0.5",
     "@vitest/coverage-v8": "^4.1.10",
     "@wyw-in-js/vite": "^0.8.0",
     "babel-plugin-transform-vite-meta-env": "^1.0.3",
