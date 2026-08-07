@@ -1,3 +1,12 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+allowBuilds:
+  esbuild: false
+  lefthook: true
+  unrs-resolver: false
+
 minimumReleaseAge: 10080 # 1 week
 minimumReleaseAgeExclude:
   - asarina
@@ -9,7 +18,3 @@ patchedDependencies:
 publicHoistPattern:
   - "@typescript/*"
   - "@nitrogql/*"
-
-packages:
-  - "apps/*"
-  - "packages/*"
