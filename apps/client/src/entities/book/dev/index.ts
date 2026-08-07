@@ -8,20 +8,28 @@ type ValidHandleCharacter =
   | ("k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t")
   | ("u" | "v" | "w" | "x" | "y" | "z" | "_");
 
-type Handle<T extends string> =
-  T extends `${ValidHandleCharacter}${infer Rest}` | "" ? Handle<Rest> : T;
+type HandleCharError<T extends string> =
+  T extends `${ValidHandleCharacter}${infer Rest}` ? HandleCharError<Rest>
+  : T extends `${infer C}${string}` ? `'${C}' is an invalid character.`
+  : never;
 
-export const handle = <T extends string>(
-  handle: string extends T ? never : T & Handle<T>,
+type HandleError<T extends string> =
+  T extends `_${string}` ? "'_' cannot be used at the beginning."
+  : HandleCharError<T>;
+
+export const handle = <const T extends string>(
+  handle: string extends T ? never
+  : [HandleError<T>] extends [never] ? T
+  : HandleError<T>,
 ): BookHandle => handle as unknown as BookHandle;
 
 /** @public */
-export const defaultBook: Book = {
-  id: "id" as BookId,
+export const dummyBook: Book = {
+  id: "B0000000000000000" as BookId,
   title: "Title",
   handle: handle("handle"),
-  description: "description.",
-  thumbnail: "color:gray",
+  description: "",
+  thumbnail: "color:black",
 };
 
 /** @public */

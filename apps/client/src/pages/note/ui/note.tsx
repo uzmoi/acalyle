@@ -1,6 +1,6 @@
 import type { BookId } from "#entities/book";
 import { type NoteId, useNote } from "#entities/note";
-import { FullNote } from "#widgets/note";
+import { DetailedNoteView } from "#widgets/note";
 
 export const Note: React.FC<{
   bookId: BookId;
@@ -8,5 +8,5 @@ export const Note: React.FC<{
 }> = ({ bookId, noteId }) => {
   const note = useNote(noteId);
 
-  return <FullNote bookId={bookId} note={note} />;
+  return <DetailedNoteView bookId={bookId} note={note} />;
 };
