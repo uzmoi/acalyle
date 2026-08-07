@@ -1,5 +1,5 @@
-import { cx, style } from "@acalyle/css";
 import { Button, ControlGroup, TextArea, theme } from "@acalyle/ui";
+import { cx, style } from "asarina";
 import { useState } from "react";
 import type { NoteId } from "~/entities/note";
 import { updateNoteContents } from "../model";

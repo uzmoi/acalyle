@@ -1,5 +1,5 @@
-import { style } from "@acalyle/css";
 import { Button } from "@acalyle/ui";
+import { style } from "asarina";
 import { BiExpandAlt, BiX } from "react-icons/bi";
 import { Link } from "#shared/ui";
 import { useNote } from "~/entities/note";

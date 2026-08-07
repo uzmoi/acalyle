@@ -1,5 +1,5 @@
-import { cx, style } from "@acalyle/css";
 import { theme } from "@acalyle/ui";
+import { cx, style } from "asarina";
 import { type Book, BookThumbnail, bookRefOf } from "#entities/book";
 import { Link } from "#shared/ui";
 

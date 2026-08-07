@@ -1,4 +1,3 @@
-import { tagResolver } from "@acalyle/css/tag-resolver";
 import { codecovVitePlugin } from "@codecov/vite-plugin";
 import nitrogql from "@nitrogql/rollup-plugin";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
@@ -25,7 +24,6 @@ export default defineConfig({
           plugins: ["transform-vite-meta-env"],
         },
         sourceMap: true,
-        tagResolver,
         features: {
           dangerousCodeRemover: ["**/*"],
         } as NonNullable<NonNullable<Parameters<WyWinJS>[0]>["features"]>,

@@ -1,6 +1,6 @@
 /* eslint-disable pure-module/pure-module */
-import { style } from "@acalyle/css";
 import { createTheme, theme } from "@acalyle/ui";
+import { style } from "asarina";
 
 // TODO: とりあえずで設定してから開発中に弄るなどして乱雑無章なのでなんとかする。
 

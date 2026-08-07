@@ -1,4 +1,4 @@
-import { cx, style } from "@acalyle/css";
+import { cx, style } from "asarina";
 import { vars } from "../theme";
 
 export interface AlertProps extends Omit<React.ComponentProps<"div">, "role"> {

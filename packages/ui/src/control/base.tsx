@@ -1,5 +1,5 @@
 /* eslint-disable pure-module/pure-module */
-import { cx, style } from "@acalyle/css";
+import { cx, style } from "asarina";
 import { theme, varName } from "../theme";
 
 export const ControlGroup: React.FC<React.ComponentProps<"div">> = props => {

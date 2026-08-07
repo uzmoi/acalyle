@@ -1,4 +1,3 @@
-import { tagResolver } from "@acalyle/css/tag-resolver";
 import react from "@vitejs/plugin-react";
 import wywInJS from "@wyw-in-js/vite";
 import dts from "vite-plugin-dts";
@@ -17,7 +16,6 @@ export default defineConfig({
         plugins: ["transform-vite-meta-env"],
       },
       sourceMap: true,
-      tagResolver,
       features: {
         dangerousCodeRemover: ["**/*", "!**/src/theme/*"],
       } as NonNullable<NonNullable<Parameters<WyWinJS>[0]>["features"]>,

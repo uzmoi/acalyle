@@ -1,4 +1,4 @@
-import { cx, style } from "@acalyle/css";
+import { cx, style } from "asarina";
 import { useRef } from "react";
 import { theme } from "../theme";
 import { base } from "./base";

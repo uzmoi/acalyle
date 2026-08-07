@@ -1,5 +1,5 @@
-import { cx, style } from "@acalyle/css";
 import { base, theme } from "@acalyle/ui";
+import { cx, style } from "asarina";
 import { type UseLinkPropsOptions, useLinkProps } from "@tanstack/react-router";
 
 export interface LinkProps extends UseLinkPropsOptions {

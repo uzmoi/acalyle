@@ -1,5 +1,5 @@
 /* eslint-disable pure-module/pure-module */
-import { globalStyle } from "@acalyle/css";
+import { globalStyle } from "asarina";
 
 globalStyle("*, ::before, ::after", {
   boxSizing: "border-box",

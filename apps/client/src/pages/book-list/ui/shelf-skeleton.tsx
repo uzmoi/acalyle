@@ -1,5 +1,5 @@
-import { cx, style } from "@acalyle/css";
 import { theme } from "@acalyle/ui";
+import { cx, style } from "asarina";
 import { BOOKS_PER_PAGE } from "../model";
 
 export const BookShelfSkeleton: React.FC = () => (

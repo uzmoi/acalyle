@@ -4,7 +4,7 @@ import "@acalyle/ui/dist/style.css";
 // eslint-disable-next-line import/no-unresolved
 import "virtual:uno.css";
 
-import { globalStyle } from "@acalyle/css";
+import { globalStyle } from "asarina";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "~/app/app";

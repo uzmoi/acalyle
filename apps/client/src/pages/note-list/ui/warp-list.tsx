@@ -1,5 +1,5 @@
-import { cx, style } from "@acalyle/css";
 import { Intersection } from "@acalyle/ui";
+import { cx, style } from "asarina";
 import { useCallback } from "react";
 import type { Book } from "~/entities/book";
 import { $noteConnection } from "~/features/search-notes";
