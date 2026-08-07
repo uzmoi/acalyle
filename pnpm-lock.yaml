@@ -274,9 +274,6 @@ importers:
       '@vitest/coverage-v8':
         specifier: ^4.1.10
         version: 4.1.10(vitest@4.1.10)
-      tsdown:
-        specifier: ^0.22.14
-        version: 0.22.14(@volar/typescript@2.4.28)(tsx@4.20.5)(typescript@7.0.2)
       vitest:
         specifier: ^4.1.10
         version: 4.1.10(@types/node@26.1.2)(@vitest/coverage-v8@4.1.10)(happy-dom@20.11.1)(vite@8.2.0(@types/node@26.1.2)(esbuild@0.27.0)(jiti@2.6.1)(tsx@4.20.5)(yaml@2.8.1))
@@ -318,9 +315,6 @@ importers:
       '@vitest/coverage-v8':
         specifier: ^4.1.10
         version: 4.1.10(vitest@4.1.10)
-      tsdown:
-        specifier: ^0.22.14
-        version: 0.22.14(@volar/typescript@2.4.28)(tsx@4.20.5)(typescript@7.0.2)
       vitest:
         specifier: ^4.1.10
         version: 4.1.10(@types/node@26.1.2)(@vitest/coverage-v8@4.1.10)(happy-dom@20.11.1)(vite@8.2.0(@types/node@26.1.2)(esbuild@0.27.0)(jiti@2.6.1)(tsx@4.20.5)(yaml@2.8.1))
@@ -386,9 +380,6 @@ importers:
       '@vitest/coverage-v8':
         specifier: ^4.1.10
         version: 4.1.10(vitest@4.1.10)
-      tsdown:
-        specifier: ^0.22.14
-        version: 0.22.14(@volar/typescript@2.4.28)(tsx@4.20.5)(typescript@7.0.2)
       vitest:
         specifier: ^4.1.10
         version: 4.1.10(@types/node@26.1.2)(@vitest/coverage-v8@4.1.10)(happy-dom@20.11.1)(vite@8.2.0(@types/node@26.1.2)(esbuild@0.27.0)(jiti@2.6.1)(tsx@4.20.5)(yaml@2.8.1))

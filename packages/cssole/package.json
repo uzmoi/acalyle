@@ -3,10 +3,8 @@
   "name": "@acalyle/cssole",
   "type": "module",
   "sideEffects": false,
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "src/index.ts",
   "scripts": {
-    "build": "tsdown src/index.ts --minify-syntax --sourcemap --dts",
     "check": "tsc",
     "test": "vitest",
     "coverage": "vitest run --coverage"
@@ -18,7 +16,6 @@
     "@acalyle/eslint-config": "workspace:*",
     "@acalyle/tsconfig": "workspace:*",
     "@vitest/coverage-v8": "^4.1.10",
-    "tsdown": "^0.22.14",
     "vitest": "^4.1.10"
   }
 }
