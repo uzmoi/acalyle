@@ -1,4 +1,4 @@
-import { codecovVitePlugin } from "@codecov/vite-plugin";
+import { codecovVitePlugin as codecov } from "@codecov/vite-plugin";
 import nitrogql from "@nitrogql/rollup-plugin";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react";
@@ -27,10 +27,10 @@ export default defineConfig(({ command }) => ({
         tsconfigPath: "tsconfig.main.json",
         bundleTypes: true,
       }),
-    codecovVitePlugin({
-      enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
+    codecov({
+      enableBundleAnalysis: true,
       bundleName: "@acalyle/client",
-      uploadToken: process.env.CODECOV_TOKEN,
+      oidc: { useGitHubOIDC: true },
     }),
   ],
   resolve: {
