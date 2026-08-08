@@ -12,6 +12,9 @@ export default defineConfig(({ command }) => ({
       sourceMap: true,
       classNameSlug: (hash, title, { name }) =>
         `${title === "className" ? name : title}__${hash}`,
+      importOverrides: {
+        "@emotion/hash": { unknown: "allow" },
+      },
     }),
     command === "build" &&
       dts({
@@ -24,13 +27,13 @@ export default defineConfig(({ command }) => ({
     sourcemap: true,
     minify: false,
     lib: {
-      entry: "./src/index.ts",
+      entry: "src/index.ts",
       fileName: "index",
       cssFileName: "style",
       formats: ["es"],
     },
-    rollupOptions: {
-      external: [/^react(?![^/])/, ...Object.keys(packageJson.dependencies)],
+    rolldownOptions: {
+      external: [/^react/, ...Object.keys(packageJson.dependencies)],
     },
   },
   test: {

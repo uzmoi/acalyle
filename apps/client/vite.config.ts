@@ -19,6 +19,10 @@ export default defineConfig(({ command }) => ({
       sourceMap: true,
       classNameSlug: (hash, title, { name }) =>
         `${title === "className" ? name : title}__${hash}`,
+      importOverrides: {
+        "@emotion/hash": { unknown: "allow" },
+        react: { unknown: "allow" },
+      },
     }),
     nitrogql({ include: ["**/*.graphql"] }),
     command === "build" &&
@@ -27,23 +31,24 @@ export default defineConfig(({ command }) => ({
         tsconfigPath: "tsconfig.main.json",
         bundleTypes: true,
       }),
-    codecov({
-      enableBundleAnalysis: true,
-      bundleName: "@acalyle/client",
-      oidc: { useGitHubOIDC: true },
-    }),
+    command === "build" &&
+      codecov({
+        enableBundleAnalysis: !!process.env.CI,
+        bundleName: "@acalyle/client",
+        oidc: { useGitHubOIDC: true },
+      }),
   ],
   resolve: {
-    alias: { "~/": `${__dirname}/src/` },
+    tsconfigPaths: true,
   },
   build: {
     lib: {
-      entry: "./src/index.ts",
+      entry: "src/index.ts",
       fileName: "index",
       cssFileName: "style",
       formats: ["es"],
     },
-    rollupOptions: {
+    rolldownOptions: {
       external: [/^react/, /^react-dom/, /^@acalyle\/(?!ui\/dist\/style\.css)/],
     },
   },
