@@ -26,7 +26,7 @@ jobs:
 
       - id: turbo-hash
         run: |
-          hash=$(npm run codegen -- --dry=json | sha256sum | cut -d ' ' -f 1)
+          hash=$(pnpm codegen --dry=json | sha256sum | cut -d ' ' -f 1)
           echo "hash=$hash" >> $GITHUB_OUTPUT
 
       - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
@@ -35,7 +35,7 @@ jobs:
           key: ${{ runner.os }}-turbo-${{ steps.turbo-hash.outputs.hash }}
           restore-keys: ${{ runner.os }}-turbo-
 
-      - run: npm run codegen
+      - run: pnpm codegen
   test:
     needs: prepare
     runs-on: ubuntu-latest
@@ -57,7 +57,7 @@ jobs:
           key: ${{ runner.os }}-turbo-${{ needs.prepare.outputs.turbo-hash }}
           fail-on-cache-miss: true
 
-      - run: npm run coverage -- --output-logs=new-only
+      - run: pnpm coverage --output-logs=new-only
 
       - id: coverage_files
         run: |
@@ -97,7 +97,7 @@ jobs:
           key: ${{ runner.os }}-turbo-${{ needs.prepare.outputs.turbo-hash }}
           fail-on-cache-miss: true
 
-      - run: npm run lint -- --output-logs=new-only
+      - run: pnpm lint --output-logs=new-only
   chromatic:
     needs: prepare
     runs-on: ubuntu-latest
@@ -121,7 +121,7 @@ jobs:
           key: ${{ runner.os }}-turbo-${{ needs.prepare.outputs.turbo-hash }}
           fail-on-cache-miss: true
 
-      - run: npm run codegen -- --output-logs=new-only
+      - run: pnpm codegen --output-logs=new-only
 
       - name: Run Chromatic on @acalyle/client
       # cspell:ignore chromaui
@@ -149,7 +149,7 @@ jobs:
           key: ${{ runner.os }}-turbo-${{ needs.prepare.outputs.turbo-hash }}
           fail-on-cache-miss: true
 
-      - run: npm run codegen -- --output-logs=new-only
+      - run: pnpm codegen --output-logs=new-only
 
       - run: pnpm build
         working-directory: apps/client
