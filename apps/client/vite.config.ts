@@ -4,12 +4,12 @@ import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react";
 import wywInJS from "@wyw-in-js/vite";
 import unocss from "unocss/vite";
-import { dts } from "rolldown-plugin-dts";
+import dts from "unplugin-dts/vite";
 import { coverageConfigDefaults, defineConfig } from "vitest/config";
 
 const isStorybook = process.argv[1]?.includes("storybook");
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [
     tanstackRouter(),
     react(),
@@ -21,7 +21,12 @@ export default defineConfig({
         `${title === "className" ? name : title}__${hash}`,
     }),
     nitrogql({ include: ["**/*.graphql"] }),
-    !isStorybook && dts({ tsconfig: "tsconfig.main.json" }),
+    command === "build" &&
+      !isStorybook &&
+      dts({
+        tsconfigPath: "tsconfig.main.json",
+        bundleTypes: true,
+      }),
     codecovVitePlugin({
       enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
       bundleName: "@acalyle/client",
@@ -63,4 +68,4 @@ export default defineConfig({
       ],
     },
   },
-});
+}));

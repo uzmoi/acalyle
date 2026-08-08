@@ -53,6 +53,7 @@ tsbuildinfo
 tsup
 typecheck
 unocss
+unplugin
 uploadables
 upsert
 uzmoi

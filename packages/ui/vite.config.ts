@@ -1,10 +1,10 @@
 import react from "@vitejs/plugin-react";
 import wywInJS from "@wyw-in-js/vite";
-import { dts } from "rolldown-plugin-dts";
+import dts from "unplugin-dts/vite";
 import { coverageConfigDefaults, defineConfig } from "vitest/config";
 import packageJson from "./package.json" with { type: "json" };
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [
     react(),
     wywInJS({
@@ -13,7 +13,11 @@ export default defineConfig({
       classNameSlug: (hash, title, { name }) =>
         `${title === "className" ? name : title}__${hash}`,
     }),
-    dts({ tsconfig: "tsconfig.main.json" }),
+    command === "build" &&
+      dts({
+        tsconfigPath: "tsconfig.main.json",
+        bundleTypes: true,
+      }),
   ],
   build: {
     target: "esnext",
@@ -37,4 +41,4 @@ export default defineConfig({
       exclude: [...coverageConfigDefaults.exclude, "**/*.stories.tsx"],
     },
   },
-});
+}));

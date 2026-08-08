@@ -25,6 +25,7 @@
   "devDependencies": {
     "@acalyle/eslint-config": "workspace:*",
     "@acalyle/tsconfig": "workspace:*",
+    "@microsoft/api-extractor": "^7.58.12",
     "@testing-library/jest-dom": "^6.6.4",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
@@ -34,7 +35,7 @@
     "@wyw-in-js/vite": "^2.3.1",
     "happy-dom": "^20.11.1",
     "react-dom": "^19.2.0",
-    "rolldown-plugin-dts": "^0.27.14",
+    "unplugin-dts": "^1.0.3",
     "vite": "^8.2.0",
     "vitest": "^4.1.10"
   }
