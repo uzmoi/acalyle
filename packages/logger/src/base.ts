@@ -10,6 +10,8 @@ export type Transport<in M, in L, in MetaData = undefined> = {
   transport(log: Log<M, L, MetaData>): void;
 };
 
+declare const console: { error(...data: unknown[]): void };
+
 export abstract class Logger<
   in Message,
   in Level,
@@ -28,13 +30,7 @@ export abstract class Logger<
       try {
         transport.transport(log);
       } catch (error) {
-        type Console = { error(...data: unknown[]): void };
-        // @ts-expect-error: consoleぐらいどのランタイムにも有る
-        (console as Console).error(
-          "Uncaught (in transport) Error:",
-          error,
-          transport,
-        );
+        console.error("Uncaught (in transport) Error:", error, transport);
       }
     }
   }
