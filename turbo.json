@@ -1,5 +1,6 @@
 {
   "$schema": "https://v2-10-8.turborepo.dev/schema.json",
+  "cacheMaxAge": "2w",
   "tasks": {
     "codegen": {
       "dependsOn": ["^build"],
