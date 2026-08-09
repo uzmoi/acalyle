@@ -18,8 +18,6 @@
   "devDependencies": {
     "@acalyle/eslint-config": "workspace:*",
     "@acalyle/tsconfig": "workspace:*",
-    "@markuplint/jsx-parser": "^4.18.3",
-    "@markuplint/react-spec": "^4.18.0",
     "@types/node": "^26.1.2",
     "@typescript/typescript6": "^6.0.2",
     "better-typescript-lib": "^2.12.0",
@@ -27,7 +25,6 @@
     "eslint": "^9.23.0",
     "globals": "^13.24.0",
     "lefthook": "^2.1.10",
-    "markuplint": "^4.18.3",
     "oxlint": "^1.19.0",
     "prettier": "^3.9.6",
     "turbo": "^2.10.8",

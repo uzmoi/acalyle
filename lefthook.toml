@@ -5,10 +5,6 @@ parallel = true
 glob = "*.{ts,tsx}"
 run = "pnpm exec oxlint --deny-warnings {staged_files}"
 
-[pre-commit.commands.markuplint]
-glob = "*.tsx"
-run = "pnpm exec markuplint --problem-only {staged_files}"
-
 [pre-commit.commands.prettier]
 run = "pnpm exec prettier --check --ignore-unknown {staged_files}"
 
