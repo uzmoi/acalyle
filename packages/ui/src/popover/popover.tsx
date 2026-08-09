@@ -14,10 +14,6 @@ import { Button } from "../control/button";
 import { theme } from "../theme";
 import { $popover } from "./store";
 
-// 全ては wyw-in-js のせい。
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const __vite_ssr_import_meta__ = { env: { DEV: true } };
-
 const PopoverIdContext = /* #__PURE__ */ createContext<string | undefined>(
   undefined,
 );
@@ -59,11 +55,10 @@ export const Popover: React.FC<PopoverProps> & {
   );
 };
 
-export interface PopoverButtonProps
-  extends Omit<
-    React.ComponentProps<typeof Button>,
-    "aria-expanded" | "aria-controls"
-  > {}
+export interface PopoverButtonProps extends Omit<
+  React.ComponentProps<typeof Button>,
+  "aria-expanded" | "aria-controls"
+> {}
 
 const PopoverButton: React.FC<PopoverButtonProps> = props => {
   const popoverId = useContext(PopoverIdContext);
@@ -100,8 +95,10 @@ if (import.meta.env.DEV) {
 const TRANSITION_DURATION = 200;
 const transition = (): Promise<void> => timeout(TRANSITION_DURATION);
 
-export interface PopoverContentProps
-  extends Omit<React.ComponentProps<"div">, "id"> {
+export interface PopoverContentProps extends Omit<
+  React.ComponentProps<"div">,
+  "id"
+> {
   closeOnClick?: boolean;
 }
 
