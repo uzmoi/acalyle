@@ -74,6 +74,7 @@ jobs:
           files: apps/client/coverage/test-report.junit.xml
           report_type: test_results
   lint:
+    if: false # eslintがTS7に対応していなくて動かないので
     needs: prepare
     runs-on: ubuntu-latest
     timeout-minutes: 10
