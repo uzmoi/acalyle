@@ -8,9 +8,12 @@ export { acalylePlugin } from "./acalyle";
 export { type Options, createConfig } from "./create-config";
 export * from "./util";
 
-export const configs = {
+export const configs: Record<
+  "recommended" | "import" | "react" | "typescript",
+  readonly Linter.Config[]
+> = {
   recommended,
   import: importConfig,
   react,
   typescript,
-} satisfies Record<string, readonly Linter.Config[]>;
+};
