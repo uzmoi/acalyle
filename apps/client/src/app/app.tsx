@@ -1,6 +1,6 @@
-import { cx, style } from "@acalyle/css";
 import { theme, vars } from "@acalyle/ui";
 import { RouterProvider } from "@tanstack/react-router";
+import { cx, style } from "asarina";
 import { QuickModalContainer } from "~/features/modal";
 import { router } from "./router";
 import { defaultThemeClassName } from "./theme";

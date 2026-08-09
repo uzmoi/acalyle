@@ -1,0 +1,13 @@
+diff --git a/types/index.d.ts b/types/index.d.ts
+index 2e9cf024117dce94968280be2c8747d6c5ae103e..f551a530e9325854ab2960fc0c7fa9279fb485f1 100644
+--- a/types/index.d.ts
++++ b/types/index.d.ts
+@@ -10,7 +10,7 @@ export { default as shaker, oxcShaker } from './shaker';
+ export { transform } from './transform';
+ export { disposeEvalBroker } from './eval/broker';
+ export { isUnprocessedEntrypointError, UnprocessedEntrypointError, } from './transform/actions/UnprocessedEntrypointError';
+-export type { Dependencies, ITransformFileResult, JSONArray, JSONObject, JSONValue, Options, ParentEntrypoint, PluginOptions, Preprocessor, PreprocessorFn, Result, Serializable, Stage, WywInJsProcessorOptions, } from './types';
++export type { Dependencies, ITransformFileResult, JSONArray, JSONObject, JSONValue, Options, ParentEntrypoint, PluginOptions, Preprocessor, PreprocessorFn, Result, Serializable, Stage, WywInJsProcessorOptions, } from './types.d.ts';
+ export { EvaluatedEntrypoint } from './transform/EvaluatedEntrypoint';
+ export type { IEvaluatedEntrypoint } from './transform/EvaluatedEntrypoint';
+ export { parseFile } from './transform/Entrypoint.helpers';

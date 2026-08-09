@@ -1,4 +1,4 @@
-import { cx, style } from "@acalyle/css";
+import { cx, style } from "asarina";
 
 export type ListVariant = "default" | "unstyled";
 

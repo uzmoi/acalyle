@@ -1,4 +1,4 @@
-import { cx, style } from "@acalyle/css";
+import { cx, style } from "asarina";
 import { theme } from "../theme";
 import { useModalContainer } from "./hook";
 import type { Modal } from "./modal";

@@ -1,9 +1,20 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+allowBuilds:
+  esbuild: false
+  lefthook: true
+  unrs-resolver: false
+
 minimumReleaseAge: 10080 # 1 week
+minimumReleaseAgeExclude:
+  - asarina
+
+patchedDependencies:
+  "@wyw-in-js/shared@2.3.0": patches/@wyw-in-js__shared@2.3.0.patch
+  "@wyw-in-js/transform": patches/@wyw-in-js__transform.patch
 
 publicHoistPattern:
   - "@typescript/*"
   - "@nitrogql/*"
-
-packages:
-  - "apps/*"
-  - "packages/*"

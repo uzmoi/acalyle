@@ -1,5 +1,5 @@
-import { cx, style } from "@acalyle/css";
 import { Button, vars } from "@acalyle/ui";
+import { cx, style } from "asarina";
 import { useCallback } from "react";
 import type { BookId } from "~/entities/book";
 import { useTemplates } from "../model";

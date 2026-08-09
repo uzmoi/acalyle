@@ -1,5 +1,5 @@
-import { cx, style } from "@acalyle/css";
 import { theme, vars } from "@acalyle/ui";
+import { cx, style } from "asarina";
 import { type Tag as TagType, parseTag } from "../model";
 
 export const Tag: React.FC<{

@@ -1,4 +1,4 @@
-import { style } from "@acalyle/css";
+import { style } from "asarina";
 import preview from "~/../.storybook/preview";
 import type { Tag } from "~/entities/tag";
 import { TagList } from "./tag-list";

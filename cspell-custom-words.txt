@@ -1,5 +1,6 @@
 acalyle
 accum
+asarina
 autodocs
 biomejs
 chrono
@@ -52,6 +53,7 @@ tsbuildinfo
 tsup
 typecheck
 unocss
+unplugin
 uploadables
 upsert
 uzmoi

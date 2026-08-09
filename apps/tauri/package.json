@@ -11,9 +11,9 @@
   "dependencies": {
     "@acalyle/client": "workspace:*",
     "@acalyle/ui": "workspace:*",
-    "@nanostores/react": "^0.4.1",
+    "@nanostores/react": "^1.1.0",
     "@tauri-apps/api": "^1.6.0",
-    "nanostores": "^0.7.4",
+    "nanostores": "^1.4.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
@@ -21,7 +21,6 @@
     "@tauri-apps/cli": "^1.6.3",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react-swc": "^4.0.1",
-    "vite": "^7.2.4"
+    "vite": "^8.2.0"
   }
 }

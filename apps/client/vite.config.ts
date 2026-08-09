@@ -1,59 +1,54 @@
-import { tagResolver } from "@acalyle/css/tag-resolver";
-import { codecovVitePlugin } from "@codecov/vite-plugin";
+import { codecovVitePlugin as codecov } from "@codecov/vite-plugin";
 import nitrogql from "@nitrogql/rollup-plugin";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
-import react from "@vitejs/plugin-react-swc";
+import react from "@vitejs/plugin-react";
 import wywInJS from "@wyw-in-js/vite";
 import unocss from "unocss/vite";
-import dts from "vite-plugin-dts";
+import dts from "unplugin-dts/vite";
 import { coverageConfigDefaults, defineConfig } from "vitest/config";
 
 const isStorybook = process.argv[1]?.includes("storybook");
 
-type WyWinJS = typeof wywInJS.default;
-
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [
     tanstackRouter(),
     react(),
     unocss(),
-    {
-      ...(wywInJS as unknown as WyWinJS)({
-        include: ["**/*.{ts,tsx}"],
-        babelOptions: {
-          presets: ["@babel/preset-typescript"],
-          plugins: ["transform-vite-meta-env"],
-        },
-        sourceMap: true,
-        tagResolver,
-        features: {
-          dangerousCodeRemover: ["**/*"],
-        } as NonNullable<NonNullable<Parameters<WyWinJS>[0]>["features"]>,
-        classNameSlug: (hash, title, { name }) =>
-          `${title === "className" ? name : title}__${hash}`,
-      }),
-      enforce: "pre", // '/@react-refresh' を読もうとして失敗するので対策。
-    },
-    nitrogql({ include: ["**/*.graphql"] }),
-    !isStorybook &&
-      dts({ tsconfigPath: "tsconfig.main.json", rollupTypes: true }),
-    codecovVitePlugin({
-      enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
-      bundleName: "@acalyle/client",
-      uploadToken: process.env.CODECOV_TOKEN,
+    wywInJS({
+      include: ["**/*.{ts,tsx}"],
+      sourceMap: true,
+      classNameSlug: (hash, title, { name }) =>
+        `${title === "className" ? name : title}__${hash}`,
+      importOverrides: {
+        "@emotion/hash": { unknown: "allow" },
+        react: { unknown: "allow" },
+      },
     }),
+    nitrogql({ include: ["**/*.graphql"] }),
+    command === "build" &&
+      !isStorybook &&
+      dts({
+        tsconfigPath: "tsconfig.main.json",
+        bundleTypes: true,
+      }),
+    command === "build" &&
+      codecov({
+        enableBundleAnalysis: !!process.env.CI,
+        bundleName: "@acalyle/client",
+        oidc: { useGitHubOIDC: true },
+      }),
   ],
   resolve: {
-    alias: { "~/": `${__dirname}/src/` },
+    tsconfigPaths: true,
   },
   build: {
     lib: {
-      entry: "./src/index.ts",
+      entry: "src/index.ts",
       fileName: "index",
       cssFileName: "style",
       formats: ["es"],
     },
-    rollupOptions: {
+    rolldownOptions: {
       external: [/^react/, /^react-dom/, /^@acalyle\/(?!ui\/dist\/style\.css)/],
     },
   },
@@ -78,4 +73,4 @@ export default defineConfig({
       ],
     },
   },
-});
+}));

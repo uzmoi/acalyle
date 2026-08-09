@@ -1,4 +1,4 @@
-import { style } from "@acalyle/css";
+import { style } from "asarina";
 
 export const visuallyHidden = style({
   position: "fixed",

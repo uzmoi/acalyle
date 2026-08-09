@@ -5,10 +5,10 @@ import "@acalyle/client/dist/style.css";
 import { BookRoute, Location, net } from "@acalyle/client";
 import * as Router from "@acalyle/router";
 import { createTheme, vars } from "@acalyle/ui";
-import { globalStyle, style } from "@acalyle/css";
 import { useStore } from "@nanostores/react";
 import { appDataDir } from "@tauri-apps/api/path";
 import { convertFileSrc } from "@tauri-apps/api/tauri";
+import { globalStyle, style } from "asarina";
 import { onMount } from "nanostores";
 
 const appDataDirPath = await appDataDir();

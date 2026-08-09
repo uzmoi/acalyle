@@ -1,0 +1,11 @@
+diff --git a/types/index.d.ts b/types/index.d.ts
+index 02b255efdcabed704a811bac5e5430a96b34749d..15aeff22add72084298c4540e4102330e9ec64e3 100644
+--- a/types/index.d.ts
++++ b/types/index.d.ts
+@@ -11,5 +11,5 @@ export type { NativeResolverAlias } from './options/nativeResolverOptions';
+ export { slugify } from './slugify';
+ export { ValueType } from './types';
+ export type { IVariableContext } from './IVariableContext';
+-export type { ClassNameSlugVars, ClassNameFn, CodeRemoverOptions, EvalErrorMode, EvalOptionsV2, EvalRequireMode, EvalResolverKind, EvalResolverMode, EvalRuntime, EvalStrategy, EvalWarning, EvalWarningCode, ImportLoader, ImportLoaderContext, ImportLoaders, ImportOverride, ImportOverrides, OxcOptions, TagResolverMeta, StrictOptions, EvalRule, EvaluatorOptions, TransformEngineOptions, Evaluator, FeatureFlag, EvaluatorConfig, FeatureFlags, VariableNameFn, WywInJsProcessorOptions, } from './options/types';
++export type { ClassNameSlugVars, ClassNameFn, CodeRemoverOptions, EvalErrorMode, EvalOptionsV2, EvalRequireMode, EvalResolverKind, EvalResolverMode, EvalRuntime, EvalStrategy, EvalWarning, EvalWarningCode, ImportLoader, ImportLoaderContext, ImportLoaders, ImportOverride, ImportOverrides, OxcOptions, TagResolverMeta, StrictOptions, EvalRule, EvaluatorOptions, TransformEngineOptions, Evaluator, FeatureFlag, EvaluatorConfig, FeatureFlags, VariableNameFn, WywInJsProcessorOptions, } from './options/types.d.ts';
+ export type { Artifact, AstExpression, AstNode, BigIntLiteral, BooleanLiteral, BuildCodeFrameErrorFn, ConstValue, DecimalLiteral, ExpressionValue, FunctionValue, Identifier, ICSSRule, LazyValue, Location, NullLiteral, NumericLiteral, Replacement, Replacements, Rules, SourceLocation, StringLiteral, WYWEvalMeta, } from './types';

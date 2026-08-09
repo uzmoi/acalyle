@@ -1,43 +1,39 @@
-import { tagResolver } from "@acalyle/css/tag-resolver";
-import react from "@vitejs/plugin-react-swc";
+import react from "@vitejs/plugin-react";
 import wywInJS from "@wyw-in-js/vite";
-import dts from "vite-plugin-dts";
+import dts from "unplugin-dts/vite";
 import { coverageConfigDefaults, defineConfig } from "vitest/config";
 import packageJson from "./package.json" with { type: "json" };
 
-type WyWinJS = typeof wywInJS.default;
-
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [
     react(),
-    (wywInJS as unknown as WyWinJS)({
+    wywInJS({
       include: ["**/*.{ts,tsx}"],
-      babelOptions: {
-        presets: ["@babel/preset-typescript"],
-        plugins: ["transform-vite-meta-env"],
-      },
       sourceMap: true,
-      tagResolver,
-      features: {
-        dangerousCodeRemover: ["**/*", "!**/src/theme/*"],
-      } as NonNullable<NonNullable<Parameters<WyWinJS>[0]>["features"]>,
       classNameSlug: (hash, title, { name }) =>
         `${title === "className" ? name : title}__${hash}`,
+      importOverrides: {
+        "@emotion/hash": { unknown: "allow" },
+      },
     }),
-    dts({ tsconfigPath: "tsconfig.main.json", rollupTypes: true }),
+    command === "build" &&
+      dts({
+        tsconfigPath: "tsconfig.main.json",
+        bundleTypes: true,
+      }),
   ],
   build: {
     target: "esnext",
     sourcemap: true,
     minify: false,
     lib: {
-      entry: "./src/index.ts",
+      entry: "src/index.ts",
       fileName: "index",
       cssFileName: "style",
       formats: ["es"],
     },
-    rollupOptions: {
-      external: [/^react(?![^/])/, ...Object.keys(packageJson.dependencies)],
+    rolldownOptions: {
+      external: [/^react/, ...Object.keys(packageJson.dependencies)],
     },
   },
   test: {
@@ -48,4 +44,4 @@ export default defineConfig({
       exclude: [...coverageConfigDefaults.exclude, "**/*.stories.tsx"],
     },
   },
-});
+}));

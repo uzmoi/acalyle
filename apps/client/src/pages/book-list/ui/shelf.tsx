@@ -1,4 +1,4 @@
-import { cx, style } from "@acalyle/css";
+import { cx, style } from "asarina";
 import type { Book } from "~/entities/book";
 import { BookCover } from "./cover";
 

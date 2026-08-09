@@ -1,4 +1,4 @@
-import { cx, keyframes, style } from "@acalyle/css";
+import { cx, keyframes, style } from "asarina";
 
 const spin = /* #__PURE__ */ keyframes({ to: { transform: "rotate(360deg)" } });
 

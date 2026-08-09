@@ -1,14 +1,25 @@
 {
-  "$schema": "https://turbo.build/schema.json",
-  "pipeline": {
+  "$schema": "https://v2-10-8.turborepo.dev/schema.json",
+  "cacheMaxAge": "2w",
+  "tasks": {
     "codegen": {
       "dependsOn": ["^build"],
       "inputs": ["src/**/*.graphql", "graphql.config.ts"],
-      "outputs": ["**/__generated__/**", "**/*.gen.ts", "**/*.d.graphql.ts", "**/*.d.graphql.ts.map"]
+      "outputs": [
+        "**/__generated__/**",
+        "**/*.gen.ts",
+        "**/*.d.graphql.ts",
+        "**/*.d.graphql.ts.map"
+      ]
     },
     "build": {
       "dependsOn": ["check"],
-      "inputs": ["src/**", "!**/*.{test,test-d,stories}.*", "*.config.*", "tsconfig.json"],
+      "inputs": [
+        "src/**",
+        "!*/**/*.{test,test-d,stories}.*",
+        "*.config.*",
+        "tsconfig.json"
+      ],
       "outputs": ["dist/**"]
     },
     "dev": {
@@ -18,7 +29,7 @@
     },
     "check": {
       "dependsOn": ["codegen"],
-      "inputs": ["!**/*.{test,test-d,stories}.*"]
+      "inputs": ["!*/**/*.{test,test-d,stories}.*"]
     },
     "lint": {
       "dependsOn": ["codegen"]

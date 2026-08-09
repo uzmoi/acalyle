@@ -1,0 +1,32 @@
+{
+  // cspell:ignore vtsls
+  "languages": {
+    "TypeScript": {
+      "format_on_save": "on",
+      "language_servers": [
+        "typescript-ls",
+        "!vtsls",
+        "!typescript-language-server",
+        "..."
+      ]
+    },
+    "TSX": {
+      "format_on_save": "on",
+      "language_servers": [
+        "typescript-ls",
+        "!vtsls",
+        "!typescript-language-server",
+        "..."
+      ]
+    },
+    "JavaScript": {
+      "format_on_save": "on",
+      "language_servers": [
+        "typescript-ls",
+        "!vtsls",
+        "!typescript-language-server",
+        "..."
+      ]
+    }
+  }
+}

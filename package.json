@@ -1,6 +1,6 @@
 {
   "private": true,
-  "packageManager": "pnpm@10.17.1+sha512.17c560fca4867ae9473a3899ad84a88334914f379be46d455cbf92e5cf4b39d34985d452d2583baf19967fa76cb5c17bc9e245529d0b98745721aa7200ecaf7a",
+  "packageManager": "pnpm@11.20.0+sha512.9a6f330a95b66446ea088faf1521405a8a01f07fde7124cc9958dfed52d4bb436737e65b08f85f37b46fcba375092558ac51262b816844b22f63406ed166bfee",
   "name": "acalyle",
   "type": "module",
   "version": "0.1.0",
@@ -18,18 +18,16 @@
   "devDependencies": {
     "@acalyle/eslint-config": "workspace:*",
     "@acalyle/tsconfig": "workspace:*",
-    "@markuplint/jsx-parser": "^4.7.22",
-    "@markuplint/react-spec": "^4.5.22",
-    "@types/node": "^24.5.2",
+    "@types/node": "^26.1.2",
+    "@typescript/typescript6": "^6.0.2",
     "better-typescript-lib": "^2.12.0",
     "cspell": "^9.3.2",
     "eslint": "^9.23.0",
     "globals": "^13.24.0",
-    "lefthook": "^1.13.6",
-    "markuplint": "^4.13.1",
+    "lefthook": "^2.1.10",
     "oxlint": "^1.19.0",
-    "prettier": "^3.6.2",
-    "turbo": "^1.13.4",
-    "typescript": "5.8.3"
+    "prettier": "^3.9.6",
+    "turbo": "^2.10.8",
+    "typescript": "7.0.2"
   }
 }

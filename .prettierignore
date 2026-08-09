@@ -3,6 +3,4 @@
 package.json
 pnpm-lock.yaml
 
-/turbo.json
-
 /apps/server/schema.graphql

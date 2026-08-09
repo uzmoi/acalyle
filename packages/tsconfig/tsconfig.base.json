@@ -1,18 +1,18 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "useDefineForClassFields": true,
+    "moduleResolution": "bundler",
+    "forceConsistentCasingInFileNames": true,
     "verbatimModuleSyntax": true,
+    "allowJs": false,
+    "noEmit": true,
+
     "lib": ["ESNext"],
     "libReplacement": true,
-    "allowJs": false,
     "skipLibCheck": true,
-    "strict": true,
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
-    "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "bundler",
-    "noEmit": true,
+
     "plugins": [{ "name": "eslint-plugin-import-access" }],
   },
 }
