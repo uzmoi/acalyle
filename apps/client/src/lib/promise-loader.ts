@@ -15,8 +15,7 @@ export type PromiseLoader<T = unknown> =
   | { status: "rejected"; error: unknown };
 
 export type PromiseLoaderW<T = unknown> =
-  | PromiseLoader<T>
-  | { status: "unpending" };
+  PromiseLoader<T> | { status: "unpending" };
 
 export const toPromise = async <T>(
   store: Atom<PromiseLoaderW<T>>,

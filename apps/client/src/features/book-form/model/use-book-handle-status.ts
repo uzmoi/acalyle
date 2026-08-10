@@ -1,14 +1,9 @@
 import { startTransition, useActionState, useState } from "react";
 import { fetchBookByHandle } from "~/entities/book";
-import { normalizeBookHandle, isValidBookHandle } from "~/features/book-form";
+import { isValidBookHandle, normalizeBookHandle } from "~/features/book-form";
 
 export type BookHandleStatus =
-  | "no-change"
-  | "invalid"
-  | "loading"
-  | "available"
-  | "unavailable"
-  | "unknown";
+  "no-change" | "invalid" | "loading" | "available" | "unavailable" | "unknown";
 
 export const useBookHandleStatus = (
   initial: string | null,

@@ -1,7 +1,7 @@
 import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
-import { Err, Ok, Result } from "@uzmoi/ut/fp";
+import { Err, Ok, type Result } from "@uzmoi/ut/fp";
 import type { JsonValue } from "@uzmoi/ut/types";
-import { print, type OperationDefinitionNode } from "graphql";
+import { type OperationDefinitionNode, print } from "graphql";
 import { logger } from "../logger";
 import { invariant } from "../utils";
 import type { GqlFnError } from "./errors";
