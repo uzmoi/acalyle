@@ -24,8 +24,8 @@ export const BookHandleForm: React.FC<{
       await changeBookHandle(bookId, normalizedHandle || null);
       startTransition(async () => {
         await navigate({
-          to: "/books/$book-ref/settings",
-          params: { "book-ref": normalizedHandle || bookRefFromId(bookId) },
+          to: "/books/$bookRef/settings",
+          params: { bookRef: normalizedHandle || bookRefFromId(bookId) },
         });
       });
     }

@@ -9,8 +9,8 @@ export const NewBookPage: React.FC = () => {
 
   const onCreatedBook = async (bookRef: BookRef): Promise<void> => {
     await navigate({
-      to: "/books/$book-ref",
-      params: { "book-ref": bookRef },
+      to: "/books/$bookRef",
+      params: { bookRef },
     });
   };
 

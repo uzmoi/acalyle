@@ -232,5 +232,11 @@
         "no-magic-numbers": "off",
       },
     },
+    {
+      "files": ["apps/client/src/app/routes/**"],
+      "rules": {
+        "filename-case": "off",
+      },
+    },
   ],
 }

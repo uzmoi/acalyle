@@ -36,8 +36,8 @@ export const NoteWarpListItem: React.FC<{
       )}
     >
       <Link
-        to="/books/$book-ref/$note-id"
-        params={{ "book-ref": bookRefOf(book), "note-id": noteId }}
+        to="/books/$bookRef/$noteId"
+        params={{ bookRef: bookRefOf(book), noteId }}
         onClick={handleClickLink}
         className=":uno: absolute inset-0"
       >

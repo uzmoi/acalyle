@@ -17,8 +17,8 @@ export const NoteCreateButton: React.FC<{
       const result = await createNote(book.id, templateName);
       const noteId = result.unwrap();
       await navigate({
-        to: "/books/$book-ref/$note-id",
-        params: { "book-ref": bookRefOf(book), "note-id": noteId },
+        to: "/books/$bookRef/$noteId",
+        params: { bookRef: bookRefOf(book), noteId },
       });
     },
     [book, navigate],

@@ -7,6 +7,6 @@ const RouteComponent: React.FC = () => {
   return <NoteListPage book={book} />;
 };
 
-export const Route = /* #__PURE__ */ createFileRoute("/books/$book-ref/")({
+export const Route = /* #__PURE__ */ createFileRoute("/books/$bookRef/")({
   component: RouteComponent,
 });

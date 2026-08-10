@@ -29,8 +29,8 @@ export const BookCover: React.FC<{
         </div>
         <p className=":uno: truncate text-xl">
           <Link
-            to="/books/$book-ref"
-            params={{ "book-ref": bookRefOf(book) }}
+            to="/books/$bookRef"
+            params={{ bookRef: bookRefOf(book) }}
             className=":uno: decoration-none outline-none before:absolute before:inset-0 focus-visible:text-teal before:content-empty"
           >
             {book.title}

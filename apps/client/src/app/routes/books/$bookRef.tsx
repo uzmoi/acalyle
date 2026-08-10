@@ -3,7 +3,7 @@ import { type BookRef, fetchBookByRef } from "#entities/book";
 import { Link } from "#shared/ui";
 
 const ErrorComponent: React.FC = () => {
-  const { "book-ref": bookRef } = useParams({ from: Route.fullPath });
+  const { bookRef } = useParams({ from: Route.fullPath });
 
   return (
     <div className=":uno: px-8 py-4 text-center">
@@ -13,10 +13,10 @@ const ErrorComponent: React.FC = () => {
   );
 };
 
-export const Route = /* #__PURE__ */ createFileRoute("/books/$book-ref")({
+export const Route = /* #__PURE__ */ createFileRoute("/books/$bookRef")({
   notFoundComponent: ErrorComponent,
   async loader({ params }) {
-    const bookRef = params["book-ref"] as BookRef;
+    const bookRef = params["bookRef"] as BookRef;
     const result = await fetchBookByRef(bookRef);
     // FIXME: unwrap
     const book = result.unwrap();
