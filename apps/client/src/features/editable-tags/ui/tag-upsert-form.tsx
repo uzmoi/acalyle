@@ -1,4 +1,4 @@
-import { Form, List, TextInput } from "@acalyle/ui";
+import { List, TextInput } from "@acalyle/ui";
 import { isNotNil } from "es-toolkit";
 import { useState } from "react";
 import type { Book } from "~/entities/book";
@@ -29,7 +29,7 @@ export const TagUpsertForm: React.FC<{
 
   return (
     // TODO: react-selectとか使う
-    <Form>
+    <form>
       {/* FIXME: markuplint の警告を消すための label でしかない */}
       <label htmlFor="TagUpsertForm" className=":uno: hidden">
         Input
@@ -47,6 +47,6 @@ export const TagUpsertForm: React.FC<{
           </List.Item>
         ))}
       </List>
-    </Form>
+    </form>
   );
 };
