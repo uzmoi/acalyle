@@ -1,15 +1,14 @@
-import type { Tag as TagType } from "./model";
+import type { Tag as TagType } from "./model/types";
+
+/** @public */
+export { printTagStyleCss } from "./model/style";
+/** @public */
+export { parseTag, tagToString } from "./model/tag";
+/** @public */
+export type { TagObject, TagSymbol, TagMetadata } from "./model/types";
 
 /** @public */
 export type Tag = TagType;
 
 /** @public */
-export {
-  type TagMetadata,
-  type TagObject,
-  type TagSymbol,
-  parseTag,
-  tagToString,
-} from "./model";
-/** @public */
-export { Tag } from "./ui";
+export { Tag } from "./ui/tag";

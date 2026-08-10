@@ -3,7 +3,7 @@ import type { Result } from "@uzmoi/ut/fp";
 import type { TagMetadata, TagSymbol } from "~/entities/tag";
 import { type GqlFnError, gql } from "~/shared/graphql";
 import { rebrand } from "~/shared/utils";
-import type { Book, BookDetail, BookHandle, BookId } from "../model";
+import type { Book, BookDetail, BookHandle, BookId } from "../model/types";
 import BookDetailQuery from "./book-detail.graphql";
 import BookQuery from "./book.graphql";
 

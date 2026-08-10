@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { Book } from "~/entities/book";
 import { type NoteId, useNote } from "~/entities/note";
 import { type Tag, parseTag } from "~/entities/tag";
-import { complementNoteTag } from "../model";
+import { complementNoteTag } from "../model/complement";
 
 export const TagUpsertForm: React.FC<{
   book: Book;

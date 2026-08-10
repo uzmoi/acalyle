@@ -2,7 +2,7 @@ import { List } from "@acalyle/ui";
 import { useId } from "react";
 import type { BookId } from "~/entities/book";
 import { Tag, type TagSymbol } from "~/entities/tag";
-import { useFilteredTags } from "../model";
+import { useFilteredTags } from "../model/use-filtered-tags";
 
 export const TagSelectList: React.FC<{
   bookId: BookId;

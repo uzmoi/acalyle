@@ -1,2 +1,2 @@
 /** @public */
-export { NoteListPage } from "./ui";
+export { NoteListPage } from "./ui/page";

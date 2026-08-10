@@ -1,4 +1,4 @@
-import { resolveResource } from "../model";
+import { resolveResource } from "../model/utils";
 
 const COLOR_THUMBNAIL_PREFIX = "color:";
 const SIZE_SCALE = 4;

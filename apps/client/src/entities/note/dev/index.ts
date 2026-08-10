@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import type { Tag } from "#entities/tag";
-import type { Note, NoteId } from "../model";
+import type { Note, NoteId } from "../model/types";
 
 /** @public */
 export const dummyNote: Note = {

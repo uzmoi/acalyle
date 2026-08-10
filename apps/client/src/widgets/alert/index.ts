@@ -1,2 +1,2 @@
 /** @public */
-export { Alert } from "./ui";
+export { Alert } from "./ui/alert";

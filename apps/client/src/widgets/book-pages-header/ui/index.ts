@@ -1,1 +1,0 @@
-export { BookPagesHeader } from "./header";

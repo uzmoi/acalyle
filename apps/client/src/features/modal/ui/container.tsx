@@ -1,6 +1,6 @@
-import { center, ModalContainer, theme } from "@acalyle/ui";
+import { ModalContainer, center, theme } from "@acalyle/ui";
 import { cx, style } from "asarina";
-import { type ModalInput, type Modals, modal } from "../model";
+import { type ModalInput, type Modals, modal } from "../model/store";
 import { ConfirmForm } from "./confirm";
 
 type ModalRenderers = {

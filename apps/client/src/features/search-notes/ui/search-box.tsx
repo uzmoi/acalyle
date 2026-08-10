@@ -1,7 +1,7 @@
 import { Popover } from "@acalyle/ui";
 import { TagSelectForm } from "#features/editable-tags";
 import type { BookId } from "~/entities/book";
-import { appendTag, parseQuery, removeTag } from "../model";
+import { appendTag, parseQuery, removeTag } from "../model/query";
 import { QueryInput } from "./query-input";
 
 export const SearchBox: React.FC<{

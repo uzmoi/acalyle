@@ -1,6 +1,7 @@
 import { TextInput } from "@acalyle/ui";
 import { useId } from "react";
-import { type BookHandleStatus, normalizeBookHandle } from "../model";
+import type { BookHandleStatus } from "../model/use-book-handle-status";
+import { normalizeBookHandle } from "../model/validation";
 
 export const HandleField: React.FC<{
   value: string;

@@ -1,4 +1,8 @@
 /** @public */
-export { close as closeNoteModal, open as openNoteInModal } from "./model";
+export {
+  close as closeNoteModal,
+  open as openNoteInModal,
+} from "./model/modal";
+
 /** @public */
-export { NoteModalContainer } from "./ui";
+export { NoteModalContainer } from "./ui/container";

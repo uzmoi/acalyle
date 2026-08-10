@@ -2,7 +2,7 @@ import { base } from "@acalyle/ui";
 import { createEditor, plainSchema } from "edix";
 import { useEffect, useRef } from "react";
 import { parseTag } from "~/entities/tag";
-import { lexQuery } from "../model";
+import { lexQuery } from "../model/query";
 
 export const QueryInput: React.FC<{
   query: string;

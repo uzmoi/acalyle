@@ -4,7 +4,7 @@ import { BiSolidEdit, BiX } from "react-icons/bi";
 import type { Book } from "~/entities/book";
 import { type NoteId, TagList } from "~/entities/note";
 import { type Tag, tagToString } from "~/entities/tag";
-import { useEditableTags } from "../model";
+import { useEditableTags } from "../model/hook";
 import { TagUpsertForm } from "./tag-upsert-form";
 
 // TODO: 編集中にタグリストをクリックしてTagUpsertFormに反映させる。

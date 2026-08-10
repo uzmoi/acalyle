@@ -1,2 +1,2 @@
 /** @public */
-export { BookSettingsPage } from "./ui";
+export { BookSettingsPage } from "./ui/page";

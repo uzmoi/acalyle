@@ -1,6 +1,6 @@
 import { gql } from "~/shared/graphql";
 import { rebrand } from "~/shared/utils";
-import type { Note, NoteId } from "../model";
+import type { Note, NoteId } from "../model/types";
 import NoteQuery from "./note.graphql";
 
 export const fetchNote = async (id: NoteId): Promise<Note | null> => {

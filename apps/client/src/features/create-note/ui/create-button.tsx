@@ -4,7 +4,7 @@ import { cx, style } from "asarina";
 import { Suspense, useCallback } from "react";
 import { BiCaretDown } from "react-icons/bi";
 import { type Book, bookRefOf } from "~/entities/book";
-import { createNote } from "../model";
+import { createNote } from "../model/mutation";
 import { NoteTemplateSelectList } from "./note-template-select-list";
 
 export const NoteCreateButton: React.FC<{

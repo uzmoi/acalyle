@@ -1,1 +1,0 @@
-export { NewBookPage } from "./page";

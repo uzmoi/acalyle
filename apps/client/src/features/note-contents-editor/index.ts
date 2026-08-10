@@ -1,2 +1,2 @@
 /** @public */
-export { NoteContentsEditor } from "./ui";
+export { NoteContentsEditor } from "./ui/editor";
