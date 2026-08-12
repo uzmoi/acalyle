@@ -5,7 +5,7 @@ import react from "@vitejs/plugin-react";
 import wywInJS from "@wyw-in-js/vite";
 import unocss from "unocss/vite";
 import dts from "unplugin-dts/vite";
-import { coverageConfigDefaults, defineConfig } from "vitest/config";
+import { defineConfig } from "vitest/config";
 
 const isStorybook = process.argv[1]?.includes("storybook");
 
@@ -67,9 +67,12 @@ export default defineConfig(({ command }) => ({
     coverage: {
       include: ["src/**"],
       exclude: [
-        ...coverageConfigDefaults.exclude,
-        "**/__{generated,mocks}__/**",
-        "**/*.stories.tsx",
+        "**/dev/**",
+        "**/*.gen.*",
+        "**/*.stories.*",
+        "**/*.d.ts",
+        "**/*.d.*.ts",
+        "**/*.map",
       ],
     },
   },
