@@ -28,7 +28,7 @@ test("submit", async () => {
 
   expect(changeBookHandle).toHaveBeenCalledWith(bookId, "hoge");
   expect(navigate).toHaveBeenCalledWith({
-    to: "/books/$book-ref/settings",
-    params: { "book-ref": "hoge" },
+    to: "/books/$bookRef/settings",
+    params: { bookRef: "hoge" },
   });
 });
