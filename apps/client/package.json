@@ -17,7 +17,8 @@
     "build-storybook": "storybook build"
   },
   "imports": {
-    "#*": "./src/*/index.ts"
+    "#*": "./src/*/index.ts",
+    "#.storybook/preview": "./.storybook/preview.tsx"
   },
   "dependencies": {
     "@acalyle/core": "workspace:*",
