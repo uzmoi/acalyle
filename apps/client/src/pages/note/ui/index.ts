@@ -1,1 +1,0 @@
-export { NotePage } from "./page";

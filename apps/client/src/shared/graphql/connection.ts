@@ -106,7 +106,7 @@ export abstract class GraphqlConnection<
     const nodes =
       "nodes" in page ? page.nodes : page.edges.map(edge => edge.node);
 
-    const length = this.nodeIds.length;
+    const { length } = this.nodeIds;
     this.nodeIds.splice(length, 0, ...nodes.map(node => node.id));
 
     this.updateNodes(nodes);

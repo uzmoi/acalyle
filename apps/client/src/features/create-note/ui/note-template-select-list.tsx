@@ -2,7 +2,7 @@ import { Button, vars } from "@acalyle/ui";
 import { cx, style } from "asarina";
 import { useCallback } from "react";
 import type { BookId } from "~/entities/book";
-import { useTemplates } from "../model";
+import { useTemplates } from "../model/use-templates";
 
 export const NoteTemplateSelectList: React.FC<{
   bookId: BookId;

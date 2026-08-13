@@ -1,2 +1,2 @@
 /** @public */
-export { BookPagesHeader } from "./ui";
+export { BookPagesHeader } from "./ui/header";

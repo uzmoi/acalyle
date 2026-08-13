@@ -35,6 +35,6 @@ describe("Normalize Book Handle", () => {
   });
 
   test("Trim to max length.", () => {
-    expect(normalizeBookHandle("🌱" + "a".repeat(1000))).toBe("a".repeat(100));
+    expect(normalizeBookHandle(`🌱${"a".repeat(1000)}`)).toBe("a".repeat(100));
   });
 });

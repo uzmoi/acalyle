@@ -1,2 +1,2 @@
 /** @public */
-export { NoteCreateButton } from "./ui";
+export { NoteCreateButton } from "./ui/create-button";

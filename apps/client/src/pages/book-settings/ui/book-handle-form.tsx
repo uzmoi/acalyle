@@ -3,9 +3,9 @@ import { useNavigate } from "@tanstack/react-router";
 import { startTransition } from "react";
 import { type BookHandle, type BookId, bookRefFromId } from "~/entities/book";
 import {
+  HandleField,
   normalizeBookHandle,
   useBookHandleStatus,
-  HandleField,
 } from "~/features/book-form";
 import { confirm } from "~/features/modal";
 import { changeBookHandle } from "../model";
@@ -24,8 +24,8 @@ export const BookHandleForm: React.FC<{
       await changeBookHandle(bookId, normalizedHandle || null);
       startTransition(async () => {
         await navigate({
-          to: "/books/$book-ref/settings",
-          params: { "book-ref": normalizedHandle || bookRefFromId(bookId) },
+          to: "/books/$bookRef/settings",
+          params: { bookRef: normalizedHandle || bookRefFromId(bookId) },
         });
       });
     }

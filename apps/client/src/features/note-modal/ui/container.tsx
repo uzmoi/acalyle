@@ -1,6 +1,6 @@
 import { ModalContainer, theme } from "@acalyle/ui";
 import { cx, style } from "asarina";
-import { type NoteModalInput, modal } from "../model";
+import { type NoteModalInput, modal } from "../model/modal";
 import { NoteModalContent } from "./content";
 
 const renderModalContent = ({

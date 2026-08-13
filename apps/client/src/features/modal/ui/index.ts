@@ -1,1 +1,0 @@
-export { QuickModalContainer } from "./container";

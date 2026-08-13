@@ -1,6 +1,6 @@
 /* eslint-disable pure-module/pure-module */
 import { faker } from "@faker-js/faker";
-import type { Book, BookHandle, BookId } from "../model";
+import type { Book, BookHandle, BookId } from "../model/types";
 
 type ValidHandleCharacter =
   | ("0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9")

@@ -18,7 +18,4 @@ interface NotFoundError {
 }
 
 export type GqlFnError =
-  | ServerError
-  | NetworkError
-  | InvalidResponseError
-  | NotFoundError;
+  ServerError | NetworkError | InvalidResponseError | NotFoundError;

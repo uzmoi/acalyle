@@ -8,6 +8,6 @@ const RouteComponent: React.FC = () => {
 };
 
 // eslint-disable-next-line pure-module/pure-module
-export const Route = createFileRoute("/books/$book-ref/settings")({
+export const Route = createFileRoute("/books/$bookRef/settings")({
   component: RouteComponent,
 });

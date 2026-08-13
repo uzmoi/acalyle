@@ -4,7 +4,7 @@ import { BiExpandAlt, BiX } from "react-icons/bi";
 import { Link } from "#shared/ui";
 import { useNote } from "~/entities/note";
 import { FullNote } from "~/widgets/note";
-import { type NoteModalInput, close } from "../model";
+import { type NoteModalInput, close } from "../model/modal";
 
 export const NoteModalContent: React.FC<NoteModalInput> = ({
   bookRef,
@@ -26,8 +26,8 @@ export const NoteModalContent: React.FC<NoteModalInput> = ({
           })}
         >
           <Link
-            to="/books/$book-ref/$note-id"
-            params={{ "book-ref": bookRef, "note-id": noteId }}
+            to="/books/$bookRef/$noteId"
+            params={{ bookRef, noteId }}
             onClick={close}
             aria-label="view on page"
           >

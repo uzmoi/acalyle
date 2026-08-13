@@ -1,1 +1,0 @@
-export { NoteModalContainer } from "./container";

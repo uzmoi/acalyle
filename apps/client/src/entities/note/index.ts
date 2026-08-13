@@ -1,4 +1,9 @@
 /** @public */
-export { $note, type Note, type NoteId, useNote } from "./model";
+export { useNote } from "./model/hook";
 /** @public */
-export { TagList } from "./ui";
+export { $note } from "./model/store";
+/** @public */
+export type { Note, NoteId } from "./model/types";
+
+/** @public */
+export { TagList } from "./ui/tag-list";

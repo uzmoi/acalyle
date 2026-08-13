@@ -4,7 +4,7 @@ import { cx, style } from "asarina";
 import { Suspense, useCallback } from "react";
 import { BiCaretDown } from "react-icons/bi";
 import { type Book, bookRefOf } from "~/entities/book";
-import { createNote } from "../model";
+import { createNote } from "../model/mutation";
 import { NoteTemplateSelectList } from "./note-template-select-list";
 
 export const NoteCreateButton: React.FC<{
@@ -17,8 +17,8 @@ export const NoteCreateButton: React.FC<{
       const result = await createNote(book.id, templateName);
       const noteId = result.unwrap();
       await navigate({
-        to: "/books/$book-ref/$note-id",
-        params: { "book-ref": bookRefOf(book), "note-id": noteId },
+        to: "/books/$bookRef/$noteId",
+        params: { bookRef: bookRefOf(book), noteId },
       });
     },
     [book, navigate],

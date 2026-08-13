@@ -1,9 +1,7 @@
 /** @public */
-export {
-  parseQuery,
-  type QueryItem,
-  printServerQuery,
-  $noteConnection,
-} from "./model";
+export { $noteConnection } from "./model/connection";
 /** @public */
-export { SearchBox } from "./ui";
+export { parseQuery, type QueryItem, printServerQuery } from "./model/query";
+
+/** @public */
+export { SearchBox } from "./ui/search-box";

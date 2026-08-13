@@ -1,16 +1,19 @@
 /** @public */
 export { fetchBookByHandle } from "./api";
+
 /** @public */
 export {
-  type Book,
-  type BookDetail,
-  type BookHandle,
-  type BookId,
   type BookRef,
   bookRefFromId,
   bookRefOf,
   fetchBookByRef,
-  useBookDetail,
-} from "./model";
+} from "./model/ref";
 /** @public */
-export { BookThumbnail } from "./ui";
+export type { Book, BookDetail, BookHandle, BookId } from "./model/types";
+/** @public */
+export { useBookDetail } from "./model/use-book-detail";
+/** @public */
+export { resolveResource } from "./model/utils";
+
+/** @public */
+export { BookThumbnail } from "./ui/thumbnail";

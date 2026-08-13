@@ -1,6 +1,6 @@
 import { Menu } from "@acalyle/ui";
 import type { NoteId } from "~/entities/note";
-import { noteActions } from "../model";
+import { noteActions } from "../model/actions";
 
 export const NoteActionList: React.FC<{
   noteIds: ReadonlySet<NoteId>;

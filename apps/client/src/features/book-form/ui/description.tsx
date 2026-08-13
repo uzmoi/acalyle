@@ -1,6 +1,6 @@
 import { TextInput } from "@acalyle/ui";
 import { useId } from "react";
-import { MAX_DESCRIPTION_LENGTH } from "../model";
+import { MAX_DESCRIPTION_LENGTH } from "../model/validation";
 
 export const DescriptionField: React.FC<{
   value: string;
