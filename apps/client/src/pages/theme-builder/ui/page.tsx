@@ -1,4 +1,4 @@
-import { Spacer } from "@acalyle/ui";
+import { Button, Spacer } from "@acalyle/ui";
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { FALLBACK_THEME, THEME_TOKEN_KEYS, getHexColor } from "../model/theme";
@@ -12,12 +12,21 @@ export const ThemeBuilderPage: React.FC = () => {
 
   return (
     <div className=":uno: mx-auto max-w-screen-xl px-8 py-4">
-      <div>
+      <div className=":uno: flex gap-2">
         <Link to="/tools" className=":uno: text-lg text-inherit">
           tools
         </Link>
-        <span className=":uno: text-lg mx-2">/</span>
-        <h1 className=":uno: inline text-xl">Theme Builder</h1>
+        <span className=":uno: text-lg">/</span>
+        <h1 className=":uno: text-xl">Theme Builder</h1>
+        <Button
+          className=":uno: ml-auto"
+          onClick={() => {
+            const json = JSON.stringify(currentTheme, null, "  ");
+            void navigator.clipboard.writeText(json);
+          }}
+        >
+          Copy as JSON
+        </Button>
       </div>
       <Spacer size="2rem" />
       <div className=":uno: flex gap-4">
