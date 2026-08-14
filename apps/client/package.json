@@ -38,6 +38,7 @@
     "js-xxhash": "^5.0.1",
     "nanostores": "^1.4.2",
     "react": "^19.2.8",
+    "react-colorful": "^5.8.0",
     "react-dom": "^19.2.8",
     "react-icons": "^5.5.0",
     "remove-accents": "^0.5.0",
