@@ -1,6 +1,6 @@
 import { Button, Spacer } from "@acalyle/ui";
-import { Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { Link } from "#/shared/ui";
 import { FALLBACK_THEME, THEME_TOKEN_KEYS, getHexColor } from "../model/theme";
 import { Preview } from "./preview";
 import { ColorInput } from "./color-input";
@@ -13,7 +13,7 @@ export const ThemeBuilderPage: React.FC = () => {
   return (
     <div className=":uno: mx-auto max-w-screen-xl px-8 py-4">
       <div className=":uno: flex gap-2">
-        <Link to="/tools" className=":uno: text-lg text-inherit">
+        <Link to="/tools" className=":uno: text-lg">
           tools
         </Link>
         <span className=":uno: text-lg">/</span>
