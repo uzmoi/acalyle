@@ -1,3 +1,4 @@
+import { type Theme, createTheme } from "@acalyle/ui";
 import { cx, style } from "asarina";
 import type { BookId } from "#/entities/book";
 import type { Note, NoteId } from "#/entities/note";
@@ -19,6 +20,13 @@ export const Preview: React.FC = () => {
       className={cx(
         ":uno: p-4 overflow-auto h-full",
         style({
+          // 移行するまでの繋ぎ
+          ...createTheme({
+            note: {
+              text: "var(--note-text)",
+              bg: "var(--note-bg)",
+            },
+          } as Theme),
           backgroundColor: "var(--app-bg)",
           color: "var(--ui-text)",
         }),
