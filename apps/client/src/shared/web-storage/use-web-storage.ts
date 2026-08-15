@@ -14,6 +14,7 @@ export const useWebStorage = <T>(
           value => (newValue = (updater as (value: T) => T)(value))
         : (newValue = updater),
       );
+      // 本当にnon-nullか不明。果たしてreactは絶対にsetStateのコールバックを即座に呼んでくれるのか。
       entry.save(newValue!);
     },
     [entry],
