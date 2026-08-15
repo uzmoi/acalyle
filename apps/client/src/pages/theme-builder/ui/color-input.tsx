@@ -1,8 +1,7 @@
 import { Popover, Spacer, TextInput } from "@acalyle/ui";
 import { useState } from "react";
 import { HexAlphaColorPicker } from "react-colorful";
-
-const HEX_RE = /^#(?:[\da-f]{3,4}|(?:[\da-f]{2}){3,4})$/;
+import { HEX_COLOR_REGEX } from "valibot";
 
 export const ColorInput: React.FC<{
   color: string;
@@ -16,7 +15,7 @@ export const ColorInput: React.FC<{
         value={string ?? color}
         onValueChange={string => {
           setString(string);
-          if (HEX_RE.test(string)) {
+          if (HEX_COLOR_REGEX.test(string)) {
             onChange(string);
           }
         }}
