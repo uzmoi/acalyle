@@ -1,14 +1,15 @@
 import { Button, Spacer } from "@acalyle/ui";
-import { useState } from "react";
+import { useWebStorage } from "#/shared/web-storage";
 import { Link } from "#/shared/ui";
-import { FALLBACK_THEME, THEME_TOKEN_KEYS, getHexColor } from "../model/theme";
+import { themeStorage } from "../model/storage";
+import { THEME_TOKEN_KEYS, getHexColor } from "../model/theme";
 import { Preview } from "./preview";
 import { ColorInput } from "./color-input";
 
 // TODO: linkを扱えるようにする。
 
 export const ThemeBuilderPage: React.FC = () => {
-  const [currentTheme, setTheme] = useState(FALLBACK_THEME);
+  const [currentTheme, setTheme] = useWebStorage(themeStorage);
 
   return (
     <div className=":uno: mx-auto max-w-screen-xl px-8 py-4">

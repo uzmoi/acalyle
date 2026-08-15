@@ -32,6 +32,7 @@ oxlint
 oxlintrc
 parens
 parsea
+picklist
 piyo
 plusplus
 precheck

@@ -1,3 +1,5 @@
+import * as v from "valibot";
+
 export interface Theme extends Record<ThemeTokenKey, ThemeTokenValue> {}
 
 export type ThemeTokenValue = `$${ThemeTokenKey}` | Color;
@@ -19,6 +21,18 @@ export const FALLBACK_THEME: Theme = {
   "note-bg": "$app-bg",
   "note-text": "$ui-text",
 };
+
+const Value = v.union([
+  v.picklist(THEME_TOKEN_KEYS.map(key => `$${key}` as const)),
+  v.picklist(["white", "black", "transparent"]),
+  v.pipe(
+    v.string(),
+    v.hexColor(),
+    v.custom<`#${string}`>(() => true),
+  ),
+]);
+
+export const Theme = v.record(v.picklist(THEME_TOKEN_KEYS), Value);
 
 export type Color = HexColor | keyof typeof NAMED_COLORS;
 export type HexColor = `#${string}`;
