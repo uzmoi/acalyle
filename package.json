@@ -27,7 +27,7 @@
     "lefthook": "^2.1.10",
     "oxlint": "^1.19.0",
     "prettier": "^3.9.6",
-    "turbo": "^2.10.8",
+    "turbo": "^2.10.9",
     "typescript": "7.0.2"
   }
 }
