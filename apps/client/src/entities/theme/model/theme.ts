@@ -17,14 +17,21 @@ export const THEME_TOKEN_KEYS = [
 export const FALLBACK_THEME: Theme = {
   "app-bg": "white",
   "ui-text": "black",
-  "ui-muted-text": "$ui-text",
+  "ui-muted-text": "gray",
   "note-bg": "$app-bg",
   "note-text": "$ui-text",
 };
 
 const Value = v.union([
   v.picklist(THEME_TOKEN_KEYS.map(key => `$${key}` as const)),
-  v.picklist(["white", "black", "transparent"]),
+  v.picklist([
+    "white",
+    "lightgray",
+    "gray",
+    "darkgray",
+    "black",
+    "transparent",
+  ]),
   v.pipe(
     v.string(),
     v.hexColor(),
@@ -39,6 +46,9 @@ export type HexColor = `#${string}`;
 
 const NAMED_COLORS = {
   white: "#ffffff",
+  lightgray: "#c0c0c0",
+  gray: "#808080",
+  darkgray: "#404040",
   black: "#000000",
   transparent: "#00000000",
 } as const satisfies Record<string, HexColor>;
