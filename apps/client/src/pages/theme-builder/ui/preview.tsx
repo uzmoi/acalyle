@@ -3,6 +3,7 @@ import { cx, style } from "asarina";
 import type { BookId } from "#/entities/book";
 import type { Note, NoteId } from "#/entities/note";
 import type { Tag } from "#/entities/tag";
+import { themeVar } from "#/entities/theme";
 import { DetailedNoteView } from "#/widgets/note";
 
 const dummyBookId = "B0000000000000000" as BookId;
@@ -22,13 +23,26 @@ export const Preview: React.FC = () => {
         style({
           // 移行するまでの繋ぎ
           ...createTheme({
+            control: {
+              text: themeVar("ui-text"),
+              bg: themeVar("ui-control-bg"),
+              outline: themeVar("ui-border"),
+            },
+            book_cover: {
+              text: themeVar("book-cover-text"),
+              bg: themeVar("book-cover-bg"),
+            },
             note: {
-              text: "var(--note-text)",
-              bg: "var(--note-bg)",
+              text: themeVar("note-text"),
+              bg: themeVar("note-bg"),
+            },
+            tag: {
+              text: themeVar("tag-text"),
+              bg: themeVar("tag-bg"),
             },
           } as Theme),
-          backgroundColor: "var(--app-bg)",
-          color: "var(--ui-text)",
+          backgroundColor: themeVar("app-bg"),
+          color: themeVar("ui-text"),
         }),
       )}
     >
