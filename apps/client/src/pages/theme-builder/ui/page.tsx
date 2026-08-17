@@ -1,8 +1,8 @@
 import { Button, Spacer } from "@acalyle/ui";
 import { useWebStorage } from "#/shared/web-storage";
 import { Link } from "#/shared/ui";
+import { THEME_TOKEN_KEYS, getHexColor } from "#/entities/theme";
 import { themeStorage } from "../model/storage";
-import { THEME_TOKEN_KEYS, getHexColor } from "../model/theme";
 import { Preview } from "./preview";
 import { ColorInput } from "./color-input";
 
