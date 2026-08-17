@@ -1,7 +1,11 @@
 import { Button, Spacer } from "@acalyle/ui";
 import { useWebStorage } from "#/shared/web-storage";
 import { Link } from "#/shared/ui";
-import { THEME_TOKEN_KEYS, getHexColor } from "#/entities/theme";
+import {
+  THEME_TOKEN_KEYS,
+  createThemeDefineStyle,
+  getHexColor,
+} from "#/entities/theme";
 import { themeStorage } from "../model/storage";
 import { Preview } from "./preview";
 import { ColorInput } from "./color-input";
@@ -46,12 +50,7 @@ export const ThemeBuilderPage: React.FC = () => {
         </div>
         <div
           className=":uno: min-w-md flex-1"
-          style={Object.fromEntries(
-            THEME_TOKEN_KEYS.map(key => [
-              `--${key}`,
-              getHexColor(currentTheme, key),
-            ]),
-          )}
+          style={createThemeDefineStyle(currentTheme)}
         >
           <Preview />
         </div>
