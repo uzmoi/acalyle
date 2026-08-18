@@ -1,5 +1,5 @@
-import { theme, vars } from "@acalyle/ui";
 import type { Preview } from "@storybook/react-vite";
+import { themeVar } from "#/entities/theme";
 import { cx, style } from "asarina";
 import { defaultThemeClassName } from "../theme";
 
@@ -10,10 +10,10 @@ const ThemeProvider: React.FC<{
     <div
       className={cx(
         defaultThemeClassName,
+        ":uno: font-sans",
         style({
           minHeight: "100%",
-          fontFamily: vars.font.sans,
-          color: theme("app-text"),
+          color: themeVar("ui-text"),
         }),
       )}
     >

@@ -1,5 +1,6 @@
-import { ModalContainer, theme } from "@acalyle/ui";
+import { ModalContainer } from "@acalyle/ui";
 import { cx, style } from "asarina";
+import { themeVar } from "#/entities/theme";
 import { type NoteModalInput, modal } from "../model/modal";
 import { NoteModalContent } from "./content";
 
@@ -10,8 +11,11 @@ const renderModalContent = ({
 }: NoteModalInput): React.ReactNode => (
   <div
     className={cx(
-      ":uno: absolute inset-16 m-auto max-w-[min(80%,96rem)] border b-gray-8 rounded-lg b-solid",
-      style({ backgroundColor: theme("app-bg") }),
+      ":uno: absolute inset-16 m-auto max-w-[min(80%,96rem)] border rounded-lg b-solid",
+      style({
+        backgroundColor: themeVar("app-bg"),
+        borderColor: themeVar("ui-border"),
+      }),
     )}
   >
     <NoteModalContent bookRef={bookRef} bookId={bookId} noteId={noteId} />
