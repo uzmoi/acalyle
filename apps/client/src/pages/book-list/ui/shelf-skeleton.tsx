@@ -1,5 +1,5 @@
-import { theme } from "@acalyle/ui";
 import { cx, style } from "asarina";
+import { themeVar } from "#/entities/theme";
 import { BOOKS_PER_PAGE } from "../model";
 
 export const BookShelfSkeleton: React.FC = () => (
@@ -13,11 +13,8 @@ export const BookShelfSkeleton: React.FC = () => (
       <div
         key={i}
         className={cx(
-          ":uno: flex h-24 animate-pulse",
-          style({
-            background: theme("book_cover-bg"),
-            borderRadius: theme("book_cover-round"),
-          }),
+          ":uno: flex h-24 animate-pulse round-2",
+          style({ background: themeVar("book-cover-bg") }),
         )}
       />
     ))}

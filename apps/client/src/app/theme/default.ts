@@ -45,28 +45,6 @@ export const defaultTheme = createTheme({
   modal: {
     backdrop: "#0004",
   },
-
-  app: {
-    text: "#DDDDDD",
-    bg: "#0e0e12",
-  },
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  book_cover: {
-    text: "currentColor",
-    bg: "#14141a",
-    border: "#1e1e28",
-    round: "0.5rem",
-  },
-  note: {
-    text: "currentColor",
-    bg: "#14141a",
-    outline: "#1e1e28",
-  },
-  tag: {
-    text: "currentColor",
-    bg: "#041e40",
-    outline: "#486aa2",
-  },
 });
 
 export const defaultThemeClassName = style(defaultTheme);

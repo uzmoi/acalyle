@@ -1,6 +1,8 @@
+import { cx, style } from "asarina";
 import { use } from "react";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
-import { Link } from "#shared/ui";
+import { themeVar } from "#/entities/theme";
+import { Link } from "#/shared/ui";
 import type { BooksPage as IBooksPage } from "../api";
 import { BookShelf } from "./shelf";
 
@@ -13,7 +15,12 @@ export const BooksPage: React.FC<{
   return (
     <div>
       <BookShelf books={books} />
-      <div className=":uno: mt flex justify-between b-t b-t-gray-7 b-t-solid pt-1">
+      <div
+        className={cx(
+          ":uno: mt flex justify-between b-t b-t-solid pt-1",
+          style({ borderTopColor: themeVar("ui-border") }),
+        )}
+      >
         <Link
           to="/books"
           search={{ query, before: pageInfo.startCursor ?? undefined }}

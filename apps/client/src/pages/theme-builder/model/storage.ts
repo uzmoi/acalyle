@@ -1,6 +1,6 @@
 import * as v from "valibot";
 import { declareStorage } from "#/shared/web-storage";
-import { FALLBACK_THEME, Theme } from "./theme";
+import { FALLBACK_THEME, Theme } from "#/entities/theme";
 
 const themeJsonSchema = v.pipe(v.string(), v.parseJson(), Theme);
 

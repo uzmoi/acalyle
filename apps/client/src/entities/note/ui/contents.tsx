@@ -1,5 +1,5 @@
-import { theme } from "@acalyle/ui";
 import { cx, style } from "asarina";
+import { themeVar } from "#/entities/theme";
 
 export const NoteContents: React.FC<{
   contents: string;
@@ -9,8 +9,8 @@ export const NoteContents: React.FC<{
       className={cx(
         ":uno: py-1 px-3 min-h-4 ws-pre-wrap break-all",
         style({
-          color: theme("note-text"),
-          background: theme("note-bg"),
+          color: themeVar("note-text"),
+          background: themeVar("note-bg"),
         }),
       )}
     >

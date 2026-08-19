@@ -8,6 +8,7 @@ codegen
 cond
 cssole
 csstype
+darkgray
 datetime
 edix
 emnorst
@@ -24,6 +25,7 @@ iframe
 iife
 Importability
 lefthook
+lightgray
 markuplint
 Millis
 nanostores

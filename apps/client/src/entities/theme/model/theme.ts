@@ -10,21 +10,42 @@ export const THEME_TOKEN_KEYS = [
   "app-bg",
   "ui-text",
   "ui-muted-text",
+  "ui-border",
+  "ui-control-bg",
+  "book-cover-bg",
+  "book-cover-text",
   "note-bg",
   "note-text",
+  "tag-bg",
+  "tag-text",
+  "tag-outline",
 ] as const;
 
 export const FALLBACK_THEME: Theme = {
   "app-bg": "white",
   "ui-text": "black",
-  "ui-muted-text": "$ui-text",
+  "ui-muted-text": "gray",
+  "ui-border": "gray",
+  "ui-control-bg": "lightgray",
+  "book-cover-bg": "lightgray",
+  "book-cover-text": "$ui-text",
   "note-bg": "$app-bg",
   "note-text": "$ui-text",
+  "tag-bg": "$app-bg",
+  "tag-text": "$ui-text",
+  "tag-outline": "$ui-border",
 };
 
 const Value = v.union([
   v.picklist(THEME_TOKEN_KEYS.map(key => `$${key}` as const)),
-  v.picklist(["white", "black", "transparent"]),
+  v.picklist([
+    "white",
+    "lightgray",
+    "gray",
+    "darkgray",
+    "black",
+    "transparent",
+  ]),
   v.pipe(
     v.string(),
     v.hexColor(),
@@ -39,6 +60,9 @@ export type HexColor = `#${string}`;
 
 const NAMED_COLORS = {
   white: "#ffffff",
+  lightgray: "#c0c0c0",
+  gray: "#808080",
+  darkgray: "#404040",
   black: "#000000",
   transparent: "#00000000",
 } as const satisfies Record<string, HexColor>;
