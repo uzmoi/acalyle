@@ -13,7 +13,7 @@ export const BookShelfSkeleton: React.FC = () => (
       <div
         key={i}
         className={cx(
-          ":uno: flex h-24 animate-pulse round-2",
+          ":uno: flex h-24 animate-pulse rounded-2",
           style({ background: themeVar("book-cover-bg") }),
         )}
       />
