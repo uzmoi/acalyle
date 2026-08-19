@@ -28,18 +28,6 @@ export const Preview: React.FC = () => {
               bg: themeVar("ui-control-bg"),
               outline: themeVar("ui-border"),
             },
-            book_cover: {
-              text: themeVar("book-cover-text"),
-              bg: themeVar("book-cover-bg"),
-            },
-            note: {
-              text: themeVar("note-text"),
-              bg: themeVar("note-bg"),
-            },
-            tag: {
-              text: themeVar("tag-text"),
-              bg: themeVar("tag-bg"),
-            },
           } as Theme),
           backgroundColor: themeVar("app-bg"),
           color: themeVar("ui-text"),
