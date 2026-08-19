@@ -13,7 +13,7 @@ export const varName = (key: string): `--${string}` =>
 export const themeVar = (key: ThemeTokenKey): `var(--${string})` =>
   `var(${varName(key)})`;
 
-export const createThemeDefineStyle = (
+export const createThemeDefinitionStyle = (
   theme: Theme,
 ): Record<`--${string}`, string> => {
   return Object.fromEntries(

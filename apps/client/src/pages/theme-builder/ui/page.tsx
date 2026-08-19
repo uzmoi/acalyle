@@ -3,7 +3,7 @@ import { useWebStorage } from "#/shared/web-storage";
 import { Link } from "#/shared/ui";
 import {
   THEME_TOKEN_KEYS,
-  createThemeDefineStyle,
+  createThemeDefinitionStyle,
   getHexColor,
 } from "#/entities/theme";
 import { themeStorage } from "../model/storage";
@@ -50,7 +50,7 @@ export const ThemeBuilderPage: React.FC = () => {
         </div>
         <div
           className=":uno: min-w-md flex-1"
-          style={createThemeDefineStyle(currentTheme)}
+          style={createThemeDefinitionStyle(currentTheme)}
         >
           <Preview />
         </div>
