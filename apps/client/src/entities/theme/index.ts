@@ -1,3 +1,4 @@
+export { useThemeDefinitionStyle } from "./model/store";
 export { createThemeDefineStyle, themeVar } from "./model/style";
 export {
   FALLBACK_THEME,

@@ -1,12 +1,14 @@
 import { type Theme, createTheme } from "@acalyle/ui";
 import { RouterProvider } from "@tanstack/react-router";
 import { cx, style } from "asarina";
-import { themeVar } from "#/entities/theme";
+import { themeVar, useThemeDefinitionStyle } from "#/entities/theme";
 import { QuickModalContainer } from "#/features/modal";
 import { router } from "./router";
 import { defaultThemeClassName } from "./theme";
 
 export const App: React.FC = () => {
+  const themeStyle = useThemeDefinitionStyle();
+
   return (
     <div
       className={cx(
@@ -25,6 +27,7 @@ export const App: React.FC = () => {
           backgroundColor: themeVar("app-bg"),
         }),
       )}
+      style={themeStyle}
     >
       <RouterProvider router={router} />
       <QuickModalContainer />
