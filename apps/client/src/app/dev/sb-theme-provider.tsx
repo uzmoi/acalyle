@@ -1,5 +1,10 @@
+import { type Theme, createTheme } from "@acalyle/ui";
 import type { Preview } from "@storybook/react-vite";
-import { themeVar } from "#/entities/theme";
+import {
+  FALLBACK_THEME,
+  createThemeDefinitionStyle,
+  themeVar,
+} from "#/entities/theme";
 import { cx, style } from "asarina";
 import { defaultThemeClassName } from "../theme";
 
@@ -13,9 +18,17 @@ const ThemeProvider: React.FC<{
         ":uno: font-sans",
         style({
           minHeight: "100%",
+          ...createTheme({
+            control: {
+              text: themeVar("ui-text"),
+              bg: themeVar("ui-control-bg"),
+              outline: themeVar("ui-border"),
+            },
+          } as Theme),
           color: themeVar("ui-text"),
         }),
       )}
+      style={createThemeDefinitionStyle(FALLBACK_THEME)}
     >
       {children}
     </div>
