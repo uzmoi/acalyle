@@ -33,9 +33,10 @@ export const ThemeBuilderPage: React.FC = () => {
           Copy as JSON
         </Button>
       </div>
-      <Spacer size="2rem" />
+      <Spacer size="1.25rem" />
       <div className=":uno: flex gap-4">
         <div className=":uno: flex flex-col gap-2 min-w-64">
+          <h2 className=":uno: text-lg">Tokens</h2>
           {THEME_TOKEN_KEYS.map(key => (
             <div key={key} className=":uno: flex gap-4 items-center">
               <p className=":uno: flex-1 text-base">{key}</p>
@@ -49,10 +50,13 @@ export const ThemeBuilderPage: React.FC = () => {
           ))}
         </div>
         <div
-          className=":uno: min-w-md flex-1"
+          className=":uno: min-w-md flex-1 flex flex-col gap-2"
           style={createThemeDefinitionStyle(currentTheme)}
         >
-          <Preview />
+          <h2 className=":uno: text-lg">Preview</h2>
+          <div className=":uno: flex-1">
+            <Preview />
+          </div>
         </div>
       </div>
     </div>
