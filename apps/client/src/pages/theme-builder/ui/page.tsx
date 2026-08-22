@@ -1,4 +1,4 @@
-import { Button, Spacer } from "@acalyle/ui";
+import { Button, Select, Spacer } from "@acalyle/ui";
 import { useWebStorage } from "#/shared/web-storage";
 import { Link } from "#/shared/ui";
 import {
@@ -6,6 +6,8 @@ import {
   createThemeDefinitionStyle,
   getHexColor,
 } from "#/entities/theme";
+import { useState } from "react";
+import { PREVIEW_PAGES, type PreviewPage } from "../model/preview";
 import { themeStorage } from "../model/storage";
 import { Preview } from "./preview";
 import { ColorInput } from "./color-input";
@@ -14,6 +16,7 @@ import { ColorInput } from "./color-input";
 
 export const ThemeBuilderPage: React.FC = () => {
   const [currentTheme, setTheme] = useWebStorage(themeStorage);
+  const [previewPage, setPreviewPage] = useState<PreviewPage>("note");
 
   return (
     <div className=":uno: mx-auto max-w-screen-xl px-8 py-4">
@@ -53,9 +56,21 @@ export const ThemeBuilderPage: React.FC = () => {
           className=":uno: min-w-md flex-1 flex flex-col gap-2"
           style={createThemeDefinitionStyle(currentTheme)}
         >
-          <h2 className=":uno: text-lg">Preview</h2>
+          <div className=":uno: flex gap-4 items-center">
+            <h2 className=":uno: flex-1 text-lg">Preview</h2>
+            <Select
+              value={previewPage}
+              onValueChange={page => setPreviewPage(page as PreviewPage)}
+            >
+              {PREVIEW_PAGES.map(page => (
+                <Select.Option key={page} value={page}>
+                  {page}
+                </Select.Option>
+              ))}
+            </Select>
+          </div>
           <div className=":uno: flex-1">
-            <Preview />
+            <Preview page={previewPage} />
           </div>
         </div>
       </div>
