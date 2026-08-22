@@ -14,10 +14,31 @@ export const dummyNote: Note = {
 export const dummyBooks: readonly Book[] = [
   {
     id: dummyBookId,
-    handle: "handle" as BookHandle,
-    title: "Title",
+    handle: "handle1" as BookHandle,
+    title: "Book 1",
     description: "This is a description.",
-    thumbnail: "color:#ffffff",
+    thumbnail: "color:oklch(0.7 0.2 40)",
+  },
+  {
+    id: "B0000000000000001" as BookId,
+    handle: "handle2" as BookHandle,
+    title: "Book 2",
+    description: "This is a description.",
+    thumbnail: "color:oklch(0.7 0.2 130)",
+  },
+  {
+    id: "B0000000000000002" as BookId,
+    handle: "handle3" as BookHandle,
+    title: "Book 3",
+    description: "This is a description.",
+    thumbnail: "color:oklch(0.7 0.2 220)",
+  },
+  {
+    id: "B0000000000000003" as BookId,
+    handle: "handle4" as BookHandle,
+    title: "Book 4",
+    description: "This is a description.",
+    thumbnail: "color:oklch(0.7 0.2 310)",
   },
 ];
 

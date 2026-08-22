@@ -30,6 +30,7 @@ markuplint
 Millis
 nanostores
 nitrogql
+oklch
 oxlint
 oxlintrc
 parens
