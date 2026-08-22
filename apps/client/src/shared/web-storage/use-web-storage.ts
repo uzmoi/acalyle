@@ -3,7 +3,7 @@ import type { WebStorageEntry } from "./web-storage";
 
 export const useWebStorage = <T>(
   entry: WebStorageEntry<T>,
-): readonly [T, (value: T | ((value: T) => T)) => void] => {
+): readonly [T, (value: T | ((value: T) => T)) => void, () => void] => {
   const [value, setValue] = useState(() => entry.read());
 
   const set = useCallback(
@@ -20,5 +20,10 @@ export const useWebStorage = <T>(
     [entry],
   );
 
-  return [value, set];
+  const reset = useCallback(() => {
+    entry.saveRaw(null);
+    setValue(entry.read());
+  }, [entry]);
+
+  return [value, set, reset];
 };

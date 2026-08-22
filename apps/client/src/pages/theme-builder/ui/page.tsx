@@ -6,6 +6,7 @@ import {
   createThemeDefinitionStyle,
   getHexColor,
 } from "#/entities/theme";
+import { confirm } from "#/features/modal";
 import { useState } from "react";
 import { PREVIEW_PAGES, type PreviewPage } from "../model/preview";
 import { themeStorage } from "../model/storage";
@@ -15,7 +16,7 @@ import { ColorInput } from "./color-input";
 // TODO: linkを扱えるようにする。
 
 export const ThemeBuilderPage: React.FC = () => {
-  const [currentTheme, setTheme] = useWebStorage(themeStorage);
+  const [currentTheme, setTheme, resetTheme] = useWebStorage(themeStorage);
   const [previewPage, setPreviewPage] = useState<PreviewPage>("note");
 
   return (
@@ -39,7 +40,20 @@ export const ThemeBuilderPage: React.FC = () => {
       <Spacer size="1.25rem" />
       <div className=":uno: flex gap-4">
         <div className=":uno: flex flex-col gap-2 min-w-64">
-          <h2 className=":uno: text-lg">Tokens</h2>
+          <div className=":uno: flex gap-4 items-center">
+            <h2 className=":uno: flex-1 text-lg">Tokens</h2>
+            <Button
+              onClick={async () => {
+                const message =
+                  "編集中のテーマをリセットします。よろしいですか？";
+                if (await confirm(message)) {
+                  resetTheme();
+                }
+              }}
+            >
+              Reset
+            </Button>
+          </div>
           {THEME_TOKEN_KEYS.map(key => (
             <div key={key} className=":uno: flex gap-4 items-center">
               <p className=":uno: flex-1 text-base">{key}</p>
