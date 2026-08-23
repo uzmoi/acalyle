@@ -4,6 +4,10 @@ export interface Theme extends Record<ThemeTokenKey, ThemeTokenValue> {}
 
 export type ThemeTokenValue = `$${ThemeTokenKey}` | Color;
 
+export const isLinkTokenValue = (
+  value: ThemeTokenValue,
+): value is `$${ThemeTokenKey}` => value.startsWith("$");
+
 export type ThemeTokenKey = (typeof THEME_TOKEN_KEYS)[number];
 
 export const THEME_TOKEN_KEYS = [
@@ -71,7 +75,7 @@ export const getHexColor = (theme: Theme, key: ThemeTokenKey): HexColor => {
   const path = new Set([key]);
   let value = theme[key];
 
-  while (value.startsWith("$")) {
+  while (isLinkTokenValue(value)) {
     const refKey = value.slice(1) as ThemeTokenKey;
     if (path.has(refKey)) return getHexColor(FALLBACK_THEME, key);
     path.add(refKey);

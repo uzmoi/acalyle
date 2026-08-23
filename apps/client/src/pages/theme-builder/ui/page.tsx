@@ -1,19 +1,13 @@
 import { Button, Select, Spacer } from "@acalyle/ui";
 import { useWebStorage } from "#/shared/web-storage";
 import { Link } from "#/shared/ui";
-import {
-  THEME_TOKEN_KEYS,
-  createThemeDefinitionStyle,
-  getHexColor,
-} from "#/entities/theme";
+import { THEME_TOKEN_KEYS, createThemeDefinitionStyle } from "#/entities/theme";
 import { confirm } from "#/features/modal";
 import { useState } from "react";
 import { PREVIEW_PAGES, type PreviewPage } from "../model/preview";
 import { themeStorage } from "../model/storage";
 import { Preview } from "./preview";
-import { ColorInput } from "./color-input";
-
-// TODO: linkを扱えるようにする。
+import { ThemeTokenRow } from "./theme-token-row";
 
 export const ThemeBuilderPage: React.FC = () => {
   const [currentTheme, setTheme, resetTheme] = useWebStorage(themeStorage);
@@ -39,7 +33,7 @@ export const ThemeBuilderPage: React.FC = () => {
       </div>
       <Spacer size="1.25rem" />
       <div className=":uno: flex gap-4">
-        <div className=":uno: flex flex-col gap-2 min-w-64">
+        <div className=":uno: flex flex-col gap-2 min-w-48">
           <div className=":uno: flex gap-4 items-center">
             <h2 className=":uno: flex-1 text-lg">Tokens</h2>
             <Button
@@ -55,15 +49,14 @@ export const ThemeBuilderPage: React.FC = () => {
             </Button>
           </div>
           {THEME_TOKEN_KEYS.map(key => (
-            <div key={key} className=":uno: flex gap-4 items-center">
-              <p className=":uno: flex-1 text-base">{key}</p>
-              <ColorInput
-                color={getHexColor(currentTheme, key)}
-                onChange={color => {
-                  setTheme(theme => ({ ...theme, [key]: color }));
-                }}
-              />
-            </div>
+            <ThemeTokenRow
+              key={key}
+              tokenKey={key}
+              theme={currentTheme}
+              onChange={color => {
+                setTheme(theme => ({ ...theme, [key]: color }));
+              }}
+            />
           ))}
         </div>
         <div

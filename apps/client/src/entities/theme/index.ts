@@ -5,4 +5,7 @@ export {
   THEME_TOKEN_KEYS,
   Theme,
   getHexColor,
+  type ThemeTokenKey,
+  type ThemeTokenValue,
+  isLinkTokenValue,
 } from "./model/theme";
