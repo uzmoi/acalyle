@@ -59,10 +59,7 @@ export const ThemeBuilderPage: React.FC = () => {
             />
           ))}
         </div>
-        <div
-          className=":uno: min-w-md flex-1 flex flex-col gap-2"
-          style={createThemeDefinitionStyle(currentTheme)}
-        >
+        <div className=":uno: min-w-md flex-1 flex flex-col gap-2">
           <div className=":uno: flex gap-4 items-center">
             <h2 className=":uno: flex-1 text-lg">Preview</h2>
             <Select
@@ -76,7 +73,10 @@ export const ThemeBuilderPage: React.FC = () => {
               ))}
             </Select>
           </div>
-          <div className=":uno: flex-1">
+          <div
+            className=":uno: flex-1"
+            style={createThemeDefinitionStyle(currentTheme)}
+          >
             <Preview page={previewPage} />
           </div>
         </div>
