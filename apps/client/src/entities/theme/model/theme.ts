@@ -25,13 +25,21 @@ export const THEME_TOKEN_KEYS = [
   "tag-outline",
 ] as const;
 
+const COLORS = {
+  white: "#ffffff",
+  lightgray: "#c0c0c0",
+  gray: "#808080",
+  darkgray: "#404040",
+  black: "#000000",
+} as const satisfies Record<string, Color>;
+
 export const FALLBACK_THEME: Theme = {
-  "app-bg": "white",
-  "ui-text": "black",
-  "ui-muted-text": "gray",
-  "ui-border": "gray",
-  "ui-control-bg": "lightgray",
-  "book-cover-bg": "lightgray",
+  "app-bg": COLORS.white,
+  "ui-text": COLORS.black,
+  "ui-muted-text": COLORS.gray,
+  "ui-border": COLORS.gray,
+  "ui-control-bg": COLORS.lightgray,
+  "book-cover-bg": COLORS.lightgray,
   "book-cover-text": "$ui-text",
   "note-bg": "$app-bg",
   "note-text": "$ui-text",
@@ -42,14 +50,7 @@ export const FALLBACK_THEME: Theme = {
 
 const Value = v.union([
   v.picklist(THEME_TOKEN_KEYS.map(key => `$${key}` as const)),
-  v.picklist([
-    "white",
-    "lightgray",
-    "gray",
-    "darkgray",
-    "black",
-    "transparent",
-  ]),
+  v.literal("transparent"),
   v.pipe(
     v.string(),
     v.hexColor(),
@@ -59,38 +60,18 @@ const Value = v.union([
 
 export const Theme = v.record(v.picklist(THEME_TOKEN_KEYS), Value);
 
-export type Color = HexColor | keyof typeof NAMED_COLORS;
-export type HexColor = `#${string}`;
+export type Color = `#${string}` | "transparent";
 
-const NAMED_COLORS = {
-  white: "#ffffff",
-  lightgray: "#c0c0c0",
-  gray: "#808080",
-  darkgray: "#404040",
-  black: "#000000",
-  transparent: "#00000000",
-} as const satisfies Record<string, HexColor>;
-
-export const getHexColor = (theme: Theme, key: ThemeTokenKey): HexColor => {
+export const getColor = (theme: Theme, key: ThemeTokenKey): Color => {
   const path = new Set([key]);
   let value = theme[key];
 
   while (isLinkTokenValue(value)) {
     const refKey = value.slice(1) as ThemeTokenKey;
-    if (path.has(refKey)) return getHexColor(FALLBACK_THEME, key);
+    if (path.has(refKey)) return getColor(FALLBACK_THEME, key);
     path.add(refKey);
     value = theme[refKey];
   }
 
-  if (value.startsWith("#")) {
-    return value;
-  }
-
-  return NAMED_COLORS[value];
+  return value;
 };
-
-declare global {
-  interface String {
-    startsWith<T extends string>(searchString: T): this is `${T}${string}`;
-  }
-}

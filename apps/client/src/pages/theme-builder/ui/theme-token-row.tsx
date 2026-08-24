@@ -8,7 +8,7 @@ import {
   THEME_TOKEN_KEYS,
   type Theme,
   type ThemeTokenKey,
-  getHexColor,
+  getColor,
   isLinkTokenValue,
   themeVar,
 } from "#/entities/theme";
@@ -21,7 +21,7 @@ export const ThemeTokenRow: React.FC<{
   const [string, setString] = useState<string>();
 
   const value = theme[tokenKey];
-  const color = getHexColor(theme, tokenKey);
+  const color = getColor(theme, tokenKey);
 
   if (isLinkTokenValue(value)) {
     return (
@@ -55,6 +55,8 @@ export const ThemeTokenRow: React.FC<{
     );
   }
 
+  const hexColor: `#${string}` = color === "transparent" ? "#0000" : color;
+
   return (
     <Popover className=":uno: flex gap-3 items-center">
       <Popover.Button
@@ -63,13 +65,13 @@ export const ThemeTokenRow: React.FC<{
         aria-label="Color picker"
       />
       <Popover.Content className=":uno: top-[calc(100%+0.25rem)] z-1 p-2">
-        <HexAlphaColorPicker color={color} onChange={onChange} />
+        <HexAlphaColorPicker color={hexColor} onChange={onChange} />
         <Spacer size="0.5rem" />
         <TextInput
           value={string ?? color}
           onValueChange={string => {
             setString(string);
-            if (HEX_COLOR_REGEX.test(string)) {
+            if (string === "transparent" || HEX_COLOR_REGEX.test(string)) {
               onChange(string);
             }
           }}

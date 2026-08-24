@@ -3,7 +3,7 @@ import {
   THEME_TOKEN_KEYS,
   type Theme,
   type ThemeTokenKey,
-  getHexColor,
+  getColor,
 } from "./theme";
 
 export const varName = (key: string): `--${string}` =>
@@ -17,6 +17,6 @@ export const createThemeDefinitionStyle = (
   theme: Theme,
 ): Record<`--${string}`, string> => {
   return Object.fromEntries(
-    THEME_TOKEN_KEYS.map(key => [varName(key), getHexColor(theme, key)]),
+    THEME_TOKEN_KEYS.map(key => [varName(key), getColor(theme, key)]),
   );
 };
