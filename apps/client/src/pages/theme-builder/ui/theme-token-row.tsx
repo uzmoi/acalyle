@@ -10,6 +10,7 @@ import {
   type ThemeTokenKey,
   getColor,
   isLinkTokenValue,
+  normalizeColor,
   themeVar,
 } from "#/entities/theme";
 
@@ -106,7 +107,7 @@ export const ThemeTokenRow: React.FC<{
             style({ color: themeVar("ui-muted-text") }),
           )}
         >
-          {color}
+          {normalizeColor(color)}
         </p>
       </div>
     </Popover>

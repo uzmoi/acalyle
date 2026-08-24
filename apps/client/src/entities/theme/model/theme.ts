@@ -75,3 +75,21 @@ export const getColor = (theme: Theme, key: ThemeTokenKey): Color => {
 
   return value;
 };
+
+export const normalizeColor = (value: Color): Color => {
+  if (value.startsWith("#")) {
+    // #rgb0 or #rrggbb00
+    if (/^#(?:.{3}0|.{6}00)$/.test(value)) {
+      return "transparent";
+    }
+
+    // #rgb or #rgba
+    // oxlint-disable-next-line no-magic-numbers
+    if (value.length < 6) {
+      // 英数字を `$&` にキャプチャして繰り返す。
+      return value.replaceAll(/\w/g, "$&$&") as `#${string}`;
+    }
+  }
+
+  return value;
+};

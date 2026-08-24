@@ -44,6 +44,7 @@ prelint
 proto
 quasis
 rizzzse
+rrggbb
 rustc
 rustls
 serde

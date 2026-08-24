@@ -8,4 +8,5 @@ export {
   getColor,
   isLinkTokenValue,
   Theme,
+  normalizeColor,
 } from "./model/theme";
