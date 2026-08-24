@@ -104,7 +104,7 @@ export const ThemeTokenRow: React.FC<{
             style({ color: themeVar("ui-muted-text") }),
           )}
         >
-          {value}
+          {color}
         </p>
       </div>
     </Popover>
