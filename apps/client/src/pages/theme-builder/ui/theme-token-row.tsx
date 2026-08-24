@@ -5,9 +5,11 @@ import { HexAlphaColorPicker } from "react-colorful";
 import { LuLink, LuUnlink } from "react-icons/lu";
 import { HEX_COLOR_REGEX } from "valibot";
 import {
+  type Color,
   THEME_TOKEN_KEYS,
   type Theme,
   type ThemeTokenKey,
+  type ThemeTokenValue,
   getColor,
   isLinkTokenValue,
   normalizeColor,
@@ -17,7 +19,7 @@ import {
 export const ThemeTokenRow: React.FC<{
   tokenKey: ThemeTokenKey;
   theme: Theme;
-  onChange: (color: string) => void;
+  onChange: (value: ThemeTokenValue) => void;
 }> = ({ tokenKey, theme, onChange }) => {
   const [string, setString] = useState<string>();
 
@@ -66,14 +68,18 @@ export const ThemeTokenRow: React.FC<{
         aria-label="Color picker"
       />
       <Popover.Content className=":uno: top-[calc(100%+0.25rem)] z-1 p-2">
-        <HexAlphaColorPicker color={hexColor} onChange={onChange} />
+        <HexAlphaColorPicker
+          color={hexColor}
+          // onChange の引数は color に有効な hex color を渡す限り hex color
+          onChange={onChange as (newColor: string) => void}
+        />
         <Spacer size="0.5rem" />
         <TextInput
           value={string ?? color}
           onValueChange={string => {
             setString(string);
             if (string === "transparent" || HEX_COLOR_REGEX.test(string)) {
-              onChange(string);
+              onChange(string as Color);
             }
           }}
           onBlur={() => setString(undefined)}
@@ -83,7 +89,9 @@ export const ThemeTokenRow: React.FC<{
         <Select
           className=":uno: font-mono w-[200px]"
           defaultValue=""
-          onValueChange={onChange}
+          // オプションは全て有効なリンク
+          onValueChange={onChange as (value: string) => void}
+          aria-label="Link"
         >
           <Select.Option value="" disabled className=":uno: hidden">
             Link
