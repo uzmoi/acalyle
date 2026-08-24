@@ -78,18 +78,26 @@ export const getColor = (theme: Theme, key: ThemeTokenKey): Color => {
 
 export const normalizeColor = (value: Color): Color => {
   if (value.startsWith("#")) {
-    // #rgb0 or #rrggbb00
-    if (/^#(?:.{3}0|.{6}00)$/.test(value)) {
+    // oxlint-disable-next-line no-magic-numbers
+    const isShort = value.length < 6;
+
+    // #rgb or #rgba
+    if (isShort) {
+      // 英数字を `$&` にキャプチャして繰り返す。
+      value = value.replaceAll(/\w/g, "$&$&") as `#${string}`;
+    }
+
+    // #rrggbb00
+    if (/^#.{6}00$/.test(value)) {
       return "transparent";
     }
 
-    // #rgb or #rgba
-    // oxlint-disable-next-line no-magic-numbers
-    if (value.length < 6) {
-      // 英数字を `$&` にキャプチャして繰り返す。
-      return value.replaceAll(/\w/g, "$&$&") as `#${string}`;
+    // #rrggbbff
+    if (/^#.{6}ff$/i.test(value)) {
+      // oxlint-disable-next-line no-magic-numbers
+      value = value.slice(0, 7) as `#${string}`;
     }
   }
 
-  return value;
+  return value.toLowerCase() as Color;
 };

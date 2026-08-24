@@ -53,4 +53,20 @@ describe("normalizeColor", () => {
   test("#rrggbb00 is normalized to 'transparent'", () => {
     expect(normalizeColor("#12345600")).toBe("transparent");
   });
+
+  test("#rgbf is normalized to #rrggbb", () => {
+    expect(normalizeColor("#123f")).toBe("#112233");
+  });
+
+  test("#rrggbbff is normalized to #rrggbb", () => {
+    expect(normalizeColor("#123456fF")).toBe("#123456");
+  });
+
+  test("Convert to lowercase", () => {
+    expect(normalizeColor("#ABCDEF")).toBe("#abcdef");
+  });
+
+  test("Through transparent", () => {
+    expect(normalizeColor("transparent")).toBe("transparent");
+  });
 });

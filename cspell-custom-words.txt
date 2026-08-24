@@ -43,9 +43,11 @@ precodegen
 prelint
 proto
 quasis
+rgbf
 rizzzse
 rrggbb
 rrggbbaa
+rrggbbff
 rustc
 rustls
 serde
