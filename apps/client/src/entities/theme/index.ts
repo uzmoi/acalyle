@@ -7,6 +7,7 @@ export {
   type ThemeTokenKey,
   type ThemeTokenValue,
   getColor,
+  isColor,
   isLinkTokenValue,
   Theme,
   normalizeColor,

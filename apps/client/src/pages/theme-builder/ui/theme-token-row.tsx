@@ -3,14 +3,13 @@ import { cx, style } from "asarina";
 import { useState } from "react";
 import { HexAlphaColorPicker } from "react-colorful";
 import { LuLink, LuUnlink } from "react-icons/lu";
-import { HEX_COLOR_REGEX } from "valibot";
 import {
-  type Color,
   THEME_TOKEN_KEYS,
   type Theme,
   type ThemeTokenKey,
   type ThemeTokenValue,
   getColor,
+  isColor,
   isLinkTokenValue,
   normalizeColor,
   themeVar,
@@ -78,8 +77,8 @@ export const ThemeTokenRow: React.FC<{
           value={string ?? color}
           onValueChange={string => {
             setString(string);
-            if (string === "transparent" || HEX_COLOR_REGEX.test(string)) {
-              onChange(string as Color);
+            if (isColor(string)) {
+              onChange(string);
             }
           }}
           onBlur={() => setString(undefined)}

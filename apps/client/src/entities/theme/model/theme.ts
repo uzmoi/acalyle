@@ -76,6 +76,9 @@ export const getColor = (theme: Theme, key: ThemeTokenKey): Color => {
   return value;
 };
 
+export const isColor = (string: string): string is Color =>
+  string === "transparent" || v.HEX_COLOR_REGEX.test(string);
+
 export const normalizeColor = (value: Color): Color => {
   if (value.startsWith("#")) {
     // oxlint-disable-next-line no-magic-numbers
