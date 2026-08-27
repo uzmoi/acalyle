@@ -3,8 +3,8 @@ import { use } from "react";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { themeVar } from "#/entities/theme";
 import { Link } from "#/shared/ui";
+import { BookShelf } from "#/widgets/book-shelf";
 import type { BooksPage as IBooksPage } from "../api";
-import { BookShelf } from "./shelf";
 
 export const BooksPage: React.FC<{
   query: string | undefined;

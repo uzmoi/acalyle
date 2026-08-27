@@ -1,8 +1,8 @@
 import { type Theme, createTheme } from "@acalyle/ui";
 import { cx, style } from "asarina";
 import { themeVar } from "#/entities/theme";
+import { BookShelf } from "#/widgets/book-shelf";
 import { DetailedNoteView } from "#/widgets/note";
-import { BookShelf } from "~/pages/book-list/ui/shelf";
 import {
   type PreviewPage,
   dummyBookId,
