@@ -1,7 +1,9 @@
 import { useNavigate } from "@tanstack/react-router";
+import { cx, style } from "asarina";
 import { BiLeftArrowAlt } from "react-icons/bi";
-import { Link } from "#shared/ui";
-import type { BookRef } from "~/entities/book";
+import { Link } from "#/shared/ui";
+import type { BookRef } from "#/entities/book";
+import { themeVar } from "#/entities/theme";
 import { CreateBookForm } from "./form";
 
 export const NewBookPage: React.FC = () => {
@@ -23,7 +25,12 @@ export const NewBookPage: React.FC = () => {
         <BiLeftArrowAlt />
         <span className=":uno: ml-1 align-bottom">Return to books</span>
       </Link>
-      <hr className=":uno: mb-3 mt-1 border-gray-7 border-none border-t-solid" />
+      <hr
+        className={cx(
+          ":uno: mb-3 mt-1 border-none border-t-solid",
+          style({ borderColor: themeVar("ui-border") }),
+        )}
+      />
       <CreateBookForm onCreatedBook={onCreatedBook} />
     </div>
   );

@@ -1,5 +1,7 @@
 import { TextInput } from "@acalyle/ui";
+import { cx, style } from "asarina";
 import { useId } from "react";
+import { themeVar } from "#/entities/theme";
 import { MAX_DESCRIPTION_LENGTH } from "../model/validation";
 
 export const DescriptionField: React.FC<{
@@ -22,7 +24,12 @@ export const DescriptionField: React.FC<{
         value={value}
         onValueChange={onChange}
       />
-      <p className=":uno: mt-1 text-xs text-gray [[aria-invalid=true]+&]:text-red">
+      <p
+        className={cx(
+          ":uno: mt-1 text-xs [[aria-invalid=true]+&]:text-red",
+          style({ color: themeVar("ui-muted-text") }),
+        )}
+      >
         {descriptionLength} / {MAX_DESCRIPTION_LENGTH} 文字
       </p>
     </div>

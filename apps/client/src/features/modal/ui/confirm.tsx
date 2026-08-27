@@ -1,5 +1,4 @@
-import { Button, ControlGroup, vars } from "@acalyle/ui";
-import { style } from "asarina";
+import { Button, ControlGroup } from "@acalyle/ui";
 import { useCallback } from "react";
 import { BiError } from "react-icons/bi";
 
@@ -18,14 +17,7 @@ export const ConfirmForm: React.FC<{
   return (
     <form action={ok} className=":uno: p-5">
       <p>
-        <BiError
-          className={style({
-            verticalAlign: "bottom",
-            color: vars.color.danger,
-            marginRight: "0.25em",
-            fontSize: "1.75em",
-          })}
-        />
+        <BiError className=":uno: align-top text-red mr-1 text-3xl" />
         <span className=":uno: text-size-xl">{message}</span>
       </p>
       <div className=":uno: mx-auto mt-3 w-fit">

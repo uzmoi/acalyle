@@ -1,5 +1,6 @@
-import { ModalContainer, center, theme } from "@acalyle/ui";
+import { ModalContainer, center } from "@acalyle/ui";
 import { cx, style } from "asarina";
+import { themeVar } from "#/entities/theme";
 import { type ModalInput, type Modals, modal } from "../model/store";
 import { ConfirmForm } from "./confirm";
 
@@ -19,7 +20,7 @@ const renderModal = (data: ModalInput): React.ReactNode => (
   <div
     className={cx(
       ":uno: rounded shadow-lg",
-      style({ ...center(), backgroundColor: theme("app-bg") }),
+      style({ ...center(), backgroundColor: themeVar("app-bg") }),
     )}
   >
     {modals[data.type](data.input, result => {

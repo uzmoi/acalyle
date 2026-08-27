@@ -1,6 +1,7 @@
 import { base, theme } from "@acalyle/ui";
 import { cx, style } from "asarina";
 import { type UseLinkPropsOptions, useLinkProps } from "@tanstack/react-router";
+import { themeVar } from "#/entities/theme";
 
 export interface LinkProps extends UseLinkPropsOptions {
   target?: React.HTMLAttributeAnchorTarget;
@@ -35,7 +36,8 @@ export const Link: React.FC<LinkProps> = ({ button, className, ...rest }) => {
     <a
       {...props}
       className={cx(
-        ":uno: text-inherit not-any-link:text-gray-4",
+        ":uno: text-inherit",
+        style({ "&:not(:any-link)": { color: themeVar("ui-muted-text") } }),
         button && cx(base, buttonStyle),
         className,
       )}

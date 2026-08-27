@@ -1,7 +1,9 @@
-import type { BookId } from "#entities/book";
-import { type Note, TagList } from "#entities/note";
-import { NoteActionButton } from "#features/note-action";
-import { DateTimeView } from "#shared/ui";
+import { cx, style } from "asarina";
+import type { BookId } from "#/entities/book";
+import { type Note, TagList } from "#/entities/note";
+import { themeVar } from "#/entities/theme";
+import { NoteActionButton } from "#/features/note-action";
+import { DateTimeView } from "#/shared/ui";
 import { NoteContents } from "~/entities/note/ui/contents";
 
 export const DetailedNoteView: React.FC<{
@@ -18,7 +20,12 @@ export const DetailedNoteView: React.FC<{
       <TagList tags={note.tags} />
 
       <div className=":uno: flex items-center gap-2 my-2">
-        <p className=":uno: flex-1 text-xs text-gray-3">
+        <p
+          className={cx(
+            ":uno: flex-1 text-xs",
+            style({ color: themeVar("ui-muted-text") }),
+          )}
+        >
           <DateTimeView dt={lastUpdatedAt.dt} />
           {lastUpdatedAt.name}
         </p>

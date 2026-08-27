@@ -1,7 +1,8 @@
-import { Button, ControlGroup, TextArea, theme } from "@acalyle/ui";
+import { Button, ControlGroup, TextArea } from "@acalyle/ui";
 import { cx, style } from "asarina";
 import { useState } from "react";
-import type { NoteId } from "~/entities/note";
+import type { NoteId } from "#/entities/note";
+import { themeVar } from "#/entities/theme";
 import { updateNoteContents } from "../model/mutation";
 
 export const NoteContentsEditor: React.FC<{
@@ -31,8 +32,8 @@ export const NoteContentsEditor: React.FC<{
         className={cx(
           ":uno: py-1 px-3",
           style({
-            color: theme("note-text"),
-            background: theme("note-bg"),
+            color: themeVar("note-text"),
+            background: themeVar("note-bg"),
           }),
         )}
       />

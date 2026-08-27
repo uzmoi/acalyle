@@ -1,7 +1,7 @@
-import { theme } from "@acalyle/ui";
 import { cx, style } from "asarina";
-import { type Book, BookThumbnail, bookRefOf } from "#entities/book";
-import { Link } from "#shared/ui";
+import { type Book, BookThumbnail, bookRefOf } from "#/entities/book";
+import { themeVar } from "#/entities/theme";
+import { Link } from "#/shared/ui";
 
 export const BookCover: React.FC<{
   book: Book;
@@ -11,18 +11,22 @@ export const BookCover: React.FC<{
       data-book-id={book.id}
       data-book-handle={book.handle}
       className={cx(
-        ":uno: relative h-24 flex overflow-hidden font-sans transition-[transform,color] focus-within:scale-102.5 hover:scale-102.5",
+        ":uno: relative h-24 flex overflow-hidden font-sans transition-[transform,color] focus-within:scale-102.5 hover:scale-102.5 rounded-2",
         style({
-          background: theme("book_cover-bg"),
-          color: theme("book_cover-text"),
-          borderRadius: theme("book_cover-round"),
+          background: themeVar("book-cover-bg"),
+          color: themeVar("book-cover-text"),
         }),
       )}
     >
       <div className=":uno: flex-1 overflow-hidden px-4 py-2">
         <div>
           {book.handle && (
-            <p className=":uno: truncate text-xs text-gray font-mono">
+            <p
+              className={cx(
+                ":uno: truncate text-xs font-mono",
+                style({ color: themeVar("ui-muted-text") }),
+              )}
+            >
               {book.handle}
             </p>
           )}
@@ -39,10 +43,17 @@ export const BookCover: React.FC<{
         <hr
           className={cx(
             ":uno: b-none b-t b-t-solid my-2",
-            style({ borderTopColor: theme("book_cover-border") }),
+            style({ borderTopColor: themeVar("ui-border") }),
           )}
         />
-        <p className=":uno: truncate text-xs text-gray">{book.description}</p>
+        <p
+          className={cx(
+            ":uno: truncate text-xs",
+            style({ color: themeVar("ui-muted-text") }),
+          )}
+        >
+          {book.description}
+        </p>
       </div>
       <BookThumbnail thumbnail={book.thumbnail} className=":uno: flex-none" />
     </div>

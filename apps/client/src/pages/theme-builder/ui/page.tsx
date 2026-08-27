@@ -1,15 +1,17 @@
-import { Button, Spacer } from "@acalyle/ui";
+import { Button, Select, Spacer } from "@acalyle/ui";
 import { useWebStorage } from "#/shared/web-storage";
 import { Link } from "#/shared/ui";
+import { THEME_TOKEN_KEYS, createThemeDefinitionStyle } from "#/entities/theme";
+import { confirm } from "#/features/modal";
+import { useState } from "react";
+import { PREVIEW_PAGES, type PreviewPage } from "../model/preview";
 import { themeStorage } from "../model/storage";
-import { THEME_TOKEN_KEYS, getHexColor } from "../model/theme";
 import { Preview } from "./preview";
-import { ColorInput } from "./color-input";
-
-// TODO: linkを扱えるようにする。
+import { ThemeTokenRow } from "./theme-token-row";
 
 export const ThemeBuilderPage: React.FC = () => {
-  const [currentTheme, setTheme] = useWebStorage(themeStorage);
+  const [currentTheme, setTheme, resetTheme] = useWebStorage(themeStorage);
+  const [previewPage, setPreviewPage] = useState<PreviewPage>("note");
 
   return (
     <div className=":uno: mx-auto max-w-screen-xl px-8 py-4">
@@ -29,31 +31,54 @@ export const ThemeBuilderPage: React.FC = () => {
           Copy as JSON
         </Button>
       </div>
-      <Spacer size="2rem" />
+      <Spacer size="1.25rem" />
       <div className=":uno: flex gap-4">
-        <div className=":uno: flex flex-col gap-2 min-w-64">
+        <div className=":uno: flex flex-col gap-2 min-w-48">
+          <div className=":uno: flex gap-4 items-center">
+            <h2 className=":uno: flex-1 text-lg">Tokens</h2>
+            <Button
+              onClick={async () => {
+                const message =
+                  "編集中のテーマをリセットします。よろしいですか？";
+                if (await confirm(message)) {
+                  resetTheme();
+                }
+              }}
+            >
+              Reset
+            </Button>
+          </div>
           {THEME_TOKEN_KEYS.map(key => (
-            <div key={key} className=":uno: flex gap-4 items-center">
-              <p className=":uno: flex-1 text-base">{key}</p>
-              <ColorInput
-                color={getHexColor(currentTheme, key)}
-                onChange={color => {
-                  setTheme(theme => ({ ...theme, [key]: color }));
-                }}
-              />
-            </div>
+            <ThemeTokenRow
+              key={key}
+              tokenKey={key}
+              theme={currentTheme}
+              onChange={color => {
+                setTheme(theme => ({ ...theme, [key]: color }));
+              }}
+            />
           ))}
         </div>
-        <div
-          className=":uno: min-w-md flex-1"
-          style={Object.fromEntries(
-            THEME_TOKEN_KEYS.map(key => [
-              `--${key}`,
-              getHexColor(currentTheme, key),
-            ]),
-          )}
-        >
-          <Preview />
+        <div className=":uno: min-w-md flex-1 flex flex-col gap-2">
+          <div className=":uno: flex gap-4 items-center">
+            <h2 className=":uno: flex-1 text-lg">Preview</h2>
+            <Select
+              value={previewPage}
+              onValueChange={page => setPreviewPage(page as PreviewPage)}
+            >
+              {PREVIEW_PAGES.map(page => (
+                <Select.Option key={page} value={page}>
+                  {page}
+                </Select.Option>
+              ))}
+            </Select>
+          </div>
+          <div
+            className=":uno: flex-1"
+            style={createThemeDefinitionStyle(currentTheme)}
+          >
+            <Preview page={previewPage} />
+          </div>
         </div>
       </div>
     </div>

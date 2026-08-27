@@ -8,6 +8,7 @@ codegen
 cond
 cssole
 csstype
+darkgray
 datetime
 edix
 emnorst
@@ -24,10 +25,12 @@ iframe
 iife
 Importability
 lefthook
+lightgray
 markuplint
 Millis
 nanostores
 nitrogql
+oklch
 oxlint
 oxlintrc
 parens
@@ -40,7 +43,11 @@ precodegen
 prelint
 proto
 quasis
+rgbf
 rizzzse
+rrggbb
+rrggbbaa
+rrggbbff
 rustc
 rustls
 serde
