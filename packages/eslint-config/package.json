@@ -26,8 +26,8 @@
   },
   "devDependencies": {
     "@acalyle/tsconfig": "workspace:*",
-    "@vitest/coverage-v8": "^4.1.10",
+    "@vitest/coverage-v8": "^4.1.11",
     "tsdown": "^0.22.14",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.11"
   }
 }

@@ -25,18 +25,18 @@
   "devDependencies": {
     "@acalyle/eslint-config": "workspace:*",
     "@acalyle/tsconfig": "workspace:*",
-    "@microsoft/api-extractor": "^7.58.12",
+    "@microsoft/api-extractor": "^7.58.13",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.2",
-    "@testing-library/user-event": "^14.6.4",
+    "@testing-library/user-event": "^14.6.6",
     "@types/react": "^19.2.18",
     "@vitejs/plugin-react": "^6.0.5",
-    "@vitest/coverage-v8": "^4.1.10",
+    "@vitest/coverage-v8": "^4.1.11",
     "@wyw-in-js/vite": "^2.3.1",
-    "happy-dom": "^20.11.2",
+    "happy-dom": "^20.11.6",
     "react-dom": "^19.2.8",
     "unplugin-dts": "^1.0.3",
-    "vite": "^8.2.1",
-    "vitest": "^4.1.10"
+    "vite": "^8.2.2",
+    "vitest": "^4.1.11"
   }
 }
