@@ -11,14 +11,19 @@ export const BookCover: React.FC<{
       data-book-id={book.id}
       data-book-handle={book.handle}
       className={cx(
-        ":uno: relative h-24 flex overflow-hidden font-sans transition-[transform,color] focus-within:scale-102.5 hover:scale-102.5 rounded-2",
+        ":uno: relative h-24 flex rounded-2",
         style({
           background: themeVar("book-cover-bg"),
           color: themeVar("book-cover-text"),
         }),
       )}
     >
-      <div className=":uno: flex-1 overflow-hidden px-4 py-2">
+      <div
+        className={cx(
+          ":uno: flex-1 overflow-hidden px-4 py-2 rounded-l-2 border border-solid",
+          style({ borderColor: themeVar("ui-border") }),
+        )}
+      >
         <div>
           {book.handle && (
             <p
@@ -35,7 +40,18 @@ export const BookCover: React.FC<{
           <Link
             to="/books/$bookRef"
             params={{ bookRef: bookRefOf(book) }}
-            className=":uno: decoration-none outline-none before:absolute before:inset-0 focus-visible:text-teal before:content-empty"
+            className={cx(
+              ":uno: decoration-none outline-none before:absolute before:inset-0 before:content-empty before:rounded-2",
+              style({
+                "&::before": {
+                  transition: "outline-color 150ms",
+                  outline: "2px solid transparent",
+                },
+                "&:hover::before, &:focus-visible::before": {
+                  outlineColor: "#4dd4",
+                },
+              }),
+            )}
           >
             {book.title}
           </Link>
@@ -55,7 +71,10 @@ export const BookCover: React.FC<{
           {book.description}
         </p>
       </div>
-      <BookThumbnail thumbnail={book.thumbnail} className=":uno: flex-none" />
+      <BookThumbnail
+        thumbnail={book.thumbnail}
+        className=":uno: flex-none rounded-r-2"
+      />
     </div>
   );
 };
