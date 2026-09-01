@@ -2,7 +2,7 @@ import { Button, ControlGroup, TextArea } from "@acalyle/ui";
 import { cx, style } from "asarina";
 import { useState } from "react";
 import type { NoteId } from "#/entities/note";
-import { themeVar } from "#/entities/theme";
+import { tth } from "#/entities/theme";
 import { updateNoteContents } from "../model/mutation";
 
 export const NoteContentsEditor: React.FC<{
@@ -31,10 +31,7 @@ export const NoteContentsEditor: React.FC<{
         // TODO: もうちょっとマシな作り方があるだろﾊﾞｶﾔﾛｺﾉﾔﾛｵﾒｪ
         className={cx(
           ":uno: py-1 px-3",
-          style({
-            color: themeVar("note-text"),
-            background: themeVar("note-bg"),
-          }),
+          style(tth.style("note-bg", "note-text")),
         )}
       />
       <ControlGroup className=":uno: mr-4 mt-2 flex justify-right">

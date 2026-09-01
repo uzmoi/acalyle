@@ -1,5 +1,5 @@
 import { cx, style } from "asarina";
-import { themeVar } from "#/entities/theme";
+import { tth } from "#/entities/theme";
 
 export const BookShelfSkeleton: React.FC<{
   count: number;
@@ -15,7 +15,7 @@ export const BookShelfSkeleton: React.FC<{
         key={i}
         className={cx(
           ":uno: flex h-24 animate-pulse rounded-2",
-          style({ background: themeVar("book-cover-bg") }),
+          style(tth.style("book-cover-bg")),
         )}
       />
     ))}

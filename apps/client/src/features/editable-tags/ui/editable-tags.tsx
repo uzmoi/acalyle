@@ -4,7 +4,7 @@ import { BiSolidEdit, BiX } from "react-icons/bi";
 import type { Book } from "#/entities/book";
 import { type NoteId, TagList } from "#/entities/note";
 import { type Tag, tagToString } from "#/entities/tag";
-import { themeVar } from "#/entities/theme";
+import { tth } from "#/entities/theme";
 import { useEditableTags } from "../model/hook";
 import { TagUpsertForm } from "./tag-upsert-form";
 
@@ -50,7 +50,7 @@ export const EditableTags: React.FC<{
         <div
           className={cx(
             ":uno: absolute top-[calc(100%+0.5em)] px-3 py-2 rounded-4",
-            style({ backgroundColor: themeVar("note-bg") }),
+            style(tth.style("note-bg")),
           )}
         >
           <TagUpsertForm book={book} noteId={noteId} onUpsert={upsertTag} />
