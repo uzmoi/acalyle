@@ -10,7 +10,7 @@ export const varName = (key: string): `--${string}` =>
   // oxlint-disable-next-line no-magic-numbers
   `--${import.meta.env.PROD ? hash(key).slice(-5) : key}`;
 
-export const themeVar = (key: ThemeTokenKey): `var(--${string})` =>
+const themeVar = (key: ThemeTokenKey): `var(--${string})` =>
   `var(${varName(key)})`;
 
 type StripSuffix<Suffix extends string, T extends string> =

@@ -1,5 +1,5 @@
 export { useThemeDefinitionStyle } from "./model/store";
-export { createThemeDefinitionStyle, themeVar, tth } from "./model/style";
+export { createThemeDefinitionStyle, tth } from "./model/style";
 export {
   type Color,
   FALLBACK_THEME,
