@@ -3,7 +3,7 @@ import type { Preview } from "@storybook/react-vite";
 import {
   FALLBACK_THEME,
   createThemeDefinitionStyle,
-  themeVar,
+  tth,
 } from "#/entities/theme";
 import { cx, style } from "asarina";
 import { defaultThemeClassName } from "../theme";
@@ -20,12 +20,12 @@ const ThemeProvider: React.FC<{
           minHeight: "100%",
           ...createTheme({
             control: {
-              text: themeVar("ui-text"),
-              bg: themeVar("ui-control-bg"),
-              outline: themeVar("ui-border"),
+              text: tth("$ui-text"),
+              bg: tth("$ui-control-bg"),
+              outline: tth("$ui-border"),
             },
           } as Theme),
-          color: themeVar("ui-text"),
+          ...tth.style("ui-text"),
         }),
       )}
       style={createThemeDefinitionStyle(FALLBACK_THEME)}

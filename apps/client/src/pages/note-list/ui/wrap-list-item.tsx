@@ -3,7 +3,7 @@ import { cx, style } from "asarina";
 import { useCallback } from "react";
 import { type Book, bookRefOf } from "#/entities/book";
 import { type NoteId, TagList, useNote } from "#/entities/note";
-import { themeVar } from "#/entities/theme";
+import { tth } from "#/entities/theme";
 import { openNoteInModal } from "#/features/note-modal";
 import { Link } from "#/shared/ui";
 // eslint-disable-next-line import-access/jsdoc
@@ -29,11 +29,10 @@ export const NoteWarpListItem: React.FC<{
     <article
       data-note-id={noteId}
       className={cx(
-        ":uno: relative overflow-hidden b b-solid rounded p-2",
+        ":uno: relative overflow-hidden rounded p-2",
         style({
-          color: themeVar("note-text"),
-          background: themeVar("note-bg"),
-          borderColor: themeVar("ui-border"),
+          ...tth.style("note-bg", "note-text"),
+          border: tth("1px solid $ui-border"),
         }),
       )}
     >

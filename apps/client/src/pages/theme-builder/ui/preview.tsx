@@ -1,6 +1,6 @@
 import { type Theme, createTheme } from "@acalyle/ui";
 import { cx, style } from "asarina";
-import { themeVar } from "#/entities/theme";
+import { tth } from "#/entities/theme";
 import { BookShelf } from "#/widgets/book-shelf";
 import { DetailedNoteView } from "#/widgets/note";
 import {
@@ -21,13 +21,12 @@ export const Preview: React.FC<{
           // 移行するまでの繋ぎ
           ...createTheme({
             control: {
-              text: themeVar("ui-text"),
-              bg: themeVar("ui-control-bg"),
-              outline: themeVar("ui-border"),
+              text: tth("$ui-text"),
+              bg: tth("$ui-control-bg"),
+              outline: tth("$ui-border"),
             },
           } as Theme),
-          backgroundColor: themeVar("app-bg"),
-          color: themeVar("ui-text"),
+          ...tth.style("app-bg", "ui-text"),
         }),
       )}
     >

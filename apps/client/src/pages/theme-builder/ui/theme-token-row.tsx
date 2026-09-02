@@ -12,7 +12,7 @@ import {
   isColor,
   isLinkTokenValue,
   normalizeColor,
-  themeVar,
+  tth,
 } from "#/entities/theme";
 
 export const ThemeTokenRow: React.FC<{
@@ -43,12 +43,7 @@ export const ThemeTokenRow: React.FC<{
         </Button>
         <div className=":uno: font-mono">
           <p>{tokenKey}</p>
-          <p
-            className={cx(
-              ":uno: text-xs",
-              style({ color: themeVar("ui-muted-text") }),
-            )}
-          >
+          <p className={cx(":uno: text-xs", style(tth.style("ui-muted-text")))}>
             {/* slice で先頭の '$' を取り除く */}
             Linked to {value.slice(1)}
           </p>
@@ -108,12 +103,7 @@ export const ThemeTokenRow: React.FC<{
       </Popover.Content>
       <div className=":uno: font-mono">
         <p>{tokenKey}</p>
-        <p
-          className={cx(
-            ":uno: text-xs",
-            style({ color: themeVar("ui-muted-text") }),
-          )}
-        >
+        <p className={cx(":uno: text-xs", style(tth.style("ui-muted-text")))}>
           {normalizeColor(color)}
         </p>
       </div>

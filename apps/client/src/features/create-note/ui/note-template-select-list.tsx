@@ -2,7 +2,7 @@ import { Button } from "@acalyle/ui";
 import { cx, style } from "asarina";
 import { useCallback } from "react";
 import type { BookId } from "#/entities/book";
-import { themeVar } from "#/entities/theme";
+import { tth } from "#/entities/theme";
 import { useTemplates } from "../model/use-templates";
 
 export const NoteTemplateSelectList: React.FC<{
@@ -34,7 +34,7 @@ export const NoteTemplateSelectList: React.FC<{
           className={cx(
             ":uno: block w-full px-3 py-1 text-align-start text-3",
             style({
-              borderTop: `1px solid ${themeVar("ui-muted-text")}`,
+              borderTop: tth("1px solid $ui-muted-text"),
               "&:enabled:is(:hover, :focus)": {
                 backgroundColor: "#fff2",
               },

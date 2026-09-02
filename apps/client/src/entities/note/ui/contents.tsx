@@ -1,5 +1,5 @@
 import { cx, style } from "asarina";
-import { themeVar } from "#/entities/theme";
+import { tth } from "#/entities/theme";
 
 export const NoteContents: React.FC<{
   contents: string;
@@ -8,10 +8,7 @@ export const NoteContents: React.FC<{
     <div
       className={cx(
         ":uno: py-1 px-3 min-h-4 ws-pre-wrap break-all",
-        style({
-          color: themeVar("note-text"),
-          background: themeVar("note-bg"),
-        }),
+        style(tth.style("note-bg", "note-text")),
       )}
     >
       {contents}

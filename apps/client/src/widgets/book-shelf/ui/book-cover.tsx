@@ -1,6 +1,6 @@
 import { cx, style } from "asarina";
 import { type Book, BookThumbnail, bookRefOf } from "#/entities/book";
-import { themeVar } from "#/entities/theme";
+import { tth } from "#/entities/theme";
 import { Link } from "#/shared/ui";
 
 export const BookCover: React.FC<{
@@ -12,16 +12,13 @@ export const BookCover: React.FC<{
       data-book-handle={book.handle}
       className={cx(
         ":uno: relative h-24 flex rounded-2",
-        style({
-          background: themeVar("book-cover-bg"),
-          color: themeVar("book-cover-text"),
-        }),
+        style(tth.style("book-cover-bg", "book-cover-text")),
       )}
     >
       <div
         className={cx(
-          ":uno: flex-1 overflow-hidden px-4 py-2 rounded-l-2 border border-solid",
-          style({ borderColor: themeVar("ui-border") }),
+          ":uno: flex-1 overflow-hidden px-4 py-2 rounded-l-2",
+          style({ border: tth("1px solid $ui-border") }),
         )}
       >
         <div>
@@ -29,7 +26,7 @@ export const BookCover: React.FC<{
             <p
               className={cx(
                 ":uno: truncate text-xs font-mono",
-                style({ color: themeVar("ui-muted-text") }),
+                style(tth.style("ui-muted-text")),
               )}
             >
               {book.handle}
@@ -58,14 +55,14 @@ export const BookCover: React.FC<{
         </p>
         <hr
           className={cx(
-            ":uno: b-none b-t b-t-solid my-2",
-            style({ borderTopColor: themeVar("ui-border") }),
+            ":uno: border-none my-2",
+            style({ borderTop: tth("1px solid $ui-border") }),
           )}
         />
         <p
           className={cx(
             ":uno: truncate text-xs",
-            style({ color: themeVar("ui-muted-text") }),
+            style(tth.style("ui-muted-text")),
           )}
         >
           {book.description}

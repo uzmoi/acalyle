@@ -3,7 +3,7 @@ import { cx, style } from "asarina";
 import { BiLeftArrowAlt } from "react-icons/bi";
 import { Link } from "#/shared/ui";
 import type { BookRef } from "#/entities/book";
-import { themeVar } from "#/entities/theme";
+import { tth } from "#/entities/theme";
 import { CreateBookForm } from "./form";
 
 export const NewBookPage: React.FC = () => {
@@ -27,8 +27,8 @@ export const NewBookPage: React.FC = () => {
       </Link>
       <hr
         className={cx(
-          ":uno: mb-3 mt-1 border-none border-t-solid",
-          style({ borderColor: themeVar("ui-border") }),
+          ":uno: mb-3 mt-1 border-none",
+          style({ borderTop: tth("1px solid $ui-border") }),
         )}
       />
       <CreateBookForm onCreatedBook={onCreatedBook} />

@@ -1,5 +1,5 @@
 import { cx, style } from "asarina";
-import { themeVar } from "#/entities/theme";
+import { tth } from "#/entities/theme";
 import type { Tag as TagType } from "../model/types";
 import { parseTag } from "../model/tag";
 
@@ -13,11 +13,10 @@ export const Tag: React.FC<{
   return (
     <span
       className={cx(
-        ":uno: tag inline-block max-w-sm overflow-hidden text-ellipsis b rounded b-solid px-1 py-0.5 align-top text-xs font-mono",
+        ":uno: tag inline-block max-w-sm overflow-hidden text-ellipsis rounded px-1 py-0.5 align-top text-xs font-mono",
         style({
-          color: themeVar("tag-text"),
-          background: themeVar("tag-bg"),
-          borderColor: themeVar("tag-outline"),
+          ...tth.style("tag-bg", "tag-text"),
+          border: tth("1px solid $tag-outline"),
         }),
       )}
       data-symbol={tag.symbol}

@@ -1,7 +1,7 @@
 import { type Theme, createTheme } from "@acalyle/ui";
 import { RouterProvider } from "@tanstack/react-router";
 import { cx, style } from "asarina";
-import { themeVar, useThemeDefinitionStyle } from "#/entities/theme";
+import { tth, useThemeDefinitionStyle } from "#/entities/theme";
 import { QuickModalContainer } from "#/features/modal";
 import { router } from "./router";
 import { defaultThemeClassName } from "./theme";
@@ -18,13 +18,12 @@ export const App: React.FC = () => {
           minHeight: "100%",
           ...createTheme({
             control: {
-              text: themeVar("ui-text"),
-              bg: themeVar("ui-control-bg"),
-              outline: themeVar("ui-border"),
+              text: tth("$ui-text"),
+              bg: tth("$ui-control-bg"),
+              outline: tth("$ui-border"),
             },
           } as Theme),
-          color: themeVar("ui-text"),
-          backgroundColor: themeVar("app-bg"),
+          ...tth.style("app-bg", "ui-text"),
         }),
       )}
       style={themeStyle}

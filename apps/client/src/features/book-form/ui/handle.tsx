@@ -1,7 +1,7 @@
 import { TextInput } from "@acalyle/ui";
 import { cx, style } from "asarina";
 import { useId } from "react";
-import { themeVar } from "#/entities/theme";
+import { tth } from "#/entities/theme";
 import type { BookHandleStatus } from "../model/use-book-handle-status";
 import { normalizeBookHandle } from "../model/validation";
 
@@ -32,10 +32,7 @@ export const HandleField: React.FC<{
         Handle
       </label>
       <p
-        className={cx(
-          ":uno: mb-1 text-xs",
-          style({ color: themeVar("ui-muted-text") }),
-        )}
+        className={cx(":uno: mb-1 text-xs", style(tth.style("ui-muted-text")))}
       >
         status:{" "}
         <span
