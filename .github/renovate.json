@@ -2,34 +2,28 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended",
-    "schedule:weekly",
+    "schedule:monthly",
     ":automergePatch",
-    ":dependencyDashboardApproval"
+    ":approveMajorUpdates"
   ],
   "minimumReleaseAge": "7 days",
   "labels": ["dependencies"],
   "automergeStrategy": "squash",
   "rangeStrategy": "bump",
   "patch": {
-    "packageRules": [
-      {
-        "groupName": "patch-npm",
-        "matchManagers": ["npm"],
-        "dependencyDashboardApproval": false
-      },
-      { "groupName": "patch-cargo", "matchManagers": ["cargo"] }
-    ]
+    "groupName": "patch",
+    "lockFileMaintenance": { "enabled": true }
   },
-  "vulnerabilityAlerts": {
-    "packageRules": [
-      { "groupName": "vulnerability-npm", "matchManagers": ["npm"] },
-      { "groupName": "vulnerability-cargo", "matchManagers": ["cargo"] }
-    ],
-    "dependencyDashboardApproval": false
+  "minor": {
+    "groupName": "minor",
+    "lockFileMaintenance": { "enabled": true }
   },
   "packageRules": [
-    { "groupName": "wyw-in-js", "matchPackageNames": ["/wyw-in-js/"] },
-    { "groupName": "markuplint", "matchPackageNames": ["/markuplint/"] },
-    { "groupName": "actions", "matchManagers": ["github-actions"] }
+    { "groupName": "GitHub Actions", "matchManagers": ["github-actions"] },
+    { "matchManagers": ["cargo"], "dependencyDashboardApproval": true },
+    {
+      "matchPackageNames": ["/eslint/"],
+      "dependencyDashboardApproval": true
+    }
   ]
 }
