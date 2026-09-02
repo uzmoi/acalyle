@@ -1,6 +1,6 @@
 import { cx, style } from "asarina";
-import type { Book } from "~/entities/book";
-import { BookCover } from "./cover";
+import type { Book } from "#/entities/book";
+import { BookCover } from "./book-cover";
 
 export const BookShelf: React.FC<{
   books: readonly Book[];

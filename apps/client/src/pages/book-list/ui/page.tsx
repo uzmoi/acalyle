@@ -1,12 +1,13 @@
 import { Catch } from "@acalyle/ui";
 import { Suspense } from "react";
 import { BiBookAdd } from "react-icons/bi";
-import { Link } from "#shared/ui";
-import { Alert } from "#widgets/alert";
+import { Link } from "#/shared/ui";
+import { Alert } from "#/widgets/alert";
+import { BookShelfSkeleton } from "#/widgets/book-shelf";
 import type { BooksPage as IBooksPage } from "../api";
+import { BOOKS_PER_PAGE } from "../model";
 import { BooksPage } from "./books-page";
 import { SearchBar } from "./search-bar";
-import { BookShelfSkeleton } from "./shelf-skeleton";
 
 export const BookListPage: React.FC<{
   query?: string | undefined;
@@ -26,7 +27,7 @@ export const BookListPage: React.FC<{
           <Alert title="本の一覧を取得できませんでした。" error={error} />
         )}
       >
-        <Suspense fallback={<BookShelfSkeleton />}>
+        <Suspense fallback={<BookShelfSkeleton count={BOOKS_PER_PAGE} />}>
           <BooksPage query={query} fetchingPage={fetchingPage} />
         </Suspense>
       </Catch>
