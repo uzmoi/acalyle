@@ -4,6 +4,7 @@ import preview from "~/../.storybook/preview";
 import { NewBookPage } from "./page";
 
 const meta = preview.meta({
+  title: "pages/new-book",
   component: NewBookPage,
   parameters: { layout: "fullscreen" },
 });

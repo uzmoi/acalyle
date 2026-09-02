@@ -3,6 +3,7 @@ import { createRandomBook, dummyBook } from "~/entities/book/dev";
 import { BookSettingsPage } from "./page";
 
 const meta = preview.meta({
+  title: "pages/book-settings",
   component: BookSettingsPage,
 });
 

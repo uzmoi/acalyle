@@ -7,6 +7,7 @@ import preview from "~/../.storybook/preview";
 import { NotePage } from "./page";
 
 const meta = preview.meta({
+  title: "pages/note",
   component: NotePage,
   parameters: { layout: "fullscreen" },
   async beforeEach() {
