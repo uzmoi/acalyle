@@ -115,7 +115,7 @@
     // MARK: Pedantic
     // Source: ESLint
     "array-callback-return": "off",
-    "eqeqeq": ["error", { "null": "ignore" }],
+    "eqeqeq": ["error", "always", { "null": "ignore" }],
     "max-classes-per-file": "off",
     "max-depth": ["warn", { "max": 4 }],
     "max-lines": ["warn", { "max": 512 }],
