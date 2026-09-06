@@ -1,7 +1,7 @@
 // cspell:ignore nonoctal isnan nonconstructor
 
 {
-  "$schema": "./oxlint_jsonc_schema.json",
+  "$schema": "node_modules/oxlint/configuration_schema.json",
   "ignorePatterns": [
     "**/{dist,coverage,__generated__,storybook-static}/**",
     "**/__*",
