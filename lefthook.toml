@@ -2,7 +2,7 @@
 parallel = true
 
 [pre-commit.commands.oxlint]
-glob = "*.{ts,tsx}"
+glob = ["*.{ts,tsx}"]
 run = "pnpm exec oxlint --deny-warnings {staged_files}"
 
 [pre-commit.commands.prettier]
