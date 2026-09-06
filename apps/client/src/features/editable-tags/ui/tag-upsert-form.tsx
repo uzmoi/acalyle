@@ -10,7 +10,7 @@ export const TagUpsertForm: React.FC<{
   book: Book;
   noteId: NoteId;
   onUpsert?: (tag: Tag) => void;
-}> = ({ book: _, noteId, onUpsert }) => {
+}> = ({ noteId, onUpsert }) => {
   const [tag, setTag] = useState("");
 
   const note = useNote(noteId);

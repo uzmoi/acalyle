@@ -1,5 +1,5 @@
 import type { Brand } from "@uzmoi/ut/types";
-import type { PageInfo } from "./schema.gen";
+import type * as schema from "./schema.gen";
 
 class Listenable {
   subscriptions = new Set<() => void>();
@@ -29,9 +29,14 @@ interface Edge<TNode> {
   node: TNode;
 }
 
+type PageInfo = Pick<
+  schema.PageInfo,
+  "hasPreviousPage" | "hasNextPage" | "startCursor" | "endCursor"
+>;
+
 type Page<TNode> =
-  | { pageInfo: Omit<PageInfo, "__typename">; edges: readonly Edge<TNode>[] }
-  | { pageInfo: Omit<PageInfo, "__typename">; nodes: readonly TNode[] };
+  | { pageInfo: PageInfo; edges: readonly Edge<TNode>[] }
+  | { pageInfo: PageInfo; nodes: readonly TNode[] };
 
 export interface ConnectionSnapshot<TId> {
   nodeIds: TId[];
@@ -54,7 +59,7 @@ export abstract class GraphqlConnection<
 
   nodeIds: TNode["id"][] = [];
 
-  private _cache = new Map<number, ConnectionSnapshot<TNode["id"]>>();
+  private readonly _cache = new Map<number, ConnectionSnapshot<TNode["id"]>>();
 
   toConnectionSnapshot(): ConnectionSnapshot<TNode["id"]> {
     if (!this._cache.has(this.notifyId)) {

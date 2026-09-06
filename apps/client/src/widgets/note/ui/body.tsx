@@ -11,7 +11,7 @@ const tabs = ["view", "editor"] as const;
 export const NoteBody: React.FC<{
   bookId: BookId;
   note: Note;
-}> = ({ bookId: _, note }) => {
+}> = ({ note }) => {
   const [tab, setTab] = useState<(typeof tabs)[number]>("view");
 
   return (
@@ -20,7 +20,9 @@ export const NoteBody: React.FC<{
         {tabs.map(tabName => (
           <List.Item key={tabName} className=":uno: inline-block">
             <Button
-              onClick={() => setTab(tabName)}
+              onClick={() => {
+                setTab(tabName);
+              }}
               unstyled
               className={cx(
                 ":uno: px-3 py-2px",

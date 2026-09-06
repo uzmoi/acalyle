@@ -12,7 +12,7 @@ export const NoteHeader: React.FC<{
   bookId: BookId;
   note: Note;
 }> = ({ bookId, note }) => {
-  const [tags, updateTags] = useState(note.tags);
+  const [tags, setTags] = useState(note.tags);
 
   const tagsSet = new Set(
     tags
@@ -46,10 +46,10 @@ export const NoteHeader: React.FC<{
               bookId={bookId}
               selection={tagsSet}
               addTag={symbol => {
-                updateTags(tags => [...tags, symbol]);
+                setTags(tags => [...tags, symbol]);
               }}
               removeTag={symbol => {
-                updateTags(tags =>
+                setTags(tags =>
                   tags.filter(tag => parseTag(tag)?.symbol !== symbol),
                 );
               }}

@@ -17,6 +17,7 @@ export const CreateBookForm: React.FC<{
   const [title, setTitle] = useState("");
   const [handle, status, setHandle] = useBookHandleStatus("");
   const [description, setDescription] = useState("");
+  // oxlint-disable-next-line typescript/no-misused-spread
   const descriptionLength = [...description].length; // code points length
 
   const action = useCallback(async () => {

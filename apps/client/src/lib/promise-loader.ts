@@ -63,13 +63,9 @@ declare const T: unique symbol;
 
 export interface PromiseLoaderExt {
   [T]: Extract<StoreValue<this>, { status: "fulfilled" }>["value"];
-  pending(
-    this: void,
-    promise: PromiseLike<this[typeof T]>,
-    abort?: () => void,
-  ): void;
-  resolve(this: void, value: this[typeof T]): void;
-  reject(this: void, error: unknown): void;
+  pending: (promise: PromiseLike<this[typeof T]>, abort?: () => void) => void;
+  resolve: (value: this[typeof T]) => void;
+  reject: (error: unknown) => void;
 }
 
 export const createPromiseLoaderAtom = <T>(): WritableAtom<PromiseLoaderW<T>> &

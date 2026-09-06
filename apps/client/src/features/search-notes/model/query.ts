@@ -69,6 +69,7 @@ export const parseQuery = function* (
       continue;
     }
 
+    // oxlint-disable-next-line typescript/switch-exhaustiveness-check
     switch (type) {
       case "tag": {
         const tag = parseTag(content)!;

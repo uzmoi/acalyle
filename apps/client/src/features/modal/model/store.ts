@@ -20,7 +20,7 @@ export const openModal = <T extends keyof Modals>(
     type,
     input,
     async close(output: unknown) {
-      await modal.close(output as never);
+      await modal.close(output);
     },
   } as ModalInput) as Promise<ReturnType<Modals[T]>>;
 };

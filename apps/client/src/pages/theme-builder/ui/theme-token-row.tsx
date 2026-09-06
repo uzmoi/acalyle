@@ -30,7 +30,9 @@ export const ThemeTokenRow: React.FC<{
       <Popover className=":uno: flex gap-3 items-center">
         <Button
           className=":uno: align-middle p-0 size-7"
-          onClick={() => onChange(color)}
+          onClick={() => {
+            onChange(color);
+          }}
         >
           <LuLink
             className=":uno: align-bottom [:is(:hover,:focus-visible)>&]:hidden"
@@ -76,7 +78,9 @@ export const ThemeTokenRow: React.FC<{
               onChange(string);
             }
           }}
-          onBlur={() => setString(undefined)}
+          onBlur={() => {
+            setString(undefined);
+          }}
           className=":uno: font-mono w-[200px]"
         />
         <Spacer size="0.5rem" />

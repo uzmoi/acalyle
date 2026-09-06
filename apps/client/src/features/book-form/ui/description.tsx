@@ -8,6 +8,7 @@ export const DescriptionField: React.FC<{
   value: string;
   onChange: (description: string) => void;
 }> = ({ value, onChange }) => {
+  // oxlint-disable-next-line typescript/no-misused-spread
   const descriptionLength = [...value].length; // code points length
   const id = useId();
 

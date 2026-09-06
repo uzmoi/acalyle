@@ -16,8 +16,8 @@ const ErrorComponent: React.FC = () => {
 export const Route = /* #__PURE__ */ createFileRoute("/books/$bookRef")({
   notFoundComponent: ErrorComponent,
   async loader({ params }) {
-    const bookRef = params["bookRef"] as BookRef;
-    const result = await fetchBookByRef(bookRef);
+    const { bookRef } = params;
+    const result = await fetchBookByRef(bookRef as BookRef);
     // FIXME: unwrap
     const book = result.unwrap();
     if (book == null) {

@@ -11,6 +11,7 @@ export interface LinkProps extends UseLinkPropsOptions {
 export const Link: React.FC<LinkProps> = ({ button, className, ...rest }) => {
   const props = useLinkProps(rest, rest.ref as React.Ref<Element>);
 
+  // oxlint-disable-next-line react/immutability
   if ("disabled" in props) delete props.disabled;
 
   const buttonStyle = style({
