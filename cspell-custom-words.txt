@@ -58,6 +58,7 @@ textnodes
 tombi
 trunc
 tsbuildinfo
+tsgolint
 tsup
 typecheck
 unocss

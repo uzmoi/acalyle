@@ -10,7 +10,8 @@
     "**/*.log",
     "**/*.d.ts",
     "**/*.d.*.ts",
-    "apps/tauri/src-tauri/**",
+    "**/*.js",
+    "apps/tauri/**",
   ],
   "env": {
     "builtin": true,
@@ -22,6 +23,10 @@
     "suspicious": "warn",
     "pedantic": "warn",
     "style": "warn",
+  },
+  "options": {
+    "typeAware": true,
+    "typeCheck": true,
   },
   "rules": {
     // Correctness (default: error)
@@ -85,6 +90,7 @@
       { "allowDeclarations": true, "allowDefinitionFiles": true },
     ],
     "typescript/no-non-null-assertion": "off",
+    "typescript/promise-function-async": "off",
     "unicorn/no-array-reduce": "off",
     "unicorn/no-length-as-slice-end": "warn",
     "unicorn/no-nested-ternary": "off",
@@ -96,6 +102,9 @@
     "eslint/no-extend-native": "error",
     "eslint/no-shadow": "off",
     "eslint/no-underscore-dangle": ["warn", { "allowAfterThis": true }],
+    "typescript/consistent-return": "off",
+    "typescript/no-unnecessary-type-parameters": "off",
+    "typescript/no-unsafe-type-assertion": "off",
     "unicorn/require-module-specifiers": "off",
 
     // Pedantic (default: warn)
@@ -117,7 +126,9 @@
     "typescript/ban-ts-comment": "error",
     "typescript/ban-types": "off",
     "typescript/no-unsafe-function-type": "error",
+    "typescript/prefer-readonly-parameter-types": "off",
     "typescript/prefer-ts-expect-error": "error",
+    "typescript/strict-boolean-expressions": "off",
     "unicorn/no-array-callback-reference": "off",
     "unicorn/no-useless-promise-resolve-reject": "off",
     "unicorn/prefer-code-point": "off",
