@@ -5,6 +5,7 @@ import { createRandomBook } from "~/entities/book/dev";
 import { BookListPage } from "./page";
 
 const meta = preview.meta({
+  title: "pages/book-list",
   component: BookListPage,
   parameters: { layout: "fullscreen" },
 });

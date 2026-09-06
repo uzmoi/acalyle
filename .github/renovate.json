@@ -1,0 +1,29 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    "schedule:monthly",
+    ":automergePatch",
+    ":approveMajorUpdates"
+  ],
+  "minimumReleaseAge": "7 days",
+  "labels": ["dependencies"],
+  "automergeStrategy": "squash",
+  "rangeStrategy": "bump",
+  "patch": {
+    "groupName": "patch",
+    "lockFileMaintenance": { "enabled": true }
+  },
+  "minor": {
+    "groupName": "minor",
+    "lockFileMaintenance": { "enabled": true }
+  },
+  "packageRules": [
+    { "groupName": "GitHub Actions", "matchManagers": ["github-actions"] },
+    { "matchManagers": ["cargo"], "dependencyDashboardApproval": true },
+    {
+      "matchPackageNames": ["/eslint/"],
+      "dependencyDashboardApproval": true
+    }
+  ]
+}
