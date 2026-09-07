@@ -5,7 +5,7 @@ import { describe, expect, test, vi } from "vitest";
 import { type Book, fetchBookByHandle } from "~/entities/book";
 import { useBookHandleStatus } from "./use-book-handle-status";
 
-vi.mock("~/entities/book");
+vi.mock(import("~/entities/book"));
 
 describe("useBookHandleStatus", () => {
   test("no-change", async () => {

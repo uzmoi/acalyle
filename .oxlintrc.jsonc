@@ -230,6 +230,28 @@
   },
   "overrides": [
     {
+      "files": ["**/*.test.*"],
+      "plugins": ["vitest"],
+      "rules": {
+        "vitest/consistent-test-it": ["warn", { "withinDescribe": "test" }],
+        "vitest/no-conditional-in-test": "off",
+        "vitest/no-hooks": "off",
+        "vitest/no-importing-vitest-globals": "off",
+        "vitest/prefer-describe-function-title": "off",
+        "vitest/prefer-expect-assertions": [
+          "warn",
+          {
+            "onlyFunctionsWithExpectInLoop": true,
+            "onlyFunctionsWithExpectInCallback": true,
+          },
+        ],
+        "vitest/prefer-lowercase-title": "off",
+        "vitest/require-test-timeout": "off",
+        "vitest/require-top-level-describe": "off",
+        "vitest/warn-todo": "off",
+      },
+    },
+    {
       "files": ["**/*.{config,stories}.*", "**/.storybook/**"],
       "rules": {
         "no-anonymous-default-export": "off",
@@ -249,9 +271,9 @@
         "eslint/max-lines-per-function": "off",
         "eslint/max-nested-callbacks": "off",
         "eslint/no-magic-numbers": "off",
+        "eslint/no-use-before-define": "off",
         "import/no-nodejs-modules": "off",
         "react/only-export-components": "off",
-        "eslint/no-use-before-define": "off",
       },
     },
     {

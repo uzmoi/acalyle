@@ -18,7 +18,7 @@ describe("useEditableTags", () => {
 
     {
       const [state, { end: _ }] = result.current;
-      expect(state).toEqual({ tags: [parseTag("#hoge")] });
+      expect(state).toStrictEqual({ tags: [parseTag("#hoge")] });
       // TODO[+msw]: end("<note-id>" as NoteId, tags);
     }
 
@@ -38,7 +38,7 @@ describe("useEditableTags", () => {
 
     rerender();
 
-    expect(result.current[0]).toEqual({
+    expect(result.current[0]).toStrictEqual({
       tags: ["@piyo:2", "#fuga"].map(parseTag),
     });
 

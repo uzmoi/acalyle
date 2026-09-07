@@ -3,7 +3,7 @@
   "experimentalTernaries": true,
   "overrides": [
     {
-      "files": ["tsconfig.*.json", ".vscode/*.json", ".oxlintrc.json"],
+      "files": ["tsconfig.*.json", ".vscode/*.json"],
       "options": { "parser": "jsonc" }
     }
   ]

@@ -8,17 +8,17 @@ import { confirm } from "~/features/modal";
 import { changeBookHandle } from "../model";
 import { BookHandleForm } from "./book-handle-form";
 
-vi.mock("@tanstack/react-router");
-vi.mock("~/entities/book");
-vi.mock("~/features/modal");
-vi.mock("../model", { spy: true });
+vi.mock(import("@tanstack/react-router"));
+vi.mock(import("~/entities/book"));
+vi.mock(import("~/features/modal"));
+vi.mock(import("../model"), { spy: true });
 
 test("submit", async () => {
   const bookId = "<book-id>" as BookId;
   vi.mocked(fetchBookByHandle).mockResolvedValue(Ok(null));
   vi.mocked(confirm).mockResolvedValue(true);
   vi.mocked(changeBookHandle).mockResolvedValue(void 0);
-  const navigate = vi.fn();
+  const navigate = vi.fn<(opts: object) => Promise<void>>();
   vi.mocked(useNavigate).mockReturnValue(navigate);
 
   render(<BookHandleForm bookId={bookId} currentHandle={null} />);

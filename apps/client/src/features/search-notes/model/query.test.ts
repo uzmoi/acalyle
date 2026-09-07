@@ -24,8 +24,9 @@ const t = {
 
 describe("lexQuery", () => {
   test("empty", () => {
-    expect(lexQuery("").toArray()).toEqual([]);
+    expect(lexQuery("").toArray()).toStrictEqual([]);
   });
+
   test("lexQuery", () => {
     expect(lexQuery('hoge -"\\\\" #tag -@tag:prop ').toArray()).toMatchObject([
       t.word("hoge"),
@@ -113,6 +114,7 @@ describe("update query", () => {
     ])("%o", (query, expected) => {
       expect(appendTag(query, "#tag" as TagSymbol)).toBe(expected);
     });
+
     test("replace tag", () => {
       expect(appendTag("@tag:fuga", "@tag" as TagSymbol)).toBe("@tag");
     });
