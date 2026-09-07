@@ -1,7 +1,4 @@
-// oxlint-disable-next-line no-unassigned-import
 import "@acalyle/ui/dist/style.css";
-// eslint-disable-next-line import/no-unresolved
-// oxlint-disable-next-line no-unassigned-import
 import "virtual:uno.css";
 
 import { definePreview } from "@storybook/react-vite";

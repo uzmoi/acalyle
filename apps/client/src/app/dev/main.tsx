@@ -1,7 +1,4 @@
-/* eslint-disable pure-module/pure-module */
-
 import "@acalyle/ui/dist/style.css";
-// eslint-disable-next-line import/no-unresolved
 import "virtual:uno.css";
 
 import { globalStyle } from "asarina";

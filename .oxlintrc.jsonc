@@ -25,6 +25,7 @@
     "style": "warn",
   },
   "options": {
+    "reportUnusedDisableDirectives": "warn",
     "typeAware": true,
     "typeCheck": true,
   },

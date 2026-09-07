@@ -1,7 +1,7 @@
 /** @public */
 export { type RegisterRebrand, rebrand } from "./rebrand";
 
-// oxlint-disable-next-line func-style, no-inner-declarations
+// oxlint-disable-next-line func-style
 export function invariant(
   condition: boolean,
   message: string | (() => string),

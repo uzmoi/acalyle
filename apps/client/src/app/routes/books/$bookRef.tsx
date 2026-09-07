@@ -21,7 +21,7 @@ export const Route = /* #__PURE__ */ createFileRoute("/books/$bookRef")({
     // FIXME: unwrap
     const book = result.unwrap();
     if (book == null) {
-      // eslint-disable-next-line @typescript-eslint/only-throw-error
+      // oxlint-disable-next-line typescript/only-throw-error
       throw notFound();
     }
     return { book };

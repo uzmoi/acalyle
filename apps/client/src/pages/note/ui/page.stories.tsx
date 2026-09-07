@@ -14,7 +14,7 @@ const meta = preview.meta({
     const { useNote } = await import("#entities/note");
     const note = createRandomNote();
     mocked(useNote).mockImplementation(id => {
-      // eslint-disable-next-line @typescript-eslint/only-throw-error
+      // oxlint-disable-next-line typescript/only-throw-error
       if (id === "id-loading") throw new Promise(noop);
       if (id === "id-error") throw new Error("mock");
       return note;

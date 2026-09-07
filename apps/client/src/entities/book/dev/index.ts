@@ -1,4 +1,3 @@
-/* eslint-disable pure-module/pure-module */
 import { faker } from "@faker-js/faker";
 import type { Book, BookHandle, BookId } from "../model/types";
 

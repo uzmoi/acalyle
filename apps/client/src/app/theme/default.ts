@@ -1,4 +1,3 @@
-/* eslint-disable pure-module/pure-module */
 import { createTheme, theme } from "@acalyle/ui";
 import { style } from "asarina";
 

@@ -1,5 +1,3 @@
-/* eslint-disable pure-module/pure-module */
-
 import { varName } from "@acalyle/ui";
 import { defaultTheme } from "../theme";
 
