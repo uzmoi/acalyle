@@ -3,7 +3,7 @@ parallel = true
 
 [pre-commit.commands.oxlint]
 glob = ["*.{ts,tsx}"]
-run = "pnpm exec oxlint --deny-warnings {staged_files}"
+run = "pnpm exec oxlint {staged_files}"
 
 [pre-commit.commands.prettier]
 run = "pnpm exec prettier --check --ignore-unknown {staged_files}"

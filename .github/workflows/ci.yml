@@ -94,7 +94,7 @@ jobs:
 
       - run: pnpm codegen --output-logs=new-only
 
-      - run: pnpm exec oxlint --deny-warnings apps/client/
+      - run: pnpm exec oxlint apps/client/
 
       # eslintがTS7に対応していなくて動かないので
       # - run: pnpm lint --output-logs=new-only
