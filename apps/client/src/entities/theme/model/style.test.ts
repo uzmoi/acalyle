@@ -6,7 +6,7 @@ test("tth", () => {
 });
 
 test("tth.style", () => {
-  expect(tth.style("app-bg", "ui-text")).toEqual({
+  expect(tth.style("app-bg", "ui-text")).toStrictEqual({
     backgroundColor: "var(--app-bg)",
     color: "var(--ui-text)",
   });
