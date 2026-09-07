@@ -6,7 +6,6 @@ import { type NoteId, TagList, useNote } from "#/entities/note";
 import { tth } from "#/entities/theme";
 import { openNoteInModal } from "#/features/note-modal";
 import { Link } from "#/shared/ui";
-// eslint-disable-next-line import-access/jsdoc
 import { NoteContents } from "~/entities/note/ui/contents";
 
 export const NoteWarpListItem: React.FC<{

@@ -34,7 +34,12 @@ export const EditableTags: React.FC<{
           {state.tags.map(tag => (
             <List.Item key={tag.symbol} className=":uno: inline-block px-0.5">
               <span>{tagToString(tag)}</span>
-              <Button onClick={() => removeTag(tag.symbol)} unstyled>
+              <Button
+                onClick={() => {
+                  removeTag(tag.symbol);
+                }}
+                unstyled
+              >
                 <BiX title="Remove" />
               </Button>
             </List.Item>

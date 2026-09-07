@@ -1,10 +1,10 @@
 import { debounce } from "es-toolkit";
 
 export interface WebStorageEntry<T> {
-  read(): T;
-  readRaw(): string | null;
-  save(query: T): void;
-  saveRaw(query: string | null): void;
+  read: () => T;
+  readRaw: () => string | null;
+  save: (query: T) => void;
+  saveRaw: (query: string | null) => void;
 }
 
 export interface DeclareStorageOptions<T> {

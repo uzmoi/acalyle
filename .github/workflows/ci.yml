@@ -76,7 +76,6 @@ jobs:
           files: apps/client/coverage/test-report.junit.xml
           report_type: test_results
   lint:
-    if: false # eslintがTS7に対応していなくて動かないので
     needs: prepare
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -93,7 +92,12 @@ jobs:
           key: ${{ runner.os }}-turbo-${{ needs.prepare.outputs.turbo-hash }}
           fail-on-cache-miss: true
 
-      - run: pnpm lint --output-logs=new-only
+      - run: pnpm codegen --output-logs=new-only
+
+      - run: pnpm exec oxlint apps/client/
+
+      # eslintがTS7に対応していなくて動かないので
+      # - run: pnpm lint --output-logs=new-only
   chromatic:
     needs: prepare
     runs-on: ubuntu-latest

@@ -7,7 +7,6 @@ const RouteComponent: React.FC = () => {
   return <BookSettingsPage book={book} />;
 };
 
-// eslint-disable-next-line pure-module/pure-module
 export const Route = createFileRoute("/books/$bookRef/settings")({
   component: RouteComponent,
 });

@@ -23,9 +23,9 @@ test("unsubscribe", () => {
   keepMount(store1);
   store1.set(false);
 
-  const fn = vi.fn();
+  const fn = vi.fn<() => void>();
   derivedStore.listen(fn);
   store2.set(2);
 
-  expect(fn).not.toBeCalled();
+  expect(fn).not.toHaveBeenCalled();
 });

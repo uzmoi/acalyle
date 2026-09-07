@@ -24,7 +24,7 @@ const renderModal = (data: ModalInput): React.ReactNode => (
     )}
   >
     {modals[data.type](data.input, result => {
-      void data.close(result as never);
+      void data.close(result);
     })}
   </div>
 );

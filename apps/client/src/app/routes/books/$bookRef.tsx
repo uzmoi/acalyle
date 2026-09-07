@@ -16,12 +16,12 @@ const ErrorComponent: React.FC = () => {
 export const Route = /* #__PURE__ */ createFileRoute("/books/$bookRef")({
   notFoundComponent: ErrorComponent,
   async loader({ params }) {
-    const bookRef = params["bookRef"] as BookRef;
-    const result = await fetchBookByRef(bookRef);
+    const { bookRef } = params;
+    const result = await fetchBookByRef(bookRef as BookRef);
     // FIXME: unwrap
     const book = result.unwrap();
     if (book == null) {
-      // eslint-disable-next-line @typescript-eslint/only-throw-error
+      // oxlint-disable-next-line typescript/only-throw-error
       throw notFound();
     }
     return { book };

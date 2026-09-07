@@ -1,5 +1,3 @@
-/* eslint-disable pure-module/pure-module */
-
 import {
   createFileRoute,
   useLoaderData,

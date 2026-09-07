@@ -1,3 +1,4 @@
+// oxlint-disable typescript/require-await
 import { act, renderHook } from "@testing-library/react";
 import { Err, Ok } from "@uzmoi/ut/fp";
 import { describe, expect, test, vi } from "vitest";

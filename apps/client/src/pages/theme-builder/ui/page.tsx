@@ -37,12 +37,14 @@ export const ThemeBuilderPage: React.FC = () => {
           <div className=":uno: flex gap-4 items-center">
             <h2 className=":uno: flex-1 text-lg">Tokens</h2>
             <Button
-              onClick={async () => {
+              onClick={() => {
                 const message =
                   "編集中のテーマをリセットします。よろしいですか？";
-                if (await confirm(message)) {
-                  resetTheme();
-                }
+                void confirm(message).then(ok => {
+                  if (ok) {
+                    resetTheme();
+                  }
+                });
               }}
             >
               Reset
@@ -64,7 +66,9 @@ export const ThemeBuilderPage: React.FC = () => {
             <h2 className=":uno: flex-1 text-lg">Preview</h2>
             <Select
               value={previewPage}
-              onValueChange={page => setPreviewPage(page as PreviewPage)}
+              onValueChange={page => {
+                setPreviewPage(page as PreviewPage);
+              }}
             >
               {PREVIEW_PAGES.map(page => (
                 <Select.Option key={page} value={page}>

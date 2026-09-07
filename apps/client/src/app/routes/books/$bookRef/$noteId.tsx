@@ -13,7 +13,6 @@ const RouteComponent: React.FC = () => {
   return <NotePage book={book} noteId={noteId as NoteId} />;
 };
 
-// eslint-disable-next-line pure-module/pure-module
 export const Route = createFileRoute("/books/$bookRef/$noteId")({
   component: RouteComponent,
 });

@@ -1,3 +1,4 @@
+// oxlint-disable typescript/unbound-method
 import { expect, test, vi } from "vitest";
 import { declareStorage } from "./web-storage";
 
