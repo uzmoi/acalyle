@@ -249,9 +249,9 @@
         "eslint/max-lines-per-function": "off",
         "eslint/max-nested-callbacks": "off",
         "eslint/no-magic-numbers": "off",
+        "eslint/no-use-before-define": "off",
         "import/no-nodejs-modules": "off",
         "react/only-export-components": "off",
-        "eslint/no-use-before-define": "off",
       },
     },
     {
