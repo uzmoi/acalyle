@@ -1,5 +1,5 @@
 import { base } from "@acalyle/ui";
-import { createEditor, plainSchema } from "edix";
+import { createPlainEditor } from "editate";
 import { useEffect, useRef } from "react";
 import { parseTag } from "~/entities/tag";
 import { lexQuery } from "../model/query";
@@ -12,9 +12,9 @@ export const QueryInput: React.FC<{
 
   useEffect(() => {
     if (ref.current == null) return;
-    const editor = createEditor({
-      doc: "",
-      schema: plainSchema({ multiline: true }),
+    const editor = createPlainEditor({
+      text: "",
+      singleline: true,
       onChange(value) {
         setQuery(value);
       },

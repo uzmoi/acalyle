@@ -10,7 +10,7 @@ cssole
 csstype
 darkgray
 datetime
-edix
+editate
 emnorst
 espree
 esquery
