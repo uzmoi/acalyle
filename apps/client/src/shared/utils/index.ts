@@ -1,3 +1,4 @@
+export * from "./editate-hooks";
 /** @public */
 export { type RegisterRebrand, rebrand } from "./rebrand";
 
