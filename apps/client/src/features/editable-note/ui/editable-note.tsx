@@ -1,12 +1,14 @@
 import { Button } from "@acalyle/ui";
 import { useState } from "react";
 import { LuBookOpenText, LuPencilLine } from "react-icons/lu";
+import type { BookId } from "#/entities/book";
 import type { Note } from "#/entities/note";
 import { saveNoteContents } from "../model/save";
 import { NoteContentsEditor } from "./note-contents-editor";
 import { NoteContentsView } from "./note-contents-view";
 
 export const EditableNote: React.FC<{
+  bookId: BookId;
   note: Note;
 }> = ({ note }) => {
   const [isRawText, setIsRawText] = useState(false);
