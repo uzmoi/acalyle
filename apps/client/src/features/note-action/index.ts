@@ -1,2 +1,1 @@
-/** @public */
-export { NoteActionButton } from "./ui/button";
+export { NoteActionList } from "./ui/action-list";
