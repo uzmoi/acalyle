@@ -3,12 +3,16 @@ import { useEditatePlainEditor } from "#/shared/utils";
 
 export const NoteContentsEditor: React.FC<{
   initialValue: string;
-}> = ({ initialValue }) => {
+  onChange?: (contents: string) => void;
+}> = ({ initialValue, onChange }) => {
   const [contents, setContents] = useState(initialValue);
 
   const [editorEl] = useEditatePlainEditor<HTMLDivElement>({
     text: initialValue,
-    onChange: setContents,
+    onChange: contents => {
+      setContents(contents);
+      onChange?.(contents);
+    },
   });
 
   return (

@@ -2,6 +2,7 @@ import { Button } from "@acalyle/ui";
 import { useState } from "react";
 import { LuBookOpenText, LuPencilLine } from "react-icons/lu";
 import type { Note } from "#/entities/note";
+import { saveNoteContents } from "../model/save";
 import { NoteContentsEditor } from "./note-contents-editor";
 import { NoteContentsView } from "./note-contents-view";
 
@@ -29,7 +30,12 @@ export const EditableNote: React.FC<{
       </header>
 
       {isRawText ?
-        <NoteContentsEditor initialValue={note.contents} />
+        <NoteContentsEditor
+          initialValue={note.contents}
+          onChange={contents => {
+            saveNoteContents(note.id, contents);
+          }}
+        />
       : <NoteContentsView contents={note.contents} />}
     </article>
   );
