@@ -1,8 +1,8 @@
 import { type Theme, createTheme } from "@acalyle/ui";
 import { cx, style } from "asarina";
 import { tth } from "#/entities/theme";
+import { EditableNote } from "#/features/editable-note";
 import { BookShelf } from "#/widgets/book-shelf";
-import { DetailedNoteView } from "#/widgets/note";
 import {
   type PreviewPage,
   dummyBookId,
@@ -31,7 +31,7 @@ export const Preview: React.FC<{
       )}
     >
       {page === "note" ?
-        <DetailedNoteView bookId={dummyBookId} note={dummyNote} />
+        <EditableNote bookId={dummyBookId} note={dummyNote} />
       : page === "bool-shelf" ?
         <BookShelf books={dummyBooks} />
       : null}

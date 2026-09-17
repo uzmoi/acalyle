@@ -1,9 +1,9 @@
 import { Button } from "@acalyle/ui";
 import { style } from "asarina";
 import { BiExpandAlt, BiX } from "react-icons/bi";
-import { Link } from "#shared/ui";
-import { useNote } from "~/entities/note";
-import { FullNote } from "~/widgets/note";
+import { useNote } from "#/entities/note";
+import { EditableNote } from "#/features/editable-note";
+import { Link } from "#/shared/ui";
 import { type NoteModalInput, close } from "../model/modal";
 
 export const NoteModalContent: React.FC<NoteModalInput> = ({
@@ -39,7 +39,7 @@ export const NoteModalContent: React.FC<NoteModalInput> = ({
         </div>
       </header>
       <div className=":uno: flex-1 overflow-x-hidden">
-        <FullNote key={noteId} bookId={bookId} note={note} />
+        <EditableNote key={noteId} bookId={bookId} note={note} />
       </div>
     </section>
   );
