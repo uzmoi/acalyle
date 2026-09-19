@@ -3,7 +3,7 @@ import {
   type PlainEditorOptions,
   createPlainEditor,
 } from "editate";
-import { useEffect, useEffectEvent, useRef, useState } from "react";
+import { useCallback, useEffect, useEffectEvent, useState } from "react";
 
 type PlainDoc = {
   children: {
@@ -13,19 +13,20 @@ type PlainDoc = {
 
 export const useEditatePlainEditor = <T extends HTMLElement>(
   options: PlainEditorOptions,
-): readonly [React.RefObject<T | null>, Editor<PlainDoc>] => {
-  const editorEl = useRef<T>(null);
-
+): readonly [React.Ref<T | null>, Editor<PlainDoc>] => {
   const onChange = useEffectEvent(options.onChange);
 
   // oxlint-disable-next-line react/hook-use-state react-hooks/rules-of-hooks
   const [editor] = useState(() => createPlainEditor({ ...options, onChange }));
 
-  useEffect(() => {
-    if (editorEl.current == null) return;
+  const ref: React.RefCallback<T> = useCallback(
+    editorEl => {
+      if (editorEl == null) return;
 
-    return editor.input(editorEl.current);
-  }, [editor]);
+      return editor.input(editorEl);
+    },
+    [editor],
+  );
 
   const readonly = !!options.readonly;
   useEffect(() => {
@@ -35,5 +36,5 @@ export const useEditatePlainEditor = <T extends HTMLElement>(
     }
   }, [editor, readonly]);
 
-  return [editorEl, editor];
+  return [ref, editor];
 };
