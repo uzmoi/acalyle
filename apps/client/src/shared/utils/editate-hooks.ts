@@ -27,5 +27,13 @@ export const useEditatePlainEditor = <T extends HTMLElement>(
     return editor.input(editorEl.current);
   }, [editor]);
 
+  const readonly = !!options.readonly;
+  useEffect(() => {
+    if (readonly !== editor.readonly) {
+      // oxlint-disable-next-line react/immutability
+      editor.readonly = readonly;
+    }
+  }, [editor, readonly]);
+
   return [editorEl, editor];
 };
