@@ -10,6 +10,8 @@ allowBuilds:
 minimumReleaseAge: 10080 # 1 week
 minimumReleaseAgeExclude:
   - asarina
+  # Renovate security update: vite@8.2.4
+  - vite@8.2.4
 
 patchedDependencies:
   "@wyw-in-js/shared@2.3.0": patches/@wyw-in-js__shared@2.3.0.patch
