@@ -12,6 +12,8 @@ minimumReleaseAgeExclude:
   - asarina
   # Renovate security update: vite@8.2.4
   - vite@8.2.4
+  # Renovate security update: storybook@10.6.2
+  - storybook@10.6.2
 
 patchedDependencies:
   "@wyw-in-js/shared@2.3.0": patches/@wyw-in-js__shared@2.3.0.patch
