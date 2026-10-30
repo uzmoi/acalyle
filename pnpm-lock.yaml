@@ -203,8 +203,8 @@ importers:
         specifier: 10.5.10
         version: 10.5.10(eslint@9.39.5(jiti@2.7.0)(supports-color@8.1.1))(supports-color@8.1.1)(typescript@7.0.2)
       happy-dom:
-        specifier: ^20.11.6
-        version: 20.11.6
+        specifier: ^21.0.0
+        version: 21.0.4
       storybook:
         specifier: 10.5.10
         version: 10.5.10(@types/react@19.2.18)(prettier@3.9.6)(react@19.2.8)
@@ -219,7 +219,7 @@ importers:
         version: 8.2.4(@types/node@26.1.2)(esbuild@0.27.0)(jiti@2.7.0)(tsx@4.20.5)(yaml@2.8.1)
       vitest:
         specifier: ^4.1.11
-        version: 4.1.11(@types/node@26.1.2)(@vitest/coverage-v8@4.1.11)(happy-dom@20.11.6)(vite@8.2.4(@types/node@26.1.2)(esbuild@0.27.0)(jiti@2.7.0)(tsx@4.20.5)(yaml@2.8.1))
+        version: 4.1.11(@types/node@26.1.2)(@vitest/coverage-v8@4.1.11)(happy-dom@21.0.4)(vite@8.2.4(@types/node@26.1.2)(esbuild@0.27.0)(jiti@2.7.0)(tsx@4.20.5)(yaml@2.8.1))
 
   apps/server: {}
 
@@ -277,7 +277,7 @@ importers:
         version: 4.1.11(vitest@4.1.11)
       vitest:
         specifier: ^4.1.11
-        version: 4.1.11(@types/node@26.1.2)(@vitest/coverage-v8@4.1.11)(happy-dom@20.11.6)(vite@8.2.4(@types/node@26.1.2)(esbuild@0.27.0)(jiti@2.7.0)(tsx@4.20.5)(yaml@2.8.1))
+        version: 4.1.11(@types/node@26.1.2)(@vitest/coverage-v8@4.1.11)(happy-dom@21.0.4)(vite@8.2.4(@types/node@26.1.2)(esbuild@0.27.0)(jiti@2.7.0)(tsx@4.20.5)(yaml@2.8.1))
 
   packages/cssole:
     dependencies:
@@ -296,7 +296,7 @@ importers:
         version: 4.1.11(vitest@4.1.11)
       vitest:
         specifier: ^4.1.11
-        version: 4.1.11(@types/node@26.1.2)(@vitest/coverage-v8@4.1.11)(happy-dom@20.11.6)(vite@8.2.4(@types/node@26.1.2)(esbuild@0.27.0)(jiti@2.7.0)(tsx@4.20.5)(yaml@2.8.1))
+        version: 4.1.11(@types/node@26.1.2)(@vitest/coverage-v8@4.1.11)(happy-dom@21.0.4)(vite@8.2.4(@types/node@26.1.2)(esbuild@0.27.0)(jiti@2.7.0)(tsx@4.20.5)(yaml@2.8.1))
 
   packages/eslint-config:
     dependencies:
@@ -342,7 +342,7 @@ importers:
         version: 0.22.14(@volar/typescript@2.4.28(typescript@7.0.2))(oxc-resolver@11.24.2)(tsx@4.20.5)(typescript@7.0.2)
       vitest:
         specifier: ^4.1.11
-        version: 4.1.11(@types/node@26.1.2)(@vitest/coverage-v8@4.1.11)(happy-dom@20.11.6)(vite@8.2.4(@types/node@26.1.2)(esbuild@0.27.0)(jiti@2.7.0)(tsx@4.20.5)(yaml@2.8.1))
+        version: 4.1.11(@types/node@26.1.2)(@vitest/coverage-v8@4.1.11)(happy-dom@21.0.4)(vite@8.2.4(@types/node@26.1.2)(esbuild@0.27.0)(jiti@2.7.0)(tsx@4.20.5)(yaml@2.8.1))
 
   packages/logger:
     dependencies:
@@ -361,7 +361,7 @@ importers:
         version: 4.1.11(vitest@4.1.11)
       vitest:
         specifier: ^4.1.11
-        version: 4.1.11(@types/node@26.1.2)(@vitest/coverage-v8@4.1.11)(happy-dom@20.11.6)(vite@8.2.4(@types/node@26.1.2)(esbuild@0.27.0)(jiti@2.7.0)(tsx@4.20.5)(yaml@2.8.1))
+        version: 4.1.11(@types/node@26.1.2)(@vitest/coverage-v8@4.1.11)(happy-dom@21.0.4)(vite@8.2.4(@types/node@26.1.2)(esbuild@0.27.0)(jiti@2.7.0)(tsx@4.20.5)(yaml@2.8.1))
 
   packages/tsconfig: {}
 
@@ -417,8 +417,8 @@ importers:
         specifier: ^2.3.1
         version: 2.3.1(supports-color@8.1.1)(typescript@7.0.2)(vite@8.2.4(@types/node@26.1.2)(esbuild@0.27.0)(jiti@2.7.0)(tsx@4.20.5)(yaml@2.8.1))
       happy-dom:
-        specifier: ^20.11.6
-        version: 20.11.6
+        specifier: ^21.0.0
+        version: 21.0.4
       react-dom:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
@@ -430,7 +430,7 @@ importers:
         version: 8.2.4(@types/node@26.1.2)(esbuild@0.27.0)(jiti@2.7.0)(tsx@4.20.5)(yaml@2.8.1)
       vitest:
         specifier: ^4.1.11
-        version: 4.1.11(@types/node@26.1.2)(@vitest/coverage-v8@4.1.11)(happy-dom@20.11.6)(vite@8.2.4(@types/node@26.1.2)(esbuild@0.27.0)(jiti@2.7.0)(tsx@4.20.5)(yaml@2.8.1))
+        version: 4.1.11(@types/node@26.1.2)(@vitest/coverage-v8@4.1.11)(happy-dom@21.0.4)(vite@8.2.4(@types/node@26.1.2)(esbuild@0.27.0)(jiti@2.7.0)(tsx@4.20.5)(yaml@2.8.1))
 
 packages:
 
@@ -4480,6 +4480,10 @@ packages:
     resolution: {integrity: sha512-Hldbg8AdAa5a5oDcZpjqnGitp7JB0hqWmfv/8qr+kft4vzSD8BHsbdRfzYvL/0QcbKcURC/yyoygbeDQarPvYg==}
     engines: {node: '>=20.0.0'}
 
+  happy-dom@21.0.4:
+    resolution: {integrity: sha512-tFm+GaLBgo6o0awHnvHaNoraVo27qJ+2tZEtZ+cIa08hXbeitrxAJajLI05hsUy/2/YTKcUjQYzHe5mCcraLBw==}
+    engines: {node: '>=20.0.0'}
+
   has-bigints@1.1.0:
     resolution: {integrity: sha512-R3pbpkcIqv2Pm3dUwgjclDRVmWpTJW2DcMzcIhEXEx1oh/CEMObMm3KLmRJOdvhM7o4uQBnwr8pzRK2sJWIqfg==}
     engines: {node: '>= 0.4'}
@@ -8029,7 +8033,7 @@ snapshots:
       picocolors: 1.1.1
       redent: 3.0.0
     optionalDependencies:
-      vitest: 4.1.11(@types/node@26.1.2)(@vitest/coverage-v8@4.1.11)(happy-dom@20.11.6)(vite@8.2.4(@types/node@26.1.2)(esbuild@0.27.0)(jiti@2.7.0)(tsx@4.20.5)(yaml@2.8.1))
+      vitest: 4.1.11(@types/node@26.1.2)(@vitest/coverage-v8@4.1.11)(happy-dom@21.0.4)(vite@8.2.4(@types/node@26.1.2)(esbuild@0.27.0)(jiti@2.7.0)(tsx@4.20.5)(yaml@2.8.1))
 
   '@testing-library/react@16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
@@ -8575,7 +8579,7 @@ snapshots:
       obug: 2.1.4
       std-env: 4.2.0
       tinyrainbow: 3.1.1
-      vitest: 4.1.11(@types/node@26.1.2)(@vitest/coverage-v8@4.1.11)(happy-dom@20.11.6)(vite@8.2.4(@types/node@26.1.2)(esbuild@0.27.0)(jiti@2.7.0)(tsx@4.20.5)(yaml@2.8.1))
+      vitest: 4.1.11(@types/node@26.1.2)(@vitest/coverage-v8@4.1.11)(happy-dom@21.0.4)(vite@8.2.4(@types/node@26.1.2)(esbuild@0.27.0)(jiti@2.7.0)(tsx@4.20.5)(yaml@2.8.1))
 
   '@vitest/expect@3.2.4':
     dependencies:
@@ -9884,6 +9888,19 @@ snapshots:
       duplexer: 0.1.2
 
   happy-dom@20.11.6:
+    dependencies:
+      '@types/node': 26.1.2
+      '@types/whatwg-mimetype': 3.0.2
+      '@types/ws': 8.18.1
+      buffer-image-size: 0.6.4
+      entities: 7.0.1
+      whatwg-mimetype: 3.0.0
+      ws: 8.21.1
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
+  happy-dom@21.0.4:
     dependencies:
       '@types/node': 26.1.2
       '@types/whatwg-mimetype': 3.0.2
@@ -11529,7 +11546,7 @@ snapshots:
       tsx: 4.20.5
       yaml: 2.8.1
 
-  vitest@4.1.11(@types/node@26.1.2)(@vitest/coverage-v8@4.1.11)(happy-dom@20.11.6)(vite@8.2.4(@types/node@26.1.2)(esbuild@0.27.0)(jiti@2.7.0)(tsx@4.20.5)(yaml@2.8.1)):
+  vitest@4.1.11(@types/node@26.1.2)(@vitest/coverage-v8@4.1.11)(happy-dom@21.0.4)(vite@8.2.4(@types/node@26.1.2)(esbuild@0.27.0)(jiti@2.7.0)(tsx@4.20.5)(yaml@2.8.1)):
     dependencies:
       '@vitest/expect': 4.1.11
       '@vitest/mocker': 4.1.11(vite@8.2.4(@types/node@26.1.2)(esbuild@0.27.0)(jiti@2.7.0)(tsx@4.20.5)(yaml@2.8.1))
@@ -11554,7 +11571,7 @@ snapshots:
     optionalDependencies:
       '@types/node': 26.1.2
       '@vitest/coverage-v8': 4.1.11(vitest@4.1.11)
-      happy-dom: 20.11.6
+      happy-dom: 21.0.4
     transitivePeerDependencies:
       - msw
 
