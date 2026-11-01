@@ -20,7 +20,7 @@
     "asarina": "^0.2.2",
     "emnorst": "^1.0.0-next.2",
     "nanostores": "^1.4.2",
-    "react": "^19.2.8"
+    "react": "^19.2.9"
   },
   "devDependencies": {
     "@acalyle/eslint-config": "workspace:*",
@@ -34,7 +34,7 @@
     "@vitest/coverage-v8": "^4.1.11",
     "@wyw-in-js/vite": "^2.3.1",
     "happy-dom": "^20.11.6",
-    "react-dom": "^19.2.8",
+    "react-dom": "^19.2.9",
     "unplugin-dts": "^1.0.3",
     "vite": "^8.2.2",
     "vitest": "^4.1.11"
